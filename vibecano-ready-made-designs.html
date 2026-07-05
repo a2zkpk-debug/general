@@ -4,8 +4,8 @@
 
      Navigation:
      • Product image / name  → single product page
-     • Add to Cart           → adds product, goes to cart page
-     • Buy Now               → adds product, goes to checkout page
+     • Add to Cart           → single product page
+     • Buy Now               → single product page
 
      Products must match required category + tag slugs in CONFIG.
      ============================================================ -->
@@ -316,9 +316,8 @@
     margin-top: auto;
   }
 
-  .vc-rm-btns form {
-    display: block;
-    margin: 0;
+  .vc-rm-btns a.vc-rm-btn {
+    width: 100%;
   }
 
   .vc-rm-btn {
@@ -536,13 +535,10 @@
       { slug: "all", label: "All Ready-Made" }
     ],
     perPage: 8,
-    cartUrl: "/cart/",
-    checkoutUrl: "/checkout/",
     endpoints: {
       products: "/wp-json/wc/store/v1/products",
       categories: "/wp-json/wc/store/v1/products/categories",
-      tags: "/wp-json/wc/store/v1/products/tags",
-      cartAdd: "/wp-json/wc/store/v1/cart/add-item"
+      tags: "/wp-json/wc/store/v1/products/tags"
     }
   };
 
@@ -573,26 +569,12 @@
       loadProducts();
     });
 
-    gridEl.addEventListener("submit", handleFormSubmit);
-
     setupCategoryChips()
       .then(loadProducts)
       .catch(function () {
         renderChips();
         loadProducts();
       });
-  }
-
-  function handleFormSubmit(event) {
-    var form = event.target;
-    if (!form || form.tagName !== "FORM" || !gridEl.contains(form)) {
-      return;
-    }
-
-    var submitBtn = event.submitter;
-    if (submitBtn) {
-      submitBtn.disabled = true;
-    }
   }
 
   function setupCategoryChips() {
@@ -799,10 +781,7 @@
     var description = getProductDescription(product);
     var productUrl = escapeAttr(product.permalink || "#");
     var productName = escapeHtml(product.name || "Product");
-    var productId = Number(product.id) || 0;
     var safeName = escapeAttr(product.name || "product");
-    var cartAction = escapeAttr(CONFIG.cartUrl);
-    var buyAction = escapeAttr(CONFIG.checkoutUrl);
 
     return [
       '<article class="vc-rm-card">',
@@ -818,16 +797,8 @@
           description ? '<p class="vc-rm-desc">' + escapeHtml(description) + "</p>" : "",
           '<div class="vc-rm-price">' + formatPrice(product.prices) + "</div>",
           '<div class="vc-rm-btns">',
-            '<form method="post" action="' + cartAction + '">',
-              '<input type="hidden" name="add-to-cart" value="' + productId + '">',
-              '<input type="hidden" name="quantity" value="1">',
-              '<button type="submit" class="vc-rm-btn cart">Add to Cart</button>',
-            "</form>",
-            '<form method="post" action="' + buyAction + '">',
-              '<input type="hidden" name="add-to-cart" value="' + productId + '">',
-              '<input type="hidden" name="quantity" value="1">',
-              '<button type="submit" class="vc-rm-btn buy">Buy Now</button>',
-            "</form>",
+            '<a class="vc-rm-btn cart" href="' + productUrl + '">Add to Cart</a>',
+            '<a class="vc-rm-btn buy" href="' + productUrl + '">Buy Now</a>',
           "</div>",
         "</div>",
       "</article>"
