@@ -6,6 +6,7 @@
      • Marquee: Free shipping on orders over Rs. 5,000
      • Guest users: Login + Register links
      • Logged-in users: greeting with their name
+     • Nav + category cards load real WooCommerce category URLs
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -676,6 +677,20 @@
     margin: 0;
   }
 
+  .vibecano-hero-root .ro-category-skeleton {
+    aspect-ratio: 1/1;
+    border-radius: 12px;
+    background:
+      linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.78), transparent),
+      rgba(226, 232, 240, 0.65);
+    background-size: 220% 100%;
+    animation: ro-pulse-shimmer 1.35s linear infinite;
+  }
+
+  @keyframes ro-pulse-shimmer {
+    to { background-position: -220% 0; }
+  }
+
   @media (max-width: 1024px) {
     .vibecano-hero-root .ro-hero-wrap { grid-template-columns: 1fr; gap: 40px; }
     .vibecano-hero-root .ro-hero-content { max-width: none; }
@@ -817,33 +832,18 @@
         <li><a class="ro-nav-trigger is-highlight" href="/shop/">Shop All</a></li>
         <li>
           <button class="ro-nav-trigger has-submenu" type="button">Collections</button>
-          <ul class="ro-submenu">
-            <li><a href="#">Essentials</a></li>
-            <li><a href="#">Streetwear</a></li>
-            <li><a href="#">Active</a></li>
-            <li><a href="#">Limited Drops</a></li>
-          </ul>
+          <ul class="ro-submenu" id="roCollectionsMenu"></ul>
         </li>
         <li>
           <button class="ro-nav-trigger has-submenu" type="button">Categories</button>
-          <ul class="ro-submenu">
-            <li><a href="#">T-Shirts</a></li>
-            <li><a href="#">Hoodies &amp; Sweatshirts</a></li>
-            <li><a href="#">Caps &amp; Hats</a></li>
-            <li><a href="#">Polo Shirts</a></li>
-            <li><a href="#">Jackets</a></li>
-          </ul>
+          <ul class="ro-submenu" id="roCategoriesMenu"></ul>
         </li>
-        <li><a class="ro-nav-trigger" href="#">New Arrivals</a></li>
-        <li><a class="ro-nav-trigger" href="#">Best Sellers</a></li>
-        <li><a class="ro-nav-trigger" href="#">Sale</a></li>
+        <li><a class="ro-nav-trigger" id="roNewArrivalsLink" href="/shop/?orderby=date">New Arrivals</a></li>
+        <li><a class="ro-nav-trigger" id="roBestSellersLink" href="/shop/?orderby=popularity">Best Sellers</a></li>
+        <li><a class="ro-nav-trigger" id="roSaleLink" href="/shop/?on_sale=true">Sale</a></li>
         <li>
           <button class="ro-nav-trigger has-submenu" type="button">Custom Orders</button>
-          <ul class="ro-submenu">
-            <li><a href="#">Bulk for Teams</a></li>
-            <li><a href="#">Business Branding</a></li>
-            <li><a href="#">Print &amp; Embroidery</a></li>
-          </ul>
+          <ul class="ro-submenu" id="roCustomOrdersMenu"></ul>
         </li>
       </ul>
 
@@ -909,66 +909,7 @@
           <h2>Shop by Category</h2>
         </div>
 
-        <div class="ro-categories">
-          <a href="#" class="ro-category">
-            <div class="ro-category-img bg-tees is-placeholder" aria-hidden="true">
-              <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M38 28h44l8 14 22 8v12l-18 6v32H36V68L18 62V50l22-8 8-14z" fill="#93c5fd" stroke="#3b82f6" stroke-width="2"/>
-              </svg>
-            </div>
-            <h3>T-Shirts</h3>
-          </a>
-
-          <a href="#" class="ro-category">
-            <div class="ro-category-img bg-longsleeve is-placeholder" aria-hidden="true">
-              <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M34 30h52l6 12 24 10v10l-20 8v32H30V70L10 62V52l24-10 6-12z" fill="#a5b4fc" stroke="#6366f1" stroke-width="2"/>
-                <path d="M30 52v8M90 52v8" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <h3>Long Sleeve</h3>
-          </a>
-
-          <a href="#" class="ro-category">
-            <div class="ro-category-img bg-hoodies is-placeholder" aria-hidden="true">
-              <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M36 34h48l10 16 18 6v38H28V56l18-6 10-16z" fill="#94a3b8" stroke="#475569" stroke-width="2"/>
-                <path d="M48 34c0-8 6-14 12-14s12 6 12 14" stroke="#475569" stroke-width="2"/>
-              </svg>
-            </div>
-            <h3>Hoodies</h3>
-          </a>
-
-          <a href="#" class="ro-category">
-            <div class="ro-category-img bg-jackets is-placeholder" aria-hidden="true">
-              <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M32 36h56l8 18v40H24V54l8-18z" fill="#64748b" stroke="#334155" stroke-width="2"/>
-                <path d="M60 36v58M44 54h32" stroke="#334155" stroke-width="2"/>
-              </svg>
-            </div>
-            <h3>Jackets</h3>
-          </a>
-
-          <a href="#" class="ro-category">
-            <div class="ro-category-img bg-hats is-placeholder" aria-hidden="true">
-              <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="60" cy="72" rx="38" ry="10" fill="#fcd34d" stroke="#d97706" stroke-width="2"/>
-                <path d="M28 72c0-22 14-38 32-38s32 16 32 38" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
-              </svg>
-            </div>
-            <h3>Hats</h3>
-          </a>
-
-          <a href="#" class="ro-category">
-            <div class="ro-category-img bg-promo is-placeholder" aria-hidden="true">
-              <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="28" y="40" width="64" height="48" rx="6" fill="#86efac" stroke="#16a34a" stroke-width="2"/>
-                <path d="M36 40V32h48v8M44 58h32M44 70h24" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
-            <h3>Promotional</h3>
-          </a>
-        </div>
+        <div class="ro-categories" id="roCategoryGrid" aria-live="polite"></div>
       </div>
     </div>
   </section>
@@ -979,11 +920,40 @@
   "use strict";
 
   var CONFIG = {
+    shopUrl: "/shop/",
     loginUrl: "/my-account/",
     registerUrl: "/my-account/?action=register",
     accountUrl: "/my-account/",
     userEndpoint: "/wp-json/wp/v2/users/me?context=edit",
-    cartEndpoint: "/wp-json/wc/store/v1/cart"
+    cartEndpoint: "/wp-json/wc/store/v1/cart",
+    categoriesEndpoint: "/wp-json/wc/store/v1/products/categories",
+    collectionsParentSlug: "collections",
+    collectionsSlugs: ["essentials", "streetwear", "active", "limited-drops"],
+    customOrdersParentSlug: "custom-orders",
+    customOrdersSlugs: ["bulk-for-teams", "business-branding", "print-embroidery"],
+    navCategorySlugs: ["t-shirts", "hoodies", "caps-hats", "polo-shirts", "jackets"],
+    heroCategories: [
+      { slug: "t-shirts", style: "bg-tees", placeholder: "tees", label: "T-Shirts" },
+      { slug: "long-sleeve", style: "bg-longsleeve", placeholder: "longsleeve", label: "Long Sleeve" },
+      { slug: "hoodies", style: "bg-hoodies", placeholder: "hoodies", label: "Hoodies" },
+      { slug: "jackets", style: "bg-jackets", placeholder: "jackets", label: "Jackets" },
+      { slug: "hats", style: "bg-hats", placeholder: "hats", label: "Hats" },
+      { slug: "promotional", style: "bg-promo", placeholder: "promo", label: "Promotional" }
+    ],
+    quickLinks: {
+      newArrivals: { slug: "new-arrivals", fallback: "/shop/?orderby=date" },
+      bestSellers: { slug: "best-sellers", fallback: "/shop/?orderby=popularity" },
+      sale: { slug: "sale", fallback: "/shop/?on_sale=true" }
+    }
+  };
+
+  var PLACEHOLDER_SVGS = {
+    tees: '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M38 28h44l8 14 22 8v12l-18 6v32H36V68L18 62V50l22-8 8-14z" fill="#93c5fd" stroke="#3b82f6" stroke-width="2"/></svg>',
+    longsleeve: '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M34 30h52l6 12 24 10v10l-20 8v32H30V70L10 62V52l24-10 6-12z" fill="#a5b4fc" stroke="#6366f1" stroke-width="2"/><path d="M30 52v8M90 52v8" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/></svg>',
+    hoodies: '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M36 34h48l10 16 18 6v38H28V56l18-6 10-16z" fill="#94a3b8" stroke="#475569" stroke-width="2"/><path d="M48 34c0-8 6-14 12-14s12 6 12 14" stroke="#475569" stroke-width="2"/></svg>',
+    jackets: '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 36h56l8 18v40H24V54l8-18z" fill="#64748b" stroke="#334155" stroke-width="2"/><path d="M60 36v58M44 54h32" stroke="#334155" stroke-width="2"/></svg>',
+    hats: '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="72" rx="38" ry="10" fill="#fcd34d" stroke="#d97706" stroke-width="2"/><path d="M28 72c0-22 14-38 32-38s32 16 32 38" fill="#fde68a" stroke="#d97706" stroke-width="2"/></svg>',
+    promo: '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="28" y="40" width="64" height="48" rx="6" fill="#86efac" stroke="#16a34a" stroke-width="2"/><path d="M36 40V32h48v8M44 58h32M44 70h24" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/></svg>'
   };
 
   var root = document.getElementById("vibecanoHeroRoot");
@@ -1000,6 +970,13 @@
   var loginLink = document.getElementById("roLoginLink");
   var registerLink = document.getElementById("roRegisterLink");
   var cartCountEl = document.getElementById("roCartCount");
+  var categoryGridEl = document.getElementById("roCategoryGrid");
+  var collectionsMenuEl = document.getElementById("roCollectionsMenu");
+  var categoriesMenuEl = document.getElementById("roCategoriesMenu");
+  var customOrdersMenuEl = document.getElementById("roCustomOrdersMenu");
+  var newArrivalsLink = document.getElementById("roNewArrivalsLink");
+  var bestSellersLink = document.getElementById("roBestSellersLink");
+  var saleLink = document.getElementById("roSaleLink");
 
   if (loginLink) {
     loginLink.href = CONFIG.loginUrl;
@@ -1018,18 +995,247 @@
       nav.classList.toggle("is-open");
     });
 
-    nav.querySelectorAll(".ro-nav-trigger.has-submenu").forEach(function (btn) {
-      btn.addEventListener("click", function (event) {
-        if (window.matchMedia("(max-width: 860px)").matches) {
-          event.preventDefault();
-          btn.parentElement.classList.toggle("is-open");
-        }
-      });
+    nav.addEventListener("click", function (event) {
+      var btn = event.target.closest(".ro-nav-trigger.has-submenu");
+      if (!btn || !window.matchMedia("(max-width: 860px)").matches) {
+        return;
+      }
+      event.preventDefault();
+      btn.parentElement.classList.toggle("is-open");
     });
   }
 
+  renderCategorySkeletons();
   loadAccountState();
   loadCartCount();
+  loadCategories();
+
+  function loadCategories() {
+    if (!window.fetch) {
+      return;
+    }
+
+    fetch(CONFIG.categoriesEndpoint + "?per_page=100&hide_empty=true", { credentials: "same-origin" })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("Categories request failed");
+        }
+        return response.json();
+      })
+      .then(function (categories) {
+        var safeCategories = Array.isArray(categories) ? categories : [];
+        renderNavigationMenus(safeCategories);
+        renderHeroCategories(safeCategories);
+        bindQuickLinks(safeCategories);
+      })
+      .catch(function () {
+        renderFallbackNavigation();
+        renderFallbackHeroCategories();
+      });
+  }
+
+  function renderNavigationMenus(categories) {
+    renderSubmenu(collectionsMenuEl, getMenuCategories(categories, {
+      parentSlug: CONFIG.collectionsParentSlug,
+      slugs: CONFIG.collectionsSlugs
+    }));
+
+    renderSubmenu(categoriesMenuEl, getMenuCategories(categories, {
+      slugs: CONFIG.navCategorySlugs,
+      fallbackTopLevel: true,
+      excludeSlugs: ["uncategorized", "collections", "custom-orders", "ready-made", "featured"]
+    }));
+
+    renderSubmenu(customOrdersMenuEl, getMenuCategories(categories, {
+      parentSlug: CONFIG.customOrdersParentSlug,
+      slugs: CONFIG.customOrdersSlugs
+    }));
+  }
+
+  function getMenuCategories(categories, options) {
+    var parentSlug = options.parentSlug;
+    var slugs = options.slugs || [];
+    var excludeSlugs = options.excludeSlugs || [];
+    var parentCategory = parentSlug ? findCategoryBySlug(categories, parentSlug) : null;
+    var matched = [];
+
+    if (parentCategory) {
+      matched = categories.filter(function (category) {
+        return Number(category.parent) === Number(parentCategory.id);
+      });
+    }
+
+    if (!matched.length && slugs.length) {
+      slugs.forEach(function (slug) {
+        var category = findCategoryBySlug(categories, slug);
+        if (category) {
+          matched.push(category);
+        }
+      });
+    }
+
+    if (!matched.length && options.fallbackTopLevel) {
+      matched = categories.filter(function (category) {
+        return Number(category.parent) === 0 && excludeSlugs.indexOf(category.slug) === -1;
+      });
+    }
+
+    return matched.sort(function (a, b) {
+      return String(a.name || "").localeCompare(String(b.name || ""));
+    });
+  }
+
+  function renderSubmenu(menuEl, categories) {
+    if (!menuEl) {
+      return;
+    }
+
+    if (!categories.length) {
+      menuEl.innerHTML = '<li><a href="' + escapeAttr(CONFIG.shopUrl) + '">Browse shop</a></li>';
+      return;
+    }
+
+    menuEl.innerHTML = categories.map(function (category) {
+      return '<li><a href="' + escapeAttr(getCategoryUrl(category)) + '">' + escapeHtml(category.name) + "</a></li>";
+    }).join("");
+  }
+
+  function bindQuickLinks(categories) {
+    setQuickLink(newArrivalsLink, CONFIG.quickLinks.newArrivals, categories);
+    setQuickLink(bestSellersLink, CONFIG.quickLinks.bestSellers, categories);
+    setQuickLink(saleLink, CONFIG.quickLinks.sale, categories);
+  }
+
+  function setQuickLink(linkEl, config, categories) {
+    if (!linkEl || !config) {
+      return;
+    }
+
+    var category = findCategoryBySlug(categories, config.slug);
+    linkEl.href = category ? getCategoryUrl(category) : config.fallback;
+  }
+
+  function renderHeroCategories(categories) {
+    if (!categoryGridEl) {
+      return;
+    }
+
+    var cards = CONFIG.heroCategories.map(function (item) {
+      return findCategoryBySlug(categories, item.slug);
+    }).filter(Boolean);
+
+    if (!cards.length) {
+      renderFallbackHeroCategories();
+      return;
+    }
+
+    categoryGridEl.innerHTML = CONFIG.heroCategories.map(function (item) {
+      var category = findCategoryBySlug(categories, item.slug);
+      if (!category) {
+        return "";
+      }
+      return renderCategoryCard(category, item);
+    }).join("");
+  }
+
+  function renderCategoryCard(category, item) {
+    var url = escapeAttr(getCategoryUrl(category));
+    var name = escapeHtml(item.label || category.name || "Category");
+    var image = category.image && category.image.src ? category.image : null;
+    var imageHtml;
+
+    if (image && image.src) {
+      imageHtml = '<img src="' + escapeAttr(image.src) + '" alt="' + escapeAttr(image.alt || category.name || "Category") + '" loading="lazy" decoding="async">';
+    } else {
+      imageHtml = PLACEHOLDER_SVGS[item.placeholder] || PLACEHOLDER_SVGS.tees;
+    }
+
+    return [
+      '<a href="' + url + '" class="ro-category">',
+        '<div class="ro-category-img ' + escapeAttr(item.style) + (image ? "" : " is-placeholder") + '" aria-hidden="true">',
+          imageHtml,
+        "</div>",
+        "<h3>" + name + "</h3>",
+      "</a>"
+    ].join("");
+  }
+
+  function renderCategorySkeletons() {
+    if (!categoryGridEl) {
+      return;
+    }
+
+    categoryGridEl.innerHTML = "";
+    for (var i = 0; i < 6; i += 1) {
+      categoryGridEl.innerHTML += '<div class="ro-category-skeleton" aria-hidden="true"></div>';
+    }
+  }
+
+  function renderFallbackNavigation() {
+    renderSubmenu(collectionsMenuEl, CONFIG.collectionsSlugs.map(slugToFallbackCategory));
+    renderSubmenu(categoriesMenuEl, CONFIG.navCategorySlugs.map(slugToFallbackCategory));
+    renderSubmenu(customOrdersMenuEl, CONFIG.customOrdersSlugs.map(slugToFallbackCategory));
+  }
+
+  function renderFallbackHeroCategories() {
+    if (!categoryGridEl) {
+      return;
+    }
+
+    categoryGridEl.innerHTML = CONFIG.heroCategories.map(function (item) {
+      return renderCategoryCard(slugToFallbackCategory(item.slug, item.label), item);
+    }).join("");
+  }
+
+  function slugToFallbackCategory(slug, label) {
+    return {
+      slug: slug,
+      name: label || slugToLabel(slug),
+      permalink: "/product-category/" + slug + "/"
+    };
+  }
+
+  function slugToLabel(slug) {
+    return String(slug || "")
+      .split("-")
+      .map(function (part) {
+        return part.charAt(0).toUpperCase() + part.slice(1);
+      })
+      .join(" ");
+  }
+
+  function findCategoryBySlug(categories, slug) {
+    if (!slug) {
+      return null;
+    }
+
+    var exact = categories.filter(function (category) {
+      return category && category.slug === slug;
+    })[0];
+
+    if (exact) {
+      return exact;
+    }
+
+    return categories.filter(function (category) {
+      if (!category || !category.slug) {
+        return false;
+      }
+      return category.slug.indexOf(slug) !== -1 || slug.indexOf(category.slug) !== -1;
+    })[0] || null;
+  }
+
+  function getCategoryUrl(category) {
+    if (category && category.permalink) {
+      return category.permalink;
+    }
+
+    if (category && category.slug) {
+      return "/product-category/" + category.slug + "/";
+    }
+
+    return CONFIG.shopUrl;
+  }
 
   function loadAccountState() {
     if (!window.fetch || !guestEl || !userEl || !greetingEl) {
@@ -1045,8 +1251,7 @@
         return response.json();
       })
       .then(function (user) {
-        var displayName = getDisplayName(user);
-        greetingEl.textContent = "Hello, " + displayName;
+        greetingEl.textContent = "Hello, " + getDisplayName(user);
         showUser();
       })
       .catch(function () {
@@ -1123,6 +1328,22 @@
       .catch(function () {
         /* Keep default cart count */
       });
+  }
+
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, function (character) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[character];
+    });
+  }
+
+  function escapeAttr(value) {
+    return escapeHtml(value).replace(/`/g, "&#96;");
   }
 })();
 </script>
