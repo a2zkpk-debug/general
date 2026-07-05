@@ -2,11 +2,12 @@
      VIBECANO — HERO / HEADER SECTION
      Paste this whole file into an Elementor HTML widget.
 
-     Features:
-     • Marquee: Free shipping on orders over Rs. 5,000
-     • Guest users: Login + Register links
-     • Logged-in users: greeting with their name
-     • Nav + category cards load real WooCommerce category URLs
+     Shows only 3 main categories:
+     • Customize
+     • Ready Made
+     • Featured
+
+     Each card uses the real WooCommerce category image + link.
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +27,6 @@
     --hero-bg: linear-gradient(135deg, #f8fafc 0%, #eef2ff 42%, #fff7ed 100%);
     --shadow-sm: 0 4px 14px rgba(15, 23, 42, .06);
     --shadow-md: 0 18px 40px rgba(15, 23, 42, .10);
-    --radius: 16px;
     font-family: 'Inter', system-ui, -apple-system, Segoe UI, sans-serif;
     color: var(--ink);
     background: #fff;
@@ -36,21 +36,17 @@
 
   .vibecano-hero-root *,
   .vibecano-hero-root *::before,
-  .vibecano-hero-root *::after {
-    box-sizing: border-box;
-  }
+  .vibecano-hero-root *::after { box-sizing: border-box; }
 
   .vibecano-hero-root a { text-decoration: none; color: inherit; }
   .vibecano-hero-root img { max-width: 100%; display: block; }
   .vibecano-hero-root button { font-family: inherit; }
 
-  /* ---------- TOP UTILITY BAR + MARQUEE ---------- */
   .vibecano-hero-root .ro-topbar {
     background: var(--ink);
     color: #fff;
     font-size: 12px;
     font-weight: 600;
-    letter-spacing: .02em;
     overflow: hidden;
   }
 
@@ -115,7 +111,6 @@
     opacity: .92;
   }
 
-  /* ---------- HEADER ---------- */
   .vibecano-hero-root .ro-header { background: #fff; border-bottom: 1px solid var(--line); }
   .vibecano-hero-root .ro-header-wrap {
     max-width: 1280px;
@@ -213,7 +208,6 @@
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    cursor: pointer;
     color: var(--ink);
     text-align: center;
     line-height: 1.25;
@@ -231,20 +225,13 @@
 
   .vibecano-hero-root .ro-action small { font-size: 11px; color: var(--slate); }
   .vibecano-hero-root .ro-action strong { font-weight: 600; }
-
-  .vibecano-hero-root .ro-action-account {
-    min-width: 72px;
-  }
+  .vibecano-hero-root .ro-action-account { min-width: 72px; }
 
   .vibecano-hero-root .ro-account-guest strong a,
-  .vibecano-hero-root .ro-account-guest small a {
-    transition: color .2s;
-  }
+  .vibecano-hero-root .ro-account-guest small a { transition: color .2s; }
 
   .vibecano-hero-root .ro-account-guest strong a:hover,
-  .vibecano-hero-root .ro-account-guest small a:hover {
-    color: var(--brand);
-  }
+  .vibecano-hero-root .ro-account-guest small a:hover { color: var(--brand); }
 
   .vibecano-hero-root .ro-account-user {
     display: flex;
@@ -255,14 +242,8 @@
     line-height: 1.25;
   }
 
-  .vibecano-hero-root .ro-account-user:hover strong {
-    color: var(--brand);
-  }
-
-  .vibecano-hero-root .ro-account-loading {
-    font-size: 11px;
-    color: var(--slate);
-  }
+  .vibecano-hero-root .ro-account-user:hover strong { color: var(--brand); }
+  .vibecano-hero-root .ro-account-loading { font-size: 11px; color: var(--slate); }
 
   .vibecano-hero-root .ro-cart-badge {
     display: inline-grid;
@@ -278,8 +259,7 @@
     margin-left: 4px;
   }
 
-  /* ---------- NAV ---------- */
-  .vibecano-hero-root .ro-nav { background: #fff; border-bottom: 1px solid var(--line); position: relative; }
+  .vibecano-hero-root .ro-nav { background: #fff; border-bottom: 1px solid var(--line); }
   .vibecano-hero-root .ro-nav-wrap {
     max-width: 1280px;
     margin: 0 auto;
@@ -297,65 +277,19 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    flex-wrap: wrap;
   }
 
-  .vibecano-hero-root .ro-nav-links > li { position: relative; }
-  .vibecano-hero-root .ro-nav-trigger {
-    background: none;
-    border: none;
-    cursor: pointer;
+  .vibecano-hero-root .ro-nav-links a {
     font-size: 14px;
     font-weight: 600;
     color: var(--ink-soft);
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 8px 0;
     transition: color .2s;
-    font-family: inherit;
+    white-space: nowrap;
   }
 
-  .vibecano-hero-root .ro-nav-trigger:hover { color: var(--brand); }
-  .vibecano-hero-root .ro-nav-trigger.is-highlight { color: var(--brand); }
-  .vibecano-hero-root .ro-nav-trigger.has-submenu::after { content: "▾"; font-size: 9px; opacity: .7; }
-
-  .vibecano-hero-root .ro-submenu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    min-width: 220px;
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    box-shadow: var(--shadow-md);
-    padding: 8px;
-    list-style: none;
-    margin: 0;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(6px);
-    transition: opacity .18s ease, transform .18s ease, visibility .18s;
-    z-index: 50;
-  }
-
-  .vibecano-hero-root .ro-nav-links > li:hover > .ro-submenu,
-  .vibecano-hero-root .ro-nav-links > li:focus-within > .ro-submenu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
-
-  .vibecano-hero-root .ro-submenu a {
-    display: block;
-    padding: 10px 12px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ink);
-    transition: background .15s, color .15s;
-  }
-
-  .vibecano-hero-root .ro-submenu a:hover { background: #eff6ff; color: var(--brand); }
+  .vibecano-hero-root .ro-nav-links a:hover,
+  .vibecano-hero-root .ro-nav-links a.is-highlight { color: var(--brand); }
 
   .vibecano-hero-root .ro-design-btn {
     background: var(--ink);
@@ -365,8 +299,6 @@
     font-weight: 700;
     font-size: 14px;
     transition: background .2s, transform .2s, box-shadow .2s;
-    border: none;
-    cursor: pointer;
     white-space: nowrap;
   }
 
@@ -386,7 +318,6 @@
     cursor: pointer;
   }
 
-  /* ---------- HERO ---------- */
   .vibecano-hero-root .ro-hero {
     position: relative;
     background: var(--hero-bg);
@@ -422,7 +353,7 @@
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: 1fr 1.15fr;
+    grid-template-columns: 1fr 1.05fr;
     gap: 56px;
     align-items: center;
   }
@@ -504,33 +435,16 @@
   }
 
   .vibecano-hero-root .ro-stat:last-child { border-right: none; padding-right: 0; }
-  .vibecano-hero-root .ro-stat strong {
-    font-size: 22px;
-    font-weight: 800;
-    color: var(--ink);
-    line-height: 1.1;
-  }
+  .vibecano-hero-root .ro-stat strong { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1.1; }
+  .vibecano-hero-root .ro-stat small { font-size: 12px; color: var(--slate); font-weight: 500; margin-top: 2px; }
 
-  .vibecano-hero-root .ro-stat small {
-    font-size: 12px;
-    color: var(--slate);
-    font-weight: 500;
-    margin-top: 2px;
-  }
-
-  .vibecano-hero-root .ro-cta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 28px;
-  }
+  .vibecano-hero-root .ro-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
 
   .vibecano-hero-root .ro-btn {
     padding: 15px 32px;
     border-radius: 999px;
     font-weight: 700;
     font-size: 15px;
-    cursor: pointer;
     transition: all .22s;
     display: inline-flex;
     align-items: center;
@@ -594,8 +508,6 @@
     flex-shrink: 0;
   }
 
-  .vibecano-hero-root .ro-hero-categories { position: relative; }
-
   .vibecano-hero-root .ro-categories-header { margin-bottom: 18px; }
   .vibecano-hero-root .ro-categories-header h2 {
     font-family: 'Plus Jakarta Sans', sans-serif;
@@ -609,16 +521,15 @@
 
   .vibecano-hero-root .ro-categories {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
   }
 
   .vibecano-hero-root .ro-category {
     background: #fff;
-    border-radius: 12px;
+    border-radius: 16px;
     border: 1px solid var(--line);
     overflow: hidden;
-    cursor: pointer;
     transition: transform .22s, box-shadow .22s, border-color .22s;
     display: flex;
     flex-direction: column;
@@ -632,9 +543,9 @@
   }
 
   .vibecano-hero-root .ro-category-img {
-    aspect-ratio: 1/1;
+    aspect-ratio: 4/5;
     overflow: hidden;
-    background: #f1f5f9;
+    background: linear-gradient(145deg, #e2e8f0 0%, #f8fafc 100%);
     position: relative;
   }
 
@@ -647,47 +558,51 @@
 
   .vibecano-hero-root .ro-category:hover .ro-category-img img { transform: scale(1.05); }
 
-  .vibecano-hero-root .ro-category-img.is-placeholder { display: grid; place-items: center; }
-  .vibecano-hero-root .ro-category-img.is-placeholder svg {
-    width: 56%;
-    height: auto;
-    opacity: .85;
-    transition: transform .35s ease, opacity .35s ease;
+  .vibecano-hero-root .ro-category-fallback {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: rgba(15, 23, 42, .18);
+    letter-spacing: -.03em;
+    text-transform: uppercase;
   }
-
-  .vibecano-hero-root .ro-category:hover .ro-category-img.is-placeholder svg {
-    transform: scale(1.06);
-    opacity: 1;
-  }
-
-  .vibecano-hero-root .ro-category-img.bg-tees { background: linear-gradient(145deg, #dbeafe 0%, #eff6ff 100%); }
-  .vibecano-hero-root .ro-category-img.bg-longsleeve { background: linear-gradient(145deg, #e0e7ff 0%, #eef2ff 100%); }
-  .vibecano-hero-root .ro-category-img.bg-hoodies { background: linear-gradient(145deg, #e2e8f0 0%, #f8fafc 100%); }
-  .vibecano-hero-root .ro-category-img.bg-jackets { background: linear-gradient(145deg, #cbd5e1 0%, #e2e8f0 100%); }
-  .vibecano-hero-root .ro-category-img.bg-hats { background: linear-gradient(145deg, #fef3c7 0%, #fffbeb 100%); }
-  .vibecano-hero-root .ro-category-img.bg-promo { background: linear-gradient(145deg, #dcfce7 0%, #f0fdf4 100%); }
 
   .vibecano-hero-root .ro-category h3 {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--ink);
-    padding: 14px 12px 16px;
-    letter-spacing: -.01em;
+    padding: 16px 12px 18px;
     margin: 0;
   }
 
   .vibecano-hero-root .ro-category-skeleton {
-    aspect-ratio: 1/1;
-    border-radius: 12px;
+    aspect-ratio: 4/5;
+    border-radius: 16px;
     background:
       linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.78), transparent),
       rgba(226, 232, 240, 0.65);
     background-size: 220% 100%;
-    animation: ro-pulse-shimmer 1.35s linear infinite;
+    animation: ro-shimmer 1.35s linear infinite;
   }
 
-  @keyframes ro-pulse-shimmer {
+  .vibecano-hero-root .ro-category-message {
+    grid-column: 1 / -1;
+    padding: 28px 16px;
+    border: 1px dashed rgba(148, 163, 184, 0.55);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--slate);
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  @keyframes ro-shimmer {
     to { background-position: -220% 0; }
   }
 
@@ -712,20 +627,8 @@
       padding-top: 8px;
     }
     .vibecano-hero-root .ro-nav-links.is-open { display: flex; }
-    .vibecano-hero-root .ro-nav-links > li { width: 100%; border-bottom: 1px solid #f1f5f9; }
-    .vibecano-hero-root .ro-nav-trigger { width: 100%; padding: 14px 4px; justify-content: space-between; }
-    .vibecano-hero-root .ro-submenu {
-      position: static;
-      opacity: 1;
-      visibility: visible;
-      transform: none;
-      box-shadow: none;
-      border: none;
-      padding: 0 0 8px 12px;
-      min-width: 0;
-      display: none;
-    }
-    .vibecano-hero-root .ro-nav-links > li.is-open > .ro-submenu { display: block; }
+    .vibecano-hero-root .ro-nav-links li { width: 100%; border-bottom: 1px solid #f1f5f9; }
+    .vibecano-hero-root .ro-nav-links a { display: block; padding: 14px 4px; }
     .vibecano-hero-root .ro-topbar-rating { display: none; }
   }
 
@@ -738,7 +641,7 @@
     .vibecano-hero-root .ro-action-account strong,
     .vibecano-hero-root .ro-action-account small { display: block; }
     .vibecano-hero-root .ro-hero { padding: 40px 16px 56px; }
-    .vibecano-hero-root .ro-categories { grid-template-columns: repeat(2, 1fr); }
+    .vibecano-hero-root .ro-categories { grid-template-columns: 1fr; gap: 14px; }
     .vibecano-hero-root .ro-stat { border-right: none; padding-right: 0; }
     .vibecano-hero-root .ro-hero-stats { gap: 12px; }
   }
@@ -751,11 +654,9 @@
 </style>
 
 <div class="vibecano-hero-root" id="vibecanoHeroRoot">
-  <!-- Topbar -->
   <div class="ro-topbar">
     <div class="ro-topbar-wrap">
       <span class="ro-topbar-badge">New Collection Live</span>
-
       <div class="ro-topbar-marquee" aria-label="Free shipping announcement">
         <div class="ro-topbar-marquee-track">
           <span>Free shipping on orders over Rs. 5,000</span>
@@ -764,12 +665,10 @@
           <span>Free shipping on orders over Rs. 5,000</span>
         </div>
       </div>
-
       <span class="ro-topbar-rating">4.9★ from 10,000+ customers</span>
     </div>
   </div>
 
-  <!-- Header -->
   <header class="ro-header">
     <div class="ro-header-wrap">
       <a href="/" class="ro-logo">
@@ -803,12 +702,10 @@
         <div class="ro-action ro-action-account" id="roAccountAction">
           <span class="ic">👤</span>
           <span class="ro-account-loading" id="roAccountLoading">Account</span>
-
           <div class="ro-account-guest" id="roAccountGuest" hidden>
             <strong><a id="roLoginLink" href="/my-account/">Login</a></strong>
             <small><a id="roRegisterLink" href="/my-account/?action=register">Register</a></small>
           </div>
-
           <a class="ro-account-user" id="roAccountUser" href="/my-account/" hidden>
             <strong id="roAccountGreeting">Hello</strong>
             <small>My account</small>
@@ -823,35 +720,19 @@
     </div>
   </header>
 
-  <!-- Nav -->
   <nav class="ro-nav">
     <div class="ro-nav-wrap">
       <button class="ro-menu-toggle" id="roMenuToggle" type="button" aria-label="Toggle menu">☰</button>
-
       <ul class="ro-nav-links" id="roNavLinks">
-        <li><a class="ro-nav-trigger is-highlight" href="/shop/">Shop All</a></li>
-        <li>
-          <button class="ro-nav-trigger has-submenu" type="button">Collections</button>
-          <ul class="ro-submenu" id="roCollectionsMenu"></ul>
-        </li>
-        <li>
-          <button class="ro-nav-trigger has-submenu" type="button">Categories</button>
-          <ul class="ro-submenu" id="roCategoriesMenu"></ul>
-        </li>
-        <li><a class="ro-nav-trigger" id="roNewArrivalsLink" href="/shop/?orderby=date">New Arrivals</a></li>
-        <li><a class="ro-nav-trigger" id="roBestSellersLink" href="/shop/?orderby=popularity">Best Sellers</a></li>
-        <li><a class="ro-nav-trigger" id="roSaleLink" href="/shop/?on_sale=true">Sale</a></li>
-        <li>
-          <button class="ro-nav-trigger has-submenu" type="button">Custom Orders</button>
-          <ul class="ro-submenu" id="roCustomOrdersMenu"></ul>
-        </li>
+        <li><a class="is-highlight" href="/shop/">Shop All</a></li>
+        <li><a id="roNavCustomize" href="/product-category/customize/">Customize</a></li>
+        <li><a id="roNavReadyMade" href="/product-category/ready-made/">Ready Made</a></li>
+        <li><a id="roNavFeatured" href="/product-category/featured/">Featured</a></li>
       </ul>
-
-      <a class="ro-design-btn" href="/shop/">Shop Collection</a>
+      <a class="ro-design-btn" id="roShopBtn" href="/shop/">Shop Collection</a>
     </div>
   </nav>
 
-  <!-- Hero -->
   <section class="ro-hero">
     <div class="ro-hero-wrap">
       <div class="ro-hero-content">
@@ -881,11 +762,11 @@
         </div>
 
         <div class="ro-cta">
-          <a class="ro-btn ro-btn-primary" href="/shop/">
-            Shop Best Sellers
+          <a class="ro-btn ro-btn-primary" id="roCtaReadyMade" href="/product-category/ready-made/">
+            Shop Ready Made
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
-          <a class="ro-btn ro-btn-outline" href="/shop/">View New Drops</a>
+          <a class="ro-btn ro-btn-outline" id="roCtaFeatured" href="/product-category/featured/">View Featured</a>
         </div>
 
         <div class="ro-trust-row">
@@ -906,9 +787,8 @@
 
       <div class="ro-hero-categories">
         <div class="ro-categories-header">
-          <h2>Shop by Category</h2>
+          <h2>Shop Main Categories</h2>
         </div>
-
         <div class="ro-categories" id="roCategoryGrid" aria-live="polite"></div>
       </div>
     </div>
@@ -927,33 +807,11 @@
     userEndpoint: "/wp-json/wp/v2/users/me?context=edit",
     cartEndpoint: "/wp-json/wc/store/v1/cart",
     categoriesEndpoint: "/wp-json/wc/store/v1/products/categories",
-    collectionsParentSlug: "collections",
-    collectionsSlugs: ["essentials", "streetwear", "active", "limited-drops"],
-    customOrdersParentSlug: "custom-orders",
-    customOrdersSlugs: ["bulk-for-teams", "business-branding", "print-embroidery"],
-    navCategorySlugs: ["t-shirts", "hoodies", "caps-hats", "polo-shirts", "jackets"],
-    heroCategories: [
-      { slug: "t-shirts", style: "bg-tees", placeholder: "tees", label: "T-Shirts" },
-      { slug: "long-sleeve", style: "bg-longsleeve", placeholder: "longsleeve", label: "Long Sleeve" },
-      { slug: "hoodies", style: "bg-hoodies", placeholder: "hoodies", label: "Hoodies" },
-      { slug: "jackets", style: "bg-jackets", placeholder: "jackets", label: "Jackets" },
-      { slug: "hats", style: "bg-hats", placeholder: "hats", label: "Hats" },
-      { slug: "promotional", style: "bg-promo", placeholder: "promo", label: "Promotional" }
-    ],
-    quickLinks: {
-      newArrivals: { slug: "new-arrivals", fallback: "/shop/?orderby=date" },
-      bestSellers: { slug: "best-sellers", fallback: "/shop/?orderby=popularity" },
-      sale: { slug: "sale", fallback: "/shop/?on_sale=true" }
-    }
-  };
-
-  var PLACEHOLDER_SVGS = {
-    tees: '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M38 28h44l8 14 22 8v12l-18 6v32H36V68L18 62V50l22-8 8-14z" fill="#93c5fd" stroke="#3b82f6" stroke-width="2"/></svg>',
-    longsleeve: '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M34 30h52l6 12 24 10v10l-20 8v32H30V70L10 62V52l24-10 6-12z" fill="#a5b4fc" stroke="#6366f1" stroke-width="2"/><path d="M30 52v8M90 52v8" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/></svg>',
-    hoodies: '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M36 34h48l10 16 18 6v38H28V56l18-6 10-16z" fill="#94a3b8" stroke="#475569" stroke-width="2"/><path d="M48 34c0-8 6-14 12-14s12 6 12 14" stroke="#475569" stroke-width="2"/></svg>',
-    jackets: '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M32 36h56l8 18v40H24V54l8-18z" fill="#64748b" stroke="#334155" stroke-width="2"/><path d="M60 36v58M44 54h32" stroke="#334155" stroke-width="2"/></svg>',
-    hats: '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="72" rx="38" ry="10" fill="#fcd34d" stroke="#d97706" stroke-width="2"/><path d="M28 72c0-22 14-38 32-38s32 16 32 38" fill="#fde68a" stroke="#d97706" stroke-width="2"/></svg>',
-    promo: '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="28" y="40" width="64" height="48" rx="6" fill="#86efac" stroke="#16a34a" stroke-width="2"/><path d="M36 40V32h48v8M44 58h32M44 70h24" stroke="#16a34a" stroke-width="2" stroke-linecap="round"/></svg>'
+    mainCategories: [
+      { key: "customize", slugs: ["customize", "custom"], label: "Customize" },
+      { key: "ready-made", slugs: ["ready-made", "ready-made-designs"], label: "Ready Made" },
+      { key: "featured", slugs: ["featured"], label: "Featured" }
+    ]
   };
 
   var root = document.getElementById("vibecanoHeroRoot");
@@ -971,51 +829,36 @@
   var registerLink = document.getElementById("roRegisterLink");
   var cartCountEl = document.getElementById("roCartCount");
   var categoryGridEl = document.getElementById("roCategoryGrid");
-  var collectionsMenuEl = document.getElementById("roCollectionsMenu");
-  var categoriesMenuEl = document.getElementById("roCategoriesMenu");
-  var customOrdersMenuEl = document.getElementById("roCustomOrdersMenu");
-  var newArrivalsLink = document.getElementById("roNewArrivalsLink");
-  var bestSellersLink = document.getElementById("roBestSellersLink");
-  var saleLink = document.getElementById("roSaleLink");
+  var navLinks = {
+    customize: document.getElementById("roNavCustomize"),
+    "ready-made": document.getElementById("roNavReadyMade"),
+    featured: document.getElementById("roNavFeatured")
+  };
+  var ctaReadyMade = document.getElementById("roCtaReadyMade");
+  var ctaFeatured = document.getElementById("roCtaFeatured");
 
-  if (loginLink) {
-    loginLink.href = CONFIG.loginUrl;
-  }
-
-  if (registerLink) {
-    registerLink.href = CONFIG.registerUrl;
-  }
-
-  if (userEl) {
-    userEl.href = CONFIG.accountUrl;
-  }
+  if (loginLink) loginLink.href = CONFIG.loginUrl;
+  if (registerLink) registerLink.href = CONFIG.registerUrl;
+  if (userEl) userEl.href = CONFIG.accountUrl;
 
   if (toggle && nav) {
     toggle.addEventListener("click", function () {
       nav.classList.toggle("is-open");
-    });
-
-    nav.addEventListener("click", function (event) {
-      var btn = event.target.closest(".ro-nav-trigger.has-submenu");
-      if (!btn || !window.matchMedia("(max-width: 860px)").matches) {
-        return;
-      }
-      event.preventDefault();
-      btn.parentElement.classList.toggle("is-open");
     });
   }
 
   renderCategorySkeletons();
   loadAccountState();
   loadCartCount();
-  loadCategories();
+  loadMainCategories();
 
-  function loadCategories() {
+  function loadMainCategories() {
     if (!window.fetch) {
+      renderFallbackCategories();
       return;
     }
 
-    fetch(CONFIG.categoriesEndpoint + "?per_page=100&hide_empty=true", { credentials: "same-origin" })
+    fetch(CONFIG.categoriesEndpoint + "?per_page=100", { credentials: "same-origin" })
       .then(function (response) {
         if (!response.ok) {
           throw new Error("Categories request failed");
@@ -1024,204 +867,48 @@
       })
       .then(function (categories) {
         var safeCategories = Array.isArray(categories) ? categories : [];
-        renderNavigationMenus(safeCategories);
-        renderHeroCategories(safeCategories);
-        bindQuickLinks(safeCategories);
+        var resolved = CONFIG.mainCategories.map(function (item) {
+          return resolveMainCategory(safeCategories, item);
+        }).filter(Boolean);
+
+        if (!resolved.length) {
+          renderFallbackCategories();
+          return;
+        }
+
+        renderCategoryCards(resolved);
+        bindNavLinks(resolved);
       })
       .catch(function () {
-        renderFallbackNavigation();
-        renderFallbackHeroCategories();
+        renderFallbackCategories();
       });
   }
 
-  function renderNavigationMenus(categories) {
-    renderSubmenu(collectionsMenuEl, getMenuCategories(categories, {
-      parentSlug: CONFIG.collectionsParentSlug,
-      slugs: CONFIG.collectionsSlugs
-    }));
+  function resolveMainCategory(categories, item) {
+    var category = null;
+    var i;
 
-    renderSubmenu(categoriesMenuEl, getMenuCategories(categories, {
-      slugs: CONFIG.navCategorySlugs,
-      fallbackTopLevel: true,
-      excludeSlugs: ["uncategorized", "collections", "custom-orders", "ready-made", "featured"]
-    }));
-
-    renderSubmenu(customOrdersMenuEl, getMenuCategories(categories, {
-      parentSlug: CONFIG.customOrdersParentSlug,
-      slugs: CONFIG.customOrdersSlugs
-    }));
-  }
-
-  function getMenuCategories(categories, options) {
-    var parentSlug = options.parentSlug;
-    var slugs = options.slugs || [];
-    var excludeSlugs = options.excludeSlugs || [];
-    var parentCategory = parentSlug ? findCategoryBySlug(categories, parentSlug) : null;
-    var matched = [];
-
-    if (parentCategory) {
-      matched = categories.filter(function (category) {
-        return Number(category.parent) === Number(parentCategory.id);
-      });
-    }
-
-    if (!matched.length && slugs.length) {
-      slugs.forEach(function (slug) {
-        var category = findCategoryBySlug(categories, slug);
-        if (category) {
-          matched.push(category);
-        }
-      });
-    }
-
-    if (!matched.length && options.fallbackTopLevel) {
-      matched = categories.filter(function (category) {
-        return Number(category.parent) === 0 && excludeSlugs.indexOf(category.slug) === -1;
-      });
-    }
-
-    return matched.sort(function (a, b) {
-      return String(a.name || "").localeCompare(String(b.name || ""));
-    });
-  }
-
-  function renderSubmenu(menuEl, categories) {
-    if (!menuEl) {
-      return;
-    }
-
-    if (!categories.length) {
-      menuEl.innerHTML = '<li><a href="' + escapeAttr(CONFIG.shopUrl) + '">Browse shop</a></li>';
-      return;
-    }
-
-    menuEl.innerHTML = categories.map(function (category) {
-      return '<li><a href="' + escapeAttr(getCategoryUrl(category)) + '">' + escapeHtml(category.name) + "</a></li>";
-    }).join("");
-  }
-
-  function bindQuickLinks(categories) {
-    setQuickLink(newArrivalsLink, CONFIG.quickLinks.newArrivals, categories);
-    setQuickLink(bestSellersLink, CONFIG.quickLinks.bestSellers, categories);
-    setQuickLink(saleLink, CONFIG.quickLinks.sale, categories);
-  }
-
-  function setQuickLink(linkEl, config, categories) {
-    if (!linkEl || !config) {
-      return;
-    }
-
-    var category = findCategoryBySlug(categories, config.slug);
-    linkEl.href = category ? getCategoryUrl(category) : config.fallback;
-  }
-
-  function renderHeroCategories(categories) {
-    if (!categoryGridEl) {
-      return;
-    }
-
-    var cards = CONFIG.heroCategories.map(function (item) {
-      return findCategoryBySlug(categories, item.slug);
-    }).filter(Boolean);
-
-    if (!cards.length) {
-      renderFallbackHeroCategories();
-      return;
-    }
-
-    categoryGridEl.innerHTML = CONFIG.heroCategories.map(function (item) {
-      var category = findCategoryBySlug(categories, item.slug);
-      if (!category) {
-        return "";
+    for (i = 0; i < item.slugs.length; i += 1) {
+      category = findCategoryBySlug(categories, item.slugs[i]);
+      if (category) {
+        break;
       }
-      return renderCategoryCard(category, item);
-    }).join("");
-  }
-
-  function renderCategoryCard(category, item) {
-    var url = escapeAttr(getCategoryUrl(category));
-    var name = escapeHtml(item.label || category.name || "Category");
-    var image = category.image && category.image.src ? category.image : null;
-    var imageHtml;
-
-    if (image && image.src) {
-      imageHtml = '<img src="' + escapeAttr(image.src) + '" alt="' + escapeAttr(image.alt || category.name || "Category") + '" loading="lazy" decoding="async">';
-    } else {
-      imageHtml = PLACEHOLDER_SVGS[item.placeholder] || PLACEHOLDER_SVGS.tees;
     }
 
-    return [
-      '<a href="' + url + '" class="ro-category">',
-        '<div class="ro-category-img ' + escapeAttr(item.style) + (image ? "" : " is-placeholder") + '" aria-hidden="true">',
-          imageHtml,
-        "</div>",
-        "<h3>" + name + "</h3>",
-      "</a>"
-    ].join("");
-  }
-
-  function renderCategorySkeletons() {
-    if (!categoryGridEl) {
-      return;
-    }
-
-    categoryGridEl.innerHTML = "";
-    for (var i = 0; i < 6; i += 1) {
-      categoryGridEl.innerHTML += '<div class="ro-category-skeleton" aria-hidden="true"></div>';
-    }
-  }
-
-  function renderFallbackNavigation() {
-    renderSubmenu(collectionsMenuEl, CONFIG.collectionsSlugs.map(slugToFallbackCategory));
-    renderSubmenu(categoriesMenuEl, CONFIG.navCategorySlugs.map(slugToFallbackCategory));
-    renderSubmenu(customOrdersMenuEl, CONFIG.customOrdersSlugs.map(slugToFallbackCategory));
-  }
-
-  function renderFallbackHeroCategories() {
-    if (!categoryGridEl) {
-      return;
-    }
-
-    categoryGridEl.innerHTML = CONFIG.heroCategories.map(function (item) {
-      return renderCategoryCard(slugToFallbackCategory(item.slug, item.label), item);
-    }).join("");
-  }
-
-  function slugToFallbackCategory(slug, label) {
-    return {
-      slug: slug,
-      name: label || slugToLabel(slug),
-      permalink: "/product-category/" + slug + "/"
-    };
-  }
-
-  function slugToLabel(slug) {
-    return String(slug || "")
-      .split("-")
-      .map(function (part) {
-        return part.charAt(0).toUpperCase() + part.slice(1);
-      })
-      .join(" ");
-  }
-
-  function findCategoryBySlug(categories, slug) {
-    if (!slug) {
+    if (!category) {
       return null;
     }
 
-    var exact = categories.filter(function (category) {
-      return category && category.slug === slug;
-    })[0];
+    return {
+      key: item.key,
+      label: item.label,
+      category: category
+    };
+  }
 
-    if (exact) {
-      return exact;
-    }
-
+  function findCategoryBySlug(categories, slug) {
     return categories.filter(function (category) {
-      if (!category || !category.slug) {
-        return false;
-      }
-      return category.slug.indexOf(slug) !== -1 || slug.indexOf(category.slug) !== -1;
+      return category && category.slug === slug;
     })[0] || null;
   }
 
@@ -1235,6 +922,86 @@
     }
 
     return CONFIG.shopUrl;
+  }
+
+  function renderCategoryCards(items) {
+    if (!categoryGridEl) {
+      return;
+    }
+
+    categoryGridEl.innerHTML = items.map(renderCategoryCard).join("");
+  }
+
+  function renderCategoryCard(item) {
+    var category = item.category;
+    var url = escapeAttr(getCategoryUrl(category));
+    var name = escapeHtml(item.label || category.name || "Category");
+    var image = category.image && category.image.src ? category.image : null;
+    var imageHtml;
+
+    if (image && image.src) {
+      imageHtml = '<img src="' + escapeAttr(image.src) + '" alt="' + escapeAttr(image.alt || category.name || item.label) + '" loading="lazy" decoding="async">';
+    } else {
+      imageHtml = '<div class="ro-category-fallback">' + escapeHtml((item.label || category.name || "VC").slice(0, 2)) + "</div>";
+    }
+
+    return [
+      '<a href="' + url + '" class="ro-category">',
+        '<div class="ro-category-img">',
+          imageHtml,
+        "</div>",
+        "<h3>" + name + "</h3>",
+      "</a>"
+    ].join("");
+  }
+
+  function bindNavLinks(items) {
+    items.forEach(function (item) {
+      var linkEl = navLinks[item.key];
+      var url = getCategoryUrl(item.category);
+
+      if (linkEl) {
+        linkEl.href = url;
+        linkEl.textContent = item.label || item.category.name;
+      }
+
+      if (item.key === "ready-made" && ctaReadyMade) {
+        ctaReadyMade.href = url;
+      }
+
+      if (item.key === "featured" && ctaFeatured) {
+        ctaFeatured.href = url;
+      }
+    });
+  }
+
+  function renderCategorySkeletons() {
+    if (!categoryGridEl) {
+      return;
+    }
+
+    categoryGridEl.innerHTML = "";
+    for (var i = 0; i < 3; i += 1) {
+      categoryGridEl.innerHTML += '<div class="ro-category-skeleton" aria-hidden="true"></div>';
+    }
+  }
+
+  function renderFallbackCategories() {
+    if (!categoryGridEl) {
+      return;
+    }
+
+    categoryGridEl.innerHTML = CONFIG.mainCategories.map(function (item) {
+      return renderCategoryCard({
+        key: item.key,
+        label: item.label,
+        category: {
+          name: item.label,
+          slug: item.slugs[0],
+          permalink: "/product-category/" + item.slugs[0] + "/"
+        }
+      });
+    }).join("");
   }
 
   function loadAccountState() {
@@ -1260,74 +1027,40 @@
   }
 
   function getDisplayName(user) {
-    if (!user) {
-      return "there";
-    }
-
-    if (user.first_name) {
-      return user.first_name;
-    }
-
-    if (user.name) {
-      return String(user.name).split(" ")[0];
-    }
-
-    if (user.slug) {
-      return user.slug;
-    }
-
+    if (!user) return "there";
+    if (user.first_name) return user.first_name;
+    if (user.name) return String(user.name).split(" ")[0];
+    if (user.slug) return user.slug;
     return "there";
   }
 
   function showGuest() {
-    if (loadingEl) {
-      loadingEl.hidden = true;
-    }
-    if (guestEl) {
-      guestEl.hidden = false;
-    }
-    if (userEl) {
-      userEl.hidden = true;
-    }
+    if (loadingEl) loadingEl.hidden = true;
+    if (guestEl) guestEl.hidden = false;
+    if (userEl) userEl.hidden = true;
   }
 
   function showUser() {
-    if (loadingEl) {
-      loadingEl.hidden = true;
-    }
-    if (guestEl) {
-      guestEl.hidden = true;
-    }
-    if (userEl) {
-      userEl.hidden = false;
-    }
+    if (loadingEl) loadingEl.hidden = true;
+    if (guestEl) guestEl.hidden = true;
+    if (userEl) userEl.hidden = false;
   }
 
   function loadCartCount() {
-    if (!window.fetch || !cartCountEl) {
-      return;
-    }
+    if (!window.fetch || !cartCountEl) return;
 
     fetch(CONFIG.cartEndpoint, { credentials: "same-origin" })
       .then(function (response) {
-        if (!response.ok) {
-          return null;
-        }
-        return response.json();
+        return response.ok ? response.json() : null;
       })
       .then(function (cart) {
-        if (!cart) {
-          return;
-        }
-
+        if (!cart) return;
         var count = Number(cart.items_count);
         if (Number.isFinite(count)) {
           cartCountEl.textContent = String(count);
         }
       })
-      .catch(function () {
-        /* Keep default cart count */
-      });
+      .catch(function () {});
   }
 
   function escapeHtml(value) {
