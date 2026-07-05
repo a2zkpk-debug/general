@@ -31,6 +31,7 @@
         /product-category/featured/
 
      The page reads the category slug from the URL automatically.
+     Includes subcategory + price range filters.
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -208,6 +209,191 @@
     color: #fff;
     box-shadow: 0 12px 24px -16px rgba(29, 155, 240, .8);
   }
+
+  /* Layout: filters + products */
+  .vc-cat-layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+  }
+
+  .vc-cat-filters {
+    position: sticky;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .vc-cat-filter-card {
+    padding: 16px;
+    border: 1px solid var(--vc-line);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 10px 30px -24px rgba(15, 23, 42, .2);
+  }
+
+  .vc-cat-filter-card h3 {
+    margin: 0 0 12px;
+    font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--vc-ink);
+  }
+
+  .vc-cat-subcats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .vc-cat-subcat-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--vc-line);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--vc-muted);
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition: all .18s ease;
+    font-family: inherit;
+  }
+
+  .vc-cat-subcat-btn:hover,
+  .vc-cat-subcat-btn.is-active {
+    border-color: var(--vc-brand);
+    background: rgba(29, 155, 240, .08);
+    color: var(--vc-brand);
+  }
+
+  .vc-cat-subcat-btn em {
+    font-style: normal;
+    font-size: 11px;
+    font-weight: 800;
+    opacity: .75;
+  }
+
+  .vc-cat-price-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .vc-cat-price-fields label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--vc-muted);
+  }
+
+  .vc-cat-price-fields input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--vc-line);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--vc-ink);
+    outline: none;
+    font-family: inherit;
+  }
+
+  .vc-cat-price-fields input:focus {
+    border-color: var(--vc-brand);
+    box-shadow: 0 0 0 3px rgba(29, 155, 240, .12);
+  }
+
+  .vc-cat-range-wrap {
+    margin-bottom: 12px;
+  }
+
+  .vc-cat-range-wrap input[type="range"] {
+    width: 100%;
+    accent-color: var(--vc-brand);
+    cursor: pointer;
+  }
+
+  .vc-cat-range-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--vc-muted);
+  }
+
+  .vc-cat-filter-actions {
+    display: grid;
+    gap: 8px;
+  }
+
+  .vc-cat-filter-actions button {
+    min-height: 40px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .18s ease;
+  }
+
+  .vc-cat-apply-btn {
+    border: 0;
+    background: var(--vc-ink);
+    color: #fff;
+  }
+
+  .vc-cat-apply-btn:hover { background: #1e293b; }
+
+  .vc-cat-clear-btn {
+    border: 1px solid var(--vc-line);
+    background: #fff;
+    color: var(--vc-muted);
+  }
+
+  .vc-cat-clear-btn:hover {
+    border-color: var(--vc-brand);
+    color: var(--vc-brand);
+  }
+
+  .vc-cat-filter-toggle {
+    display: none;
+    width: 100%;
+    min-height: 44px;
+    margin-bottom: 14px;
+    border: 1px solid var(--vc-line);
+    border-radius: 14px;
+    background: #fff;
+    color: var(--vc-ink);
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .vc-cat-no-subcats {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--vc-muted);
+    line-height: 1.5;
+  }
+
+  .vc-cat-main { min-width: 0; }
 
   /* Toolbar */
   .vc-cat-toolbar {
@@ -423,6 +609,16 @@
     to { background-position: -220% 0; }
   }
 
+  @media (max-width: 960px) {
+    .vc-cat-layout { grid-template-columns: 1fr; }
+    .vc-cat-filters {
+      position: static;
+      display: none;
+    }
+    .vc-cat-filters.is-open { display: flex; }
+    .vc-cat-filter-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  }
+
   @media (max-width: 1100px) {
     .vc-cat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
@@ -469,20 +665,58 @@
 
     <div class="vc-cat-pills" id="vcCatPills"></div>
 
-    <div class="vc-cat-toolbar">
-      <div class="vc-cat-count" id="vcCatCountLabel">Showing <em>0</em> products</div>
-      <select class="vc-cat-sort" id="vcCatSort" aria-label="Sort products">
-        <option value="popularity">Most Popular</option>
-        <option value="date">Newest</option>
-        <option value="price">Price: Low to High</option>
-        <option value="price-desc">Price: High to Low</option>
-      </select>
-    </div>
+    <button type="button" class="vc-cat-filter-toggle" id="vcCatFilterToggle">Show filters</button>
 
-    <div class="vc-cat-grid" id="vcCatGrid" aria-live="polite"></div>
+    <div class="vc-cat-layout">
+      <aside class="vc-cat-filters" id="vcCatFilters" aria-label="Product filters">
+        <div class="vc-cat-filter-card">
+          <h3>Subcategories</h3>
+          <div class="vc-cat-subcats" id="vcCatSubcats"></div>
+        </div>
 
-    <div class="vc-cat-loadmore" id="vcCatLoadMoreWrap" hidden>
-      <button type="button" id="vcCatLoadMore">Load more products</button>
+        <div class="vc-cat-filter-card">
+          <h3>Price Range</h3>
+          <div class="vc-cat-price-fields">
+            <label>
+              Min (Rs)
+              <input type="number" id="vcCatMinPrice" min="0" step="100" placeholder="0">
+            </label>
+            <label>
+              Max (Rs)
+              <input type="number" id="vcCatMaxPrice" min="0" step="100" placeholder="50000">
+            </label>
+          </div>
+          <div class="vc-cat-range-wrap">
+            <input type="range" id="vcCatMaxRange" min="0" max="50000" step="500" value="50000">
+            <div class="vc-cat-range-labels">
+              <span>Rs 0</span>
+              <span id="vcCatMaxRangeLabel">Rs 50,000</span>
+            </div>
+          </div>
+          <div class="vc-cat-filter-actions">
+            <button type="button" class="vc-cat-apply-btn" id="vcCatApplyFilters">Apply filters</button>
+            <button type="button" class="vc-cat-clear-btn" id="vcCatClearFilters">Clear filters</button>
+          </div>
+        </div>
+      </aside>
+
+      <div class="vc-cat-main">
+        <div class="vc-cat-toolbar">
+          <div class="vc-cat-count" id="vcCatCountLabel">Showing <em>0</em> products</div>
+          <select class="vc-cat-sort" id="vcCatSort" aria-label="Sort products">
+            <option value="popularity">Most Popular</option>
+            <option value="date">Newest</option>
+            <option value="price">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+          </select>
+        </div>
+
+        <div class="vc-cat-grid" id="vcCatGrid" aria-live="polite"></div>
+
+        <div class="vc-cat-loadmore" id="vcCatLoadMoreWrap" hidden>
+          <button type="button" id="vcCatLoadMore">Load more products</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -502,6 +736,8 @@
     slugAliases: {
       custom: "customize"
     },
+    priceMaxDefault: 50000,
+    currencyMinorUnit: 2,
     endpoints: {
       categories: "/wp-json/wc/store/v1/products/categories",
       products: "/wp-json/wc/store/v1/products"
@@ -511,10 +747,17 @@
   var state = {
     slug: getCategorySlugFromUrl(),
     categoryId: 0,
+    parentCategoryId: 0,
+    activeCategoryId: 0,
+    subcategoryId: 0,
+    minPrice: null,
+    maxPrice: null,
     sort: "popularity",
     page: 1,
     totalPages: 1,
-    totalProducts: 0
+    totalProducts: 0,
+    allCategories: [],
+    priceMinorUnit: CONFIG.currencyMinorUnit
   };
 
   var crumbCurrent = document.getElementById("vcCatCrumbCurrent");
@@ -525,6 +768,15 @@
   var catProductCount = document.getElementById("vcCatProductCount");
   var catCountLabel = document.getElementById("vcCatCountLabel");
   var pillsEl = document.getElementById("vcCatPills");
+  var subcatsEl = document.getElementById("vcCatSubcats");
+  var filtersEl = document.getElementById("vcCatFilters");
+  var filterToggleEl = document.getElementById("vcCatFilterToggle");
+  var minPriceEl = document.getElementById("vcCatMinPrice");
+  var maxPriceEl = document.getElementById("vcCatMaxPrice");
+  var maxRangeEl = document.getElementById("vcCatMaxRange");
+  var maxRangeLabelEl = document.getElementById("vcCatMaxRangeLabel");
+  var applyFiltersBtn = document.getElementById("vcCatApplyFilters");
+  var clearFiltersBtn = document.getElementById("vcCatClearFilters");
   var gridEl = document.getElementById("vcCatGrid");
   var sortEl = document.getElementById("vcCatSort");
   var loadMoreWrap = document.getElementById("vcCatLoadMoreWrap");
@@ -533,6 +785,8 @@
   if (!gridEl || !window.fetch) {
     return;
   }
+
+  setupFilterControls();
 
   sortEl.addEventListener("change", function () {
     state.sort = sortEl.value;
@@ -552,6 +806,100 @@
 
   init();
 
+  function setupFilterControls() {
+    if (maxRangeEl) {
+      maxRangeEl.max = String(CONFIG.priceMaxDefault);
+      maxRangeEl.value = String(CONFIG.priceMaxDefault);
+      updateMaxRangeLabel(CONFIG.priceMaxDefault);
+
+      maxRangeEl.addEventListener("input", function () {
+        var value = Number(maxRangeEl.value);
+        if (maxPriceEl) {
+          maxPriceEl.value = String(value);
+        }
+        updateMaxRangeLabel(value);
+      });
+    }
+
+    if (maxPriceEl) {
+      maxPriceEl.placeholder = String(CONFIG.priceMaxDefault);
+      maxPriceEl.addEventListener("input", function () {
+        if (!maxRangeEl) return;
+        var value = Number(maxPriceEl.value);
+        if (Number.isFinite(value)) {
+          maxRangeEl.value = String(Math.min(value, CONFIG.priceMaxDefault));
+          updateMaxRangeLabel(Number(maxRangeEl.value));
+        }
+      });
+    }
+
+    if (applyFiltersBtn) {
+      applyFiltersBtn.addEventListener("click", function () {
+        applyPriceFilters();
+        state.page = 1;
+        loadProducts(false);
+        closeMobileFilters();
+      });
+    }
+
+    if (clearFiltersBtn) {
+      clearFiltersBtn.addEventListener("click", function () {
+        clearAllFilters();
+        state.page = 1;
+        loadProducts(false);
+      });
+    }
+
+    if (filterToggleEl && filtersEl) {
+      filterToggleEl.addEventListener("click", function () {
+        var isOpen = filtersEl.classList.toggle("is-open");
+        filterToggleEl.textContent = isOpen ? "Hide filters" : "Show filters";
+      });
+    }
+  }
+
+  function applyPriceFilters() {
+    var minVal = minPriceEl ? Number(minPriceEl.value) : NaN;
+    var maxVal = maxPriceEl ? Number(maxPriceEl.value) : NaN;
+
+    state.minPrice = Number.isFinite(minVal) && minVal > 0 ? minVal : null;
+    state.maxPrice = Number.isFinite(maxVal) && maxVal > 0 ? maxVal : null;
+
+    if (state.minPrice !== null && state.maxPrice !== null && state.minPrice > state.maxPrice) {
+      var swap = state.minPrice;
+      state.minPrice = state.maxPrice;
+      state.maxPrice = swap;
+      if (minPriceEl) minPriceEl.value = String(state.minPrice);
+      if (maxPriceEl) maxPriceEl.value = String(state.maxPrice);
+    }
+  }
+
+  function clearAllFilters() {
+    state.subcategoryId = 0;
+    state.minPrice = null;
+    state.maxPrice = null;
+    if (minPriceEl) minPriceEl.value = "";
+    if (maxPriceEl) maxPriceEl.value = "";
+    if (maxRangeEl) {
+      maxRangeEl.value = String(CONFIG.priceMaxDefault);
+      updateMaxRangeLabel(CONFIG.priceMaxDefault);
+    }
+    renderSubcategoryFilters();
+  }
+
+  function updateMaxRangeLabel(value) {
+    if (maxRangeLabelEl) {
+      maxRangeLabelEl.textContent = "Rs " + Number(value).toLocaleString("en-PK");
+    }
+  }
+
+  function closeMobileFilters() {
+    if (filtersEl && window.matchMedia("(max-width: 960px)").matches) {
+      filtersEl.classList.remove("is-open");
+      if (filterToggleEl) filterToggleEl.textContent = "Show filters";
+    }
+  }
+
   function init() {
     renderSkeletons();
     renderMainPills();
@@ -562,12 +910,14 @@
     }
 
     fetchCategory()
-      .then(function (category) {
-        if (!category) {
+      .then(function (result) {
+        if (!result || !result.category) {
           showError("Category not found", "Could not find category slug: " + state.slug);
           return;
         }
-        renderCategoryHero(category);
+
+        renderCategoryHero(result.category);
+        renderSubcategoryFilters();
         state.page = 1;
         return loadProducts(false);
       })
@@ -598,6 +948,7 @@
       .then(checkResponse)
       .then(function (categories) {
         var list = categories || [];
+        state.allCategories = list;
         var match = findCategoryBySlug(list, state.slug);
 
         if (!match) {
@@ -612,10 +963,67 @@
 
         if (match && match.id) {
           state.categoryId = Number(match.id);
+          state.parentCategoryId = Number(match.id);
+          state.activeCategoryId = Number(match.id);
         }
 
-        return match || null;
+        return { category: match || null, categories: list };
       });
+  }
+
+  function getSubcategories() {
+    if (!state.parentCategoryId) {
+      return [];
+    }
+
+    return state.allCategories.filter(function (cat) {
+      return cat && Number(cat.parent) === Number(state.parentCategoryId);
+    }).sort(function (a, b) {
+      return String(a.name || "").localeCompare(String(b.name || ""));
+    });
+  }
+
+  function renderSubcategoryFilters() {
+    if (!subcatsEl) {
+      return;
+    }
+
+    var subcats = getSubcategories();
+
+    if (!subcats.length) {
+      subcatsEl.innerHTML = '<p class="vc-cat-no-subcats">No subcategories in this collection.</p>';
+      return;
+    }
+
+    var html = [
+      '<button type="button" class="vc-cat-subcat-btn' + (state.subcategoryId === 0 ? " is-active" : "") + '" data-subcat="0">',
+        "<span>All</span>",
+      "</button>"
+    ];
+
+    subcats.forEach(function (cat) {
+      var isActive = Number(state.subcategoryId) === Number(cat.id);
+      var count = Number(cat.count) || 0;
+      html.push(
+        '<button type="button" class="vc-cat-subcat-btn' + (isActive ? " is-active" : "") + '" data-subcat="' + cat.id + '">',
+          "<span>" + escapeHtml(cat.name) + "</span>",
+          "<em>" + count + "</em>",
+        "</button>"
+      );
+    });
+
+    subcatsEl.innerHTML = html.join("");
+
+    subcatsEl.querySelectorAll(".vc-cat-subcat-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        state.subcategoryId = Number(btn.getAttribute("data-subcat")) || 0;
+        state.activeCategoryId = state.subcategoryId || state.parentCategoryId;
+        state.page = 1;
+        renderSubcategoryFilters();
+        loadProducts(false);
+        closeMobileFilters();
+      });
+    });
   }
 
   function findCategoryBySlug(categories, slug) {
@@ -625,7 +1033,7 @@
   }
 
   function loadProducts(append) {
-    if (!state.categoryId) {
+    if (!state.activeCategoryId && !state.categoryId) {
       showError("Category not found", "No category ID for slug: " + state.slug);
       return Promise.resolve();
     }
@@ -660,6 +1068,10 @@
       .then(function (products) {
         var list = Array.isArray(products) ? products : [];
 
+        if (list.length && list[0].prices && Number.isFinite(Number(list[0].prices.currency_minor_unit))) {
+          state.priceMinorUnit = Number(list[0].prices.currency_minor_unit);
+        }
+
         if (append) {
           appendProducts(list);
         } else {
@@ -683,9 +1095,19 @@
 
   function buildProductsUrl() {
     var params = new URLSearchParams();
+    var categoryId = state.subcategoryId || state.activeCategoryId || state.categoryId;
+
     params.set("per_page", String(CONFIG.perPage));
     params.set("page", String(state.page));
-    params.set("category", String(state.categoryId));
+    params.set("category", String(categoryId));
+
+    if (state.minPrice !== null) {
+      params.set("min_price", String(toMinorUnits(state.minPrice, state.priceMinorUnit)));
+    }
+
+    if (state.maxPrice !== null) {
+      params.set("max_price", String(toMinorUnits(state.maxPrice, state.priceMinorUnit)));
+    }
 
     if (state.sort === "price" || state.sort === "price-desc") {
       params.set("orderby", "price");
@@ -699,6 +1121,11 @@
     }
 
     return CONFIG.endpoints.products + "?" + params.toString();
+  }
+
+  function toMinorUnits(amount, minorUnit) {
+    var decimals = Number.isFinite(minorUnit) ? minorUnit : 2;
+    return Math.round(Number(amount) * Math.pow(10, decimals));
   }
 
   function renderCategoryHero(category) {
@@ -747,7 +1174,7 @@
 
   function renderProducts(products) {
     if (!products.length) {
-      gridEl.innerHTML = '<div class="vc-cat-empty"><strong>No products yet</strong>Add products to this category in WooCommerce.</div>';
+      gridEl.innerHTML = '<div class="vc-cat-empty"><strong>No products found</strong>Try changing filters or subcategory.</div>';
       updateCountLabel(0);
       return;
     }
