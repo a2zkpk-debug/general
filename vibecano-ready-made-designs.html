@@ -585,8 +585,10 @@
     }
 
     event.preventDefault();
+    event.stopPropagation();
 
     var productId = Number(button.getAttribute("data-product-id"));
+    var productUrl = button.getAttribute("data-product-url") || "";
     var action = button.getAttribute("data-vc-rm-action");
 
     if (!productId || !action) {
@@ -594,53 +596,142 @@
     }
 
     if (action === "cart") {
-      handleAddToCart(button, productId);
+      handleAddToCart(button, productId, productUrl);
     } else if (action === "buy") {
-      handleBuyNow(button, productId);
+      handleBuyNow(button, productId, productUrl);
     }
   }
 
-  function handleAddToCart(button, productId) {
+  function handleAddToCart(button, productId, productUrl) {
     setButtonLoading(button, true);
 
     addProductToCart(productId)
       .then(function () {
-        window.location.href = CONFIG.homeUrl;
+        refreshCartFragments();
+        window.location.assign(CONFIG.homeUrl);
       })
-      .catch(function () {
-        window.location.href = CONFIG.homeUrl + "?add-to-cart=" + encodeURIComponent(productId);
+      .catch(function (error) {
+        if (error && error.needsProductPage && productUrl) {
+          window.location.assign(productUrl);
+          return;
+        }
+        submitAddToCartForm(productId, CONFIG.homeUrl);
       });
   }
 
-  function handleBuyNow(button, productId) {
+  function handleBuyNow(button, productId, productUrl) {
     setButtonLoading(button, true);
 
     addProductToCart(productId)
       .then(function () {
-        window.location.href = CONFIG.checkoutUrl;
+        refreshCartFragments();
+        window.location.assign(CONFIG.checkoutUrl);
       })
-      .catch(function () {
-        window.location.href = CONFIG.checkoutUrl + "?add-to-cart=" + encodeURIComponent(productId);
+      .catch(function (error) {
+        if (error && error.needsProductPage && productUrl) {
+          window.location.assign(productUrl);
+          return;
+        }
+        submitAddToCartForm(productId, CONFIG.checkoutUrl);
+      });
+  }
+
+  /* Method 1: WooCommerce wc-ajax (most reliable) */
+  function wcAjaxAddToCart(productId) {
+    var body = new URLSearchParams();
+    body.append("product_id", String(productId));
+    body.append("quantity", "1");
+
+    return fetch("/?wc-ajax=add_to_cart", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: body.toString()
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        if (!data) {
+          throw new Error("Empty cart response");
+        }
+
+        if (data.error) {
+          var err = new Error(data.error_message || "Add to cart failed");
+          err.needsProductPage = true;
+          err.productUrl = data.product_url || "";
+          throw err;
+        }
+
+        return data;
+      });
+  }
+
+  /* Method 2: Store API with session nonce */
+  function storeApiAddToCart(productId) {
+    return fetch("/wp-json/wc/store/v1/cart", {
+      credentials: "same-origin"
+    })
+      .then(function (response) {
+        var nonce = response.headers.get("Nonce") || response.headers.get("X-WC-Store-API-Nonce");
+        if (!nonce) {
+          throw new Error("Missing Store API nonce");
+        }
+        return fetch(CONFIG.endpoints.cartAdd, {
+          method: "POST",
+          credentials: "same-origin",
+          headers: {
+            "Content-Type": "application/json",
+            "Nonce": nonce,
+            "X-WC-Store-API-Nonce": nonce
+          },
+          body: JSON.stringify({
+            id: productId,
+            quantity: 1
+          })
+        });
+      })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("Store API add failed");
+        }
+        return response.json();
       });
   }
 
   function addProductToCart(productId) {
-    return fetch(CONFIG.endpoints.cartAdd, {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        id: productId,
-        quantity: 1
-      })
-    }).then(function (response) {
-      if (!response.ok) {
-        throw new Error("Add to cart failed");
+    return wcAjaxAddToCart(productId).catch(function (firstError) {
+      if (firstError && firstError.needsProductPage) {
+        throw firstError;
       }
-      return response.json();
+      return storeApiAddToCart(productId);
     });
+  }
+
+  /* Method 3: Native WooCommerce POST form (always works for simple products) */
+  function submitAddToCartForm(productId, redirectUrl) {
+    var form = document.createElement("form");
+    form.method = "post";
+    form.action = redirectUrl || CONFIG.homeUrl;
+    form.style.display = "none";
+
+    var input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "add-to-cart";
+    input.value = String(productId);
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit();
+  }
+
+  function refreshCartFragments() {
+    if (window.jQuery) {
+      window.jQuery(document.body).trigger("wc_fragment_refresh");
+    }
   }
 
   function setButtonLoading(button, isLoading) {
@@ -869,8 +960,8 @@
           description ? '<p class="vc-rm-desc">' + escapeHtml(description) + "</p>" : "",
           '<div class="vc-rm-price">' + formatPrice(product.prices) + "</div>",
           '<div class="vc-rm-btns">',
-            '<button type="button" class="vc-rm-btn cart" data-vc-rm-action="cart" data-product-id="' + productId + '">Add to Cart</button>',
-            '<button type="button" class="vc-rm-btn buy" data-vc-rm-action="buy" data-product-id="' + productId + '">Buy Now</button>',
+            '<button type="button" class="vc-rm-btn cart" data-vc-rm-action="cart" data-product-id="' + productId + '" data-product-url="' + productUrl + '">Add to Cart</button>',
+            '<button type="button" class="vc-rm-btn buy" data-vc-rm-action="buy" data-product-id="' + productId + '" data-product-url="' + productUrl + '">Buy Now</button>',
           "</div>",
         "</div>",
       "</article>"
