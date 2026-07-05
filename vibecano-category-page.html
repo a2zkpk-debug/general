@@ -2,36 +2,60 @@
      VIBECANO — CUSTOM PRODUCT CATEGORY PAGE
      Paste this whole file into an Elementor HTML widget.
 
-     HOW TO REPLACE DEFAULT WOOCOMMERCE CATEGORY PAGE
-     ────────────────────────────────────────────────
-     1. WordPress → Templates → Theme Builder (Elementor Pro)
-        OR edit the category page directly in Elementor.
+     HOW TO USE WITH ELEMENTOR (when Product Archive is already used for Shop)
+     ────────────────────────────────────────────────────────────────────────
 
-     2. Create / edit template: Product Archive OR Product Category.
+     You need TWO separate templates:
 
-     3. Set layout to Canvas or Full Width (no sidebar).
+     A) SHOP PAGE  (/shop/)           → keep your existing Product Archive template
+     B) CATEGORY PAGES (/product-category/ready-made/ etc.) → NEW template below
 
-     4. Hide default WooCommerce output:
-        • Delete the default WooCommerce widgets/blocks from the template
-        • OR add this Custom CSS in Elementor → Site Settings → Custom CSS:
+     STEP 1 — Fix your existing Shop template
+     • WordPress → Templates → Theme Builder
+     • Edit your current "Product Archive" template
+     • Click the wrench icon → Display Conditions
+     • Set condition to:  WooCommerce → Shop Page
+       (remove "All Product Archive" or "In Categories" if those are checked)
+     • Update
 
-          .woocommerce-products-header,
-          .woocommerce-result-count,
-          .woocommerce-ordering,
-          .products,
-          .woocommerce-pagination {
+     STEP 2 — Create the Category template
+     • Theme Builder → Archive → Add New
+     • Name it: Vibecano Category Page
+     • Click Create Template → choose a blank/canvas section
+     • Page Layout: Elementor Canvas (or Full Width, no sidebar)
+
+     STEP 3 — Add the custom category design
+     • Drag ONE "HTML" widget onto the page
+     • Paste THIS ENTIRE FILE into the HTML widget
+     • Remove any WooCommerce Archive / Products widgets if Elementor added them
+
+     STEP 4 — Set Display Conditions for the NEW template
+     • Publish → Display Conditions
+     • Add:  Archive → Product Archive → In Categories → All
+       (or pick only Customize, Ready Made, Featured)
+     • Make sure Shop Page is NOT included on this template
+     • Save
+
+     STEP 5 — Hide leftover default WooCommerce output (if any shows)
+     • Elementor → Site Settings → Custom CSS:
+
+          body.tax-product_cat .woocommerce-products-header,
+          body.tax-product_cat .woocommerce-result-count,
+          body.tax-product_cat .woocommerce-ordering,
+          body.tax-product_cat ul.products,
+          body.tax-product_cat .woocommerce-pagination {
             display: none !important;
           }
 
-     5. Add one HTML widget and paste THIS ENTIRE FILE.
+     STEP 6 — Test these URLs
+     • /shop/                          → your existing shop template
+     • /product-category/ready-made/   → new Vibecano category design
+     • /product-category/customize/
+     • /product-category/featured/
 
-     6. Save. Visit:
-        /product-category/customize/
-        /product-category/ready-made/
-        /product-category/featured/
-
-     The page reads the category slug from the URL automatically.
-     Includes subcategory + price range filters.
+     NOTE: Category template priority should be more specific than Shop.
+     If category pages still show the shop layout, edit conditions so
+     the Shop template = "Shop Page" ONLY and category template = "In Categories".
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
