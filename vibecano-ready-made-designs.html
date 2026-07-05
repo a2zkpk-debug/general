@@ -4,8 +4,8 @@
 
      Navigation:
      • Product image / name  → single product page
-     • Add to Cart           → adds product, returns to home page
-     • Buy Now               → adds product, goes to checkout
+     • Add to Cart           → adds product, goes to cart page
+     • Buy Now               → adds product, goes to checkout page
 
      Products must match required category + tag slugs in CONFIG.
      ============================================================ -->
@@ -536,7 +536,7 @@
       { slug: "all", label: "All Ready-Made" }
     ],
     perPage: 8,
-    homeUrl: "/",
+    cartUrl: "/cart/",
     checkoutUrl: "/checkout/",
     endpoints: {
       products: "/wp-json/wc/store/v1/products",
@@ -801,9 +801,8 @@
     var productName = escapeHtml(product.name || "Product");
     var productId = Number(product.id) || 0;
     var safeName = escapeAttr(product.name || "product");
-    var needsOptions = !!product.has_options;
-    var cartAction = needsOptions ? productUrl : escapeAttr(CONFIG.homeUrl);
-    var buyAction = needsOptions ? productUrl : escapeAttr(CONFIG.checkoutUrl);
+    var cartAction = escapeAttr(CONFIG.cartUrl);
+    var buyAction = escapeAttr(CONFIG.checkoutUrl);
 
     return [
       '<article class="vc-rm-card">',
