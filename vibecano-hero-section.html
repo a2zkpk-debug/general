@@ -8,6 +8,8 @@
      • Featured
 
      Each card uses the real WooCommerce category image + link.
+     • Guest: Login + Register
+     • Logged in: Assalam O Alikum with user name
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -243,7 +245,13 @@
   }
 
   .vibecano-hero-root .ro-account-user:hover strong { color: var(--brand); }
-  .vibecano-hero-root .ro-account-loading { font-size: 11px; color: var(--slate); }
+
+  .vibecano-hero-root .ro-account-user strong {
+    max-width: 148px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
 
   .vibecano-hero-root .ro-cart-badge {
     display: inline-grid;
@@ -759,14 +767,12 @@
 
         <div class="ro-action ro-action-account" id="roAccountAction">
           <span class="ic">👤</span>
-          <span class="ro-account-loading" id="roAccountLoading">Account</span>
-          <div class="ro-account-guest" id="roAccountGuest" hidden>
+          <div class="ro-account-guest" id="roAccountGuest">
             <strong><a id="roLoginLink" href="/my-account/">Login</a></strong>
             <small><a id="roRegisterLink" href="/my-account/?action=register">Register</a></small>
           </div>
           <a class="ro-account-user" id="roAccountUser" href="/my-account/" hidden>
-            <strong id="roAccountGreeting">Hello</strong>
-            <small>My account</small>
+            <strong id="roAccountGreeting"></strong>
           </a>
         </div>
 
@@ -879,7 +885,7 @@
 
   var toggle = document.getElementById("roMenuToggle");
   var nav = document.getElementById("roNavLinks");
-  var loadingEl = document.getElementById("roAccountLoading");
+  var loadingEl = null;
   var guestEl = document.getElementById("roAccountGuest");
   var userEl = document.getElementById("roAccountUser");
   var greetingEl = document.getElementById("roAccountGreeting");
@@ -1081,7 +1087,7 @@
         return response.json();
       })
       .then(function (user) {
-        greetingEl.textContent = "Hello, " + getDisplayName(user);
+        greetingEl.textContent = "Assalam O Alikum, " + getDisplayName(user);
         showUser();
       })
       .catch(function () {
@@ -1098,13 +1104,11 @@
   }
 
   function showGuest() {
-    if (loadingEl) loadingEl.hidden = true;
     if (guestEl) guestEl.hidden = false;
     if (userEl) userEl.hidden = true;
   }
 
   function showUser() {
-    if (loadingEl) loadingEl.hidden = true;
     if (guestEl) guestEl.hidden = true;
     if (userEl) userEl.hidden = false;
   }
