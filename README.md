@@ -14,13 +14,23 @@ Use the `vibecano-featured-products.php` plugin to load products dynamically fro
    `wp-content/plugins/vibecano-featured-products/vibecano-featured-products.php`
 2. In WordPress admin, go to **Plugins** and activate **Vibecano Featured Products**.
 
-### Use in Elementor
+### Use in Elementor (recommended)
 
-Replace your entire static HTML block with this single line in the Elementor **HTML** widget:
+**Best option:** use the built-in Elementor widget (most reliable):
+
+1. Edit your page in Elementor
+2. Search the widget panel for **Vibecano Featured Products**
+3. Drag it onto the page
+4. Delete the old static HTML widget
+5. Click **Update**
+
+**Alternative:** use a **Shortcode** widget (not HTML widget) with:
 
 ```html
 [vibecano_featured_products]
 ```
+
+The HTML widget often shows the shortcode as plain text instead of running it.
 
 ### Mark products as featured
 
@@ -61,3 +71,13 @@ If you want **every new product** to appear without marking it featured:
 ```
 
 This shows the 4 most recently published products.
+
+## Troubleshooting
+
+| What you see | Fix |
+|---|---|
+| Plain text `[vibecano_featured_products]` on the page | Use the **Vibecano Featured Products** Elementor widget, or a **Shortcode** widget — not an HTML widget |
+| Old hardcoded products still showing | Delete the old HTML widget entirely and add the new widget |
+| Empty section | Publish products in WooCommerce and set a product image. The plugin now falls back to newest products if none are marked Featured |
+| Yellow admin notice | Read the message while logged in as admin — it explains what is missing |
+| Changes not visible | Clear cache: Elementor → Tools → Regenerate CSS, plus any caching plugin (LiteSpeed, WP Rocket, etc.) |
