@@ -172,7 +172,7 @@
   .vibecano-hero-root .ro-search { flex: 1; max-width: 480px; position: relative; }
   .vibecano-hero-root .ro-search input {
     width: 100%;
-    padding: 12px 16px 12px 42px;
+    padding: 12px 92px 12px 42px;
     border: 1px solid #cbd5e1;
     border-radius: 999px;
     font-size: 14px;
@@ -185,6 +185,27 @@
     border-color: var(--brand);
     box-shadow: 0 0 0 3px rgba(29, 155, 240, .12);
     background: #fff;
+  }
+
+  .vibecano-hero-root .ro-search-btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    min-height: 36px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .vibecano-hero-root .ro-search-btn:hover {
+    background: #1e293b;
   }
 
   .vibecano-hero-root .ro-search::before {
@@ -745,9 +766,10 @@
         </span>
       </a>
 
-      <form class="ro-search" id="roSearchForm" action="/" method="get" role="search">
-        <input type="search" name="s" id="roSearchInput" placeholder="Search hoodies, tees, caps..." aria-label="Search products" autocomplete="off">
+      <form class="ro-search" action="/" method="get" role="search">
+        <input type="search" name="s" placeholder="Search hoodies, tees, caps..." aria-label="Search products" required>
         <input type="hidden" name="post_type" value="product">
+        <button type="submit" class="ro-search-btn">Search</button>
       </form>
 
       <div class="ro-actions">
@@ -894,8 +916,6 @@
   var registerLink = document.getElementById("roRegisterLink");
   var cartCountEl = document.getElementById("roCartCount");
   var categoryGridEl = document.getElementById("roCategoryGrid");
-  var searchFormEl = document.getElementById("roSearchForm");
-  var searchInputEl = document.getElementById("roSearchInput");
   var navLinks = {
     customize: document.getElementById("roNavCustomize"),
     "ready-made": document.getElementById("roNavReadyMade"),
@@ -911,22 +931,6 @@
   if (toggle && nav) {
     toggle.addEventListener("click", function () {
       nav.classList.toggle("is-open");
-    });
-  }
-
-  if (searchFormEl && searchInputEl) {
-    searchFormEl.addEventListener("submit", function (event) {
-      var value = searchInputEl.value.trim();
-      if (!value) {
-        event.preventDefault();
-        return;
-      }
-
-      event.preventDefault();
-      var params = new URLSearchParams();
-      params.set("s", value);
-      params.set("post_type", "product");
-      window.location.assign("/?" + params.toString());
     });
   }
 
