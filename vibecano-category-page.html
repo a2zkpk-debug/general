@@ -1,0 +1,1320 @@
+<!-- ============================================================
+     VIBECANO — CUSTOM PRODUCT CATEGORY PAGE
+     Paste this whole file into an Elementor HTML widget.
+
+     HOW TO USE WITH ELEMENTOR (when Product Archive is already used for Shop)
+     ────────────────────────────────────────────────────────────────────────
+
+     You need TWO separate templates:
+
+     A) SHOP PAGE  (/shop/)           → keep your existing Product Archive template
+     B) CATEGORY PAGES (/product-category/ready-made/ etc.) → NEW template below
+
+     STEP 1 — Fix your existing Shop template
+     • WordPress → Templates → Theme Builder
+     • Edit your current "Product Archive" template
+     • Click the wrench icon → Display Conditions
+     • Set condition to:  WooCommerce → Shop Page
+       (remove "All Product Archive" or "In Categories" if those are checked)
+     • Update
+
+     STEP 2 — Create the Category template
+     • Theme Builder → Archive → Add New
+     • Name it: Vibecano Category Page
+     • Click Create Template → choose a blank/canvas section
+     • Page Layout: Elementor Canvas (or Full Width, no sidebar)
+
+     STEP 3 — Add the custom category design
+     • Drag ONE "HTML" widget onto the page
+     • Paste THIS ENTIRE FILE into the HTML widget
+     • Remove any WooCommerce Archive / Products widgets if Elementor added them
+
+     STEP 4 — Set Display Conditions for the NEW template
+     • Publish → Display Conditions
+     • Add:  Archive → Product Archive → In Categories → All
+       (or pick only Customize, Ready Made, Featured)
+     • Make sure Shop Page is NOT included on this template
+     • Save
+
+     STEP 5 — Hide leftover default WooCommerce output (if any shows)
+     • Elementor → Site Settings → Custom CSS:
+
+          body.tax-product_cat .woocommerce-products-header,
+          body.tax-product_cat .woocommerce-result-count,
+          body.tax-product_cat .woocommerce-ordering,
+          body.tax-product_cat ul.products,
+          body.tax-product_cat .woocommerce-pagination {
+            display: none !important;
+          }
+
+     STEP 6 — Test these URLs
+     • /shop/                          → your existing shop template
+     • /product-category/ready-made/   → new Vibecano category design
+     • /product-category/customize/
+     • /product-category/featured/
+
+     NOTE: Category template priority should be more specific than Shop.
+     If category pages still show the shop layout, edit conditions so
+     the Shop template = "Shop Page" ONLY and category template = "In Categories".
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  .vc-cat-root {
+    --vc-ink: #0b1220;
+    --vc-muted: #64748b;
+    --vc-line: #e2e8f0;
+    --vc-brand: #1d9bf0;
+    --vc-accent: #f97316;
+    --vc-bg: #f8fafc;
+    --vc-shadow: 0 24px 60px -34px rgba(15, 23, 42, 0.55);
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    color: var(--vc-ink);
+    background: var(--vc-bg);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .vc-cat-root *, .vc-cat-root *::before, .vc-cat-root *::after { box-sizing: border-box; }
+  .vc-cat-root a { text-decoration: none; color: inherit; }
+  .vc-cat-root img { display: block; max-width: 100%; }
+
+  .vc-cat-wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+
+  /* Breadcrumb */
+  .vc-cat-crumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 18px 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--vc-muted);
+  }
+
+  .vc-cat-crumb a:hover { color: var(--vc-brand); }
+  .vc-cat-crumb span.sep { opacity: .45; }
+
+  /* Hero banner */
+  .vc-cat-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 280px;
+    margin-bottom: 28px;
+    border-radius: 28px;
+    border: 1px solid rgba(226, 232, 240, .9);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    box-shadow: var(--vc-shadow);
+  }
+
+  .vc-cat-hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transform: scale(1.02);
+    transition: transform .6s ease;
+  }
+
+  .vc-cat-hero:hover .vc-cat-hero-bg { transform: scale(1.06); }
+
+  .vc-cat-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgba(15, 23, 42, .88) 0%, rgba(15, 23, 42, .55) 55%, rgba(15, 23, 42, .25) 100%),
+      linear-gradient(0deg, rgba(15, 23, 42, .35), transparent 50%);
+  }
+
+  .vc-cat-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    min-height: 280px;
+    padding: 32px;
+  }
+
+  .vc-cat-hero-copy { max-width: 620px; }
+
+  .vc-cat-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.16);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  .vc-cat-kicker::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--vc-accent);
+  }
+
+  .vc-cat-title {
+    margin: 0 0 10px;
+    font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -.04em;
+    color: #fff;
+  }
+
+  .vc-cat-desc {
+    margin: 0 0 16px;
+    color: rgba(255,255,255,.82);
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 540px;
+  }
+
+  .vc-cat-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .vc-cat-meta span {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.14);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* Main category pills */
+  .vc-cat-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  .vc-cat-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: 999px;
+    border: 1px solid var(--vc-line);
+    background: #fff;
+    color: var(--vc-muted);
+    font-size: 13px;
+    font-weight: 800;
+    transition: all .2s ease;
+  }
+
+  .vc-cat-pill:hover,
+  .vc-cat-pill.is-active {
+    border-color: var(--vc-brand);
+    background: var(--vc-brand);
+    color: #fff;
+    box-shadow: 0 12px 24px -16px rgba(29, 155, 240, .8);
+  }
+
+  /* Layout: filters + products */
+  .vc-cat-layout {
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 22px;
+    align-items: start;
+  }
+
+  .vc-cat-filters {
+    position: sticky;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .vc-cat-filter-card {
+    padding: 16px;
+    border: 1px solid var(--vc-line);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 10px 30px -24px rgba(15, 23, 42, .2);
+  }
+
+  .vc-cat-filter-card h3 {
+    margin: 0 0 12px;
+    font-family: 'Plus Jakarta Sans', Inter, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--vc-ink);
+  }
+
+  .vc-cat-subcats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .vc-cat-subcat-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--vc-line);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--vc-muted);
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition: all .18s ease;
+    font-family: inherit;
+  }
+
+  .vc-cat-subcat-btn:hover,
+  .vc-cat-subcat-btn.is-active {
+    border-color: var(--vc-brand);
+    background: rgba(29, 155, 240, .08);
+    color: var(--vc-brand);
+  }
+
+  .vc-cat-subcat-btn em {
+    font-style: normal;
+    font-size: 11px;
+    font-weight: 800;
+    opacity: .75;
+  }
+
+  .vc-cat-price-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .vc-cat-price-fields label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--vc-muted);
+  }
+
+  .vc-cat-price-fields input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--vc-line);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--vc-ink);
+    outline: none;
+    font-family: inherit;
+  }
+
+  .vc-cat-price-fields input:focus {
+    border-color: var(--vc-brand);
+    box-shadow: 0 0 0 3px rgba(29, 155, 240, .12);
+  }
+
+  .vc-cat-range-wrap {
+    margin-bottom: 12px;
+  }
+
+  .vc-cat-range-wrap input[type="range"] {
+    width: 100%;
+    accent-color: var(--vc-brand);
+    cursor: pointer;
+  }
+
+  .vc-cat-range-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--vc-muted);
+  }
+
+  .vc-cat-filter-actions {
+    display: grid;
+    gap: 8px;
+  }
+
+  .vc-cat-filter-actions button {
+    min-height: 40px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .18s ease;
+  }
+
+  .vc-cat-apply-btn {
+    border: 0;
+    background: var(--vc-ink);
+    color: #fff;
+  }
+
+  .vc-cat-apply-btn:hover { background: #1e293b; }
+
+  .vc-cat-clear-btn {
+    border: 1px solid var(--vc-line);
+    background: #fff;
+    color: var(--vc-muted);
+  }
+
+  .vc-cat-clear-btn:hover {
+    border-color: var(--vc-brand);
+    color: var(--vc-brand);
+  }
+
+  .vc-cat-filter-toggle {
+    display: none;
+    width: 100%;
+    min-height: 44px;
+    margin-bottom: 14px;
+    border: 1px solid var(--vc-line);
+    border-radius: 14px;
+    background: #fff;
+    color: var(--vc-ink);
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .vc-cat-no-subcats {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--vc-muted);
+    line-height: 1.5;
+  }
+
+  .vc-cat-main { min-width: 0; }
+
+  /* Toolbar */
+  .vc-cat-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 22px;
+    padding: 14px 16px;
+    border: 1px solid var(--vc-line);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 10px 30px -24px rgba(15, 23, 42, .25);
+  }
+
+  .vc-cat-count {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--vc-ink);
+  }
+
+  .vc-cat-count em {
+    font-style: normal;
+    color: var(--vc-brand);
+  }
+
+  .vc-cat-sort {
+    min-width: 180px;
+    padding: 10px 36px 10px 14px;
+    border: 1px solid var(--vc-line);
+    border-radius: 12px;
+    background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%2364748b' d='M1.41.59 6 5.17 10.59.59 12 2l-6 6-6-6z'/></svg>") no-repeat right 13px center;
+    color: var(--vc-ink);
+    font-size: 13px;
+    font-weight: 700;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+
+  /* Grid */
+  .vc-cat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .vc-cat-card {
+    overflow: hidden;
+    border: 1px solid rgba(226, 232, 240, .95);
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 16px 40px -32px rgba(15, 23, 42, .85);
+    transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .vc-cat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(29, 155, 240, .28);
+    box-shadow: 0 24px 60px -34px rgba(15, 23, 42, .95);
+  }
+
+  .vc-cat-img {
+    position: relative;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  }
+
+  .vc-cat-img a { display: block; width: 100%; height: 100%; }
+
+  .vc-cat-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .4s ease;
+  }
+
+  .vc-cat-card:hover .vc-cat-img img { transform: scale(1.07); }
+
+  .vc-cat-sale {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: var(--vc-accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+
+  .vc-cat-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .vc-cat-name {
+    display: -webkit-box;
+    overflow: hidden;
+    min-height: 42px;
+    margin-bottom: 8px;
+    color: var(--vc-ink);
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.35;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .vc-cat-name:hover { color: var(--vc-brand); }
+
+  .vc-cat-price {
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .vc-cat-price del {
+    margin-right: 7px;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .vc-cat-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  .vc-cat-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 800;
+    transition: transform .18s ease, background .18s ease;
+  }
+
+  .vc-cat-btn:hover { transform: translateY(-1px); }
+  .vc-cat-btn.cart { background: #0f172a; color: #fff; }
+  .vc-cat-btn.cart:hover { background: #1e293b; }
+  .vc-cat-btn.buy { background: var(--vc-accent); color: #fff; }
+  .vc-cat-btn.buy:hover { background: #ea580c; }
+
+  .vc-cat-skeleton {
+    aspect-ratio: 1/1.45;
+    border-radius: 22px;
+    background:
+      linear-gradient(90deg, transparent, rgba(255,255,255,.78), transparent),
+      rgba(226, 232, 240, .65);
+    background-size: 220% 100%;
+    animation: vc-cat-shimmer 1.35s linear infinite;
+  }
+
+  .vc-cat-empty,
+  .vc-cat-error {
+    grid-column: 1 / -1;
+    padding: 40px 20px;
+    border: 1px dashed rgba(148, 163, 184, .55);
+    border-radius: 22px;
+    background: #fff;
+    text-align: center;
+    color: var(--vc-muted);
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .vc-cat-empty strong,
+  .vc-cat-error strong {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--vc-ink);
+    font-size: 18px;
+  }
+
+  .vc-cat-loadmore {
+    display: flex;
+    justify-content: center;
+    margin-top: 28px;
+  }
+
+  .vc-cat-loadmore button {
+    min-height: 46px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--vc-ink);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease;
+  }
+
+  .vc-cat-loadmore button:hover { background: #1e293b; transform: translateY(-1px); }
+  .vc-cat-loadmore button:disabled { opacity: .55; cursor: wait; }
+
+  @keyframes vc-cat-shimmer {
+    to { background-position: -220% 0; }
+  }
+
+  @media (max-width: 960px) {
+    .vc-cat-layout { grid-template-columns: 1fr; }
+    .vc-cat-filters {
+      position: static;
+      display: none;
+    }
+    .vc-cat-filters.is-open { display: flex; }
+    .vc-cat-filter-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  }
+
+  @media (max-width: 1100px) {
+    .vc-cat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 800px) {
+    .vc-cat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .vc-cat-hero-inner { padding: 24px; min-height: 240px; }
+    .vc-cat-toolbar { align-items: stretch; flex-direction: column; }
+    .vc-cat-sort { width: 100%; max-width: none; }
+  }
+
+  @media (max-width: 480px) {
+    .vc-cat-wrap { padding: 0 14px 44px; }
+    .vc-cat-grid { grid-template-columns: 1fr; }
+    .vc-cat-btns { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="vc-cat-root" id="vcCatRoot">
+  <div class="vc-cat-wrap">
+    <nav class="vc-cat-crumb" id="vcCatCrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="sep">/</span>
+      <a href="/shop/">Shop</a>
+      <span class="sep">/</span>
+      <span id="vcCatCrumbCurrent">Category</span>
+    </nav>
+
+    <section class="vc-cat-hero" id="vcCatHero">
+      <div class="vc-cat-hero-bg" id="vcCatHeroBg"></div>
+      <div class="vc-cat-hero-overlay"></div>
+      <div class="vc-cat-hero-inner">
+        <div class="vc-cat-hero-copy">
+          <span class="vc-cat-kicker" id="vcCatKicker">Collection</span>
+          <h1 class="vc-cat-title" id="vcCatTitle">Loading...</h1>
+          <p class="vc-cat-desc" id="vcCatDesc"></p>
+          <div class="vc-cat-meta">
+            <span id="vcCatProductCount">0 products</span>
+            <span>Free shipping Rs. 5,000+</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="vc-cat-pills" id="vcCatPills"></div>
+
+    <button type="button" class="vc-cat-filter-toggle" id="vcCatFilterToggle">Show filters</button>
+
+    <div class="vc-cat-layout">
+      <aside class="vc-cat-filters" id="vcCatFilters" aria-label="Product filters">
+        <div class="vc-cat-filter-card">
+          <h3>Subcategories</h3>
+          <div class="vc-cat-subcats" id="vcCatSubcats"></div>
+        </div>
+
+        <div class="vc-cat-filter-card">
+          <h3>Price Range</h3>
+          <div class="vc-cat-price-fields">
+            <label>
+              Min (Rs)
+              <input type="number" id="vcCatMinPrice" min="0" step="100" placeholder="0">
+            </label>
+            <label>
+              Max (Rs)
+              <input type="number" id="vcCatMaxPrice" min="0" step="100" placeholder="50000">
+            </label>
+          </div>
+          <div class="vc-cat-range-wrap">
+            <input type="range" id="vcCatMaxRange" min="0" max="50000" step="500" value="50000">
+            <div class="vc-cat-range-labels">
+              <span>Rs 0</span>
+              <span id="vcCatMaxRangeLabel">Rs 50,000</span>
+            </div>
+          </div>
+          <div class="vc-cat-filter-actions">
+            <button type="button" class="vc-cat-apply-btn" id="vcCatApplyFilters">Apply filters</button>
+            <button type="button" class="vc-cat-clear-btn" id="vcCatClearFilters">Clear filters</button>
+          </div>
+        </div>
+      </aside>
+
+      <div class="vc-cat-main">
+        <div class="vc-cat-toolbar">
+          <div class="vc-cat-count" id="vcCatCountLabel">Showing <em>0</em> products</div>
+          <select class="vc-cat-sort" id="vcCatSort" aria-label="Sort products">
+            <option value="popularity">Most Popular</option>
+            <option value="date">Newest</option>
+            <option value="price">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+          </select>
+        </div>
+
+        <div class="vc-cat-grid" id="vcCatGrid" aria-live="polite"></div>
+
+        <div class="vc-cat-loadmore" id="vcCatLoadMoreWrap" hidden>
+          <button type="button" id="vcCatLoadMore">Load more products</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var CONFIG = {
+    shopUrl: "/shop/",
+    perPage: 12,
+    mainCategories: [
+      { slug: "customize", label: "Customize" },
+      { slug: "ready-made", label: "Ready Made" },
+      { slug: "featured", label: "Featured" }
+    ],
+    slugAliases: {
+      custom: "customize"
+    },
+    priceMaxDefault: 50000,
+    currencyMinorUnit: 2,
+    endpoints: {
+      categories: "/wp-json/wc/store/v1/products/categories",
+      products: "/wp-json/wc/store/v1/products"
+    }
+  };
+
+  var state = {
+    slug: getCategorySlugFromUrl(),
+    categoryId: 0,
+    parentCategoryId: 0,
+    activeCategoryId: 0,
+    subcategoryId: 0,
+    minPrice: null,
+    maxPrice: null,
+    sort: "popularity",
+    page: 1,
+    totalPages: 1,
+    totalProducts: 0,
+    allCategories: [],
+    priceMinorUnit: CONFIG.currencyMinorUnit
+  };
+
+  var crumbCurrent = document.getElementById("vcCatCrumbCurrent");
+  var heroBg = document.getElementById("vcCatHeroBg");
+  var catTitle = document.getElementById("vcCatTitle");
+  var catDesc = document.getElementById("vcCatDesc");
+  var catKicker = document.getElementById("vcCatKicker");
+  var catProductCount = document.getElementById("vcCatProductCount");
+  var catCountLabel = document.getElementById("vcCatCountLabel");
+  var pillsEl = document.getElementById("vcCatPills");
+  var subcatsEl = document.getElementById("vcCatSubcats");
+  var filtersEl = document.getElementById("vcCatFilters");
+  var filterToggleEl = document.getElementById("vcCatFilterToggle");
+  var minPriceEl = document.getElementById("vcCatMinPrice");
+  var maxPriceEl = document.getElementById("vcCatMaxPrice");
+  var maxRangeEl = document.getElementById("vcCatMaxRange");
+  var maxRangeLabelEl = document.getElementById("vcCatMaxRangeLabel");
+  var applyFiltersBtn = document.getElementById("vcCatApplyFilters");
+  var clearFiltersBtn = document.getElementById("vcCatClearFilters");
+  var gridEl = document.getElementById("vcCatGrid");
+  var sortEl = document.getElementById("vcCatSort");
+  var loadMoreWrap = document.getElementById("vcCatLoadMoreWrap");
+  var loadMoreBtn = document.getElementById("vcCatLoadMore");
+
+  if (!gridEl || !window.fetch) {
+    return;
+  }
+
+  setupFilterControls();
+
+  sortEl.addEventListener("change", function () {
+    state.sort = sortEl.value;
+    state.page = 1;
+    loadProducts(false);
+  });
+
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener("click", function () {
+      if (state.page >= state.totalPages) {
+        return;
+      }
+      state.page += 1;
+      loadProducts(true);
+    });
+  }
+
+  init();
+
+  function setupFilterControls() {
+    if (maxRangeEl) {
+      maxRangeEl.max = String(CONFIG.priceMaxDefault);
+      maxRangeEl.value = String(CONFIG.priceMaxDefault);
+      updateMaxRangeLabel(CONFIG.priceMaxDefault);
+
+      maxRangeEl.addEventListener("input", function () {
+        var value = Number(maxRangeEl.value);
+        if (maxPriceEl) {
+          maxPriceEl.value = String(value);
+        }
+        updateMaxRangeLabel(value);
+      });
+    }
+
+    if (maxPriceEl) {
+      maxPriceEl.placeholder = String(CONFIG.priceMaxDefault);
+      maxPriceEl.addEventListener("input", function () {
+        if (!maxRangeEl) return;
+        var value = Number(maxPriceEl.value);
+        if (Number.isFinite(value)) {
+          maxRangeEl.value = String(Math.min(value, CONFIG.priceMaxDefault));
+          updateMaxRangeLabel(Number(maxRangeEl.value));
+        }
+      });
+    }
+
+    if (applyFiltersBtn) {
+      applyFiltersBtn.addEventListener("click", function () {
+        applyPriceFilters();
+        state.page = 1;
+        loadProducts(false);
+        closeMobileFilters();
+      });
+    }
+
+    if (clearFiltersBtn) {
+      clearFiltersBtn.addEventListener("click", function () {
+        clearAllFilters();
+        state.page = 1;
+        loadProducts(false);
+      });
+    }
+
+    if (filterToggleEl && filtersEl) {
+      filterToggleEl.addEventListener("click", function () {
+        var isOpen = filtersEl.classList.toggle("is-open");
+        filterToggleEl.textContent = isOpen ? "Hide filters" : "Show filters";
+      });
+    }
+  }
+
+  function applyPriceFilters() {
+    var minVal = minPriceEl ? Number(minPriceEl.value) : NaN;
+    var maxVal = maxPriceEl ? Number(maxPriceEl.value) : NaN;
+
+    state.minPrice = Number.isFinite(minVal) && minVal > 0 ? minVal : null;
+    state.maxPrice = Number.isFinite(maxVal) && maxVal > 0 ? maxVal : null;
+
+    if (state.minPrice !== null && state.maxPrice !== null && state.minPrice > state.maxPrice) {
+      var swap = state.minPrice;
+      state.minPrice = state.maxPrice;
+      state.maxPrice = swap;
+      if (minPriceEl) minPriceEl.value = String(state.minPrice);
+      if (maxPriceEl) maxPriceEl.value = String(state.maxPrice);
+    }
+  }
+
+  function clearAllFilters() {
+    state.subcategoryId = 0;
+    state.minPrice = null;
+    state.maxPrice = null;
+    if (minPriceEl) minPriceEl.value = "";
+    if (maxPriceEl) maxPriceEl.value = "";
+    if (maxRangeEl) {
+      maxRangeEl.value = String(CONFIG.priceMaxDefault);
+      updateMaxRangeLabel(CONFIG.priceMaxDefault);
+    }
+    renderSubcategoryFilters();
+  }
+
+  function updateMaxRangeLabel(value) {
+    if (maxRangeLabelEl) {
+      maxRangeLabelEl.textContent = "Rs " + Number(value).toLocaleString("en-PK");
+    }
+  }
+
+  function closeMobileFilters() {
+    if (filtersEl && window.matchMedia("(max-width: 960px)").matches) {
+      filtersEl.classList.remove("is-open");
+      if (filterToggleEl) filterToggleEl.textContent = "Show filters";
+    }
+  }
+
+  function init() {
+    renderSkeletons();
+    renderMainPills();
+
+    if (!state.slug) {
+      showError("Category not found", "Open a product category URL like /product-category/ready-made/");
+      return;
+    }
+
+    fetchCategory()
+      .then(function (result) {
+        if (!result || !result.category) {
+          showError("Category not found", "Could not find category slug: " + state.slug);
+          return;
+        }
+
+        renderCategoryHero(result.category);
+        renderSubcategoryFilters();
+        state.page = 1;
+        return loadProducts(false);
+      })
+      .catch(function () {
+        showError("Something went wrong", "Please refresh the page or check the WooCommerce Store API.");
+      });
+  }
+
+  function getCategorySlugFromUrl() {
+    var path = window.location.pathname.replace(/\/+$/, "");
+    var parts = path.split("/").filter(Boolean);
+    var index = parts.indexOf("product-category");
+    var slug = "";
+
+    if (index !== -1 && parts[index + 1]) {
+      slug = parts[index + 1];
+    }
+
+    if (CONFIG.slugAliases[slug]) {
+      slug = CONFIG.slugAliases[slug];
+    }
+
+    return slug;
+  }
+
+  function fetchCategory() {
+    return fetch(CONFIG.endpoints.categories + "?per_page=100", { credentials: "same-origin" })
+      .then(checkResponse)
+      .then(function (categories) {
+        var list = categories || [];
+        state.allCategories = list;
+        var match = findCategoryBySlug(list, state.slug);
+
+        if (!match) {
+          Object.keys(CONFIG.slugAliases || {}).some(function (alias) {
+            if (CONFIG.slugAliases[alias] === state.slug) {
+              match = findCategoryBySlug(list, alias);
+              return !!match;
+            }
+            return false;
+          });
+        }
+
+        if (match && match.id) {
+          state.categoryId = Number(match.id);
+          state.parentCategoryId = Number(match.id);
+          state.activeCategoryId = Number(match.id);
+        }
+
+        return { category: match || null, categories: list };
+      });
+  }
+
+  function getSubcategories() {
+    if (!state.parentCategoryId) {
+      return [];
+    }
+
+    return state.allCategories.filter(function (cat) {
+      return cat && Number(cat.parent) === Number(state.parentCategoryId);
+    }).sort(function (a, b) {
+      return String(a.name || "").localeCompare(String(b.name || ""));
+    });
+  }
+
+  function renderSubcategoryFilters() {
+    if (!subcatsEl) {
+      return;
+    }
+
+    var subcats = getSubcategories();
+
+    if (!subcats.length) {
+      subcatsEl.innerHTML = '<p class="vc-cat-no-subcats">No subcategories in this collection.</p>';
+      return;
+    }
+
+    var html = [
+      '<button type="button" class="vc-cat-subcat-btn' + (state.subcategoryId === 0 ? " is-active" : "") + '" data-subcat="0">',
+        "<span>All</span>",
+      "</button>"
+    ];
+
+    subcats.forEach(function (cat) {
+      var isActive = Number(state.subcategoryId) === Number(cat.id);
+      var count = Number(cat.count) || 0;
+      html.push(
+        '<button type="button" class="vc-cat-subcat-btn' + (isActive ? " is-active" : "") + '" data-subcat="' + cat.id + '">',
+          "<span>" + escapeHtml(cat.name) + "</span>",
+          "<em>" + count + "</em>",
+        "</button>"
+      );
+    });
+
+    subcatsEl.innerHTML = html.join("");
+
+    subcatsEl.querySelectorAll(".vc-cat-subcat-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        state.subcategoryId = Number(btn.getAttribute("data-subcat")) || 0;
+        state.activeCategoryId = state.subcategoryId || state.parentCategoryId;
+        state.page = 1;
+        renderSubcategoryFilters();
+        loadProducts(false);
+        closeMobileFilters();
+      });
+    });
+  }
+
+  function findCategoryBySlug(categories, slug) {
+    return categories.filter(function (cat) {
+      return cat && cat.slug === slug;
+    })[0] || null;
+  }
+
+  function loadProducts(append) {
+    if (!state.activeCategoryId && !state.categoryId) {
+      showError("Category not found", "No category ID for slug: " + state.slug);
+      return Promise.resolve();
+    }
+
+    if (!append) {
+      renderSkeletons();
+    } else if (loadMoreBtn) {
+      loadMoreBtn.disabled = true;
+    }
+
+    return fetch(buildProductsUrl(), { credentials: "same-origin" })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("Request failed: " + response.status);
+        }
+
+        var total = Number(response.headers.get("X-WP-Total"));
+        var totalPages = Number(response.headers.get("X-WP-TotalPages"));
+
+        if (Number.isFinite(total)) {
+          state.totalProducts = total;
+        }
+
+        if (Number.isFinite(totalPages)) {
+          state.totalPages = totalPages;
+        } else {
+          state.totalPages = state.page;
+        }
+
+        return response.json();
+      })
+      .then(function (products) {
+        var list = Array.isArray(products) ? products : [];
+
+        if (list.length && list[0].prices && Number.isFinite(Number(list[0].prices.currency_minor_unit))) {
+          state.priceMinorUnit = Number(list[0].prices.currency_minor_unit);
+        }
+
+        if (append) {
+          appendProducts(list);
+        } else {
+          renderProducts(list);
+        }
+
+        updateCountLabel(append ? gridEl.querySelectorAll(".vc-cat-card").length : list.length);
+        updateLoadMore();
+      })
+      .catch(function () {
+        if (!append) {
+          showError("Products could not load", "Please refresh or try again later.");
+        }
+      })
+      .then(function () {
+        if (loadMoreBtn) {
+          loadMoreBtn.disabled = false;
+        }
+      });
+  }
+
+  function buildProductsUrl() {
+    var params = new URLSearchParams();
+    var categoryId = state.subcategoryId || state.activeCategoryId || state.categoryId;
+
+    params.set("per_page", String(CONFIG.perPage));
+    params.set("page", String(state.page));
+    params.set("category", String(categoryId));
+
+    if (state.minPrice !== null) {
+      params.set("min_price", String(toMinorUnits(state.minPrice, state.priceMinorUnit)));
+    }
+
+    if (state.maxPrice !== null) {
+      params.set("max_price", String(toMinorUnits(state.maxPrice, state.priceMinorUnit)));
+    }
+
+    if (state.sort === "price" || state.sort === "price-desc") {
+      params.set("orderby", "price");
+      params.set("order", state.sort === "price-desc" ? "desc" : "asc");
+    } else if (state.sort === "date") {
+      params.set("orderby", "date");
+      params.set("order", "desc");
+    } else {
+      params.set("orderby", "popularity");
+      params.set("order", "desc");
+    }
+
+    return CONFIG.endpoints.products + "?" + params.toString();
+  }
+
+  function toMinorUnits(amount, minorUnit) {
+    var decimals = Number.isFinite(minorUnit) ? minorUnit : 2;
+    return Math.round(Number(amount) * Math.pow(10, decimals));
+  }
+
+  function renderCategoryHero(category) {
+    var name = category.name || slugToLabel(state.slug);
+    var desc = stripHtml(category.description || "");
+    var count = Number(category.count) || 0;
+    var image = category.image && category.image.src ? category.image.src : "";
+
+    if (crumbCurrent) crumbCurrent.textContent = name;
+    if (catTitle) catTitle.textContent = name;
+    if (catKicker) catKicker.textContent = "Vibecano Collection";
+    if (catDesc) catDesc.textContent = desc || "Explore premium apparel in the " + name + " collection.";
+    if (catProductCount) catProductCount.textContent = count + (count === 1 ? " product" : " products");
+    if (heroBg && image) {
+      heroBg.style.backgroundImage = "url('" + image.replace(/'/g, "\\'") + "')";
+    }
+
+    document.title = name + " | Vibecano";
+    highlightActivePill();
+  }
+
+  function renderMainPills() {
+    if (!pillsEl) return;
+
+    pillsEl.innerHTML = CONFIG.mainCategories.map(function (item) {
+      var active = item.slug === state.slug ? " is-active" : "";
+      return '<a class="vc-cat-pill' + active + '" href="/product-category/' + escapeAttr(item.slug) + '/">' + escapeHtml(item.label) + "</a>";
+    }).join("");
+  }
+
+  function highlightActivePill() {
+    if (!pillsEl) return;
+    Array.prototype.forEach.call(pillsEl.children, function (pill) {
+      var href = pill.getAttribute("href") || "";
+      var isActive = href.indexOf("/" + state.slug + "/") !== -1;
+      pill.classList.toggle("is-active", isActive);
+    });
+  }
+
+  function renderSkeletons() {
+    gridEl.innerHTML = "";
+    for (var i = 0; i < 8; i += 1) {
+      gridEl.innerHTML += '<div class="vc-cat-skeleton" aria-hidden="true"></div>';
+    }
+  }
+
+  function renderProducts(products) {
+    if (!products.length) {
+      gridEl.innerHTML = '<div class="vc-cat-empty"><strong>No products found</strong>Try changing filters or subcategory.</div>';
+      updateCountLabel(0);
+      return;
+    }
+
+    gridEl.innerHTML = products.map(renderProductCard).join("");
+    updateCountLabel(products.length);
+  }
+
+  function appendProducts(products) {
+    if (!products.length) {
+      updateLoadMore();
+      return;
+    }
+
+    gridEl.insertAdjacentHTML("beforeend", products.map(renderProductCard).join(""));
+    updateCountLabel(gridEl.querySelectorAll(".vc-cat-card").length);
+  }
+
+  function renderProductCard(product) {
+    var image = product.images && product.images.length ? product.images[0] : null;
+    var productUrl = escapeAttr(product.permalink || "#");
+    var name = escapeHtml(product.name || "Product");
+    var safeName = escapeAttr(product.name || "Product");
+    var onSale = product.on_sale || (product.prices && product.prices.sale_price && product.prices.regular_price !== product.prices.sale_price);
+
+    return [
+      '<article class="vc-cat-card">',
+        '<div class="vc-cat-img">',
+          onSale ? '<span class="vc-cat-sale">Sale</span>' : "",
+          '<a href="' + productUrl + '" aria-label="View ' + safeName + '">',
+            image && image.src
+              ? '<img src="' + escapeAttr(image.src) + '" alt="' + escapeAttr(image.alt || product.name || "Product") + '" loading="lazy" decoding="async">'
+              : "",
+          "</a>",
+        "</div>",
+        '<div class="vc-cat-body">',
+          '<a class="vc-cat-name" href="' + productUrl + '">' + name + "</a>",
+          '<div class="vc-cat-price">' + formatPrice(product.prices) + "</div>",
+          '<div class="vc-cat-btns">',
+            '<a class="vc-cat-btn cart" href="' + productUrl + '">Add to Cart</a>',
+            '<a class="vc-cat-btn buy" href="' + productUrl + '">Buy Now</a>',
+          "</div>",
+        "</div>",
+      "</article>"
+    ].join("");
+  }
+
+  function updateCountLabel(count) {
+    var total = state.totalProducts || count;
+    if (catCountLabel) {
+      catCountLabel.innerHTML = "Showing <em>" + count + "</em> of <em>" + total + "</em> products";
+    }
+  }
+
+  function updateLoadMore() {
+    if (!loadMoreWrap || !loadMoreBtn) return;
+    var hasMore = state.page < state.totalPages;
+    loadMoreWrap.hidden = !hasMore;
+    loadMoreBtn.disabled = !hasMore;
+  }
+
+  function showError(title, body) {
+    gridEl.innerHTML = '<div class="vc-cat-error"><strong>' + escapeHtml(title) + "</strong>" + escapeHtml(body) + "</div>";
+    if (catTitle) catTitle.textContent = title;
+    updateCountLabel(0);
+  }
+
+  function checkResponse(response) {
+    if (!response.ok) throw new Error("Request failed: " + response.status);
+    return response.json();
+  }
+
+  function formatPrice(prices) {
+    if (!prices || !prices.price) return "";
+    var regular = prices.regular_price;
+    var sale = prices.sale_price;
+    if (regular && sale && regular !== sale) {
+      return "<del>" + escapeHtml(formatMoney(prices, regular)) + "</del>" + escapeHtml(formatMoney(prices, sale));
+    }
+    return escapeHtml(formatMoney(prices, prices.price));
+  }
+
+  function formatMoney(prices, value) {
+    var minorUnit = Number(prices.currency_minor_unit);
+    var decimals = Number.isFinite(minorUnit) ? minorUnit : 2;
+    var amount = Number.parseInt(value, 10);
+    if (!Number.isFinite(amount)) return "";
+    var symbol = prices.currency_prefix || prices.currency_symbol || "";
+    var suffix = prices.currency_suffix || "";
+    var dec = prices.currency_decimal_separator || ".";
+    var thou = prices.currency_thousand_separator || ",";
+    var num = (amount / Math.pow(10, decimals)).toFixed(decimals).split(".");
+    num[0] = num[0].replace(/\B(?=(\d{3})+(?!\d))/g, thou);
+    return symbol + num.join(dec) + suffix;
+  }
+
+  function slugToLabel(slug) {
+    return String(slug || "").split("-").map(function (p) {
+      return p.charAt(0).toUpperCase() + p.slice(1);
+    }).join(" ");
+  }
+
+  function stripHtml(value) {
+    var node = document.createElement("div");
+    node.innerHTML = String(value || "");
+    return (node.textContent || node.innerText || "").replace(/\s+/g, " ").trim();
+  }
+
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function escapeAttr(value) {
+    return escapeHtml(value).replace(/`/g, "&#96;");
+  }
+})();
+</script>

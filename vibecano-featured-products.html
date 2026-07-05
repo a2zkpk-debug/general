@@ -1,0 +1,413 @@
+<!-- ============================================================
+     VIBECANO — FEATURED PRODUCT SHOWCASE
+     Paste into Elementor HTML widget.
+
+     • Loads products from the "Featured" category
+     • Desktop: 12 products (4 cols × 3 rows)
+     • Tablet:  12 products (3 cols × 4 rows)
+     • Mobile:   8 products (2 cols × 4 rows)
+
+     Assign products to Products → Categories → Featured.
+     ============================================================ -->
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap");
+
+  .vc-featured-cats,
+  .vc-featured-cats * { box-sizing: border-box; }
+
+  .vc-featured-cats {
+    position: relative;
+    overflow: hidden;
+    padding: 86px 20px;
+    background:
+      radial-gradient(circle at 12% 10%, rgba(249, 115, 22, 0.13), transparent 28%),
+      radial-gradient(circle at 90% 8%, rgba(37, 99, 235, 0.12), transparent 30%),
+      linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+    color: #0f172a;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    isolation: isolate;
+  }
+
+  .vc-featured-cats::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.16) 1px, transparent 1px);
+    background-size: 34px 34px;
+    mask-image: linear-gradient(to bottom, black, transparent 78%);
+  }
+
+  .vc-featured-cats-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  .vc-featured-cats-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 24px;
+    margin-bottom: 34px;
+  }
+
+  .vc-featured-cats-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 12px;
+    padding: 8px 13px;
+    border: 1px solid rgba(37, 99, 235, 0.16);
+    border-radius: 999px;
+    background: rgba(219, 234, 254, 0.88);
+    color: #1d4ed8;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .vc-featured-cats-kicker::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #2563eb;
+    box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.12);
+  }
+
+  .vc-featured-cats-title {
+    max-width: 720px;
+    margin: 0;
+    font-family: "Plus Jakarta Sans", Inter, sans-serif;
+    font-size: clamp(30px, 4vw, 46px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+  }
+
+  .vc-featured-cats-sub {
+    max-width: 610px;
+    margin: 12px 0 0;
+    color: #64748b;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.7;
+  }
+
+  .vc-featured-cats-shop {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 18px;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 999px;
+    background: #fff;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 900;
+    text-decoration: none;
+    box-shadow: 0 18px 38px -28px rgba(15, 23, 42, 0.65);
+    transition: transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    white-space: nowrap;
+  }
+
+  .vc-featured-cats-shop:hover,
+  .vc-featured-cats-shop:focus-visible {
+    border-color: rgba(37, 99, 235, 0.36);
+    color: #2563eb;
+    transform: translateY(-2px);
+  }
+
+  .vc-featured-cats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .vc-featured-cats-loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 48px 20px;
+    color: #64748b;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .vc-featured-cat {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    min-height: 280px;
+    aspect-ratio: 4 / 5;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: 28px;
+    background: #0f172a;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 26px 60px -42px rgba(15, 23, 42, 0.95);
+    isolation: isolate;
+    transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+  }
+
+  .vc-featured-cat:hover,
+  .vc-featured-cat:focus-visible {
+    border-color: rgba(37, 99, 235, 0.34);
+    box-shadow: 0 34px 76px -44px rgba(15, 23, 42, 1);
+    transform: translateY(-7px);
+  }
+
+  .vc-featured-cat img {
+    position: absolute;
+    inset: 0;
+    z-index: -3;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: saturate(1.05) contrast(1.04);
+    transition: transform 0.55s ease, filter 0.55s ease;
+  }
+
+  .vc-featured-cat:hover img,
+  .vc-featured-cat:focus-visible img {
+    filter: saturate(1.14) contrast(1.08);
+    transform: scale(1.08);
+  }
+
+  .vc-featured-cat::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      linear-gradient(to top, rgba(2, 6, 23, 0.88), rgba(2, 6, 23, 0.28) 48%, rgba(2, 6, 23, 0.02)),
+      radial-gradient(circle at top right, rgba(249, 115, 22, 0.2), transparent 34%);
+  }
+
+  .vc-featured-cat::after {
+    content: "";
+    position: absolute;
+    inset: 14px;
+    z-index: -1;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 22px;
+    pointer-events: none;
+  }
+
+  .vc-featured-cat-name {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 22px;
+    font-family: "Plus Jakarta Sans", Inter, sans-serif;
+    font-size: clamp(18px, 1.8vw, 24px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    text-shadow: 0 18px 34px rgba(0, 0, 0, 0.38);
+  }
+
+  @media (max-width: 980px) {
+    .vc-featured-cats-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .vc-featured-cat {
+      min-height: 240px;
+      border-radius: 24px;
+    }
+
+    .vc-featured-cat::after {
+      inset: 12px;
+      border-radius: 18px;
+    }
+
+    .vc-featured-cat-name {
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      font-size: clamp(16px, 2vw, 20px);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .vc-featured-cats { padding: 62px 16px; }
+
+    .vc-featured-cats-head {
+      grid-template-columns: 1fr;
+      margin-bottom: 26px;
+    }
+
+    .vc-featured-cats-shop { width: 100%; }
+
+    .vc-featured-cats-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .vc-featured-cat {
+      min-height: 200px;
+      border-radius: 20px;
+      aspect-ratio: 4 / 4.6;
+    }
+
+    .vc-featured-cat::after {
+      inset: 10px;
+      border-radius: 14px;
+    }
+
+    .vc-featured-cat-name {
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      font-size: clamp(13px, 3.6vw, 17px);
+    }
+  }
+</style>
+
+<section class="vc-featured-cats">
+  <div class="vc-featured-cats-inner">
+
+    <div class="vc-featured-cats-head">
+      <div>
+        <span class="vc-featured-cats-kicker">Featured products</span>
+        <h2 class="vc-featured-cats-title">Fresh styles made for your vibe.</h2>
+        <p class="vc-featured-cats-sub">A clean, visual showcase of selected Vibecano products with premium imagery and direct product discovery.</p>
+      </div>
+      <a class="vc-featured-cats-shop" href="/shop/">View full shop</a>
+    </div>
+
+    <div class="vc-featured-cats-grid" id="vc-featured-cats-grid">
+      <p class="vc-featured-cats-loading">Loading featured products&hellip;</p>
+    </div>
+
+  </div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+
+  var grid = document.getElementById("vc-featured-cats-grid");
+  if (!grid) return;
+
+  var DESKTOP_COUNT  = 12;
+  var MOBILE_COUNT   = 8;
+  var MOBILE_BREAK   = window.matchMedia("(max-width: 720px)");
+  var API_BASE       = "/wp-json/wc/store/v1/products";
+  var CATEGORY_SLUG  = "featured"; /* WooCommerce category slug — change if yours differs */
+  var PLACEHOLDER    = "https://vibecano.com/wp-content/uploads/woocommerce-placeholder-324x324.png";
+
+  var featuredProducts = [];
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function productLimit() {
+    return MOBILE_BREAK.matches ? MOBILE_COUNT : DESKTOP_COUNT;
+  }
+
+  function fetchJson(url) {
+    return fetch(url).then(function (res) {
+      if (!res.ok) throw new Error("Request failed");
+      return res.json();
+    });
+  }
+
+  function categoryProductsUrl() {
+    return API_BASE + "?category=" + encodeURIComponent(CATEGORY_SLUG) + "&per_page=100&orderby=date&order=desc";
+  }
+
+  function starredProductsUrl() {
+    return API_BASE + "?featured=true&per_page=100&orderby=date&order=desc";
+  }
+
+  function mergeProducts(primary, secondary) {
+    var seen = {};
+    var merged = [];
+
+    [primary, secondary].forEach(function (list) {
+      if (!Array.isArray(list)) return;
+
+      list.forEach(function (product) {
+        if (!product || !product.id || seen[product.id]) return;
+        seen[product.id] = true;
+        merged.push(product);
+      });
+    });
+
+    return merged;
+  }
+
+  function productCard(product) {
+    var img  = (product.images && product.images[0]) || {};
+    var src  = img.src || PLACEHOLDER;
+    var alt  = img.alt || product.name;
+    var url  = product.permalink || "#";
+    var name = product.name || "Product";
+
+    return (
+      '<a class="vc-featured-cat" href="' + escapeHtml(url) + '">' +
+        '<img src="' + escapeHtml(src) + '" alt="' + escapeHtml(alt) + '" loading="lazy">' +
+        '<span class="vc-featured-cat-name">' + escapeHtml(name) + '</span>' +
+      '</a>'
+    );
+  }
+
+  function showMessage(html) {
+    grid.innerHTML = '<p class="vc-featured-cats-loading">' + html + '</p>';
+  }
+
+  function render() {
+    if (!featuredProducts.length) {
+      showMessage('No products found in the <strong>Featured</strong> category. Assign products to Products &rarr; Categories &rarr; Featured.');
+      return;
+    }
+
+    grid.innerHTML = featuredProducts
+      .slice(0, productLimit())
+      .map(productCard)
+      .join("");
+  }
+
+  function init() {
+    fetchJson(categoryProductsUrl())
+      .then(function (categoryProducts) {
+        if (Array.isArray(categoryProducts) && categoryProducts.length) {
+          return categoryProducts;
+        }
+        return fetchJson(starredProductsUrl());
+      })
+      .then(function (products) {
+        featuredProducts = Array.isArray(products) ? products : [];
+        render();
+      })
+      .catch(function () {
+        showMessage("Unable to load featured products. Please refresh the page.");
+      });
+  }
+
+  function onBreakpointChange() {
+    if (featuredProducts.length) render();
+  }
+
+  if (MOBILE_BREAK.addEventListener) {
+    MOBILE_BREAK.addEventListener("change", onBreakpointChange);
+  } else if (MOBILE_BREAK.addListener) {
+    MOBILE_BREAK.addListener(onBreakpointChange);
+  }
+
+  init();
+})();
+</script>
