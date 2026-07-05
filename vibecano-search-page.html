@@ -552,30 +552,39 @@
     ],
     endpoints: {
       products: "/wp-json/wc/store/v1/products"
-    }
+    },
+    searchBase: "/"
   };
 
   var state = {
-    query: getSearchQuery(),
+    query: "",
     sort: "popularity",
     page: 1,
     totalPages: 1,
-    totalProducts: 0
+    totalProducts: 0,
+    usingFallback: false
   };
 
-  var titleEl = document.getElementById("vcSearchTitle");
-  var subEl = document.getElementById("vcSearchSub");
-  var crumbEl = document.getElementById("vcSearchCrumbCurrent");
-  var inputEl = document.getElementById("vcSearchInput");
-  var chipsEl = document.getElementById("vcSearchChips");
-  var countEl = document.getElementById("vcSearchCount");
-  var gridEl = document.getElementById("vcSearchGrid");
-  var sortEl = document.getElementById("vcSearchSort");
-  var formEl = document.getElementById("vcSearchForm");
-  var loadMoreWrap = document.getElementById("vcSearchLoadMoreWrap");
-  var loadMoreBtn = document.getElementById("vcSearchLoadMore");
+  state.query = getSearchQuery();
 
-  if (!gridEl || !window.fetch) {
+  var root = document.getElementById("vcSearchRoot");
+  if (!root || !window.fetch) {
+    return;
+  }
+
+  var titleEl = root.querySelector("#vcSearchTitle");
+  var subEl = root.querySelector("#vcSearchSub");
+  var crumbEl = root.querySelector("#vcSearchCrumbCurrent");
+  var inputEl = root.querySelector("#vcSearchInput");
+  var chipsEl = root.querySelector("#vcSearchChips");
+  var countEl = root.querySelector("#vcSearchCount");
+  var gridEl = root.querySelector("#vcSearchGrid");
+  var sortEl = root.querySelector("#vcSearchSort");
+  var formEl = root.querySelector("#vcSearchForm");
+  var loadMoreWrap = root.querySelector("#vcSearchLoadMoreWrap");
+  var loadMoreBtn = root.querySelector("#vcSearchLoadMore");
+
+  if (!gridEl || !formEl || !inputEl) {
     return;
   }
 
@@ -590,8 +599,9 @@
   sortEl.addEventListener("change", function () {
     state.sort = sortEl.value;
     state.page = 1;
+    state.usingFallback = false;
     if (state.query) {
-      loadResults(false);
+      loadResults(false, true);
     }
   });
 
@@ -605,66 +615,20 @@
 
   if (formEl) {
     formEl.addEventListener("submit", function (event) {
-      event.preventDefault();
       var value = inputEl ? inputEl.value.trim() : "";
-      if (!value) return;
-      runSearch(value);
+      if (!value) {
+        event.preventDefault();
+      }
     });
   }
-
-  if (chipsEl) {
-    chipsEl.addEventListener("click", function (event) {
-      var chip = event.target.closest(".vc-search-chip");
-      if (!chip) return;
-      event.preventDefault();
-      runSearch(chip.textContent.trim());
-    });
-  }
-
-  window.addEventListener("popstate", function () {
-    state.query = getSearchQuery();
-    if (inputEl) inputEl.value = state.query;
-    updateHeroCopy();
-    if (state.query) {
-      state.page = 1;
-      renderSkeletons();
-      loadResults(false);
-    } else {
-      renderEmptyPrompt();
-    }
-  });
 
   init();
 
-  function runSearch(query) {
-    state.query = String(query || "").trim();
-    state.page = 1;
-
-    if (inputEl) {
-      inputEl.value = state.query;
-    }
-
-    updateBrowserUrl(state.query);
-    updateHeroCopy();
-
-    if (!state.query) {
-      renderEmptyPrompt();
-      return;
-    }
-
-    renderSkeletons();
-    loadResults(false);
-  }
-
-  function updateBrowserUrl(query) {
-    try {
-      var url = new URL(window.location.href);
-      url.searchParams.set("s", query);
-      url.searchParams.set("post_type", "product");
-      window.history.pushState({ vcSearch: query }, "", url.toString());
-    } catch (error) {
-      /* Ignore URL update errors */
-    }
+  function getSearchPageUrl(query) {
+    var params = new URLSearchParams();
+    params.set("s", String(query || "").trim());
+    params.set("post_type", "product");
+    return CONFIG.searchBase + "?" + params.toString();
   }
 
   function init() {
@@ -672,8 +636,14 @@
       renderEmptyPrompt();
       return;
     }
+
+    if (inputEl) {
+      inputEl.value = state.query;
+    }
+
+    updateHeroCopy();
     renderSkeletons();
-    loadResults(false);
+    loadResults(false, true);
   }
 
   function getSearchQuery() {
@@ -731,49 +701,123 @@
     chipsEl.innerHTML = [
       '<span class="vc-search-chips-label">Popular:</span>'
     ].concat(CONFIG.popularSearches.map(function (term) {
-      return '<a class="vc-search-chip" href="/?s=' + encodeURIComponent(term) + '&post_type=product">' + escapeHtml(term) + "</a>";
+      return '<a class="vc-search-chip" href="' + escapeAttr(getSearchPageUrl(term)) + '">' + escapeHtml(term) + "</a>";
     })).join("");
   }
 
-  function loadResults(append) {
+  function loadResults(append, allowFallback) {
     if (!state.query) {
       renderEmptyPrompt();
       return Promise.resolve();
     }
 
     if (!append) {
+      if (allowFallback !== false) {
+        state.usingFallback = false;
+      }
+      state.totalProducts = 0;
+      state.totalPages = 1;
       renderSkeletons();
     } else if (loadMoreBtn) {
       loadMoreBtn.disabled = true;
     }
 
-    return fetch(buildProductsUrl(), { credentials: "same-origin" })
+    var requestUrl = state.usingFallback ? buildFallbackProductsUrl() : buildProductsUrl();
+
+    return fetch(requestUrl, { credentials: "same-origin" })
       .then(function (response) {
-        if (!response.ok) throw new Error("Search failed");
-        var total = Number(response.headers.get("X-WP-Total"));
-        var totalPages = Number(response.headers.get("X-WP-TotalPages"));
-        if (Number.isFinite(total)) state.totalProducts = total;
-        if (Number.isFinite(totalPages)) state.totalPages = totalPages;
+        if (!response.ok) {
+          throw new Error("Search failed");
+        }
+
+        if (!state.usingFallback) {
+          var total = Number(response.headers.get("X-WP-Total"));
+          var totalPages = Number(response.headers.get("X-WP-TotalPages"));
+          if (Number.isFinite(total)) {
+            state.totalProducts = total;
+          }
+          if (Number.isFinite(totalPages)) {
+            state.totalPages = totalPages;
+          }
+        }
+
         return response.json();
       })
       .then(function (products) {
         var list = Array.isArray(products) ? products : [];
+
+        if (!append && !list.length && allowFallback && !state.usingFallback) {
+          state.usingFallback = true;
+          state.page = 1;
+          return loadResults(false, false);
+        }
+
+        if (state.usingFallback) {
+          list = filterProductsLocally(list, state.query);
+          state.totalProducts = list.length;
+          state.totalPages = 1;
+        }
+
         if (append) {
           appendProducts(list);
         } else {
           renderProducts(list);
         }
+
         updateCountLabel(append ? gridEl.querySelectorAll(".vc-search-card").length : list.length);
         updateLoadMore();
       })
       .catch(function () {
+        if (!append && allowFallback && !state.usingFallback) {
+          state.usingFallback = true;
+          state.page = 1;
+          return loadResults(false, false);
+        }
+
         if (!append) {
           gridEl.innerHTML = renderNoResultsHtml("Search unavailable", "Please refresh and try again.");
+          updateCountLabel(0);
         }
       })
       .then(function () {
-        if (loadMoreBtn) loadMoreBtn.disabled = false;
+        if (loadMoreBtn) {
+          loadMoreBtn.disabled = false;
+        }
       });
+  }
+
+  function buildFallbackProductsUrl() {
+    var params = new URLSearchParams();
+    params.set("per_page", "100");
+    params.set("page", "1");
+    return CONFIG.endpoints.products + "?" + params.toString();
+  }
+
+  function filterProductsLocally(products, query) {
+    var terms = String(query || "").toLowerCase().split(/\s+/).filter(Boolean);
+
+    if (!terms.length) {
+      return products;
+    }
+
+    return products.filter(function (product) {
+      var haystack = [
+        product.name || "",
+        product.slug || "",
+        stripHtml(product.short_description || ""),
+        stripHtml(product.description || "")
+      ].join(" ").toLowerCase();
+
+      return terms.every(function (term) {
+        return haystack.indexOf(term) !== -1;
+      });
+    });
+  }
+
+  function stripHtml(value) {
+    var node = document.createElement("div");
+    node.innerHTML = String(value || "");
+    return (node.textContent || node.innerText || "").replace(/\s+/g, " ").trim();
   }
 
   function buildProductsUrl() {
@@ -789,8 +833,8 @@
       params.set("orderby", "date");
       params.set("order", "desc");
     } else {
-      params.set("orderby", "popularity");
-      params.set("order", "desc");
+      params.set("orderby", "title");
+      params.set("order", "asc");
     }
 
     return CONFIG.endpoints.products + "?" + params.toString();
@@ -880,12 +924,16 @@
   }
 
   function updateCountLabel(count) {
-    if (!countEl) return;
+    if (!countEl) {
+      return;
+    }
+
     if (!state.query) {
       countEl.innerHTML = "Start typing to search";
       return;
     }
-    var total = state.totalProducts || count;
+
+    var total = state.usingFallback ? count : (Number.isFinite(state.totalProducts) ? state.totalProducts : count);
     countEl.innerHTML = "Found <em>" + total + "</em> result" + (total === 1 ? "" : "s");
   }
 
