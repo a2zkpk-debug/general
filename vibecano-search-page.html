@@ -510,6 +510,7 @@
           <div class="vc-search-input-wrap">
             <input type="search" name="s" id="vcSearchInput" placeholder="Try hoodies, t-shirts, caps..." aria-label="Search products" autocomplete="off">
           </div>
+          <input type="hidden" name="post_type" value="product">
           <button type="submit" class="vc-search-submit">Search</button>
         </form>
 
@@ -603,15 +604,68 @@
   }
 
   if (formEl) {
-    formEl.addEventListener("submit", function () {
+    formEl.addEventListener("submit", function (event) {
+      event.preventDefault();
       var value = inputEl ? inputEl.value.trim() : "";
       if (!value) return;
-      state.query = value;
-      state.page = 1;
+      runSearch(value);
     });
   }
 
+  if (chipsEl) {
+    chipsEl.addEventListener("click", function (event) {
+      var chip = event.target.closest(".vc-search-chip");
+      if (!chip) return;
+      event.preventDefault();
+      runSearch(chip.textContent.trim());
+    });
+  }
+
+  window.addEventListener("popstate", function () {
+    state.query = getSearchQuery();
+    if (inputEl) inputEl.value = state.query;
+    updateHeroCopy();
+    if (state.query) {
+      state.page = 1;
+      renderSkeletons();
+      loadResults(false);
+    } else {
+      renderEmptyPrompt();
+    }
+  });
+
   init();
+
+  function runSearch(query) {
+    state.query = String(query || "").trim();
+    state.page = 1;
+
+    if (inputEl) {
+      inputEl.value = state.query;
+    }
+
+    updateBrowserUrl(state.query);
+    updateHeroCopy();
+
+    if (!state.query) {
+      renderEmptyPrompt();
+      return;
+    }
+
+    renderSkeletons();
+    loadResults(false);
+  }
+
+  function updateBrowserUrl(query) {
+    try {
+      var url = new URL(window.location.href);
+      url.searchParams.set("s", query);
+      url.searchParams.set("post_type", "product");
+      window.history.pushState({ vcSearch: query }, "", url.toString());
+    } catch (error) {
+      /* Ignore URL update errors */
+    }
+  }
 
   function init() {
     if (!state.query) {
@@ -627,17 +681,25 @@
     var fromQuery = params.get("s") || params.get("search") || "";
 
     if (fromQuery) {
-      return decodeURIComponent(fromQuery.replace(/\+/g, " ")).trim();
+      return normalizeQuery(fromQuery);
     }
 
     var parts = window.location.pathname.replace(/\/+$/, "").split("/").filter(Boolean);
     var searchIndex = parts.indexOf("search");
 
     if (searchIndex !== -1 && parts[searchIndex + 1]) {
-      return decodeURIComponent(parts[searchIndex + 1].replace(/\+/g, " ")).trim();
+      return normalizeQuery(parts[searchIndex + 1]);
     }
 
     return "";
+  }
+
+  function normalizeQuery(value) {
+    try {
+      return decodeURIComponent(String(value).replace(/\+/g, " ")).trim();
+    } catch (error) {
+      return String(value).replace(/\+/g, " ").trim();
+    }
   }
 
   function updateHeroCopy() {
@@ -669,7 +731,7 @@
     chipsEl.innerHTML = [
       '<span class="vc-search-chips-label">Popular:</span>'
     ].concat(CONFIG.popularSearches.map(function (term) {
-      return '<a class="vc-search-chip" href="/?s=' + encodeURIComponent(term) + '">' + escapeHtml(term) + "</a>";
+      return '<a class="vc-search-chip" href="/?s=' + encodeURIComponent(term) + '&post_type=product">' + escapeHtml(term) + "</a>";
     })).join("");
   }
 
