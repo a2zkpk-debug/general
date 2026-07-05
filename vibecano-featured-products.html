@@ -2,12 +2,12 @@
      VIBECANO — FEATURED PRODUCT SHOWCASE
      Paste into Elementor HTML widget.
 
-     • Loads ONLY WooCommerce featured products
+     • Loads products from the "Featured" category
      • Desktop: 12 products (4 cols × 3 rows)
      • Tablet:  12 products (3 cols × 4 rows)
      • Mobile:   8 products (2 cols × 4 rows)
 
-     Mark products as Featured in WooCommerce → Products → Edit.
+     Assign products to Products → Categories → Featured.
      ============================================================ -->
 
 <style>
@@ -297,11 +297,12 @@
   var grid = document.getElementById("vc-featured-cats-grid");
   if (!grid) return;
 
-  var DESKTOP_COUNT = 12;
-  var MOBILE_COUNT  = 8;
-  var MOBILE_BREAK  = window.matchMedia("(max-width: 720px)");
-  var API_URL       = "/wp-json/wc/store/v1/products?featured=true&per_page=100&orderby=date&order=desc";
-  var PLACEHOLDER   = "https://vibecano.com/wp-content/uploads/woocommerce-placeholder-324x324.png";
+  var DESKTOP_COUNT  = 12;
+  var MOBILE_COUNT   = 8;
+  var MOBILE_BREAK   = window.matchMedia("(max-width: 720px)");
+  var API_BASE       = "/wp-json/wc/store/v1/products";
+  var CATEGORY_SLUG  = "featured"; /* WooCommerce category slug — change if yours differs */
+  var PLACEHOLDER    = "https://vibecano.com/wp-content/uploads/woocommerce-placeholder-324x324.png";
 
   var featuredProducts = [];
 
@@ -317,21 +318,36 @@
     return MOBILE_BREAK.matches ? MOBILE_COUNT : DESKTOP_COUNT;
   }
 
-  /* Keep only products confirmed as featured */
-  function keepFeaturedOnly(products) {
-    if (!Array.isArray(products)) return [];
+  function fetchJson(url) {
+    return fetch(url).then(function (res) {
+      if (!res.ok) throw new Error("Request failed");
+      return res.json();
+    });
+  }
 
-    var hasFeaturedFlag = products.some(function (p) {
-      return typeof p.featured === "boolean" || typeof p.is_featured === "boolean";
+  function categoryProductsUrl() {
+    return API_BASE + "?category=" + encodeURIComponent(CATEGORY_SLUG) + "&per_page=100&orderby=date&order=desc";
+  }
+
+  function starredProductsUrl() {
+    return API_BASE + "?featured=true&per_page=100&orderby=date&order=desc";
+  }
+
+  function mergeProducts(primary, secondary) {
+    var seen = {};
+    var merged = [];
+
+    [primary, secondary].forEach(function (list) {
+      if (!Array.isArray(list)) return;
+
+      list.forEach(function (product) {
+        if (!product || !product.id || seen[product.id]) return;
+        seen[product.id] = true;
+        merged.push(product);
+      });
     });
 
-    if (!hasFeaturedFlag) {
-      return products;
-    }
-
-    return products.filter(function (p) {
-      return p.featured === true || p.is_featured === true;
-    });
+    return merged;
   }
 
   function productCard(product) {
@@ -355,7 +371,7 @@
 
   function render() {
     if (!featuredProducts.length) {
-      showMessage('No featured products found. Open a product in WooCommerce and check <strong>Featured</strong> under Catalog visibility.');
+      showMessage('No products found in the <strong>Featured</strong> category. Assign products to Products &rarr; Categories &rarr; Featured.');
       return;
     }
 
@@ -366,13 +382,15 @@
   }
 
   function init() {
-    fetch(API_URL)
-      .then(function (res) {
-        if (!res.ok) throw new Error("Request failed");
-        return res.json();
+    fetchJson(categoryProductsUrl())
+      .then(function (categoryProducts) {
+        if (Array.isArray(categoryProducts) && categoryProducts.length) {
+          return categoryProducts;
+        }
+        return fetchJson(starredProductsUrl());
       })
-      .then(function (data) {
-        featuredProducts = keepFeaturedOnly(Array.isArray(data) ? data : []);
+      .then(function (products) {
+        featuredProducts = Array.isArray(products) ? products : [];
         render();
       })
       .catch(function () {
