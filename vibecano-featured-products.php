@@ -531,3 +531,12 @@ function vibecano_register_elementor_widget( $widgets_manager ) {
 }
 add_action( 'elementor/widgets/register', 'vibecano_register_elementor_widget' );
 add_action( 'elementor/widgets/widgets_registered', 'vibecano_register_elementor_widget' );
+
+/**
+ * Always show the search results page instead of redirecting to one product.
+ *
+ * WooCommerce redirects to the product page when a search returns exactly one
+ * match (e.g. searching "Tshirt" jumps to /product/tshirt/). This keeps every
+ * search on the custom search results template.
+ */
+add_filter( 'woocommerce_redirect_single_search_result', '__return_false' );

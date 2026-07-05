@@ -745,8 +745,8 @@
         </span>
       </a>
 
-      <form class="ro-search" action="/" method="get" role="search">
-        <input type="search" name="s" placeholder="Search hoodies, tees, caps..." aria-label="Search products" />
+      <form class="ro-search" id="roSearchForm" action="/" method="get" role="search">
+        <input type="search" name="s" id="roSearchInput" placeholder="Search hoodies, tees, caps..." aria-label="Search products" autocomplete="off">
         <input type="hidden" name="post_type" value="product">
       </form>
 
@@ -894,6 +894,8 @@
   var registerLink = document.getElementById("roRegisterLink");
   var cartCountEl = document.getElementById("roCartCount");
   var categoryGridEl = document.getElementById("roCategoryGrid");
+  var searchFormEl = document.getElementById("roSearchForm");
+  var searchInputEl = document.getElementById("roSearchInput");
   var navLinks = {
     customize: document.getElementById("roNavCustomize"),
     "ready-made": document.getElementById("roNavReadyMade"),
@@ -909,6 +911,22 @@
   if (toggle && nav) {
     toggle.addEventListener("click", function () {
       nav.classList.toggle("is-open");
+    });
+  }
+
+  if (searchFormEl && searchInputEl) {
+    searchFormEl.addEventListener("submit", function (event) {
+      var value = searchInputEl.value.trim();
+      if (!value) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      var params = new URLSearchParams();
+      params.set("s", value);
+      params.set("post_type", "product");
+      window.location.assign("/?" + params.toString());
     });
   }
 
