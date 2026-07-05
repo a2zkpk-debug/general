@@ -1,18 +1,22 @@
 <!-- ============================================================
-     VIBECANO — FEATURED PRODUCT IMAGE SHOWCASE (DYNAMIC)
-     Paste this whole file into an Elementor HTML widget.
+     VIBECANO — FEATURED PRODUCT SHOWCASE
+     Paste into Elementor HTML widget.
 
-     Auto-loads WooCommerce featured products via Store API.
-     Mark products as Featured in WooCommerce → Products → Edit product.
+     • Auto-loads WooCommerce featured products
+     • Desktop: 12 products (4 cols × 3 rows)
+     • Tablet:  12 products (3 cols × 4 rows)
+     • Mobile:   8 products (2 cols × 4 rows)
+
+     Mark products as Featured in WooCommerce → Products → Edit.
      ============================================================ -->
+
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap");
 
   .vc-featured-cats,
-  .vc-featured-cats * {
-    box-sizing: border-box;
-  }
+  .vc-featured-cats * { box-sizing: border-box; }
 
+  /* Section */
   .vc-featured-cats {
     position: relative;
     overflow: hidden;
@@ -43,6 +47,7 @@
     margin: 0 auto;
   }
 
+  /* Header */
   .vc-featured-cats-head {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -120,6 +125,7 @@
     transform: translateY(-2px);
   }
 
+  /* Grid — Desktop: 4 columns × 3 rows = 12 */
   .vc-featured-cats-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -135,6 +141,7 @@
     font-weight: 600;
   }
 
+  /* Product card */
   .vc-featured-cat {
     position: relative;
     display: block;
@@ -164,7 +171,6 @@
     z-index: -3;
     width: 100%;
     height: 100%;
-    display: block;
     object-fit: cover;
     object-position: center;
     filter: saturate(1.05) contrast(1.04);
@@ -197,26 +203,20 @@
     pointer-events: none;
   }
 
-  .vc-featured-cat-content {
+  .vc-featured-cat-name {
     position: absolute;
     left: 22px;
     right: 22px;
     bottom: 22px;
-    display: block;
-  }
-
-  .vc-featured-cat-name {
-    display: block;
-    margin-bottom: 8px;
     font-family: "Plus Jakarta Sans", Inter, sans-serif;
-    font-size: clamp(21px, 2vw, 26px);
+    font-size: clamp(18px, 1.8vw, 24px);
     font-weight: 800;
     line-height: 1.08;
     letter-spacing: -0.035em;
     text-shadow: 0 18px 34px rgba(0, 0, 0, 0.38);
   }
 
-  /* Tablet: 3 columns × 4 rows = 12 products */
+  /* Tablet: 3 columns × 4 rows = 12 */
   @media (max-width: 980px) {
     .vc-featured-cats-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -233,31 +233,24 @@
       border-radius: 18px;
     }
 
-    .vc-featured-cat-content {
+    .vc-featured-cat-name {
       left: 16px;
       right: 16px;
       bottom: 16px;
-    }
-
-    .vc-featured-cat-name {
-      font-size: clamp(17px, 2vw, 22px);
+      font-size: clamp(16px, 2vw, 20px);
     }
   }
 
-  /* Mobile: 2 columns × 4 rows = 8 products */
+  /* Mobile: 2 columns × 4 rows = 8 */
   @media (max-width: 720px) {
-    .vc-featured-cats {
-      padding: 62px 16px;
-    }
+    .vc-featured-cats { padding: 62px 16px; }
 
     .vc-featured-cats-head {
       grid-template-columns: 1fr;
       margin-bottom: 26px;
     }
 
-    .vc-featured-cats-shop {
-      width: 100%;
-    }
+    .vc-featured-cats-shop { width: 100%; }
 
     .vc-featured-cats-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -275,119 +268,138 @@
       border-radius: 14px;
     }
 
-    .vc-featured-cat-content {
+    .vc-featured-cat-name {
       left: 14px;
       right: 14px;
       bottom: 14px;
-    }
-
-    .vc-featured-cat-name {
-      font-size: clamp(14px, 3.8vw, 18px);
-      margin-bottom: 0;
+      font-size: clamp(13px, 3.6vw, 17px);
     }
   }
 </style>
 
 <section class="vc-featured-cats">
   <div class="vc-featured-cats-inner">
+
     <div class="vc-featured-cats-head">
       <div>
         <span class="vc-featured-cats-kicker">Featured products</span>
         <h2 class="vc-featured-cats-title">Fresh styles made for your vibe.</h2>
         <p class="vc-featured-cats-sub">A clean, visual showcase of selected Vibecano products with premium imagery and direct product discovery.</p>
       </div>
-
       <a class="vc-featured-cats-shop" href="/shop/">View full shop</a>
     </div>
 
     <div class="vc-featured-cats-grid" id="vc-featured-cats-grid">
-      <p class="vc-featured-cats-loading">Loading featured products...</p>
+      <p class="vc-featured-cats-loading">Loading featured products&hellip;</p>
     </div>
+
   </div>
 </section>
 
 <script>
 (function () {
+  "use strict";
+
   var grid = document.getElementById("vc-featured-cats-grid");
   if (!grid) return;
 
-  var DESKTOP_LIMIT = 12;
-  var MOBILE_LIMIT  = 8;
-  var MOBILE_QUERY  = window.matchMedia("(max-width: 720px)");
+  /* ---- Settings ---- */
+  var DESKTOP_COUNT = 12;
+  var MOBILE_COUNT  = 8;
+  var MOBILE_BREAK  = window.matchMedia("(max-width: 720px)");
+  var API_BASE      = "/wp-json/wc/store/v1/products";
+  var PLACEHOLDER   = "https://vibecano.com/wp-content/uploads/woocommerce-placeholder-324x324.png";
 
-  var FEATURED_URL = "/wp-json/wc/store/v1/products?featured=true&per_page=" + DESKTOP_LIMIT + "&orderby=date&order=desc";
-  var RECENT_URL   = "/wp-json/wc/store/v1/products?per_page=" + DESKTOP_LIMIT + "&orderby=date&order=desc";
-  var PLACEHOLDER  = "https://vibecano.com/wp-content/uploads/woocommerce-placeholder-324x324.png";
+  var allProducts = [];
 
-  function escapeHtml(value) {
-    return String(value)
+  /* ---- Helpers ---- */
+  function escapeHtml(str) {
+    return String(str)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
   }
 
-  var allProducts = [];
-
-  function getVisibleProducts() {
-    var limit = MOBILE_QUERY.matches ? MOBILE_LIMIT : DESKTOP_LIMIT;
-    return allProducts.slice(0, limit);
+  function productLimit() {
+    return MOBILE_BREAK.matches ? MOBILE_COUNT : DESKTOP_COUNT;
   }
 
-  function renderProducts(products) {
-    if (!Array.isArray(products) || products.length === 0) {
-      grid.innerHTML = '<p class="vc-featured-cats-loading">No featured products found. Mark products as <strong>Featured</strong> in WooCommerce.</p>';
+  function apiUrl(featured) {
+    var params = "per_page=" + DESKTOP_COUNT + "&orderby=date&order=desc";
+    return featured ? API_BASE + "?featured=true&" + params : API_BASE + "?" + params;
+  }
+
+  function productCard(product) {
+    var img     = (product.images && product.images[0]) || {};
+    var src     = img.src || PLACEHOLDER;
+    var alt     = img.alt || product.name;
+    var url     = product.permalink || "#";
+    var name    = product.name || "Product";
+
+    return (
+      '<a class="vc-featured-cat" href="' + escapeHtml(url) + '">' +
+        '<img src="' + escapeHtml(src) + '" alt="' + escapeHtml(alt) + '" loading="lazy">' +
+        '<span class="vc-featured-cat-name">' + escapeHtml(name) + '</span>' +
+      '</a>'
+    );
+  }
+
+  function showMessage(html) {
+    grid.innerHTML = '<p class="vc-featured-cats-loading">' + html + '</p>';
+  }
+
+  /* ---- Render ---- */
+  function render() {
+    if (!allProducts.length) {
+      showMessage('No featured products found. Mark products as <strong>Featured</strong> in WooCommerce.');
       return;
     }
 
-    allProducts = products;
-    var visibleProducts = getVisibleProducts();
-
-    grid.innerHTML = visibleProducts.map(function (product) {
-      var image = product.images && product.images[0] ? product.images[0] : null;
-      var imageSrc = image && image.src ? image.src : PLACEHOLDER;
-      var imageAlt = image && image.alt ? image.alt : product.name;
-
-      return (
-        '<a class="vc-featured-cat" href="' + escapeHtml(product.permalink) + '">' +
-          '<img src="' + escapeHtml(imageSrc) + '" alt="' + escapeHtml(imageAlt) + '" loading="lazy">' +
-          '<span class="vc-featured-cat-content">' +
-            '<span>' +
-              '<span class="vc-featured-cat-name">' + escapeHtml(product.name) + '</span>' +
-            '</span>' +
-          '</span>' +
-        '</a>'
-      );
-    }).join("");
+    grid.innerHTML = allProducts
+      .slice(0, productLimit())
+      .map(productCard)
+      .join("");
   }
 
-  if (MOBILE_QUERY.addEventListener) {
-    MOBILE_QUERY.addEventListener("change", function () {
-      if (allProducts.length) renderProducts(allProducts);
-    });
-  } else if (MOBILE_QUERY.addListener) {
-    MOBILE_QUERY.addListener(function () {
-      if (allProducts.length) renderProducts(allProducts);
-    });
+  /* ---- Fetch ---- */
+  function fetchProducts(featured) {
+    return fetch(apiUrl(featured))
+      .then(function (res) {
+        if (!res.ok) throw new Error("Request failed");
+        return res.json();
+      })
+      .then(function (data) {
+        return Array.isArray(data) ? data : [];
+      });
   }
 
-  function loadProducts(url) {
-    return fetch(url).then(function (response) {
-      if (!response.ok) throw new Error("API request failed");
-      return response.json();
-    });
+  function init() {
+    fetchProducts(true)
+      .then(function (products) {
+        if (products.length) return products;
+        return fetchProducts(false);
+      })
+      .then(function (products) {
+        allProducts = products;
+        render();
+      })
+      .catch(function () {
+        showMessage("Unable to load products. Please refresh the page.");
+      });
   }
 
-  loadProducts(FEATURED_URL)
-    .then(function (products) {
-      if (Array.isArray(products) && products.length > 0) {
-        renderProducts(products);
-        return;
-      }
-      return loadProducts(RECENT_URL).then(renderProducts);
-    })
-    .catch(function () {
-      grid.innerHTML = '<p class="vc-featured-cats-loading">Unable to load products. Please refresh the page.</p>';
-    });
+  /* Re-render when screen size crosses mobile breakpoint */
+  function onBreakpointChange() {
+    if (allProducts.length) render();
+  }
+
+  if (MOBILE_BREAK.addEventListener) {
+    MOBILE_BREAK.addEventListener("change", onBreakpointChange);
+  } else if (MOBILE_BREAK.addListener) {
+    MOBILE_BREAK.addListener(onBreakpointChange);
+  }
+
+  init();
 })();
 </script>
