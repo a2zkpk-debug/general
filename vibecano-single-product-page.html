@@ -1,0 +1,1505 @@
+<!-- ============================================================
+     VIBECANO — SINGLE PRODUCT PAGE
+     Paste this whole file into an Elementor HTML widget on the
+     WooCommerce Single Product template.
+
+     Behavior:
+     - Auto-loads current product by URL slug or product_cms/product_id query
+     - Ready-made products show Add to Cart
+     - Customizable products show Customize Now
+     ============================================================ -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+
+<style>
+  .vc-sp,
+  .vc-sp * {
+    box-sizing: border-box;
+  }
+
+  .vc-sp {
+    --vc-sp-text: #0f172a;
+    --vc-sp-muted: #64748b;
+    --vc-sp-soft: #f8fafc;
+    --vc-sp-line: rgba(148, 163, 184, 0.28);
+    --vc-sp-orange: #f97316;
+    --vc-sp-orange-dark: #ea580c;
+    --vc-sp-blue: #2563eb;
+    position: relative;
+    overflow: hidden;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 34px 18px 70px;
+    color: var(--vc-sp-text);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .vc-sp::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(249, 115, 22, 0.1), transparent 28%),
+      radial-gradient(circle at 92% 6%, rgba(37, 99, 235, 0.09), transparent 30%);
+    pointer-events: none;
+  }
+
+  .vc-sp-crumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    align-items: center;
+    margin-bottom: 18px;
+    color: var(--vc-sp-muted);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .vc-sp-crumb a {
+    color: var(--vc-sp-muted);
+    text-decoration: none;
+  }
+
+  .vc-sp-crumb a:hover {
+    color: var(--vc-sp-orange);
+  }
+
+  .vc-sp-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1.04fr) minmax(360px, 0.96fr);
+    gap: clamp(26px, 4vw, 54px);
+    align-items: start;
+  }
+
+  .vc-sp-gallery {
+    position: sticky;
+    top: 20px;
+    display: grid;
+    gap: 14px;
+  }
+
+  .vc-sp-main {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--vc-sp-line);
+    border-radius: 30px;
+    background:
+      linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(37, 99, 235, 0.08)),
+      var(--vc-sp-soft);
+    box-shadow: 0 30px 80px -58px rgba(15, 23, 42, 0.8);
+  }
+
+  .vc-sp-main img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.55s ease, filter 0.55s ease;
+  }
+
+  .vc-sp-main:hover img {
+    filter: saturate(1.08);
+    transform: scale(1.055);
+  }
+
+  .vc-sp-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.78);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    backdrop-filter: blur(12px);
+  }
+
+  .vc-sp-badge::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: #22c55e;
+    box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.16);
+  }
+
+  .vc-sp-thumbs {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .vc-sp-thumb {
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    background: var(--vc-sp-soft);
+    cursor: pointer;
+    transition: border-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .vc-sp-thumb.is-active {
+    border-color: var(--vc-sp-orange);
+  }
+
+  .vc-sp-thumb:hover {
+    transform: translateY(-2px);
+  }
+
+  .vc-sp-thumb img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .vc-sp-panel {
+    padding: clamp(20px, 3vw, 30px);
+    border: 1px solid var(--vc-sp-line);
+    border-radius: 30px;
+    background:
+      radial-gradient(circle at top right, rgba(249, 115, 22, 0.08), transparent 38%),
+      rgba(255, 255, 255, 0.92);
+    box-shadow: 0 28px 80px -62px rgba(15, 23, 42, 0.86);
+  }
+
+  .vc-sp-type {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #fff7ed;
+    color: #c2410c;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .vc-sp-title {
+    margin: 0 0 12px;
+    color: var(--vc-sp-text);
+    font-family: Manrope, Inter, sans-serif;
+    font-size: clamp(30px, 4vw, 46px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+  }
+
+  .vc-sp-rating {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 16px;
+    color: var(--vc-sp-muted);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .vc-sp-stars {
+    color: #f59e0b;
+    letter-spacing: 2px;
+  }
+
+  .vc-sp-price {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: baseline;
+    margin-bottom: 18px;
+    color: var(--vc-sp-text);
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+
+  .vc-sp-price del {
+    color: #94a3b8;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .vc-sp-price ins {
+    color: var(--vc-sp-text);
+    text-decoration: none;
+  }
+
+  .vc-sp-desc {
+    margin: 0 0 22px;
+    color: #475569;
+    font-size: 15px;
+    font-weight: 550;
+    line-height: 1.75;
+  }
+
+  .vc-sp-option {
+    margin-top: 18px;
+  }
+
+  .vc-sp-option-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  .vc-sp-label {
+    color: var(--vc-sp-muted);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .vc-sp-chart {
+    border: 0;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #1e293b;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 850;
+    padding: 8px 12px;
+  }
+
+  .vc-sp-sizes,
+  .vc-sp-colors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+  }
+
+  .vc-sp-size {
+    min-width: 48px;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--vc-sp-line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--vc-sp-text);
+    cursor: pointer;
+    font-weight: 800;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  }
+
+  .vc-sp-size.is-active {
+    border-color: var(--vc-sp-text);
+    background: var(--vc-sp-text);
+    color: #fff;
+  }
+
+  .vc-sp-color {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border: 3px solid #fff;
+    border-radius: 999px;
+    outline: 1px solid var(--vc-sp-line);
+    cursor: pointer;
+    transition: transform 0.18s ease, outline-color 0.18s ease;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .vc-sp-color.is-active {
+    outline: 3px solid var(--vc-sp-text);
+  }
+
+  .vc-sp-color:hover {
+    transform: scale(1.08);
+  }
+
+  .vc-sp-color-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .vc-sp-actions {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    margin-top: 26px;
+  }
+
+  .vc-sp-qty {
+    display: inline-flex;
+    overflow: hidden;
+    height: 50px;
+    border: 1px solid var(--vc-sp-line);
+    border-radius: 999px;
+    background: #fff;
+  }
+
+  .vc-sp-qty button {
+    width: 40px;
+    border: 0;
+    background: transparent;
+    color: var(--vc-sp-text);
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .vc-sp-qty input {
+    width: 44px;
+    border: 0;
+    outline: 0;
+    color: var(--vc-sp-text);
+    font-size: 15px;
+    font-weight: 850;
+    text-align: center;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  .vc-sp-qty input::-webkit-outer-spin-button,
+  .vc-sp-qty input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .vc-sp-main-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    border: 0;
+    border-radius: 999px;
+    background: #0f172a;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 900;
+    text-decoration: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  }
+
+  .vc-sp-main-btn.is-custom {
+    background: linear-gradient(135deg, var(--vc-sp-orange), #ec4899);
+    box-shadow: 0 22px 38px -26px rgba(249, 115, 22, 0.95);
+  }
+
+  .vc-sp-main-btn:hover,
+  .vc-sp-main-btn:focus-visible {
+    transform: translateY(-2px);
+  }
+
+  .vc-sp-main-btn:disabled {
+    cursor: wait;
+    opacity: 0.65;
+    transform: none;
+  }
+
+  .vc-sp-wish {
+    display: grid;
+    width: 50px;
+    height: 50px;
+    place-items: center;
+    border: 1px solid var(--vc-sp-line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--vc-sp-text);
+    cursor: pointer;
+    font-size: 20px;
+  }
+
+  .vc-sp-features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .vc-sp-feature {
+    padding: 13px 10px;
+    border: 1px solid var(--vc-sp-line);
+    border-radius: 16px;
+    background: var(--vc-sp-soft);
+    color: var(--vc-sp-muted);
+    font-size: 11.5px;
+    font-weight: 800;
+    line-height: 1.35;
+    text-align: center;
+  }
+
+  .vc-sp-feature span {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 20px;
+  }
+
+  .vc-sp-meta {
+    display: grid;
+    gap: 7px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--vc-sp-line);
+    color: var(--vc-sp-muted);
+    font-size: 13px;
+    font-weight: 650;
+  }
+
+  .vc-sp-meta b {
+    color: var(--vc-sp-text);
+  }
+
+  .vc-sp-tabs {
+    margin-top: 46px;
+    padding: 24px;
+    border: 1px solid var(--vc-sp-line);
+    border-radius: 28px;
+    background: #fff;
+  }
+
+  .vc-sp-tab-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--vc-sp-line);
+  }
+
+  .vc-sp-tab-btn {
+    padding: 13px 16px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: var(--vc-sp-muted);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 850;
+    white-space: nowrap;
+  }
+
+  .vc-sp-tab-btn.is-active {
+    border-color: var(--vc-sp-orange);
+    color: var(--vc-sp-text);
+  }
+
+  .vc-sp-tab-pane {
+    display: none;
+    color: #475569;
+    font-size: 14.5px;
+    font-weight: 550;
+    line-height: 1.75;
+  }
+
+  .vc-sp-tab-pane.is-active {
+    display: block;
+  }
+
+  .vc-sp-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(8px);
+  }
+
+  .vc-sp-modal.is-open {
+    display: flex;
+  }
+
+  .vc-sp-modal-box {
+    position: relative;
+    width: min(680px, 100%);
+    max-height: 90vh;
+    overflow: auto;
+    padding: 26px;
+    border-radius: 26px;
+    background: #fff;
+    box-shadow: 0 32px 80px -40px rgba(0, 0, 0, 0.85);
+  }
+
+  .vc-sp-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--vc-sp-soft);
+    color: var(--vc-sp-muted);
+    cursor: pointer;
+    font-size: 18px;
+  }
+
+  .vc-sp-modal h3 {
+    margin: 0 42px 18px;
+    color: var(--vc-sp-text);
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .vc-sp-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--vc-sp-text);
+    font-size: 14px;
+  }
+
+  .vc-sp-table th,
+  .vc-sp-table td {
+    padding: 12px;
+    border: 1px solid var(--vc-sp-line);
+    text-align: center;
+  }
+
+  .vc-sp-table th,
+  .vc-sp-table td:first-child {
+    background: var(--vc-sp-soft);
+    font-weight: 850;
+  }
+
+  .vc-sp-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    z-index: 100000;
+    padding: 13px 20px;
+    border-radius: 999px;
+    background: #0f172a;
+    color: #fff;
+    box-shadow: 0 20px 40px -28px rgba(0, 0, 0, 0.75);
+    font-size: 14px;
+    font-weight: 800;
+    opacity: 0;
+    transform: translateX(-50%) translateY(50px);
+    transition: opacity 0.28s ease, transform 0.28s ease;
+    pointer-events: none;
+  }
+
+  .vc-sp-toast.is-showing {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .vc-sp-skeleton {
+    background: linear-gradient(90deg, #f1f5f9, #e2e8f0, #f1f5f9);
+    background-size: 200% 100%;
+    animation: vcSpShimmer 1.4s linear infinite;
+    color: transparent;
+  }
+
+  @keyframes vcSpShimmer {
+    to { background-position: -200% 0; }
+  }
+
+  @media (max-width: 980px) {
+    .vc-sp-wrap {
+      grid-template-columns: 1fr;
+    }
+
+    .vc-sp-gallery {
+      position: static;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .vc-sp {
+      padding: 22px 14px 54px;
+    }
+
+    .vc-sp-panel,
+    .vc-sp-tabs {
+      padding: 18px;
+      border-radius: 24px;
+    }
+
+    .vc-sp-actions,
+    .vc-sp-features {
+      grid-template-columns: 1fr;
+    }
+
+    .vc-sp-qty,
+    .vc-sp-main-btn,
+    .vc-sp-wish {
+      width: 100%;
+    }
+
+    .vc-sp-qty input {
+      width: 100%;
+    }
+
+    .vc-sp-thumbs {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>
+
+<div class="vc-sp" id="vcSpRoot">
+  <div class="vc-sp-crumb">
+    <a href="/">Home</a>
+    <span>/</span>
+    <a href="/shop/">Shop</a>
+    <span>/</span>
+    <span id="vcSpCrumb">Product</span>
+  </div>
+
+  <div class="vc-sp-wrap">
+    <div class="vc-sp-gallery">
+      <div class="vc-sp-main" id="vcSpMain">
+        <div class="vc-sp-skeleton" style="width:100%;height:100%"></div>
+      </div>
+      <div class="vc-sp-thumbs" id="vcSpThumbs"></div>
+    </div>
+
+    <div class="vc-sp-panel">
+      <div class="vc-sp-type" id="vcSpType">Loading product</div>
+      <h1 class="vc-sp-title vc-sp-skeleton" id="vcSpTitle" style="height:52px;width:80%">&nbsp;</h1>
+      <div class="vc-sp-rating">
+        <span class="vc-sp-stars">★★★★★</span>
+        <span id="vcSpReviews">(0 reviews)</span>
+      </div>
+      <div class="vc-sp-price" id="vcSpPrice">—</div>
+      <div class="vc-sp-desc" id="vcSpDesc"></div>
+
+      <div class="vc-sp-option" id="vcSpSizeWrap" style="display:none">
+        <div class="vc-sp-option-head">
+          <span class="vc-sp-label">Choose size</span>
+          <button class="vc-sp-chart" type="button" onclick="vcSpOpenChart()">Size chart</button>
+        </div>
+        <div class="vc-sp-sizes" id="vcSpSizes"></div>
+      </div>
+
+      <div class="vc-sp-option" id="vcSpColorWrap" style="display:none">
+        <div class="vc-sp-option-head">
+          <span class="vc-sp-label">Choose color</span>
+          <span class="vc-sp-label" id="vcSpSelectedColorName" style="letter-spacing:0.04em;text-transform:none;color:#0f172a"></span>
+        </div>
+        <div class="vc-sp-colors" id="vcSpColors"></div>
+      </div>
+
+      <div class="vc-sp-actions">
+        <div class="vc-sp-qty">
+          <button type="button" onclick="vcSpQty(-1)">−</button>
+          <input id="vcSpQty" type="number" min="1" value="1">
+          <button type="button" onclick="vcSpQty(1)">+</button>
+        </div>
+        <button class="vc-sp-main-btn" id="vcSpMainBtn" type="button" onclick="vcSpMainAction()">Add to Cart</button>
+        <button class="vc-sp-wish" type="button" title="Wishlist">♡</button>
+      </div>
+
+      <div class="vc-sp-features">
+        <div class="vc-sp-feature"><span>🚚</span>Fast delivery support</div>
+        <div class="vc-sp-feature"><span>🎨</span>Design help available</div>
+        <div class="vc-sp-feature"><span>✅</span>Quality checked</div>
+      </div>
+
+      <div class="vc-sp-meta">
+        <div><b>SKU:</b> <span id="vcSpSku">—</span></div>
+        <div><b>Categories:</b> <span id="vcSpCats">—</span></div>
+        <div><b>Tags:</b> <span id="vcSpTags">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vc-sp-tabs">
+    <div class="vc-sp-tab-nav">
+      <button class="vc-sp-tab-btn is-active" type="button" data-tab="desc">Description</button>
+      <button class="vc-sp-tab-btn" type="button" data-tab="details">Product Details</button>
+      <button class="vc-sp-tab-btn" type="button" data-tab="ship">Shipping</button>
+      <button class="vc-sp-tab-btn" type="button" data-tab="reviews">Reviews</button>
+    </div>
+    <div class="vc-sp-tab-pane is-active" data-pane="desc" id="vcSpTabDesc"></div>
+    <div class="vc-sp-tab-pane" data-pane="details">
+      <ul>
+        <li>Carefully selected product base for printing.</li>
+        <li>Ready-made designs are prepared by Vibecano.</li>
+        <li>Customizable products can be opened in the designer tool.</li>
+        <li>For best care, wash inside out and avoid bleach.</li>
+      </ul>
+    </div>
+    <div class="vc-sp-tab-pane" data-pane="ship">
+      <p><b>Delivery:</b> Available across Pakistan after order confirmation.</p>
+      <p><b>Custom items:</b> Custom printed products are made for your selected design and may not be returnable unless defective.</p>
+    </div>
+    <div class="vc-sp-tab-pane" data-pane="reviews">
+      <p>No reviews yet. Be the first to review this product.</p>
+    </div>
+  </div>
+</div>
+
+<div class="vc-sp-modal" id="vcSpChart">
+  <div class="vc-sp-modal-box">
+    <button class="vc-sp-modal-close" type="button" onclick="vcSpCloseChart()">×</button>
+    <h3>Regular Fit Size Chart</h3>
+    <table class="vc-sp-table">
+      <thead><tr><th>Size</th><th>S</th><th>M</th><th>L</th><th>XL</th></tr></thead>
+      <tbody>
+        <tr><td>Length</td><td>27</td><td>28</td><td>29</td><td>30</td></tr>
+        <tr><td>Shoulder</td><td>18</td><td>19</td><td>20</td><td>21</td></tr>
+        <tr><td>Chest</td><td>19.5</td><td>20.5</td><td>21.5</td><td>22.5</td></tr>
+        <tr><td>Sleeves</td><td>8</td><td>8.5</td><td>9</td><td>9.5</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="vc-sp-modal" id="vcSpAdded">
+  <div class="vc-sp-modal-box" style="max-width:460px">
+    <button class="vc-sp-modal-close" type="button" onclick="vcSpCloseAdded()">×</button>
+    <h3>Added to cart</h3>
+    <div id="vcSpAddedProduct"></div>
+    <div class="vc-sp-actions" style="grid-template-columns:1fr 1fr;margin-top:18px">
+      <a class="vc-sp-main-btn" href="/cart/" style="text-decoration:none">View Cart</a>
+      <a class="vc-sp-main-btn is-custom" href="/checkout/" style="text-decoration:none">Checkout</a>
+    </div>
+  </div>
+</div>
+
+<div class="vc-sp-toast" id="vcSpToast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var API = "/wp-json/wc/store/v1";
+  var DESIGNER_URL = "/design-editor/";
+  var LUMISE_PRODUCT_BASE = "2";
+  var CUSTOM_CAT_SLUGS = ["customize", "customizable", "custom", "customize-your-own", "design-your-own"];
+  var CUSTOM_TAG_SLUGS = ["customizable", "customize", "custom", "design-your-own"];
+  var PRODUCT = null;
+  var IS_CUSTOM = false;
+  var VARIATIONS = [];
+  var VARIATION_BY_KEY = {};
+  var HAS_COLOR_VARIATIONS = false;
+  var selectedVariation = null;
+  var selectedColor = "";
+  var selectedSize = "";
+  var CART_TOKEN_KEY = "vcWcCartToken";
+
+  var COLOR_HEX_MAP = {
+    black: "#0f172a",
+    white: "#ffffff",
+    red: "#dc2626",
+    blue: "#2563eb",
+    green: "#16a34a",
+    yellow: "#eab308",
+    orange: "#f97316",
+    pink: "#ec4899",
+    purple: "#7c3aed",
+    navy: "#1e3a8a",
+    maroon: "#7f1d1d",
+    gray: "#6b7280",
+    grey: "#6b7280",
+    charcoal: "#374151",
+    olive: "#6b8e23",
+    cream: "#fffdd0",
+    neon: "#39ff14",
+    steel: "#71797e",
+    mustard: "#ffdb58",
+    royal: "#4169e1",
+    sky: "#87ceeb",
+    sea: "#2e8b57"
+  };
+
+  function getStoredCartToken() {
+    try {
+      return sessionStorage.getItem(CART_TOKEN_KEY) || "";
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function storeCartToken(response) {
+    var token = response.headers.get("Cart-Token");
+    if (!token) return getStoredCartToken();
+    try {
+      sessionStorage.setItem(CART_TOKEN_KEY, token);
+    } catch (error) {}
+    return token;
+  }
+
+  function getCartHeaders(nonce, token) {
+    var headers = {
+      "Content-Type": "application/json",
+      "Nonce": nonce,
+      "X-WC-Store-API-Nonce": nonce
+    };
+    token = token || getStoredCartToken();
+    if (token) headers["Cart-Token"] = token;
+    return headers;
+  }
+
+  function getProductAttributes() {
+    return PRODUCT && Array.isArray(PRODUCT.attributes) ? PRODUCT.attributes : [];
+  }
+
+  function getAttributeByPattern(pattern) {
+    return getProductAttributes().filter(function (attribute) {
+      return pattern.test(attribute.name || "") || pattern.test(attribute.taxonomy || "");
+    })[0] || null;
+  }
+
+  function getDefaultAttributeValue(namePattern) {
+    var attribute = getAttributeByPattern(namePattern);
+    var terms = attribute && Array.isArray(attribute.terms) ? attribute.terms : [];
+    if (!terms.length) return "";
+    var preferred = terms.filter(function (term) { return term && term.default; })[0];
+    return (preferred && preferred.name) || (terms[0] && terms[0].name) || "";
+  }
+
+  function getRequiredColorValue() {
+    if (selectedColor) return selectedColor;
+    return getDefaultAttributeValue(/colou?r/i);
+  }
+
+  function productHasColorAttribute() {
+    return !!getAttributeByPattern(/colou?r/i);
+  }
+
+  function productUsesColorVariations() {
+    var colorAttribute = getAttributeByPattern(/colou?r/i);
+    if (!colorAttribute) return false;
+    if (colorAttribute.has_variations) return true;
+    return HAS_COLOR_VARIATIONS;
+  }
+
+  function getAttributeParamKey(attribute) {
+    if (!attribute) return "";
+    if (attribute.taxonomy) {
+      return "attribute_" + String(attribute.taxonomy).toLowerCase();
+    }
+    return "attribute_" + String(attribute.name || "").toLowerCase().replace(/\s+/g, "_");
+  }
+
+  function buildAddToCartPayload(quantity) {
+    var payload = { id: PRODUCT.id, quantity: quantity };
+    if (!VARIATIONS.length) return payload;
+
+    var variation = [];
+    var sizeAttribute = getAttributeByPattern(/size/i);
+    var colorAttribute = getAttributeByPattern(/colou?r/i);
+
+    if (selectedSize && sizeAttribute) {
+      variation.push({ attribute: sizeAttribute.name, value: selectedSize });
+    }
+    if (productHasColorAttribute() && colorAttribute) {
+      variation.push({ attribute: colorAttribute.name, value: getRequiredColorValue() });
+    }
+    if (variation.length) payload.variation = variation;
+    return payload;
+  }
+
+  function buildClassicAddToCartUrl(quantity, destination) {
+    var params = new URLSearchParams();
+    var sizeAttribute = getAttributeByPattern(/size/i);
+    var colorAttribute = getAttributeByPattern(/colou?r/i);
+
+    params.set("add-to-cart", String(PRODUCT.id));
+    params.set("quantity", String(quantity));
+    if (selectedVariation && selectedVariation.id) {
+      params.set("variation_id", String(selectedVariation.id));
+    }
+    if (selectedSize && sizeAttribute) {
+      params.set(getAttributeParamKey(sizeAttribute), selectedSize);
+    }
+    if (productHasColorAttribute() && colorAttribute) {
+      params.set(getAttributeParamKey(colorAttribute), getRequiredColorValue());
+    }
+    return (destination || "/checkout/") + "?" + params.toString();
+  }
+
+  function getProductSlug() {
+    var parts = window.location.pathname.split("/").filter(Boolean);
+    var productIndex = parts.indexOf("product");
+    return productIndex >= 0 && parts[productIndex + 1] ? parts[productIndex + 1] : (parts[parts.length - 1] || "");
+  }
+
+  function getProductIdFromUrl() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var id = params.get("product_cms") || params.get("product_id") || params.get("pid");
+      return id && /^\d+$/.test(id) ? id : "";
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function urlSaysCustomize() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var customize = String(params.get("customize") || "").toLowerCase();
+      return customize === "1" || customize === "true" || customize === "yes";
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function isCustomProduct(product) {
+    var categories = product && Array.isArray(product.categories) ? product.categories : [];
+    var tags = product && Array.isArray(product.tags) ? product.tags : [];
+    var hasCustomCategory = categories.some(function (category) {
+      return category && (CUSTOM_CAT_SLUGS.indexOf(category.slug) >= 0 || /custom|design/i.test(category.name || ""));
+    });
+    var hasCustomTag = tags.some(function (tag) {
+      return tag && (CUSTOM_TAG_SLUGS.indexOf(tag.slug) >= 0 || /custom|design/i.test(tag.name || ""));
+    });
+
+    return urlSaysCustomize() || hasCustomCategory || hasCustomTag;
+  }
+
+  function loadProduct() {
+    var id = getProductIdFromUrl();
+    var slug = getProductSlug();
+    var url = id ? API + "/products/" + encodeURIComponent(id) : API + "/products?slug=" + encodeURIComponent(slug);
+
+    if (!id && !slug) {
+      showLoadError("Product not found");
+      return;
+    }
+
+    fetch(url, { credentials: "same-origin" })
+      .then(checkResponse)
+      .then(function (data) {
+        PRODUCT = id ? data : (Array.isArray(data) ? data[0] : null);
+        if (!PRODUCT || !PRODUCT.id) {
+          throw new Error("Product not found");
+        }
+        IS_CUSTOM = isCustomProduct(PRODUCT);
+        return loadVariations(PRODUCT).then(function () {
+          renderProduct(PRODUCT);
+        });
+      })
+      .catch(function () {
+        showLoadError("Product could not be loaded");
+      });
+  }
+
+  function loadVariations(product) {
+    var variations = Array.isArray(product.variations) ? product.variations : [];
+    if (!variations.length) {
+      VARIATIONS = [];
+      VARIATION_BY_KEY = {};
+      HAS_COLOR_VARIATIONS = productUsesColorVariations();
+      selectedVariation = null;
+      return Promise.resolve();
+    }
+
+    return Promise.all(variations.map(function (variation) {
+      return fetch(API + "/products/" + encodeURIComponent(variation.id), { credentials: "same-origin" })
+        .then(checkResponse)
+        .then(function (details) {
+          details.__attributes = details.attributes || variation.attributes || [];
+          details.__parentVariation = variation;
+          return details;
+        })
+        .catch(function () {
+          variation.__attributes = variation.attributes || [];
+          return variation;
+        });
+    })).then(function (details) {
+      VARIATIONS = details;
+      buildVariationMaps();
+      selectedVariation = null;
+    });
+  }
+
+  function buildVariationMaps() {
+    VARIATION_BY_KEY = {};
+    HAS_COLOR_VARIATIONS = productUsesColorVariations();
+
+    VARIATIONS.forEach(function (variation) {
+      var size = getVariationSize(variation);
+      var color = getVariationColor(variation);
+      if (color) HAS_COLOR_VARIATIONS = true;
+
+      var key = buildVariationKey(size, color);
+      if (key) {
+        VARIATION_BY_KEY[key] = variation;
+      }
+
+      if (size && !HAS_COLOR_VARIATIONS) {
+        VARIATION_BY_KEY[normalizeOption(size)] = variation;
+      }
+    });
+  }
+
+  function buildVariationKey(size, color) {
+    var parts = [];
+    if (size) parts.push(normalizeOption(size));
+    if (color) parts.push(normalizeOption(color));
+    return parts.join("|");
+  }
+
+  function checkResponse(response) {
+    if (!response.ok) {
+      throw new Error("Request failed: " + response.status);
+    }
+    return response.json();
+  }
+
+  function showLoadError(message) {
+    var title = document.getElementById("vcSpTitle");
+    title.classList.remove("vc-sp-skeleton");
+    title.removeAttribute("style");
+    title.textContent = message;
+  }
+
+  function renderProduct(product) {
+    document.getElementById("vcSpCrumb").textContent = product.name || "Product";
+    document.getElementById("vcSpType").textContent = IS_CUSTOM ? "Customizable product" : "Ready-made product";
+    document.getElementById("vcSpReviews").textContent = "(" + (product.review_count || 0) + " reviews)";
+    document.getElementById("vcSpDesc").innerHTML = product.short_description || "";
+    document.getElementById("vcSpTabDesc").innerHTML = product.description || product.short_description || "No description available.";
+    document.getElementById("vcSpSku").textContent = product.sku || "—";
+    document.getElementById("vcSpCats").textContent = (product.categories || []).map(function (item) { return item.name; }).join(", ") || "—";
+    document.getElementById("vcSpTags").textContent = (product.tags || []).map(function (item) { return item.name; }).join(", ") || "—";
+
+    var title = document.getElementById("vcSpTitle");
+    title.classList.remove("vc-sp-skeleton");
+    title.removeAttribute("style");
+    title.textContent = product.name || "Product";
+
+    renderPrice(product);
+    renderGallery(product);
+    renderAttributes(product);
+    renderMainButton();
+  }
+
+  function renderPrice(product) {
+    var price = document.getElementById("vcSpPrice");
+    if (selectedVariation && selectedVariation.prices) {
+      price.innerHTML = formatVariationPrice(selectedVariation);
+      return;
+    }
+    if (product.price_html && /\d/.test(product.price_html)) {
+      price.innerHTML = product.price_html;
+      return;
+    }
+    price.textContent = product.prices ? formatMoney(product.prices, product.prices.price) : "";
+  }
+
+  function renderGallery(product) {
+    var images = getDisplayImages(product);
+    var main = document.getElementById("vcSpMain");
+    var thumbs = document.getElementById("vcSpThumbs");
+
+    if (!images.length) {
+      main.innerHTML = '<div style="display:grid;place-items:center;height:100%;color:#94a3b8;font-weight:800">No image</div>';
+      thumbs.innerHTML = "";
+      return;
+    }
+
+    main.innerHTML = '<span class="vc-sp-badge">' + escapeHtml(IS_CUSTOM ? "Customizable" : "Ready-made") + '</span><img id="vcSpMainImg" src="' + escapeAttr(images[0].src) + '" alt="' + escapeAttr(images[0].alt || product.name || "Product") + '">';
+    thumbs.innerHTML = images.map(function (image, index) {
+      return '<button class="vc-sp-thumb ' + (index === 0 ? "is-active" : "") + '" type="button" data-index="' + index + '"><img src="' + escapeAttr(image.thumbnail || image.src) + '" alt=""></button>';
+    }).join("");
+
+    Array.prototype.forEach.call(thumbs.querySelectorAll(".vc-sp-thumb"), function (button) {
+      button.addEventListener("click", function () {
+        Array.prototype.forEach.call(thumbs.querySelectorAll(".vc-sp-thumb"), function (item) {
+          item.classList.remove("is-active");
+        });
+        button.classList.add("is-active");
+        document.getElementById("vcSpMainImg").src = images[Number(button.dataset.index)].src;
+      });
+    });
+  }
+
+  function getDisplayImages(product) {
+    if (selectedVariation && Array.isArray(selectedVariation.images) && selectedVariation.images.length) {
+      return selectedVariation.images;
+    }
+    return product.images && product.images.length ? product.images : [];
+  }
+
+  function renderAttributes(product) {
+    renderSizeOptions(getAttributeByPattern(/size/i));
+    renderColorOptions(getAttributeByPattern(/colou?r/i));
+  }
+
+  function renderSizeOptions(attribute) {
+    var wrap = document.getElementById("vcSpSizeWrap");
+    var target = document.getElementById("vcSpSizes");
+    var terms = attribute && attribute.terms ? attribute.terms : [];
+
+    target.innerHTML = "";
+    selectedSize = "";
+    if (!terms.length) {
+      wrap.style.display = "none";
+      return;
+    }
+
+    wrap.style.display = "";
+    var activeIndex = terms.findIndex(function (term) {
+      return term && term.default;
+    });
+    if (activeIndex < 0) activeIndex = 0;
+
+    terms.forEach(function (term, index) {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "vc-sp-size" + (index === activeIndex ? " is-active" : "");
+      button.textContent = term.name;
+      if (index === activeIndex) selectedSize = term.name;
+      button.addEventListener("click", function () {
+        Array.prototype.forEach.call(target.querySelectorAll(".vc-sp-size"), function (item) { item.classList.remove("is-active"); });
+        button.classList.add("is-active");
+        selectedSize = term.name;
+        syncSelectedVariation();
+      });
+      target.appendChild(button);
+    });
+    syncSelectedVariation();
+  }
+
+  function renderColorOptions(attribute) {
+    var wrap = document.getElementById("vcSpColorWrap");
+    var target = document.getElementById("vcSpColors");
+    var terms = attribute && attribute.terms ? attribute.terms : [];
+
+    target.innerHTML = "";
+    selectedColor = "";
+    if (!terms.length) {
+      wrap.style.display = "none";
+      updateSelectedColorLabel("");
+      return;
+    }
+
+    wrap.style.display = "";
+    var activeIndex = terms.findIndex(function (term) {
+      return term && term.default;
+    });
+    if (activeIndex < 0) activeIndex = 0;
+
+    terms.forEach(function (term, index) {
+      var button = document.createElement("button");
+      var swatchStyle = getSwatchStyle(term);
+
+      button.type = "button";
+      button.className = "vc-sp-color" + (index === activeIndex ? " is-active" : "");
+      button.title = term.name;
+      button.setAttribute("aria-label", term.name);
+
+      if (swatchStyle.backgroundImage) {
+        button.style.backgroundImage = swatchStyle.backgroundImage;
+        button.style.backgroundColor = swatchStyle.backgroundColor || "transparent";
+      } else {
+        button.style.backgroundColor = swatchStyle.backgroundColor;
+      }
+
+      button.innerHTML = '<span class="vc-sp-color-label">' + escapeHtml(term.name) + "</span>";
+      if (index === activeIndex) selectedColor = term.name;
+
+      button.addEventListener("click", function () {
+        Array.prototype.forEach.call(target.querySelectorAll(".vc-sp-color"), function (item) { item.classList.remove("is-active"); });
+        button.classList.add("is-active");
+        selectedColor = term.name;
+        updateSelectedColorLabel(selectedColor);
+        syncSelectedVariation();
+      });
+      target.appendChild(button);
+    });
+
+    updateSelectedColorLabel(selectedColor);
+    syncSelectedVariation();
+  }
+
+  function updateSelectedColorLabel(colorName) {
+    var label = document.getElementById("vcSpSelectedColorName");
+    label.textContent = colorName ? "— " + colorName : "";
+  }
+
+  function getSwatchStyle(term) {
+    var image = term && (term.image && (term.image.src || term.image.url)) || term.image_src || "";
+    if (image) {
+      return {
+        backgroundImage: "url('" + String(image).replace(/'/g, "\\'") + "')",
+        backgroundColor: "#fff"
+      };
+    }
+
+    return {
+      backgroundColor: colorNameToHex(term && term.name)
+    };
+  }
+
+  function syncSelectedVariation() {
+    selectVariationForCurrentOptions();
+    renderPrice(PRODUCT);
+    renderGallery(PRODUCT);
+  }
+
+  function selectVariationForCurrentOptions() {
+    if (!VARIATIONS.length) {
+      selectedVariation = null;
+      return;
+    }
+
+    selectedVariation = findMatchingVariation();
+  }
+
+  function findMatchingVariation() {
+    if (!VARIATIONS.length) return null;
+
+    var key = buildVariationKey(selectedSize, productUsesColorVariations() ? selectedColor : "");
+    if (key && VARIATION_BY_KEY[key]) {
+      return VARIATION_BY_KEY[key];
+    }
+
+    return VARIATIONS.filter(function (variation) {
+      var text = String(variation.variation || variation.name || "").toLowerCase();
+      var sizeValue = getVariationSize(variation);
+      var colorValue = getVariationColor(variation);
+      var sizeMatches = !selectedSize ||
+        normalizeOption(sizeValue) === normalizeOption(selectedSize) ||
+        text.indexOf(String(selectedSize).toLowerCase()) >= 0;
+      var colorMatches = !productUsesColorVariations() || !selectedColor ||
+        !colorValue ||
+        normalizeOption(colorValue) === normalizeOption(selectedColor) ||
+        text.indexOf(String(selectedColor).toLowerCase()) >= 0;
+
+      return sizeMatches && colorMatches;
+    })[0] || null;
+  }
+
+  function getVariationSize(variation) {
+    var text = String(variation.variation || variation.name || "");
+    var match = text.match(/size\s*:\s*([^,|]+)/i);
+    if (match && match[1]) return match[1].trim();
+
+    var attributes = variation.__attributes || variation.attributes || [];
+    return getVariationAttributeValue(attributes, /size/i);
+  }
+
+  function getVariationColor(variation) {
+    var text = String(variation.variation || variation.name || "");
+    var match = text.match(/colou?r\s*:\s*([^,|]+)/i);
+    if (match && match[1]) return match[1].trim();
+
+    var attributes = variation.__attributes || variation.attributes || [];
+    return getVariationAttributeValue(attributes, /colou?r/i);
+  }
+
+  function normalizeOption(value) {
+    return String(value || "").toLowerCase().replace(/\s+/g, "-");
+  }
+
+  function getVariationAttributeValue(attributes, pattern) {
+    var match = (attributes || []).filter(function (attribute) {
+      var name = String(attribute.name || "");
+      var taxonomy = String(attribute.taxonomy || "");
+      return pattern.test(name) || pattern.test(taxonomy);
+    })[0];
+
+    if (!match || match.value == null) return "";
+    return String(match.value).trim();
+  }
+
+  function renderMainButton() {
+    var button = document.getElementById("vcSpMainBtn");
+    button.classList.toggle("is-custom", IS_CUSTOM);
+    button.textContent = IS_CUSTOM ? "Customize Now" : "Add to Cart";
+  }
+
+  function colorNameToHex(name) {
+    var normalized = String(name || "").toLowerCase().trim();
+    if (!normalized) return "#94a3b8";
+    if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(normalized)) return normalized;
+
+    if (COLOR_HEX_MAP[normalized]) return COLOR_HEX_MAP[normalized];
+
+    var tokens = normalized.split(/[\s\-_/]+/).filter(Boolean);
+    for (var i = 0; i < tokens.length; i += 1) {
+      if (COLOR_HEX_MAP[tokens[i]]) return COLOR_HEX_MAP[tokens[i]];
+    }
+
+    for (var key in COLOR_HEX_MAP) {
+      if (normalized.indexOf(key) >= 0) return COLOR_HEX_MAP[key];
+    }
+
+    return "#94a3b8";
+  }
+
+  function formatMoney(prices, value) {
+    var decimals = Number.isFinite(Number(prices.currency_minor_unit)) ? Number(prices.currency_minor_unit) : 2;
+    var amount = Number.parseInt(value, 10);
+    var symbol = prices.currency_prefix || prices.currency_symbol || "";
+    var suffix = prices.currency_suffix || "";
+    if (!Number.isFinite(amount)) return "";
+    return symbol + (amount / Math.pow(10, decimals)).toLocaleString(undefined, { maximumFractionDigits: decimals }) + suffix;
+  }
+
+  function formatVariationPrice(variation) {
+    var prices = variation.prices || {};
+    var current = formatMoney(prices, prices.price);
+    if (prices.regular_price && prices.sale_price && prices.regular_price !== prices.sale_price) {
+      return '<del>' + escapeHtml(formatMoney(prices, prices.regular_price)) + '</del><ins>' + escapeHtml(current) + '</ins>';
+    }
+    return escapeHtml(current);
+  }
+
+  function showToast(message) {
+    var toast = document.getElementById("vcSpToast");
+    toast.textContent = message;
+    toast.classList.add("is-showing");
+    setTimeout(function () {
+      toast.classList.remove("is-showing");
+    }, 2400);
+  }
+
+  window.vcSpQty = function (delta) {
+    var input = document.getElementById("vcSpQty");
+    input.value = Math.max(1, (Number.parseInt(input.value, 10) || 1) + delta);
+  };
+
+  window.vcSpOpenChart = function () {
+    document.getElementById("vcSpChart").classList.add("is-open");
+  };
+
+  window.vcSpCloseChart = function () {
+    document.getElementById("vcSpChart").classList.remove("is-open");
+  };
+
+  window.vcSpCloseAdded = function () {
+    document.getElementById("vcSpAdded").classList.remove("is-open");
+  };
+
+  window.vcSpMainAction = function () {
+    if (!PRODUCT) return;
+    if (IS_CUSTOM) {
+      var params = new URLSearchParams({
+        product_base: LUMISE_PRODUCT_BASE,
+        product_cms: String(PRODUCT.id),
+        color: selectedColor || getRequiredColorValue(),
+        size: selectedSize
+      });
+      window.location.href = DESIGNER_URL + "?" + params.toString();
+      return;
+    }
+
+    selectVariationForCurrentOptions();
+
+    if (VARIATIONS.length && productHasColorAttribute() && !selectedColor) {
+      showToast("Please choose a color");
+      return;
+    }
+
+    if (VARIATIONS.length && !selectedVariation && selectedSize) {
+      selectedVariation = findMatchingVariation();
+    }
+
+    if (VARIATIONS.length && !selectedVariation) {
+      showToast(productHasColorAttribute() ? "Please choose an available size and color" : "Please choose an available size");
+      return;
+    }
+
+    addToCart();
+  };
+
+  function addToCart() {
+    var button = document.getElementById("vcSpMainBtn");
+    var oldText = button.textContent;
+    var quantity = Number.parseInt(document.getElementById("vcSpQty").value, 10) || 1;
+    var cartToken = "";
+    var nonce = "";
+
+    button.disabled = true;
+    button.textContent = "Adding...";
+
+    fetch(API + "/cart", {
+      credentials: "include",
+      headers: getStoredCartToken() ? { "Cart-Token": getStoredCartToken() } : {}
+    })
+      .then(function (response) {
+        nonce = response.headers.get("Nonce") || response.headers.get("X-WC-Store-API-Nonce") || "";
+        cartToken = storeCartToken(response);
+        return fetch(API + "/cart/add-item", {
+          method: "POST",
+          credentials: "include",
+          headers: getCartHeaders(nonce, cartToken),
+          body: JSON.stringify(buildAddToCartPayload(quantity))
+        });
+      })
+      .then(function (response) {
+        storeCartToken(response);
+        nonce = response.headers.get("Nonce") || response.headers.get("X-WC-Store-API-Nonce") || nonce;
+        return response.json().then(function (data) {
+          if (!response.ok) throw new Error(data && data.message ? data.message : "Add to cart failed");
+          if (!data.items || !data.items.length) throw new Error("Product was not added to cart");
+          return data;
+        });
+      })
+      .then(function () {
+        document.body.dispatchEvent(new CustomEvent("wc-blocks_added_to_cart"));
+        window.location.href = "/checkout/";
+      })
+      .catch(function () {
+        window.location.href = buildClassicAddToCartUrl(quantity, "/checkout/");
+      })
+      .finally(function () {
+        if (!button.disabled) return;
+        button.disabled = false;
+        button.textContent = oldText;
+      });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".vc-sp-tab-btn"), function (button) {
+    button.addEventListener("click", function () {
+      Array.prototype.forEach.call(document.querySelectorAll(".vc-sp-tab-btn"), function (item) { item.classList.remove("is-active"); });
+      Array.prototype.forEach.call(document.querySelectorAll(".vc-sp-tab-pane"), function (item) { item.classList.remove("is-active"); });
+      button.classList.add("is-active");
+      document.querySelector('.vc-sp-tab-pane[data-pane="' + button.dataset.tab + '"]').classList.add("is-active");
+    });
+  });
+
+  document.getElementById("vcSpChart").addEventListener("click", function (event) {
+    if (event.target.id === "vcSpChart") window.vcSpCloseChart();
+  });
+
+  document.getElementById("vcSpAdded").addEventListener("click", function (event) {
+    if (event.target.id === "vcSpAdded") window.vcSpCloseAdded();
+  });
+
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, function (character) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[character];
+    });
+  }
+
+  function escapeAttr(value) {
+    return escapeHtml(value).replace(/`/g, "&#96;");
+  }
+
+  loadProduct();
+})();
+</script>
