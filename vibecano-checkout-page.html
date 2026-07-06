@@ -582,7 +582,8 @@
   var SHOP = "/shop/";
   var WHATSAPP = "923332929254";
   var CART_TOKEN_KEY = "vcWcCartToken";
-  var SHIPPING_NORMAL = 250;
+  var SHIPPING_NORMAL = 300;
+  var SHIPPING_URGENT = 500;
   var FREE_SHIPPING_MIN = 5000;
   var CUSTOM_PRODUCT_IDS = [];
 
@@ -652,7 +653,7 @@
 
   function selectedShipping() {
     var checked = $('input[name="vcShip"]:checked');
-    return checked ? checked.value : "standard";
+    return checked ? checked.value : "normal";
   }
 
   function paymentName(method) {
@@ -748,8 +749,17 @@
     var subtotal = subtotalRaw / Math.pow(10, minor);
     var discount = discountRaw / Math.pow(10, minor);
     var apiShipping = Number(totals.total_shipping || 0) / Math.pow(10, minor);
-    var shipping = apiShipping > 0 ? apiShipping : (subtotal - discount >= FREE_SHIPPING_MIN ? 0 : SHIPPING_NORMAL);
-    if (selectedShipping() === "pickup") shipping = 0;
+    var baseShipping = selectedShipping() === "urgent" ? SHIPPING_URGENT : SHIPPING_NORMAL;
+    var shipping = apiShipping > 0 ? apiShipping : baseShipping;
+    var shippingNote = selectedShipping() === "urgent" ? "Urgent delivery" : "Normal delivery";
+
+    if (subtotal - discount >= FREE_SHIPPING_MIN) {
+      shipping = 0;
+      shippingNote = "Free shipping over Rs. 5,000";
+    } else if (!hasCustomItems(cartData && cartData.items) && selectedPayment() !== "cod") {
+      shipping = Math.round(shipping / 2);
+      shippingNote += " — 50% advance payment discount";
+    }
     var total = subtotal - discount + shipping + Number(totals.total_tax || 0) / Math.pow(10, minor);
     return {
       minor: minor,
@@ -759,6 +769,7 @@
       discount: discount,
       discountRaw: discountRaw,
       shipping: shipping,
+      shippingNote: shippingNote,
       tax: Number(totals.total_tax || 0) / Math.pow(10, minor),
       total: total,
       freeShipping: subtotal - discount >= FREE_SHIPPING_MIN
@@ -818,6 +829,34 @@
       });
     }
 
+    if (item && Array.isArray(item.attributes)) {
+      item.attributes.forEach(function (entry) {
+        pushLine(entry && entry.name, entry && entry.value);
+      });
+    }
+
+    if (typeof item && item.variation === "string" && item.variation.trim()) {
+      item.variation.split(/,\s*/).forEach(function (part) {
+        var pieces = String(part || "").split(/\s*:\s*/);
+        if (pieces.length >= 2) pushLine(pieces[0], pieces.slice(1).join(": "));
+      });
+    }
+
+    if (!lines.length) {
+      var name = String(item && item.name || "");
+      var dashIndex = name.indexOf(" - ");
+      if (dashIndex >= 0) {
+        name.slice(dashIndex + 3).split(/,\s*/).forEach(function (part) {
+          part = String(part || "").trim();
+          if (!part) return;
+          if (/^(xs|s|m|l|xl|xxl|small|medium|large)$/i.test(part)) pushLine("Size", part);
+          else if (/^size\b/i.test(part)) pushLine("Size", part.replace(/^size\s*:?\s*/i, ""));
+          else if (/^colou?r\b/i.test(part)) pushLine("Color", part.replace(/^colou?r\s*:?\s*/i, ""));
+          else pushLine("Option", part);
+        });
+      }
+    }
+
     return lines;
   }
 
@@ -869,26 +908,16 @@
   function buildWhatsAppMessage(order, formData, payLabel) {
     var computed = checkoutTotals(cart);
     var lines = [
-      "New Vibecano Order",
-      "Order #" + (order && (order.order_id || order.id) ? (order.order_id || order.id) : "Pending"),
+      "🛍️ *NEW ORDER — Vibecano*",
       "",
-      "Customer: " + formData.firstName + " " + formData.lastName,
-      "Phone: " + formData.phone,
-      "Email: " + (formData.email || "—"),
-      "Address: " + formData.address + ", " + formData.city + ", " + formData.province + " " + formData.postcode,
-      "Shipping: " + (selectedShipping() === "pickup" ? "Self pickup" : "Standard delivery"),
-      "Payment: " + payLabel
-    ];
+      "*Customer:* " + formData.firstName + " " + formData.lastName,
+      "*Phone:* " + formData.phone,
+      formData.email ? "*Email:* " + formData.email : "",
+      "*Address:* " + formData.address + ", " + formData.city + ", " + formData.province + (formData.postcode ? " " + formData.postcode : ""),
+      "",
+      "*Items:*"
+    ].filter(Boolean);
 
-    if (selectedPayment() !== "cod" && receipt && receipt.name) {
-      lines.push("Receipt: " + receipt.name + " (please attach the uploaded receipt image/file)");
-    }
-
-    if (formData.note) {
-      lines.push("Notes: " + formData.note);
-    }
-
-    lines.push("", "Items:");
     (cart.items || []).forEach(function (item) {
       lines.push(
         "• " + (item.name || "Product") +
@@ -900,12 +929,34 @@
       });
     });
 
-    lines.push(
-      "",
-      "Subtotal: " + formatMoney(computed.subtotalRaw, computed.minor, computed.prefix),
-      "Shipping: " + (computed.shipping > 0 ? formatMoney(Math.round(computed.shipping * Math.pow(10, computed.minor)), computed.minor, computed.prefix) : "Free"),
-      "Total: " + formatMoney(Math.round(computed.total * Math.pow(10, computed.minor)), computed.minor, computed.prefix)
-    );
+    lines.push("");
+    lines.push("*Subtotal:* " + formatMoney(computed.subtotalRaw, computed.minor, computed.prefix));
+    lines.push("*Delivery:* " + (selectedShipping() === "urgent" ? "Urgent Delivery" : "Normal Delivery"));
+    lines.push("*Shipping:* " + (computed.shipping > 0 ? formatMoney(Math.round(computed.shipping * Math.pow(10, computed.minor)), computed.minor, computed.prefix) : computed.shippingNote));
+    lines.push("*TOTAL:* " + formatMoney(Math.round(computed.total * Math.pow(10, computed.minor)), computed.minor, computed.prefix));
+    lines.push("");
+    lines.push("*Payment:* " + payLabel);
+
+    if (selectedPayment() !== "cod") {
+      lines.push("_Advance payment receipt is required before order confirmation._");
+      if (receipt && receipt.name) {
+        lines.push("*Receipt file:* " + receipt.name);
+      }
+    }
+
+    if (hasCustomItems()) {
+      lines.push("_Customizable products are confirmed only after full payment receipt verification._");
+    }
+
+    if (formData.note) {
+      lines.push("");
+      lines.push("*Special Instructions:*");
+      lines.push(formData.note);
+    }
+
+    if (order && (order.order_id || order.id)) {
+      lines.unshift("Order #" + (order.order_id || order.id));
+    }
 
     return lines.join("\n");
   }
@@ -917,8 +968,11 @@
       try {
         var sharePayload = { text: message, files: [receipt.file] };
         if (!navigator.canShare || navigator.canShare(sharePayload)) {
-          navigator.share(sharePayload).catch(function () {
+          navigator.share(sharePayload).then(function () {
+            showToast("Order sent — receipt shared");
+          }).catch(function () {
             window.open(waUrl, "_blank");
+            showToast("Attach your payment receipt in WhatsApp");
           });
           return;
         }
@@ -926,6 +980,9 @@
     }
 
     window.open(waUrl, "_blank");
+    if (receipt && receipt.name) {
+      showToast("Attach your payment receipt in WhatsApp");
+    }
 
     if (
       receipt &&
@@ -1239,8 +1296,8 @@
           '</div>',
           '<h3>Shipping method</h3>',
           '<div class="vc-checkout-shipping" id="vcCoShipping">',
-            renderShippingOption("standard", true, "Standard delivery", "Rs " + SHIPPING_NORMAL + " nationwide (free on orders over Rs " + FREE_SHIPPING_MIN.toLocaleString("en-PK") + ")"),
-            renderShippingOption("pickup", false, "Self pickup", "Collect from our studio — free"),
+            renderShippingOption("normal", true, "Normal Delivery", "Flat Rs. 300 all over Pakistan."),
+            renderShippingOption("urgent", false, "Urgent Delivery", "Priority delivery support for Rs. 500."),
           '</div>',
           '<h3>Payment method</h3>',
           '<div class="vc-checkout-payments" id="vcCoPayments">',
