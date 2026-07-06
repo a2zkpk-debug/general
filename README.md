@@ -10,7 +10,7 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 
 ## Checkout full-width fix
 
-The checkout section now breaks out of narrow Elementor containers using full-viewport CSS (`100vw` + `calc(50% - 50vw)`) with a JavaScript fallback on load/resize when a right-side gap is detected.
+The checkout section now stretches to full page width on Elementor. The live checkout HTML widget uses `elementor-widget__width-initial`, which limited the page to about 963px and left empty space on the right. The fix expands the Elementor host containers to `100%` width via JavaScript on load, render, and resize.
 
 ## Checkout WhatsApp fix (color, size, receipt)
 

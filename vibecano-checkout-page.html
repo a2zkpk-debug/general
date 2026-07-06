@@ -19,10 +19,8 @@
     --vc-co-orange: #f97316;
     --vc-co-blue: #2563eb;
     position: relative;
-    width: 100vw;
-    max-width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
+    width: 100%;
+    max-width: none;
     overflow-x: hidden;
     padding: 44px 0 72px;
     background:
@@ -786,26 +784,39 @@
     };
   }
 
-  function fitCheckoutToViewport() {
+  function expandCheckoutHost() {
     var section = $("#vcCheckoutSection");
     if (!section) return;
 
-    var scrollbar = window.innerWidth - document.documentElement.clientWidth;
-    var fullWidth = window.innerWidth - scrollbar;
-    var rect = section.getBoundingClientRect();
-    var gapRight = fullWidth - (rect.left + rect.width);
-
-    if (rect.left > 1 || gapRight > 1) {
-      section.style.width = fullWidth + "px";
-      section.style.maxWidth = fullWidth + "px";
-      section.style.marginLeft = -rect.left + "px";
-      section.style.marginRight = "0";
-    } else {
-      section.style.width = "";
-      section.style.maxWidth = "";
-      section.style.marginLeft = "";
-      section.style.marginRight = "";
+    var node = section.parentElement;
+    while (node && node !== document.documentElement) {
+      if (
+        node.classList &&
+        (
+          node.classList.contains("elementor-widget") ||
+          node.classList.contains("elementor-element") ||
+          node.classList.contains("e-con") ||
+          node.classList.contains("elementor-widget-wrap") ||
+          node.classList.contains("elementor")
+        )
+      ) {
+        node.style.setProperty("width", "100%", "important");
+        node.style.setProperty("max-width", "none", "important");
+        node.style.setProperty("align-self", "stretch", "important");
+        node.style.setProperty("flex", "1 1 100%", "important");
+      }
+      node = node.parentElement;
     }
+
+    section.style.setProperty("width", "100%", "important");
+    section.style.setProperty("max-width", "none", "important");
+  }
+
+  function fitCheckoutToViewport() {
+    expandCheckoutHost();
+
+    var section = $("#vcCheckoutSection");
+    if (!section) return;
 
     var viewport = window.innerHeight || document.documentElement.clientHeight || 0;
     section.style.minHeight = viewport > 640 ? "" : viewport + "px";
