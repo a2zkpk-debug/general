@@ -8,6 +8,10 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 - `vibecano-cart-page.html` — Custom cart page with Store API integration
 - `vibecano-checkout-page.html` — Custom checkout page with WhatsApp order flow
 
+## Checkout full-width fix
+
+The checkout section now breaks out of narrow Elementor containers using full-viewport CSS (`100vw` + `calc(50% - 50vw)`) with a JavaScript fallback on load/resize when a right-side gap is detected.
+
 ## Checkout WhatsApp fix (color, size, receipt)
 
 WhatsApp messages now include Size/Color from Store API cart variations. Receipt uploads use the mobile Share API when available; desktop opens a receipt image tab for manual attach because `wa.me` links cannot include files.
