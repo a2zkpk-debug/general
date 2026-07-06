@@ -1,0 +1,1156 @@
+<!-- ============================================================
+     VIBECANO — CUSTOM CHECKOUT PAGE
+     Paste this whole file into an Elementor HTML widget.
+     Uses WooCommerce Store API.
+     ============================================================ -->
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Manrope:wght@700;800&display=swap");
+
+  .vc-checkout-page,
+  .vc-checkout-page * {
+    box-sizing: border-box;
+  }
+
+  .vc-checkout-page {
+    --vc-co-text: #0f172a;
+    --vc-co-muted: #64748b;
+    --vc-co-line: rgba(148, 163, 184, 0.28);
+    --vc-co-soft: #f8fafc;
+    --vc-co-orange: #f97316;
+    --vc-co-blue: #2563eb;
+    position: relative;
+    overflow: hidden;
+    padding: 44px 18px 72px;
+    background:
+      radial-gradient(circle at 8% 4%, rgba(249, 115, 22, 0.11), transparent 28%),
+      radial-gradient(circle at 92% 0%, rgba(37, 99, 235, 0.11), transparent 30%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    color: var(--vc-co-text);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .vc-checkout-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  .vc-checkout-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 22px;
+    align-items: end;
+    margin-bottom: 24px;
+    padding: clamp(24px, 4vw, 38px);
+    border-radius: 34px;
+    background:
+      radial-gradient(circle at top right, rgba(249, 115, 22, 0.22), transparent 35%),
+      linear-gradient(135deg, #07111f 0%, #0f172a 52%, #172554 100%);
+    color: #fff;
+    box-shadow: 0 30px 80px -58px rgba(15, 23, 42, 0.9);
+  }
+
+  .vc-checkout-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 8px 13px;
+    border: 1px solid rgba(249, 115, 22, 0.35);
+    border-radius: 999px;
+    background: rgba(249, 115, 22, 0.13);
+    color: #fed7aa;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .vc-checkout-kicker::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--vc-co-orange);
+    box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.13);
+  }
+
+  .vc-checkout-title {
+    max-width: 760px;
+    margin: 0;
+    font-family: Manrope, Inter, sans-serif;
+    font-size: clamp(34px, 5vw, 58px);
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+  }
+
+  .vc-checkout-title span {
+    color: #fb923c;
+  }
+
+  .vc-checkout-sub {
+    max-width: 650px;
+    margin: 14px 0 0;
+    color: #cbd5e1;
+    font-size: 16px;
+    font-weight: 650;
+    line-height: 1.75;
+  }
+
+  .vc-checkout-hero-card {
+    min-width: 220px;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+  }
+
+  .vc-checkout-hero-card b {
+    display: block;
+    font-size: 24px;
+    font-weight: 900;
+  }
+
+  .vc-checkout-hero-card span {
+    display: block;
+    margin-top: 4px;
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vc-checkout-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 22px;
+    align-items: start;
+  }
+
+  .vc-checkout-form {
+    display: grid;
+    gap: 18px;
+    padding: 22px;
+    border: 1px solid var(--vc-co-line);
+    border-radius: 26px;
+    background: #fff;
+    box-shadow: 0 22px 58px -48px rgba(15, 23, 42, 0.7);
+  }
+
+  .vc-checkout-form h3 {
+    margin: 0;
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .vc-checkout-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .vc-checkout-field {
+    display: grid;
+    gap: 7px;
+  }
+
+  .vc-checkout-field.is-full {
+    grid-column: 1 / -1;
+  }
+
+  .vc-checkout-field label {
+    color: var(--vc-co-muted);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vc-checkout-field input,
+  .vc-checkout-field textarea,
+  .vc-checkout-field select {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid var(--vc-co-line);
+    border-radius: 14px;
+    background: var(--vc-co-soft);
+    color: var(--vc-co-text);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 650;
+    outline: 0;
+  }
+
+  .vc-checkout-field textarea {
+    min-height: 92px;
+    resize: vertical;
+  }
+
+  .vc-checkout-payments {
+    display: grid;
+    gap: 10px;
+  }
+
+  .vc-checkout-pay {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    padding: 14px;
+    border: 1px solid var(--vc-co-line);
+    border-radius: 18px;
+    background: var(--vc-co-soft);
+    cursor: pointer;
+    transition: border-color 0.18s ease, background 0.18s ease;
+  }
+
+  .vc-checkout-pay.is-active {
+    border-color: var(--vc-co-orange);
+    background: #fff7ed;
+  }
+
+  .vc-checkout-pay input {
+    margin-top: 3px;
+  }
+
+  .vc-checkout-pay b {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .vc-checkout-pay span {
+    display: block;
+    color: var(--vc-co-muted);
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.55;
+  }
+
+  .vc-checkout-bank {
+    display: none;
+    margin-top: 12px;
+    padding: 14px;
+    border: 1px dashed var(--vc-co-line);
+    border-radius: 16px;
+    background: #fff;
+    color: var(--vc-co-muted);
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.65;
+  }
+
+  .vc-checkout-bank.is-visible {
+    display: block;
+  }
+
+  .vc-checkout-receipt {
+    display: none;
+    margin-top: 12px;
+  }
+
+  .vc-checkout-receipt.is-visible {
+    display: grid;
+    gap: 8px;
+  }
+
+  .vc-checkout-receipt label {
+    color: var(--vc-co-muted);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vc-checkout-receipt input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px dashed var(--vc-co-line);
+    border-radius: 14px;
+    background: #fff;
+    font-size: 13px;
+  }
+
+  .vc-checkout-receipt-name {
+    color: #16a34a;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .vc-checkout-summary {
+    position: sticky;
+    top: 18px;
+    padding: 20px;
+    border: 1px solid var(--vc-co-line);
+    border-radius: 26px;
+    background:
+      radial-gradient(circle at top right, rgba(249, 115, 22, 0.08), transparent 38%),
+      #fff;
+    box-shadow: 0 26px 70px -56px rgba(15, 23, 42, 0.9);
+  }
+
+  .vc-checkout-summary h3 {
+    margin: 0 0 16px;
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .vc-order-list {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .vc-order-item {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: start;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--vc-co-line);
+  }
+
+  .vc-order-item:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .vc-order-img {
+    overflow: hidden;
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    background: var(--vc-co-soft);
+  }
+
+  .vc-order-img img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .vc-order-name {
+    margin: 0 0 4px;
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+
+  .vc-order-meta {
+    color: var(--vc-co-muted);
+    font-size: 12px;
+    font-weight: 650;
+    line-height: 1.5;
+  }
+
+  .vc-order-price {
+    color: var(--vc-co-text);
+    font-size: 14px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .vc-checkout-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 9px 0;
+    color: var(--vc-co-muted);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .vc-checkout-row.total {
+    margin-top: 10px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--vc-co-line);
+    color: var(--vc-co-text);
+    font-size: 19px;
+    font-weight: 900;
+  }
+
+  .vc-checkout-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 50px;
+    margin-top: 14px;
+    border: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--vc-co-orange), #ec4899);
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 900;
+    box-shadow: 0 22px 38px -26px rgba(249, 115, 22, 0.95);
+  }
+
+  .vc-checkout-submit:disabled {
+    cursor: wait;
+    opacity: 0.7;
+  }
+
+  .vc-checkout-back {
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 12px;
+    color: var(--vc-co-muted);
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .vc-checkout-empty,
+  .vc-checkout-loading {
+    padding: 48px 20px;
+    border: 1px dashed var(--vc-co-line);
+    border-radius: 26px;
+    background: #fff;
+    color: var(--vc-co-muted);
+    text-align: center;
+    box-shadow: 0 22px 58px -48px rgba(15, 23, 42, 0.7);
+  }
+
+  .vc-checkout-empty h3 {
+    margin: 0 0 8px;
+    color: var(--vc-co-text);
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  .vc-checkout-empty p {
+    margin: 0 auto 18px;
+    max-width: 440px;
+    font-size: 14px;
+    font-weight: 650;
+    line-height: 1.6;
+  }
+
+  .vc-checkout-empty a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 18px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--vc-co-orange), #ec4899);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  .vc-checkout-toast {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 100000;
+    padding: 13px 18px;
+    border-radius: 999px;
+    background: #0f172a;
+    color: #fff;
+    box-shadow: 0 20px 40px -28px rgba(0, 0, 0, 0.75);
+    font-size: 14px;
+    font-weight: 800;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.28s ease, transform 0.28s ease;
+    pointer-events: none;
+  }
+
+  .vc-checkout-toast.is-showing {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 960px) {
+    .vc-checkout-hero,
+    .vc-checkout-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .vc-checkout-summary {
+      position: static;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .vc-checkout-page {
+      padding: 28px 14px 58px;
+    }
+
+    .vc-checkout-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .vc-order-item {
+      grid-template-columns: 56px minmax(0, 1fr);
+    }
+
+    .vc-order-price {
+      grid-column: 2;
+      justify-self: start;
+    }
+  }
+</style>
+
+<section class="vc-checkout-page">
+  <div class="vc-checkout-inner">
+    <div class="vc-checkout-hero">
+      <div>
+        <span class="vc-checkout-kicker">Vibecano checkout</span>
+        <h1 class="vc-checkout-title">Complete your <span>order</span> securely.</h1>
+        <p class="vc-checkout-sub">Enter your delivery details, choose a payment method, and confirm your order on WhatsApp.</p>
+      </div>
+      <div class="vc-checkout-hero-card">
+        <b id="vcCheckoutTotal">—</b>
+        <span>Order total</span>
+      </div>
+    </div>
+
+    <div id="vcCheckoutRoot">
+      <div class="vc-checkout-loading">Loading checkout...</div>
+    </div>
+  </div>
+</section>
+
+<div id="vcCheckoutToast" class="vc-checkout-toast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var API = "/wp-json/wc/store/v1";
+  var CART = "/cart/";
+  var SHOP = "/shop/";
+  var WHATSAPP = "923332929254";
+  var CART_TOKEN_KEY = "vcWcCartToken";
+
+  var root = document.getElementById("vcCheckoutRoot");
+  var toastEl = document.getElementById("vcCheckoutToast");
+  var totalEl = document.getElementById("vcCheckoutTotal");
+  var nonce = "";
+  var cart = null;
+  var selectedPayment = "cod";
+  var paymentReceipt = null;
+
+  if (!root || !toastEl || !window.fetch) {
+    return;
+  }
+
+  function bootstrapCartTokenFromUrl() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var session = params.get("session");
+      if (session) {
+        sessionStorage.setItem(CART_TOKEN_KEY, session);
+      }
+    } catch (error) {}
+  }
+
+  bootstrapCartTokenFromUrl();
+
+  function getStoredCartToken() {
+    try {
+      return sessionStorage.getItem(CART_TOKEN_KEY) || "";
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function storeCartToken(response) {
+    var token = response.headers.get("Cart-Token");
+    if (!token) return getStoredCartToken();
+    try {
+      sessionStorage.setItem(CART_TOKEN_KEY, token);
+    } catch (error) {}
+    return token;
+  }
+
+  function getCartHeaders() {
+    var headers = {
+      "Content-Type": "application/json",
+      "Nonce": nonce,
+      "X-WC-Store-API-Nonce": nonce
+    };
+    var token = getStoredCartToken();
+    if (token) headers["Cart-Token"] = token;
+    return headers;
+  }
+
+  function showToast(message) {
+    toastEl.textContent = message;
+    toastEl.classList.add("is-showing");
+    setTimeout(function () {
+      toastEl.classList.remove("is-showing");
+    }, 2300);
+  }
+
+  function fetchCart() {
+    var headers = {};
+    var token = getStoredCartToken();
+    if (token) headers["Cart-Token"] = token;
+
+    return fetch(API + "/cart", { credentials: "include", headers: headers }).then(function (response) {
+      nonce = response.headers.get("Nonce") || response.headers.get("X-WC-Store-API-Nonce") || nonce;
+      storeCartToken(response);
+      if (!response.ok) throw new Error("Cart request failed");
+      return response.json();
+    });
+  }
+
+  function updateCustomer(payload) {
+    return fetch(API + "/cart/update-customer", {
+      method: "POST",
+      credentials: "include",
+      headers: getCartHeaders(),
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      nonce = response.headers.get("Nonce") || response.headers.get("X-WC-Store-API-Nonce") || nonce;
+      storeCartToken(response);
+      return response.json().then(function (data) {
+        if (!response.ok) {
+          throw new Error(data && data.message ? data.message : "Could not update customer details");
+        }
+        return data;
+      });
+    });
+  }
+
+  function checkoutOrder(payload) {
+    return fetch(API + "/checkout", {
+      method: "POST",
+      credentials: "include",
+      headers: getCartHeaders(),
+      body: JSON.stringify(payload)
+    }).then(function (response) {
+      nonce = response.headers.get("Nonce") || response.headers.get("X-WC-Store-API-Nonce") || nonce;
+      storeCartToken(response);
+      return response.json().then(function (data) {
+        if (!response.ok) {
+          throw new Error(data && data.message ? data.message : "Checkout failed");
+        }
+        return data;
+      });
+    });
+  }
+
+  function normalizeMetaLabel(raw) {
+    var label = String(raw || "")
+      .replace(/^attribute_/i, "")
+      .replace(/^pa_/i, "")
+      .replace(/[-_]/g, " ")
+      .trim();
+
+    if (/^size$/i.test(label)) return "Size";
+    if (/^colou?r$/i.test(label)) return "Color";
+    if (!label) return "Detail";
+
+    return label.split(/\s+/).map(function (word) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(" ");
+  }
+
+  function getItemMetaLines(item) {
+    var lines = [];
+    var seen = {};
+
+    function pushLine(label, value) {
+      var cleanLabel = normalizeMetaLabel(label);
+      var cleanValue = String(value || "").trim();
+      if (!cleanValue) return;
+
+      var key = cleanLabel.toLowerCase() + "::" + cleanValue.toLowerCase();
+      if (seen[key]) return;
+      seen[key] = true;
+      lines.push({ label: cleanLabel, value: cleanValue });
+    }
+
+    if (item && Array.isArray(item.variation)) {
+      item.variation.forEach(function (entry) {
+        pushLine(entry && entry.attribute, entry && entry.value);
+      });
+    }
+
+    if (item && Array.isArray(item.item_data)) {
+      item.item_data.forEach(function (entry) {
+        pushLine(
+          (entry && (entry.name || entry.key || entry.attribute)) || "",
+          (entry && (entry.display || entry.value)) || ""
+        );
+      });
+    }
+
+    return lines;
+  }
+
+  function formatItemMetaInline(item) {
+    var parts = ["Qty: " + Number(item.quantity || 1)];
+    getItemMetaLines(item).forEach(function (line) {
+      parts.push(line.label + ": " + line.value);
+    });
+    return parts.join(" · ");
+  }
+
+  function formatItemMetaForNote(item) {
+    var meta = getItemMetaLines(item).map(function (line) {
+      return line.label + ": " + line.value;
+    }).join(", ");
+    return (item.name || "Product") + " x" + Number(item.quantity || 1) + (meta ? " (" + meta + ")" : "");
+  }
+
+  function buildCustomerNote(formData, paymentLabel, receiptName) {
+    var lines = [
+      "Vibecano custom checkout",
+      "Payment: " + paymentLabel
+    ];
+
+    if (receiptName) {
+      lines.push("Receipt file: " + receiptName);
+    }
+
+    if (formData.notes) {
+      lines.push("Customer note: " + formData.notes);
+    }
+
+    lines.push("Items:");
+    (cart.items || []).forEach(function (item) {
+      lines.push("- " + formatItemMetaForNote(item));
+    });
+
+    return lines.join("\n");
+  }
+
+  function buildWhatsAppMessage(order, formData, paymentLabel) {
+    var totals = cart && cart.totals ? cart.totals : {};
+    var minor = Number.isFinite(Number(totals.currency_minor_unit)) ? Number(totals.currency_minor_unit) : 0;
+    var prefix = totals.currency_prefix || totals.currency_symbol || "Rs ";
+    var lines = [
+      "New Vibecano Order",
+      "Order #" + (order && (order.order_id || order.id) ? (order.order_id || order.id) : "Pending"),
+      "",
+      "Customer: " + formData.fullName,
+      "Phone: " + formData.phone,
+      "Email: " + (formData.email || "—"),
+      "Address: " + formData.address + ", " + formData.city,
+      "Payment: " + paymentLabel
+    ];
+
+    if (selectedPayment !== "cod" && paymentReceipt && paymentReceipt.name) {
+      lines.push("Receipt: " + paymentReceipt.name + " (please attach the uploaded receipt image/file)");
+    }
+
+    if (formData.notes) {
+      lines.push("Notes: " + formData.notes);
+    }
+
+    lines.push("", "Items:");
+    (cart.items || []).forEach(function (item) {
+      lines.push(
+        "• " + (item.name || "Product") +
+        " x" + Number(item.quantity || 1) +
+        " — " + formatMoney(item.totals && item.totals.line_total, minor, prefix)
+      );
+      getItemMetaLines(item).forEach(function (meta) {
+        lines.push("  ↳ " + meta.label + ": " + meta.value);
+      });
+    });
+
+    lines.push(
+      "",
+      "Subtotal: " + formatMoney(totals.total_items, minor, prefix),
+      "Total: " + formatMoney(totals.total_price, minor, prefix)
+    );
+
+    return lines.join("\n");
+  }
+
+  function openWhatsAppWithReceipt(message) {
+    var waUrl = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(message);
+
+    if (paymentReceipt && paymentReceipt.file && navigator.share) {
+      try {
+        var sharePayload = { text: message, files: [paymentReceipt.file] };
+        if (!navigator.canShare || navigator.canShare(sharePayload)) {
+          navigator.share(sharePayload).catch(function () {
+            window.open(waUrl, "_blank");
+          });
+          return;
+        }
+      } catch (error) {}
+    }
+
+    window.open(waUrl, "_blank");
+
+    if (
+      paymentReceipt &&
+      paymentReceipt.type &&
+      paymentReceipt.type.indexOf("image/") === 0 &&
+      paymentReceipt.dataUrl &&
+      (!navigator.share || !navigator.canShare)
+    ) {
+      setTimeout(function () {
+        var receiptWindow = window.open("", "_blank");
+        if (!receiptWindow) return;
+        receiptWindow.document.write(
+          "<!doctype html><html><head><meta charset=\"utf-8\"><title>Attach payment receipt</title></head>" +
+          "<body style=\"font-family:Inter,sans-serif;padding:24px;max-width:720px;margin:0 auto;text-align:center;color:#0f172a\">" +
+          "<h2 style=\"margin:0 0 10px\">Payment receipt</h2>" +
+          "<p style=\"color:#64748b;line-height:1.6\">WhatsApp links cannot attach files automatically. Long-press or save this image, then attach it in your WhatsApp chat.</p>" +
+          "<img src=\"" + paymentReceipt.dataUrl + "\" alt=\"Payment receipt\" style=\"max-width:100%;height:auto;border-radius:16px;border:1px solid #e2e8f0;margin:18px 0\">" +
+          "<p style=\"font-size:13px;color:#64748b\">File: " + escapeHtml(paymentReceipt.name || "receipt") + "</p>" +
+          "</body></html>"
+        );
+        receiptWindow.document.close();
+      }, 400);
+    }
+  }
+
+  function getPaymentLabel(method) {
+    if (method === "cod") return "Cash on Delivery";
+    if (method === "bacs") return "Bank Transfer / JazzCash / EasyPaisa";
+    if (method === "cheque") return "Cheque";
+    return method;
+  }
+
+  function readFormData() {
+    return {
+      fullName: String(document.getElementById("vcCoName").value || "").trim(),
+      phone: String(document.getElementById("vcCoPhone").value || "").trim(),
+      email: String(document.getElementById("vcCoEmail").value || "").trim(),
+      address: String(document.getElementById("vcCoAddress").value || "").trim(),
+      city: String(document.getElementById("vcCoCity").value || "").trim(),
+      notes: String(document.getElementById("vcCoNotes").value || "").trim()
+    };
+  }
+
+  function validateForm(formData) {
+    if (!formData.fullName) return "Please enter your full name.";
+    if (!formData.phone) return "Please enter your phone number.";
+    if (!formData.address) return "Please enter your delivery address.";
+    if (!formData.city) return "Please enter your city.";
+    if (selectedPayment !== "cod" && !paymentReceipt) {
+      return "Please upload your payment receipt for the selected payment method.";
+    }
+    return "";
+  }
+
+  function splitName(fullName) {
+    var parts = String(fullName || "").trim().split(/\s+/);
+    if (!parts.length) return { first_name: "", last_name: "" };
+    if (parts.length === 1) return { first_name: parts[0], last_name: "." };
+    return {
+      first_name: parts.shift(),
+      last_name: parts.join(" ")
+    };
+  }
+
+  function placeOrder() {
+    var formData = readFormData();
+    var validationError = validateForm(formData);
+    if (validationError) {
+      showToast(validationError);
+      return;
+    }
+
+    var submitButton = document.getElementById("vcCoSubmit");
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Placing order...";
+    }
+
+    var nameParts = splitName(formData.fullName);
+    var paymentLabel = getPaymentLabel(selectedPayment);
+    var receiptName = paymentReceipt && paymentReceipt.name ? paymentReceipt.name : "";
+    var customerNote = buildCustomerNote(formData, paymentLabel, receiptName);
+
+    var addressPayload = {
+      billing_address: {
+        first_name: nameParts.first_name,
+        last_name: nameParts.last_name,
+        company: "",
+        address_1: formData.address,
+        address_2: "",
+        city: formData.city,
+        state: "PB",
+        postcode: "",
+        country: "PK",
+        email: formData.email,
+        phone: formData.phone
+      },
+      shipping_address: {
+        first_name: nameParts.first_name,
+        last_name: nameParts.last_name,
+        company: "",
+        address_1: formData.address,
+        address_2: "",
+        city: formData.city,
+        state: "PB",
+        postcode: "",
+        country: "PK",
+        phone: formData.phone
+      }
+    };
+
+    updateCustomer(addressPayload)
+      .then(function (updatedCart) {
+        cart = updatedCart;
+        return checkoutOrder({
+          billing_address: addressPayload.billing_address,
+          shipping_address: addressPayload.shipping_address,
+          payment_method: selectedPayment,
+          customer_note: customerNote
+        });
+      })
+      .then(function (order) {
+        var message = buildWhatsAppMessage(order, formData, paymentLabel);
+        openWhatsAppWithReceipt(message);
+        showToast("Order placed — opening WhatsApp");
+        renderSuccess(order);
+      })
+      .catch(function (error) {
+        showToast(error.message || "Could not place order");
+      })
+      .finally(function () {
+        if (!submitButton) return;
+        submitButton.disabled = false;
+        submitButton.textContent = "Place Order & Confirm on WhatsApp";
+      });
+  }
+
+  function render(cartData) {
+    cart = cartData;
+    var items = cart && Array.isArray(cart.items) ? cart.items : [];
+    var totals = cart && cart.totals ? cart.totals : {};
+    var minor = Number.isFinite(Number(totals.currency_minor_unit)) ? Number(totals.currency_minor_unit) : 0;
+    var prefix = totals.currency_prefix || totals.currency_symbol || "Rs ";
+
+    totalEl.textContent = formatMoney(totals.total_price, minor, prefix);
+
+    if (!items.length) {
+      renderEmpty();
+      return;
+    }
+
+    var methods = Array.isArray(cart.payment_methods) && cart.payment_methods.length
+      ? cart.payment_methods
+      : ["cod", "bacs", "cheque"];
+
+    if (methods.indexOf(selectedPayment) < 0) {
+      selectedPayment = methods[0];
+    }
+
+    root.innerHTML = [
+      '<div class="vc-checkout-shell">',
+        '<form class="vc-checkout-form" id="vcCheckoutForm" novalidate>',
+          '<h3>Delivery details</h3>',
+          '<div class="vc-checkout-grid">',
+            '<div class="vc-checkout-field is-full"><label for="vcCoName">Full name</label><input id="vcCoName" type="text" autocomplete="name" required></div>',
+            '<div class="vc-checkout-field"><label for="vcCoPhone">WhatsApp / phone</label><input id="vcCoPhone" type="tel" autocomplete="tel" required></div>',
+            '<div class="vc-checkout-field"><label for="vcCoEmail">Email (optional)</label><input id="vcCoEmail" type="email" autocomplete="email"></div>',
+            '<div class="vc-checkout-field is-full"><label for="vcCoAddress">Complete address</label><input id="vcCoAddress" type="text" autocomplete="street-address" required></div>',
+            '<div class="vc-checkout-field"><label for="vcCoCity">City</label><input id="vcCoCity" type="text" autocomplete="address-level2" required></div>',
+            '<div class="vc-checkout-field is-full"><label for="vcCoNotes">Order notes (optional)</label><textarea id="vcCoNotes" placeholder="Delivery instructions, gift message, etc."></textarea></div>',
+          '</div>',
+          '<h3>Payment method</h3>',
+          '<div class="vc-checkout-payments" id="vcCoPayments">',
+            methods.map(function (method) {
+              return renderPaymentOption(method, method === selectedPayment);
+            }).join(""),
+          '</div>',
+          '<div class="vc-checkout-bank' + (selectedPayment !== "cod" ? " is-visible" : "") + '" id="vcCoBankDetails">',
+            '<strong>Bank / wallet details</strong><br>',
+            'Account Title: Vibecano<br>',
+            'Bank: Meezan Bank<br>',
+            'Account #: 01234567890123<br>',
+            'JazzCash / EasyPaisa: 0333-2929254',
+          '</div>',
+          '<div class="vc-checkout-receipt' + (selectedPayment !== "cod" ? " is-visible" : "") + '" id="vcCoReceiptWrap">',
+            '<label for="vcCoReceipt">Upload payment receipt</label>',
+            '<input id="vcCoReceipt" type="file" accept="image/*,.pdf">',
+            '<div class="vc-checkout-receipt-name" id="vcCoReceiptName"></div>',
+          '</div>',
+        '</form>',
+        renderSummary(items, totals, minor, prefix),
+      '</div>'
+    ].join("");
+
+    bindCheckoutActions();
+  }
+
+  function renderPaymentOption(method, isActive) {
+    var title = getPaymentLabel(method);
+    var description = "Pay when your order arrives at your doorstep.";
+    if (method === "bacs") description = "Transfer the order total, then upload your receipt below.";
+    if (method === "cheque") description = "Pay by cheque and upload proof of payment.";
+
+    return [
+      '<label class="vc-checkout-pay' + (isActive ? " is-active" : "") + '" data-method="' + escapeAttr(method) + '">',
+        '<input type="radio" name="vcCoPayment" value="' + escapeAttr(method) + '"' + (isActive ? " checked" : "") + '>',
+        '<div>',
+          '<b>' + escapeHtml(title) + '</b>',
+          '<span>' + escapeHtml(description) + '</span>',
+        '</div>',
+      '</label>'
+    ].join("");
+  }
+
+  function renderSummary(items, totals, minor, prefix) {
+    var discount = Number(totals.total_discount || 0);
+    var shipping = Number(totals.total_shipping || 0);
+    var tax = Number(totals.total_tax || 0);
+
+    return [
+      '<aside class="vc-checkout-summary">',
+        '<h3>Order Summary</h3>',
+        '<div class="vc-order-list">',
+          items.map(function (item) { return renderItem(item, minor, prefix); }).join(""),
+        '</div>',
+        '<div class="vc-checkout-row"><span>Subtotal</span><span>' + formatMoney(totals.total_items, minor, prefix) + '</span></div>',
+        discount > 0 ? '<div class="vc-checkout-row" style="color:#16a34a"><span>Discount</span><span>− ' + formatMoney(discount, minor, prefix) + '</span></div>' : "",
+        '<div class="vc-checkout-row"><span>Shipping</span><span>' + (shipping > 0 ? formatMoney(shipping, minor, prefix) : "Calculated at checkout") + '</span></div>',
+        tax > 0 ? '<div class="vc-checkout-row"><span>Tax</span><span>' + formatMoney(tax, minor, prefix) + '</span></div>' : "",
+        '<div class="vc-checkout-row total"><span>Total</span><span>' + formatMoney(totals.total_price, minor, prefix) + '</span></div>',
+        '<button class="vc-checkout-submit" type="button" id="vcCoSubmit">Place Order & Confirm on WhatsApp</button>',
+        '<a class="vc-checkout-back" href="' + CART + '">← Back to cart</a>',
+      '</aside>'
+    ].join("");
+  }
+
+  function renderItem(item, minor, prefix) {
+    var image = item.images && item.images[0] ? item.images[0].src : "";
+    return [
+      '<article class="vc-order-item">',
+        '<div class="vc-order-img">',
+          image ? '<img src="' + escapeAttr(image) + '" alt="' + escapeAttr(item.name || "Product") + '">' : "",
+        '</div>',
+        '<div>',
+          '<h4 class="vc-order-name">' + escapeHtml(item.name || "Product") + '</h4>',
+          '<div class="vc-order-meta">' + escapeHtml(formatItemMetaInline(item)) + '</div>',
+        '</div>',
+        '<div class="vc-order-price">' + formatMoney(item.totals && item.totals.line_total, minor, prefix) + '</div>',
+      '</article>'
+    ].join("");
+  }
+
+  function bindCheckoutActions() {
+    var form = document.getElementById("vcCheckoutForm");
+    var submitButton = document.getElementById("vcCoSubmit");
+    var receiptInput = document.getElementById("vcCoReceipt");
+    var receiptNameEl = document.getElementById("vcCoReceiptName");
+    var bankDetails = document.getElementById("vcCoBankDetails");
+    var receiptWrap = document.getElementById("vcCoReceiptWrap");
+
+    Array.prototype.forEach.call(document.querySelectorAll(".vc-checkout-pay"), function (node) {
+      node.addEventListener("click", function () {
+        selectedPayment = node.dataset.method || "cod";
+        Array.prototype.forEach.call(document.querySelectorAll(".vc-checkout-pay"), function (entry) {
+          entry.classList.toggle("is-active", entry.dataset.method === selectedPayment);
+          var input = entry.querySelector('input[type="radio"]');
+          if (input) input.checked = entry.dataset.method === selectedPayment;
+        });
+        if (bankDetails) bankDetails.classList.toggle("is-visible", selectedPayment !== "cod");
+        if (receiptWrap) receiptWrap.classList.toggle("is-visible", selectedPayment !== "cod");
+      });
+    });
+
+    if (receiptInput) {
+      receiptInput.addEventListener("change", function (event) {
+        var file = event.target.files && event.target.files[0];
+        if (!file) {
+          paymentReceipt = null;
+          if (receiptNameEl) receiptNameEl.textContent = "";
+          return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function (loadEvent) {
+          paymentReceipt = {
+            name: file.name,
+            type: file.type,
+            file: file,
+            dataUrl: loadEvent.target.result
+          };
+          if (receiptNameEl) receiptNameEl.textContent = "Selected: " + file.name;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    if (submitButton) {
+      submitButton.addEventListener("click", placeOrder);
+    }
+
+    if (form) {
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        placeOrder();
+      });
+    }
+  }
+
+  function renderEmpty() {
+    totalEl.textContent = "—";
+    root.innerHTML = [
+      '<div class="vc-checkout-empty">',
+        '<h3>Your cart is empty</h3>',
+        '<p>Add products to your cart before checkout.</p>',
+        '<a href="' + SHOP + '">Start Shopping</a>',
+      '</div>'
+    ].join("");
+  }
+
+  function renderSuccess(order) {
+    var orderId = order && (order.order_id || order.id) ? (order.order_id || order.id) : "";
+    root.innerHTML = [
+      '<div class="vc-checkout-empty">',
+        '<h3>Order placed successfully</h3>',
+        '<p>' + (orderId ? "Order #" + escapeHtml(String(orderId)) + " has been created. " : "") + 'Continue in WhatsApp to confirm payment and delivery details.</p>',
+        '<a href="' + SHOP + '">Continue Shopping</a>',
+      '</div>'
+    ].join("");
+  }
+
+  function formatMoney(raw, minor, prefix) {
+    var value = Number(raw || 0) / Math.pow(10, minor);
+    return prefix + value.toLocaleString("en-PK", {
+      minimumFractionDigits: minor > 0 ? 2 : 0,
+      maximumFractionDigits: minor > 0 ? 2 : 0
+    }).replace(/\.00$/, "");
+  }
+
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, function (character) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[character];
+    });
+  }
+
+  function escapeAttr(value) {
+    return escapeHtml(value).replace(/`/g, "&#96;");
+  }
+
+  fetchCart()
+    .then(render)
+    .catch(function () {
+      root.innerHTML = '<div class="vc-checkout-empty"><h3>Could not load checkout</h3><p>Please refresh the page or return to your cart.</p><a href="' + CART + '">Back to cart</a></div>';
+    });
+})();
+</script>
