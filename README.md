@@ -1,28 +1,36 @@
-# Vibecano Single Product Page Fix
+# Vibecano WooCommerce Custom Pages
 
-Fixed version of the Elementor HTML widget for WooCommerce single product pages.
+Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 
-## Problem
+## Files
 
-Color swatches were hidden because `renderColorOptions()` required `COLOR_VARIES === true`. That flag was only set when variation API responses exposed a parseable color value. Size options did not have this restriction, so sizes appeared while colors did not.
+- `vibecano-single-product-page.html` — Single product page with size/color swatches
+- `vibecano-cart-page.html` — Custom cart page with Store API integration
 
-## Fix
+## Cart checkout redirect fix
 
-See `vibecano-single-product-page.html` for the full updated widget code.
+### Problem
 
-Key changes:
+Clicking **Proceed to Checkout** returned to the cart page because the custom cart uses the WooCommerce Store API (`Cart-Token` in `sessionStorage`), while checkout uses the classic WooCommerce session. A plain `/checkout/` link does not carry the Store API cart, so WooCommerce sees an empty cart and redirects back to `/cart/`.
 
-1. Show color swatches whenever the product has a Color attribute with terms (same logic as size).
-2. Detect color variations from product attributes (`has_variations`) and improved variation parsing.
-3. Match variations by size + color using a composite key.
-4. Use actual WooCommerce attribute names/slugs for add-to-cart payloads.
-5. Improved color name to hex mapping for compound names (e.g. "OLIVE Green", "NAVY BLUE").
-6. Support swatch images from Store API term data when available.
+### Fix
+
+Redirect to checkout with the cart session token:
+
+```
+/checkout/?session=CART_TOKEN
+```
+
+WooCommerce restores the Store API cart from the `session` query parameter. The fixed cart page refreshes the cart on checkout click and redirects with the stored token. The single product page uses the same pattern after add-to-cart.
+
+## Single product color swatches fix
+
+Color swatches were hidden because `renderColorOptions()` required `COLOR_VARIES`, which only became true when variation API data exposed parseable color values. The fix shows colors whenever the Color attribute has terms.
 
 ## Usage
 
-Replace the existing Elementor HTML widget content on your WooCommerce Single Product template with the contents of `vibecano-single-product-page.html`.
+Replace the Elementor HTML widget content on each template with the matching file contents.
 
 ## Note on Variation Swatches plugin
 
-The GetWooPlugins swatches plugin styles the default WooCommerce variation form. This custom widget renders its own swatch UI via the Store API. Plugin-configured swatch colors/images appear when exposed on attribute terms; otherwise the built-in color mapping is used.
+The GetWooPlugins swatches plugin styles the default WooCommerce variation form. These custom widgets render their own UI via the Store API. The swatches plugin can be uninstalled if all product/cart pages use these custom templates.

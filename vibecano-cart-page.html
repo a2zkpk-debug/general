@@ -1,0 +1,794 @@
+<!-- ============================================================
+     VIBECANO — CUSTOM CART PAGE
+     Paste this whole file into an Elementor HTML widget.
+     Uses WooCommerce Store API.
+     ============================================================ -->
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Manrope:wght@700;800&display=swap");
+
+  .vc-cart-page,
+  .vc-cart-page * {
+    box-sizing: border-box;
+  }
+
+  .vc-cart-page {
+    --vc-cart-text: #0f172a;
+    --vc-cart-muted: #64748b;
+    --vc-cart-line: rgba(148, 163, 184, 0.28);
+    --vc-cart-soft: #f8fafc;
+    --vc-cart-orange: #f97316;
+    --vc-cart-blue: #2563eb;
+    position: relative;
+    overflow: hidden;
+    padding: 44px 18px 72px;
+    background:
+      radial-gradient(circle at 8% 4%, rgba(249, 115, 22, 0.11), transparent 28%),
+      radial-gradient(circle at 92% 0%, rgba(37, 99, 235, 0.11), transparent 30%),
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    color: var(--vc-cart-text);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .vc-cart-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  .vc-cart-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 22px;
+    align-items: end;
+    margin-bottom: 24px;
+    padding: clamp(24px, 4vw, 38px);
+    border-radius: 34px;
+    background:
+      radial-gradient(circle at top right, rgba(249, 115, 22, 0.22), transparent 35%),
+      linear-gradient(135deg, #07111f 0%, #0f172a 52%, #172554 100%);
+    color: #fff;
+    box-shadow: 0 30px 80px -58px rgba(15, 23, 42, 0.9);
+  }
+
+  .vc-cart-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 8px 13px;
+    border: 1px solid rgba(249, 115, 22, 0.35);
+    border-radius: 999px;
+    background: rgba(249, 115, 22, 0.13);
+    color: #fed7aa;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .vc-cart-kicker::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--vc-cart-orange);
+    box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.13);
+  }
+
+  .vc-cart-title {
+    max-width: 760px;
+    margin: 0;
+    font-family: Manrope, Inter, sans-serif;
+    font-size: clamp(34px, 5vw, 58px);
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -0.035em;
+  }
+
+  .vc-cart-title span {
+    color: #fb923c;
+  }
+
+  .vc-cart-sub {
+    max-width: 650px;
+    margin: 14px 0 0;
+    color: #cbd5e1;
+    font-size: 16px;
+    font-weight: 650;
+    line-height: 1.75;
+  }
+
+  .vc-cart-hero-card {
+    min-width: 220px;
+    padding: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+  }
+
+  .vc-cart-hero-card b {
+    display: block;
+    font-size: 24px;
+    font-weight: 900;
+  }
+
+  .vc-cart-hero-card span {
+    display: block;
+    margin-top: 4px;
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vc-cart-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 22px;
+    align-items: start;
+  }
+
+  .vc-cart-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .vc-cart-item {
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: center;
+    padding: 14px;
+    border: 1px solid var(--vc-cart-line);
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 22px 58px -48px rgba(15, 23, 42, 0.7);
+  }
+
+  .vc-cart-img {
+    overflow: hidden;
+    width: 104px;
+    height: 104px;
+    border-radius: 18px;
+    background: var(--vc-cart-soft);
+  }
+
+  .vc-cart-img img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .vc-cart-name {
+    margin: 0 0 6px;
+    color: var(--vc-cart-text);
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  .vc-cart-meta {
+    color: var(--vc-cart-muted);
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.5;
+  }
+
+  .vc-cart-badge {
+    display: inline-flex;
+    margin-left: 7px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #fff7ed;
+    color: #c2410c;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vc-cart-qty {
+    display: inline-flex;
+    overflow: hidden;
+    margin-top: 10px;
+    border: 1px solid var(--vc-cart-line);
+    border-radius: 999px;
+    background: #fff;
+  }
+
+  .vc-cart-qty button {
+    width: 34px;
+    height: 34px;
+    border: 0;
+    background: transparent;
+    color: var(--vc-cart-text);
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 900;
+  }
+
+  .vc-cart-qty span {
+    display: grid;
+    min-width: 34px;
+    height: 34px;
+    place-items: center;
+    color: var(--vc-cart-text);
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .vc-cart-right {
+    display: grid;
+    gap: 9px;
+    justify-items: end;
+    text-align: right;
+  }
+
+  .vc-cart-price {
+    color: var(--vc-cart-text);
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+  }
+
+  .vc-cart-remove {
+    border: 0;
+    background: transparent;
+    color: var(--vc-cart-muted);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: underline;
+  }
+
+  .vc-cart-remove:hover {
+    color: var(--vc-cart-orange);
+  }
+
+  .vc-cart-summary {
+    position: sticky;
+    top: 18px;
+    padding: 20px;
+    border: 1px solid var(--vc-cart-line);
+    border-radius: 26px;
+    background:
+      radial-gradient(circle at top right, rgba(249, 115, 22, 0.08), transparent 38%),
+      #fff;
+    box-shadow: 0 26px 70px -56px rgba(15, 23, 42, 0.9);
+  }
+
+  .vc-cart-summary h3 {
+    margin: 0 0 16px;
+    color: var(--vc-cart-text);
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .vc-cart-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 9px 0;
+    color: var(--vc-cart-muted);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .vc-cart-row.total {
+    margin-top: 10px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--vc-cart-line);
+    color: var(--vc-cart-text);
+    font-size: 19px;
+    font-weight: 900;
+  }
+
+  .vc-cart-coupon {
+    display: flex;
+    gap: 8px;
+    margin: 14px 0;
+  }
+
+  .vc-cart-coupon input {
+    min-width: 0;
+    flex: 1;
+    padding: 12px;
+    border: 1px solid var(--vc-cart-line);
+    border-radius: 14px;
+    background: var(--vc-cart-soft);
+    color: var(--vc-cart-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    outline: 0;
+  }
+
+  .vc-cart-coupon button {
+    border: 0;
+    border-radius: 14px;
+    background: #0f172a;
+    color: #fff;
+    cursor: pointer;
+    padding: 0 14px;
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .vc-cart-checkout,
+  .vc-cart-empty a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 50px;
+    border: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--vc-cart-orange), #ec4899);
+    color: #fff;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 900;
+    text-decoration: none;
+    box-shadow: 0 22px 38px -26px rgba(249, 115, 22, 0.95);
+    cursor: pointer;
+  }
+
+  .vc-cart-checkout:disabled {
+    cursor: wait;
+    opacity: 0.7;
+  }
+
+  .vc-cart-continue {
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 12px;
+    color: var(--vc-cart-muted);
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .vc-cart-empty,
+  .vc-cart-loading {
+    padding: 48px 20px;
+    border: 1px dashed var(--vc-cart-line);
+    border-radius: 26px;
+    background: #fff;
+    color: var(--vc-cart-muted);
+    text-align: center;
+    box-shadow: 0 22px 58px -48px rgba(15, 23, 42, 0.7);
+  }
+
+  .vc-cart-empty h3 {
+    margin: 0 0 8px;
+    color: var(--vc-cart-text);
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  .vc-cart-empty p {
+    margin: 0 auto 18px;
+    max-width: 440px;
+    color: var(--vc-cart-muted);
+    font-size: 14px;
+    font-weight: 650;
+    line-height: 1.6;
+  }
+
+  .vc-cart-toast {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 100000;
+    padding: 13px 18px;
+    border-radius: 999px;
+    background: #0f172a;
+    color: #fff;
+    box-shadow: 0 20px 40px -28px rgba(0, 0, 0, 0.75);
+    font-size: 14px;
+    font-weight: 800;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.28s ease, transform 0.28s ease;
+    pointer-events: none;
+  }
+
+  .vc-cart-toast.is-showing {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 960px) {
+    .vc-cart-hero,
+    .vc-cart-shell {
+      grid-template-columns: 1fr;
+    }
+
+    .vc-cart-summary {
+      position: static;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .vc-cart-page {
+      padding: 28px 14px 58px;
+    }
+
+    .vc-cart-item {
+      grid-template-columns: 88px 1fr;
+    }
+
+    .vc-cart-img {
+      width: 88px;
+      height: 88px;
+    }
+
+    .vc-cart-right {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+    }
+
+    .vc-cart-coupon {
+      flex-direction: column;
+    }
+  }
+</style>
+
+<section class="vc-cart-page">
+  <div class="vc-cart-inner">
+    <div class="vc-cart-hero">
+      <div>
+        <span class="vc-cart-kicker">Vibecano cart</span>
+        <h1 class="vc-cart-title">Review your <span>selected vibe</span> before checkout.</h1>
+        <p class="vc-cart-sub">Check your ready-made designs, custom products, quantities, and order total before moving to secure checkout.</p>
+      </div>
+      <div class="vc-cart-hero-card">
+        <b id="vcCartCount">—</b>
+        <span>Items in cart</span>
+      </div>
+    </div>
+
+    <div id="vcCartRoot">
+      <div class="vc-cart-loading">Loading your cart...</div>
+    </div>
+  </div>
+</section>
+
+<div id="vcCartToast" class="vc-cart-toast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var API = "/wp-json/wc/store/v1";
+  var CHECKOUT = "/checkout/";
+  var SHOP = "/shop/";
+  var CART_TOKEN_KEY = "vcWcCartToken";
+  var root = document.getElementById("vcCartRoot");
+  var toastEl = document.getElementById("vcCartToast");
+  var countEl = document.getElementById("vcCartCount");
+  var nonce = "";
+
+  if (!root || !toastEl || !window.fetch) {
+    return;
+  }
+
+  function getStoredCartToken() {
+    try {
+      return sessionStorage.getItem(CART_TOKEN_KEY) || "";
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function storeCartToken(response) {
+    var token = response.headers.get("Cart-Token");
+    if (!token) return getStoredCartToken();
+    try {
+      sessionStorage.setItem(CART_TOKEN_KEY, token);
+    } catch (error) {}
+    return token;
+  }
+
+  function buildCheckoutUrl(token) {
+    token = token || getStoredCartToken();
+    if (!token) return CHECKOUT;
+
+    try {
+      var url = new URL(CHECKOUT, window.location.origin);
+      url.searchParams.set("session", token);
+      return url.pathname + url.search + url.hash;
+    } catch (error) {
+      var joiner = CHECKOUT.indexOf("?") >= 0 ? "&" : "?";
+      return CHECKOUT + joiner + "session=" + encodeURIComponent(token);
+    }
+  }
+
+  function getCartHeaders() {
+    var headers = {
+      "Content-Type": "application/json",
+      "Nonce": nonce,
+      "X-WC-Store-API-Nonce": nonce
+    };
+    var token = getStoredCartToken();
+    if (token) headers["Cart-Token"] = token;
+    return headers;
+  }
+
+  function showToast(message) {
+    toastEl.textContent = message;
+    toastEl.classList.add("is-showing");
+    setTimeout(function () {
+      toastEl.classList.remove("is-showing");
+    }, 2300);
+  }
+
+  function fetchCart() {
+    var headers = {};
+    var token = getStoredCartToken();
+    if (token) headers["Cart-Token"] = token;
+
+    return fetch(API + "/cart", { credentials: "include", headers: headers }).then(function (response) {
+      nonce = response.headers.get("Nonce") || response.headers.get("X-WC-Store-API-Nonce") || nonce;
+      storeCartToken(response);
+      if (!response.ok) throw new Error("Cart request failed");
+      return response.json();
+    });
+  }
+
+  function updateItem(key, quantity) {
+    return fetch(API + "/cart/update-item", {
+      method: "POST",
+      credentials: "include",
+      headers: getCartHeaders(),
+      body: JSON.stringify({ key: key, quantity: quantity })
+    }).then(handleCartMutation);
+  }
+
+  function removeItem(key) {
+    return fetch(API + "/cart/remove-item", {
+      method: "POST",
+      credentials: "include",
+      headers: getCartHeaders(),
+      body: JSON.stringify({ key: key })
+    }).then(handleCartMutation);
+  }
+
+  function applyCoupon(code) {
+    return fetch(API + "/cart/apply-coupon", {
+      method: "POST",
+      credentials: "include",
+      headers: getCartHeaders(),
+      body: JSON.stringify({ code: code })
+    }).then(handleCartMutation);
+  }
+
+  function handleCartMutation(response) {
+    nonce = response.headers.get("Nonce") || response.headers.get("X-WC-Store-API-Nonce") || nonce;
+    storeCartToken(response);
+    return response.json().then(function (data) {
+      if (!response.ok) {
+        throw new Error(data && data.message ? data.message : "Cart update failed");
+      }
+      return data;
+    });
+  }
+
+  function proceedToCheckout(button) {
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Opening checkout...";
+    }
+    root.style.opacity = "0.55";
+
+    fetchCart()
+      .then(function (cart) {
+        var items = cart && Array.isArray(cart.items) ? cart.items : [];
+        if (!items.length) {
+          showToast("Your cart is empty");
+          return;
+        }
+
+        window.location.href = buildCheckoutUrl(getStoredCartToken());
+      })
+      .catch(function () {
+        var token = getStoredCartToken();
+        if (token) {
+          window.location.href = buildCheckoutUrl(token);
+          return;
+        }
+        showToast("Could not open checkout. Please try again.");
+      })
+      .finally(function () {
+        root.style.opacity = "1";
+        if (!button || button.disabled === false) return;
+        button.disabled = false;
+        button.textContent = "Proceed to Checkout";
+      });
+  }
+
+  function render(cart) {
+    var items = cart && Array.isArray(cart.items) ? cart.items : [];
+    var itemCount = items.reduce(function (total, item) { return total + Number(item.quantity || 0); }, 0);
+    countEl.textContent = String(itemCount);
+
+    if (!items.length) {
+      renderEmpty();
+      return;
+    }
+
+    root.innerHTML = [
+      '<div class="vc-cart-shell">',
+        '<div class="vc-cart-list">',
+          items.map(function (item) { return renderItem(item, cart); }).join(""),
+        '</div>',
+        renderSummary(cart),
+      '</div>'
+    ].join("");
+
+    bindCartActions(cart);
+  }
+
+  function renderItem(item, cart) {
+    var image = item.images && item.images[0] ? item.images[0].src : "";
+    var isCustom = (item.item_data && item.item_data.length) || (item.variation && item.variation.length);
+    var minor = cart.totals && Number.isFinite(Number(cart.totals.currency_minor_unit)) ? Number(cart.totals.currency_minor_unit) : 2;
+    var prefix = cart.totals && (cart.totals.currency_prefix || cart.totals.currency_symbol) ? (cart.totals.currency_prefix || cart.totals.currency_symbol) : "Rs ";
+
+    return [
+      '<article class="vc-cart-item" data-key="' + escapeAttr(item.key) + '">',
+        '<div class="vc-cart-img">',
+          image ? '<img src="' + escapeAttr(image) + '" alt="' + escapeAttr(item.name || "Product") + '">' : "",
+        '</div>',
+        '<div>',
+          '<h3 class="vc-cart-name">' + escapeHtml(item.name || "Product") + (isCustom ? '<span class="vc-cart-badge">Custom</span>' : "") + '</h3>',
+          '<div class="vc-cart-meta">' + formatMoney(item.prices && item.prices.price, minor, prefix) + ' each</div>',
+          '<div class="vc-cart-qty">',
+            '<button type="button" data-action="dec">−</button>',
+            '<span>' + Number(item.quantity || 1) + '</span>',
+            '<button type="button" data-action="inc">+</button>',
+          '</div>',
+        '</div>',
+        '<div class="vc-cart-right">',
+          '<div class="vc-cart-price">' + formatMoney(item.totals && item.totals.line_total, minor, prefix) + '</div>',
+          '<button class="vc-cart-remove" type="button" data-action="remove">Remove</button>',
+        '</div>',
+      '</article>'
+    ].join("");
+  }
+
+  function renderSummary(cart) {
+    var totals = cart.totals || {};
+    var minor = Number.isFinite(Number(totals.currency_minor_unit)) ? Number(totals.currency_minor_unit) : 2;
+    var prefix = totals.currency_prefix || totals.currency_symbol || "Rs ";
+    var discount = Number(totals.total_discount || 0);
+    var shipping = Number(totals.total_shipping || 0);
+    var tax = Number(totals.total_tax || 0);
+
+    return [
+      '<aside class="vc-cart-summary">',
+        '<h3>Order Summary</h3>',
+        '<div class="vc-cart-row"><span>Subtotal</span><span>' + formatMoney(totals.total_items, minor, prefix) + '</span></div>',
+        discount > 0 ? '<div class="vc-cart-row" style="color:#16a34a"><span>Discount</span><span>− ' + formatMoney(discount, minor, prefix) + '</span></div>' : "",
+        '<div class="vc-cart-row"><span>Shipping</span><span>' + (shipping > 0 ? formatMoney(shipping, minor, prefix) : "Calculated at checkout") + '</span></div>',
+        tax > 0 ? '<div class="vc-cart-row"><span>Tax</span><span>' + formatMoney(tax, minor, prefix) + '</span></div>' : "",
+        '<div class="vc-cart-coupon">',
+          '<input id="vcCartCoupon" type="text" placeholder="Coupon code">',
+          '<button id="vcCartApply" type="button">Apply</button>',
+        '</div>',
+        '<div class="vc-cart-row total"><span>Total</span><span>' + formatMoney(totals.total_price, minor, prefix) + '</span></div>',
+        '<button class="vc-cart-checkout" type="button" id="vcCartCheckout">Proceed to Checkout</button>',
+        '<a class="vc-cart-continue" href="' + SHOP + '">← Continue shopping</a>',
+      '</aside>'
+    ].join("");
+  }
+
+  function bindCartActions(cart) {
+    Array.prototype.forEach.call(root.querySelectorAll(".vc-cart-item"), function (node) {
+      var key = node.dataset.key;
+      var item = cart.items.filter(function (entry) { return entry.key === key; })[0];
+      Array.prototype.forEach.call(node.querySelectorAll("[data-action]"), function (button) {
+        button.addEventListener("click", function () {
+          var action = button.dataset.action;
+          if (!item) return;
+          root.style.opacity = "0.55";
+          var request;
+
+          if (action === "inc") request = updateItem(key, Number(item.quantity || 1) + 1);
+          if (action === "dec") request = Number(item.quantity || 1) <= 1 ? removeItem(key) : updateItem(key, Number(item.quantity || 1) - 1);
+          if (action === "remove") request = removeItem(key);
+
+          request
+            .then(function (updatedCart) {
+              if (action === "remove") showToast("Item removed");
+              render(updatedCart);
+            })
+            .catch(function (error) {
+              showToast(error.message || "Could not update cart");
+            })
+            .finally(function () {
+              root.style.opacity = "1";
+            });
+        });
+      });
+    });
+
+    var applyButton = document.getElementById("vcCartApply");
+    if (applyButton) {
+      applyButton.addEventListener("click", function () {
+        var code = String(document.getElementById("vcCartCoupon").value || "").trim();
+        if (!code) return;
+        root.style.opacity = "0.55";
+        applyCoupon(code)
+          .then(function (updatedCart) {
+            showToast("Coupon applied");
+            render(updatedCart);
+          })
+          .catch(function (error) {
+            showToast(error.message || "Coupon could not be applied");
+          })
+          .finally(function () {
+            root.style.opacity = "1";
+          });
+      });
+    }
+
+    var checkoutButton = document.getElementById("vcCartCheckout");
+    if (checkoutButton) {
+      checkoutButton.addEventListener("click", function () {
+        proceedToCheckout(checkoutButton);
+      });
+    }
+  }
+
+  function renderEmpty() {
+    root.innerHTML = [
+      '<div class="vc-cart-empty">',
+        '<h3>Your cart is empty</h3>',
+        '<p>Looks like you have not added anything yet. Explore ready-made designs or start a custom product.</p>',
+        '<a href="' + SHOP + '">Start Shopping</a>',
+      '</div>'
+    ].join("");
+  }
+
+  function formatMoney(raw, minor, prefix) {
+    var value = Number(raw || 0) / Math.pow(10, minor);
+    return prefix + value.toLocaleString("en-PK", {
+      minimumFractionDigits: minor > 0 ? 2 : 0,
+      maximumFractionDigits: minor > 0 ? 2 : 0
+    }).replace(/\.00$/, "");
+  }
+
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, function (character) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[character];
+    });
+  }
+
+  function escapeAttr(value) {
+    return escapeHtml(value).replace(/`/g, "&#96;");
+  }
+
+  fetchCart()
+    .then(render)
+    .catch(function () {
+      root.innerHTML = '<div class="vc-cart-empty"><h3>Could not load cart</h3><p>Please refresh the page or try again.</p></div>';
+    });
+})();
+</script>

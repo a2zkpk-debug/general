@@ -774,7 +774,7 @@
     <div id="vcSpAddedProduct"></div>
     <div class="vc-sp-actions" style="grid-template-columns:1fr 1fr;margin-top:18px">
       <a class="vc-sp-main-btn" href="/cart/" style="text-decoration:none">View Cart</a>
-      <a class="vc-sp-main-btn is-custom" href="/checkout/" style="text-decoration:none">Checkout</a>
+      <a class="vc-sp-main-btn is-custom" id="vcSpCheckoutLink" href="/checkout/" style="text-decoration:none">Checkout</a>
     </div>
   </div>
 </div>
@@ -840,6 +840,19 @@
       sessionStorage.setItem(CART_TOKEN_KEY, token);
     } catch (error) {}
     return token;
+  }
+
+  function buildCheckoutUrl(token) {
+    token = token || getStoredCartToken();
+    if (!token) return "/checkout/";
+
+    try {
+      var url = new URL("/checkout/", window.location.origin);
+      url.searchParams.set("session", token);
+      return url.pathname + url.search + url.hash;
+    } catch (error) {
+      return "/checkout/?session=" + encodeURIComponent(token);
+    }
   }
 
   function getCartHeaders(nonce, token) {
@@ -1455,7 +1468,7 @@
       })
       .then(function () {
         document.body.dispatchEvent(new CustomEvent("wc-blocks_added_to_cart"));
-        window.location.href = "/checkout/";
+        window.location.href = buildCheckoutUrl(getStoredCartToken());
       })
       .catch(function () {
         window.location.href = buildClassicAddToCartUrl(quantity, "/checkout/");
@@ -1483,6 +1496,16 @@
   document.getElementById("vcSpAdded").addEventListener("click", function (event) {
     if (event.target.id === "vcSpAdded") window.vcSpCloseAdded();
   });
+
+  var checkoutLink = document.getElementById("vcSpCheckoutLink");
+  if (checkoutLink) {
+    checkoutLink.addEventListener("click", function (event) {
+      var token = getStoredCartToken();
+      if (!token) return;
+      event.preventDefault();
+      window.location.href = buildCheckoutUrl(token);
+    });
+  }
 
   function escapeHtml(value) {
     return String(value || "").replace(/[&<>"']/g, function (character) {
