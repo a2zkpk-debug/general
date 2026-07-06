@@ -4,9 +4,17 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 
 ## Files
 
+- `vibecano-header.html` — Site-wide header (top bar, logo, search, nav, cart count)
+- `vibecano-hero-section.html` — Homepage hero content only (category circles + CTAs)
 - `vibecano-single-product-page.html` — Single product page with size/color swatches
 - `vibecano-cart-page.html` — Custom cart page with Store API integration
 - `vibecano-checkout-page.html` — Custom checkout page with WhatsApp order flow
+
+## Header + hero setup
+
+1. **All pages:** paste `vibecano-header.html` into **Elementor → Theme Builder → Header** (HTML widget, width **100%**).
+2. **Homepage only:** paste `vibecano-hero-section.html` into the homepage content area below the header.
+3. Remove the old combined hero/header widget if it is still on the homepage.
 
 ## Checkout full-width fix
 
