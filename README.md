@@ -6,6 +6,11 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 
 - `vibecano-single-product-page.html` — Single product page with size/color swatches
 - `vibecano-cart-page.html` — Custom cart page with Store API integration
+- `vibecano-checkout-page.html` — Custom checkout page with WhatsApp order flow
+
+## Checkout WhatsApp fix (color, size, receipt)
+
+WhatsApp messages now include Size/Color from Store API cart variations. Receipt uploads use the mobile Share API when available; desktop opens a receipt image tab for manual attach because `wa.me` links cannot include files.
 
 ## Cart checkout redirect fix
 
