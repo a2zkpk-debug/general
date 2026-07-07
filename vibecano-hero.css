@@ -455,7 +455,34 @@
   }
 
   .vibecano-hero-root .ro-hero-bg {
-    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .vibecano-hero-root .ro-hero-bg img {
+    position: absolute;
+    left: 50%;
+    top: 56%;
+    transform: translate(-50%, -50%);
+    width: 108%;
+    min-width: 320px;
+    max-width: 560px;
+    height: auto;
+    opacity: 1;
+    object-fit: contain;
+    object-position: center center;
+  }
+
+  .vibecano-hero-root .ro-hero-categories .ro-hero-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .82) 0%, rgba(255, 255, 255, .35) 42%, rgba(255, 255, 255, .4) 100%);
+    pointer-events: none;
   }
 
   .vibecano-hero-root .ro-hero::before {
@@ -646,17 +673,28 @@
   .vibecano-hero-root .ro-hero-categories {
     position: relative;
     padding: 18px 16px 14px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, .45) 0%, rgba(255, 255, 255, .72) 100%);
+    background: #fff;
     border-radius: 20px;
-    border: 1px solid rgba(226, 232, 240, .75);
-    box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
-    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-md);
   }
 
-  .vibecano-hero-root .ro-categories-header,
-  .vibecano-hero-root .ro-categories {
-    position: relative;
-    z-index: 1;
+  .vibecano-hero-root .ro-family-banner {
+    margin-top: 18px;
+    text-align: center;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .vibecano-hero-root .ro-family-banner img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
   }
 
   .vibecano-hero-root .ro-categories-header {
@@ -823,14 +861,8 @@
   @media (max-width: 1024px) {
     .vibecano-hero-root .ro-hero-wrap { grid-template-columns: 1fr; gap: 40px; }
     .vibecano-hero-root .ro-hero-content { max-width: none; }
-    .vibecano-hero-root .ro-hero-bg img {
-      top: 62%;
-      width: 100%;
-      max-width: 480px;
-      opacity: .65;
-    }
-    .vibecano-hero-root .ro-hero-categories {
-      background: linear-gradient(180deg, rgba(255, 255, 255, .5) 0%, rgba(255, 255, 255, .82) 100%);
+    .vibecano-hero-root .ro-family-banner {
+      margin-top: 14px;
     }
   }
 
