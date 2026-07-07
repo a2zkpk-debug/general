@@ -43,13 +43,6 @@
         label: "Accessories",
         toneClass: "is-accessories",
         fallbackImage: "https://vibecano.com/wp-content/uploads/2026/07/Accessories-251x300.jpg"
-      },
-      {
-        key: "under999",
-        slugs: ["under999", "under-999"],
-        label: "Under Rs. 999",
-        toneClass: "is-under999",
-        fallbackLabel: "999"
       }
     ]
   };
