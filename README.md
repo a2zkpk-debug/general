@@ -5,22 +5,39 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 ## Files
 
 - `vibecano-header.html` — Site-wide header for inner pages (top bar, logo, search, nav, cart count)
-- `vibecano-hero-section.html` — Homepage combined header + hero (paste as ONE HTML widget)
+- `vibecano-hero.css` — Stylesheet for homepage hero (upload to WordPress Media first)
+- `vibecano-hero-section.html` — Homepage combined header + hero HTML widget
 - `vibecano-footer.html` — Site-wide footer (links, contact, copyright)
 - `vibecano-single-product-page.html` — Single product page with size/color swatches
 - `vibecano-cart-page.html` — Custom cart page with Store API integration
 - `vibecano-checkout-page.html` — Custom checkout page with WhatsApp order flow
 
-## Homepage hero (IMPORTANT paste steps)
+## Homepage hero (IMPORTANT — 2 steps)
 
-Elementor often breaks `<style>` tags and HTML comments, which makes CSS show as plain text on the page. The hero file now injects CSS via JavaScript instead.
+**Why:** Elementor strips `<!-- comments -->` and `<style>` tags from HTML widgets, which makes CSS appear as plain text on the page. The live site currently has old broken code pasted multiple times — you must replace it completely.
 
-1. Open the homepage HTML widget in Elementor.
-2. **Select all existing code and delete it completely** (Ctrl+A → Delete). Do not paste on top of old code.
-3. Paste the **entire** `vibecano-hero-section.html` file.
-4. Set the section and widget width to **100% / Full Width**.
-5. **Disable the Theme Builder header on the homepage** (Templates → Theme Builder → Header → exclude homepage, or set homepage header to empty). Otherwise you get a double header.
-6. Update/Publish, then hard-refresh the browser (Ctrl+Shift+R).
+### Step 1 — Upload CSS file
+
+1. In WordPress go to **Media → Add New**
+2. Upload `vibecano-hero.css` from this repo
+3. Copy the file URL — it should be:  
+   `https://vibecano.com/wp-content/uploads/2026/07/vibecano-hero.css`  
+   (rename on upload if needed to match this path)
+
+If you skip this step, the HTML widget will try a CDN fallback, but uploading to your site is more reliable.
+
+### Step 2 — Replace HTML widget code
+
+1. Open **Elementor → Homepage → HTML widget** (the first/top one)
+2. **Ctrl+A → Delete ALL** existing code (critical — old code is broken)
+3. Paste the **entire** `vibecano-hero-section.html` (starts with `<link rel="stylesheet"`)
+4. Set section + widget to **Full Width / 100%**
+5. **Disable Theme Builder header on homepage** (avoid double header)
+6. **Update** → hard refresh **Ctrl+Shift+R**
+
+### How to verify it worked
+
+View page source and search for `ro-topbar` — you should see it inside HTML, NOT as visible CSS text like `--surface:` on the page.
 
 ## Other pages (shop, cart, product, etc.)
 
