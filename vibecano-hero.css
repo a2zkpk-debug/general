@@ -667,7 +667,13 @@
   
   .vibecano-hero-root .ro-hero-categories {
     position: relative;
-    padding: 10px 0 4px;
+    padding: 18px 16px 10px;
+    background: rgba(255, 255, 255, .72);
+    border-radius: 20px;
+    border: 1px solid rgba(226, 232, 240, .9);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
   }
 
   .vibecano-hero-root .ro-categories-header {
@@ -834,13 +840,21 @@
   @media (max-width: 1024px) {
     .vibecano-hero-root .ro-hero-wrap { grid-template-columns: 1fr; gap: 40px; }
     .vibecano-hero-root .ro-hero-content { max-width: none; }
+    .vibecano-hero-root .ro-hero-bg {
+      mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .25) 35%, rgba(0, 0, 0, .15) 65%, transparent 100%);
+      -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .25) 35%, rgba(0, 0, 0, .15) 65%, transparent 100%);
+    }
     .vibecano-hero-root .ro-hero-bg img {
-      right: 50%;
-      top: auto;
-      bottom: -8%;
-      transform: translateX(50%);
-      width: min(88vw, 520px);
-      opacity: .14;
+      left: 50%;
+      right: auto;
+      bottom: 42%;
+      transform: translateX(-50%);
+      width: min(78vw, 460px);
+      opacity: .12;
+      object-position: center bottom;
+    }
+    .vibecano-hero-root .ro-hero-categories {
+      background: rgba(255, 255, 255, .85);
     }
   }
 
