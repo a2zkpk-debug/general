@@ -452,7 +452,7 @@
     padding: 56px 24px 72px;
     overflow: hidden;
     background:
-      linear-gradient(105deg, rgba(248, 250, 252, .97) 0%, rgba(248, 250, 252, .88) 38%, rgba(255, 255, 255, .72) 58%, rgba(255, 247, 237, .55) 100%),
+      linear-gradient(105deg, rgba(248, 250, 252, .98) 0%, rgba(248, 250, 252, .92) 34%, rgba(255, 255, 255, .55) 52%, rgba(255, 247, 237, .4) 100%),
       linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
   }
 
@@ -461,23 +461,23 @@
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    mask-image: linear-gradient(115deg, rgba(0, 0, 0, .7) 0%, rgba(0, 0, 0, .35) 38%, transparent 62%);
-    -webkit-mask-image: linear-gradient(115deg, rgba(0, 0, 0, .7) 0%, rgba(0, 0, 0, .35) 38%, transparent 62%);
+    mask-image: linear-gradient(90deg, transparent 0%, transparent 46%, rgba(0, 0, 0, .55) 54%, rgba(0, 0, 0, 1) 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 46%, rgba(0, 0, 0, .55) 54%, rgba(0, 0, 0, 1) 100%);
   }
 
   .vibecano-hero-root .ro-hero-bg img {
     position: absolute;
-    left: -6%;
+    left: 54%;
     right: auto;
-    bottom: -4%;
-    top: auto;
-    transform: none;
-    width: min(44vw, 500px);
+    top: 48%;
+    bottom: auto;
+    transform: translateY(-50%);
+    width: min(46vw, 560px);
     height: auto;
-    opacity: .17;
+    opacity: .48;
     object-fit: contain;
-    object-position: left bottom;
-    filter: saturate(1.02);
+    object-position: center center;
+    filter: saturate(1.12) contrast(1.04);
   }
 
   .vibecano-hero-root .ro-hero::before {
@@ -668,12 +668,12 @@
   .vibecano-hero-root .ro-hero-categories {
     position: relative;
     padding: 18px 16px 10px;
-    background: rgba(255, 255, 255, .72);
+    background: rgba(255, 255, 255, .78);
     border-radius: 20px;
     border: 1px solid rgba(226, 232, 240, .9);
     box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
 
   .vibecano-hero-root .ro-categories-header {
@@ -841,20 +841,21 @@
     .vibecano-hero-root .ro-hero-wrap { grid-template-columns: 1fr; gap: 40px; }
     .vibecano-hero-root .ro-hero-content { max-width: none; }
     .vibecano-hero-root .ro-hero-bg {
-      mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .25) 35%, rgba(0, 0, 0, .15) 65%, transparent 100%);
-      -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .25) 35%, rgba(0, 0, 0, .15) 65%, transparent 100%);
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, .15) 0%, rgba(0, 0, 0, .55) 40%, rgba(0, 0, 0, .35) 70%, transparent 100%);
+      -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, .15) 0%, rgba(0, 0, 0, .55) 40%, rgba(0, 0, 0, .35) 70%, transparent 100%);
     }
     .vibecano-hero-root .ro-hero-bg img {
       left: 50%;
       right: auto;
-      bottom: 42%;
+      top: auto;
+      bottom: 38%;
       transform: translateX(-50%);
-      width: min(78vw, 460px);
-      opacity: .12;
+      width: min(86vw, 540px);
+      opacity: .24;
       object-position: center bottom;
     }
     .vibecano-hero-root .ro-hero-categories {
-      background: rgba(255, 255, 255, .85);
+      background: rgba(255, 255, 255, .88);
     }
   }
 
