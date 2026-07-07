@@ -1,0 +1,24 @@
+PASTE THIS BLOCK right AFTER the closing </div> of roCategoryGrid
+(and BEFORE the two <script src=...> lines at the bottom)
+
+<script>
+(function () {
+  var grid = document.getElementById("roCategoryGrid");
+  if (!grid || !grid.querySelector(".ro-category")) return;
+  var snapshot = grid.innerHTML;
+  function keepCategories() {
+    if (!grid.querySelector(".ro-category.is-women") || !grid.querySelector(".ro-category.is-accessories")) {
+      grid.innerHTML = snapshot;
+    }
+  }
+  new MutationObserver(keepCategories).observe(grid, { childList: true });
+  document.addEventListener("DOMContentLoaded", keepCategories);
+  window.addEventListener("load", keepCategories);
+  window.VIBECANO_STATIC_CATEGORIES = true;
+})();
+</script>
+
+ALSO replace the bottom two script lines with:
+
+<script src="https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@8d23f6f/vibecano-nav-shared.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@8d23f6f/vibecano-hero.js" defer></script>
