@@ -466,26 +466,25 @@
     height: 100%;
     object-fit: cover;
     object-position: center right;
-    opacity: .22;
+    opacity: .4;
   }
 
   .vibecano-hero-root .ro-hero-bg::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(105deg, rgba(248, 250, 252, .94) 0%, rgba(248, 250, 252, .78) 38%, rgba(255, 255, 255, .45) 62%, rgba(255, 255, 255, .2) 100%);
+    background: linear-gradient(105deg, rgba(248, 250, 252, .9) 0%, rgba(248, 250, 252, .55) 34%, rgba(255, 255, 255, .12) 58%, rgba(255, 255, 255, 0) 100%);
     pointer-events: none;
   }
 
   .vibecano-hero-root .ro-hero-categories {
     position: relative;
-    padding: 18px 16px 20px;
-    border-radius: 20px;
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow-md);
-    background: rgba(255, 255, 255, .88);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .vibecano-hero-root .ro-hero::before {
@@ -685,7 +684,8 @@
     font-weight: 800;
     letter-spacing: .16em;
     text-transform: uppercase;
-    color: var(--slate);
+    color: var(--ink-soft);
+    text-shadow: 0 1px 0 #fff, 0 0 14px rgba(255, 255, 255, .95);
   }
 
   .vibecano-hero-root .ro-categories {
@@ -829,8 +829,12 @@
   @media (max-width: 1024px) {
     .vibecano-hero-root .ro-hero-wrap { grid-template-columns: 1fr; gap: 40px; }
     .vibecano-hero-root .ro-hero-content { max-width: none; }
-    .vibecano-hero-root .ro-hero-categories::after {
-      height: 130px;
+    .vibecano-hero-root .ro-hero-bg img {
+      object-position: center center;
+      opacity: .18;
+    }
+    .vibecano-hero-root .ro-hero-bg::after {
+      background: linear-gradient(180deg, rgba(248, 250, 252, .92) 0%, rgba(248, 250, 252, .7) 50%, rgba(255, 255, 255, .35) 100%);
     }
   }
 
