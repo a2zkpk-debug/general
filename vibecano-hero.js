@@ -9,6 +9,12 @@
     userEndpoint: "/wp-json/wp/v2/users/me?context=edit",
     cartEndpoint: "/wp-json/wc/store/v1/cart",
     categoriesEndpoint: "/wp-json/wc/store/v1/products/categories",
+    categoryImages: {
+      men: "https://vibecano.com/wp-content/uploads/2026/07/Men-251x300.jpg",
+      women: "https://vibecano.com/wp-content/uploads/2026/07/women-251x300.jpg",
+      kids: "https://vibecano.com/wp-content/uploads/2026/07/kids-251x300.jpg",
+      accessories: "https://vibecano.com/wp-content/uploads/2026/07/Accessories-251x300.jpg"
+    },
     mainCategories: [
       {
         key: "men",
@@ -160,7 +166,7 @@
         key: item.key,
         label: item.label,
         toneClass: item.toneClass,
-        fallbackImage: item.fallbackImage || "",
+        fallbackImage: item.fallbackImage || CONFIG.categoryImages[item.key] || "",
         fallbackLabel: item.fallbackLabel || "",
         category: {
           name: item.label,
@@ -170,7 +176,7 @@
       };
     });
 
-    renderCategoryCards(resolved, categories);
+    renderCategoryCards(resolved);
     bindCategoryLinks(resolved);
     afterCategoriesLoaded(categories);
   }
@@ -190,7 +196,7 @@
       key: item.key,
       label: item.label,
       toneClass: item.toneClass,
-      fallbackImage: item.fallbackImage || "",
+      fallbackImage: item.fallbackImage || CONFIG.categoryImages[item.key] || "",
       fallbackLabel: item.fallbackLabel || "",
       category: category
     };
@@ -209,6 +215,9 @@
   }
 
   function getCategoryImage(item) {
+    if (item.key && CONFIG.categoryImages[item.key]) {
+      return CONFIG.categoryImages[item.key];
+    }
     if (item.fallbackImage) return item.fallbackImage;
     if (item.category && item.category.image && item.category.image.src) {
       return item.category.image.src;
@@ -216,14 +225,12 @@
     return "";
   }
 
-  function renderCategoryCards(items, categories) {
+  function renderCategoryCards(items) {
     if (!categoryGridEl) return;
-    categoryGridEl.innerHTML = items.map(function (item) {
-      return renderCategoryCard(item, categories);
-    }).join("");
+    categoryGridEl.innerHTML = items.map(renderCategoryCard).join("");
   }
 
-  function renderCategoryCard(item, categories) {
+  function renderCategoryCard(item) {
     var category = item.category;
     var url = escapeAttr(getCategoryUrl(category));
     var name = escapeHtml(item.label || category.name || "Category");
@@ -238,13 +245,6 @@
       imageHtml = '<div class="ro-category-fallback">' + fallbackText + "</div>";
     }
 
-    var subsHtml = "";
-    if (window.VibecanoNav && window.VibecanoNav.NAV_MENUS[item.key]) {
-      subsHtml = '<div class="ro-category-subs">' +
-        window.VibecanoNav.renderCategorySubLinks(item.key, categories || [], 4) +
-        "</div>";
-    }
-
     return [
       '<a href="' + url + '" class="ro-category ' + toneClass + '">',
         '<div class="ro-category-ring">',
@@ -253,7 +253,6 @@
           "</div>",
         "</div>",
         "<h3>" + name + "</h3>",
-        subsHtml,
       "</a>"
     ].join("");
   }
@@ -290,7 +289,7 @@
         key: item.key,
         label: item.label,
         toneClass: item.toneClass,
-        fallbackImage: item.fallbackImage || "",
+        fallbackImage: item.fallbackImage || CONFIG.categoryImages[item.key] || "",
         fallbackLabel: item.fallbackLabel || "",
         category: {
           name: item.label,
@@ -300,7 +299,7 @@
       };
     });
 
-    renderCategoryCards(fallback, categories || []);
+    renderCategoryCards(fallback);
     bindCategoryLinks(fallback);
     afterCategoriesLoaded(categories || []);
   }

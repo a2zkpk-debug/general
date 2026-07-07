@@ -692,8 +692,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
-    width: clamp(110px, 12vw, 150px);
+    gap: 12px;
+    width: clamp(96px, 11vw, 128px);
     text-align: center;
     transition: transform .24s ease;
   }
@@ -739,14 +739,17 @@
     height: 100%;
     overflow: hidden;
     border-radius: 50%;
-    background: #f8fafc;
-    border: 3px solid #fff;
+    background: #fff7ed;
+    border: 4px solid #f59e0b;
+    box-shadow: inset 0 0 0 2px #fff;
   }
 
   .vibecano-hero-root .ro-category-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top center;
+    display: block;
     transition: transform .4s ease;
   }
 
@@ -806,34 +809,6 @@
   .vibecano-hero-root .ro-category.is-kids h3 { color: #d97706; }
   .vibecano-hero-root .ro-category.is-accessories h3 { color: #059669; }
   .vibecano-hero-root .ro-category.is-under999 h3 { color: #dc2626; }
-
-  .vibecano-hero-root .ro-category-subs {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    width: 100%;
-    margin-top: -2px;
-  }
-
-  .vibecano-hero-root .ro-category-subs a {
-    font-size: 10px;
-    line-height: 1.35;
-    color: var(--slate);
-    font-weight: 500;
-    transition: color .15s;
-  }
-
-  .vibecano-hero-root .ro-category-subs a:hover { color: var(--brand); }
-
-  .vibecano-hero-root .ro-category-sub-head {
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: .08em;
-    color: var(--ink-soft);
-    margin-top: 4px;
-  }
-
-  .vibecano-hero-root .ro-category-sub-head:first-child { margin-top: 0; }
 
   .vibecano-hero-root .ro-category-skeleton {
     width: clamp(96px, 11vw, 128px);
