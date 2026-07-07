@@ -3,7 +3,7 @@
      Paste into homepage Elementor HTML widget BELOW the header.
 
      Use vibecano-header.html separately in Theme Builder header.
-     Shows 3 main category cards: Customize, Ready Made, Featured
+     Brand collections: Men, Women, Kids, Accessories, Under Rs. 999
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +19,7 @@
     --brand: #1d9bf0;
     --brand-dark: #0b7ec7;
     --accent: #f59e0b;
-    --hero-bg: linear-gradient(135deg, #f8fafc 0%, #eef2ff 42%, #fff7ed 100%);
+    --hero-bg-image: url("https://vibecano.com/wp-content/uploads/2026/07/Boys-and-girls-300x167.png");
     --shadow-sm: 0 4px 14px rgba(15, 23, 42, .06);
     --shadow-md: 0 18px 40px rgba(15, 23, 42, .10);
     width: 100%;
@@ -39,9 +39,30 @@
 
   .vibecano-hero-root .ro-hero {
     position: relative;
-    background: var(--hero-bg);
     padding: 56px 24px 72px;
     overflow: hidden;
+    background:
+      linear-gradient(105deg, rgba(248, 250, 252, .97) 0%, rgba(248, 250, 252, .88) 38%, rgba(255, 255, 255, .72) 58%, rgba(255, 247, 237, .55) 100%),
+      linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  }
+
+  .vibecano-hero-root .ro-hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .vibecano-hero-root .ro-hero-bg img {
+    position: absolute;
+    right: -2%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(52vw, 640px);
+    height: auto;
+    opacity: .22;
+    object-fit: contain;
+    filter: saturate(1.05);
   }
 
   .vibecano-hero-root .ro-hero::before {
@@ -51,8 +72,9 @@
     right: -80px;
     width: 420px;
     height: 420px;
-    background: radial-gradient(circle, rgba(29,155,240,.14) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(29,155,240,.10) 0%, transparent 70%);
     pointer-events: none;
+    z-index: 0;
   }
 
   .vibecano-hero-root .ro-hero::after {
@@ -62,8 +84,9 @@
     left: -60px;
     width: 360px;
     height: 360px;
-    background: radial-gradient(circle, rgba(245,158,11,.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(245,158,11,.10) 0%, transparent 70%);
     pointer-events: none;
+    z-index: 0;
   }
 
   .vibecano-hero-root .ro-hero-wrap {
@@ -72,8 +95,8 @@
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: 1fr 1.05fr;
-    gap: 56px;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 48px;
     align-items: center;
   }
 
@@ -196,6 +219,17 @@
     color: #fff;
   }
 
+  .vibecano-hero-root .ro-btn-accent {
+    background: linear-gradient(135deg, #f59e0b 0%, #ea580c 100%);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(234, 88, 12, .22);
+  }
+
+  .vibecano-hero-root .ro-btn-accent:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(234, 88, 12, .28);
+  }
+
   .vibecano-hero-root .ro-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
 
   .vibecano-hero-root .ro-trust-row {
@@ -234,7 +268,7 @@
 
   .vibecano-hero-root .ro-categories-header {
     text-align: center;
-    margin-bottom: 26px;
+    margin-bottom: 22px;
   }
 
   .vibecano-hero-root .ro-categories-header h2 {
@@ -251,7 +285,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    gap: clamp(18px, 4vw, 42px);
+    gap: clamp(10px, 2vw, 22px);
     flex-wrap: wrap;
   }
 
@@ -259,8 +293,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 14px;
-    width: clamp(132px, 16vw, 176px);
+    gap: 12px;
+    width: clamp(96px, 11vw, 128px);
     text-align: center;
     transition: transform .24s ease;
   }
@@ -268,29 +302,37 @@
   .vibecano-hero-root .ro-category:hover { transform: translateY(-6px); }
 
   .vibecano-hero-root .ro-category-ring {
-    width: clamp(132px, 16vw, 176px);
-    height: clamp(132px, 16vw, 176px);
+    width: clamp(96px, 11vw, 128px);
+    height: clamp(96px, 11vw, 128px);
     border-radius: 50%;
-    padding: 4px;
-    box-shadow: 0 20px 44px -28px rgba(15, 23, 42, .42);
+    padding: 3px;
+    box-shadow: 0 16px 36px -24px rgba(15, 23, 42, .42);
     transition: box-shadow .24s ease, transform .24s ease;
   }
 
-  .vibecano-hero-root .ro-category.is-customize .ro-category-ring {
-    background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+  .vibecano-hero-root .ro-category.is-men .ro-category-ring {
+    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
   }
 
-  .vibecano-hero-root .ro-category.is-ready-made .ro-category-ring {
-    background: linear-gradient(135deg, #fb923c 0%, #f59e0b 100%);
+  .vibecano-hero-root .ro-category.is-women .ro-category-ring {
+    background: linear-gradient(135deg, #f472b6 0%, #db2777 100%);
   }
 
-  .vibecano-hero-root .ro-category.is-featured .ro-category-ring {
-    background: linear-gradient(135deg, #c084fc 0%, #ec4899 100%);
+  .vibecano-hero-root .ro-category.is-kids .ro-category-ring {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  }
+
+  .vibecano-hero-root .ro-category.is-accessories .ro-category-ring {
+    background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+  }
+
+  .vibecano-hero-root .ro-category.is-under999 .ro-category-ring {
+    background: linear-gradient(135deg, #fb923c 0%, #dc2626 100%);
   }
 
   .vibecano-hero-root .ro-category:hover .ro-category-ring {
-    box-shadow: 0 26px 54px -24px rgba(15, 23, 42, .52);
-    transform: scale(1.03);
+    box-shadow: 0 22px 48px -20px rgba(15, 23, 42, .52);
+    transform: scale(1.04);
   }
 
   .vibecano-hero-root .ro-category-img {
@@ -299,7 +341,7 @@
     overflow: hidden;
     border-radius: 50%;
     background: #f8fafc;
-    border: 4px solid #fff;
+    border: 3px solid #fff;
   }
 
   .vibecano-hero-root .ro-category-img img {
@@ -317,44 +359,58 @@
     display: grid;
     place-items: center;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 34px;
+    font-size: 26px;
     font-weight: 800;
-    color: rgba(15, 23, 42, .12);
     letter-spacing: -.04em;
     text-transform: uppercase;
   }
 
-  .vibecano-hero-root .ro-category.is-customize .ro-category-fallback {
+  .vibecano-hero-root .ro-category.is-men .ro-category-fallback {
     background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
-    color: rgba(37, 99, 235, .22);
+    color: rgba(37, 99, 235, .35);
   }
 
-  .vibecano-hero-root .ro-category.is-ready-made .ro-category-fallback {
+  .vibecano-hero-root .ro-category.is-women .ro-category-fallback {
+    background: linear-gradient(145deg, #fdf2f8 0%, #fce7f3 100%);
+    color: rgba(219, 39, 119, .35);
+  }
+
+  .vibecano-hero-root .ro-category.is-kids .ro-category-fallback {
+    background: linear-gradient(145deg, #fffbeb 0%, #fef3c7 100%);
+    color: rgba(217, 119, 6, .35);
+  }
+
+  .vibecano-hero-root .ro-category.is-accessories .ro-category-fallback {
+    background: linear-gradient(145deg, #ecfdf5 0%, #d1fae5 100%);
+    color: rgba(5, 150, 105, .35);
+  }
+
+  .vibecano-hero-root .ro-category.is-under999 .ro-category-fallback {
     background: linear-gradient(145deg, #fff7ed 0%, #ffedd5 100%);
-    color: rgba(234, 88, 12, .22);
-  }
-
-  .vibecano-hero-root .ro-category.is-featured .ro-category-fallback {
-    background: linear-gradient(145deg, #faf5ff 0%, #f3e8ff 100%);
-    color: rgba(147, 51, 234, .22);
+    color: #dc2626;
+    font-size: 20px;
+    line-height: 1.1;
   }
 
   .vibecano-hero-root .ro-category h3 {
     margin: 0;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 800;
     letter-spacing: -.01em;
     color: var(--ink);
+    line-height: 1.25;
   }
 
-  .vibecano-hero-root .ro-category.is-customize h3 { color: #2563eb; }
-  .vibecano-hero-root .ro-category.is-ready-made h3 { color: #ea580c; }
-  .vibecano-hero-root .ro-category.is-featured h3 { color: #9333ea; }
+  .vibecano-hero-root .ro-category.is-men h3 { color: #2563eb; }
+  .vibecano-hero-root .ro-category.is-women h3 { color: #db2777; }
+  .vibecano-hero-root .ro-category.is-kids h3 { color: #d97706; }
+  .vibecano-hero-root .ro-category.is-accessories h3 { color: #059669; }
+  .vibecano-hero-root .ro-category.is-under999 h3 { color: #dc2626; }
 
   .vibecano-hero-root .ro-category-skeleton {
-    width: clamp(132px, 16vw, 176px);
-    height: clamp(132px, 16vw, 176px);
+    width: clamp(96px, 11vw, 128px);
+    height: clamp(96px, 11vw, 128px);
     border-radius: 50%;
     background:
       linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.78), transparent),
@@ -370,11 +426,19 @@
   @media (max-width: 1024px) {
     .vibecano-hero-root .ro-hero-wrap { grid-template-columns: 1fr; gap: 40px; }
     .vibecano-hero-root .ro-hero-content { max-width: none; }
+    .vibecano-hero-root .ro-hero-bg img {
+      right: 50%;
+      top: auto;
+      bottom: -8%;
+      transform: translateX(50%);
+      width: min(88vw, 520px);
+      opacity: .14;
+    }
   }
 
   @media (max-width: 768px) {
     .vibecano-hero-root .ro-hero { padding: 40px 16px 56px; }
-    .vibecano-hero-root .ro-categories { gap: 22px; }
+    .vibecano-hero-root .ro-categories { gap: 14px; }
     .vibecano-hero-root .ro-stat { border-right: none; padding-right: 0; }
     .vibecano-hero-root .ro-hero-stats { gap: 12px; }
   }
@@ -382,27 +446,41 @@
   @media (max-width: 480px) {
     .vibecano-hero-root .ro-btn { padding: 13px 22px; font-size: 14px; width: 100%; }
     .vibecano-hero-root .ro-cta { flex-direction: column; }
+    .vibecano-hero-root .ro-category { width: clamp(88px, 28vw, 108px); }
+    .vibecano-hero-root .ro-category-ring {
+      width: clamp(88px, 28vw, 108px);
+      height: clamp(88px, 28vw, 108px);
+    }
+    .vibecano-hero-root .ro-category-skeleton {
+      width: clamp(88px, 28vw, 108px);
+      height: clamp(88px, 28vw, 108px);
+    }
+    .vibecano-hero-root .ro-category h3 { font-size: 12px; }
   }
 </style>
 
 <div class="vibecano-hero-root" id="vibecanoHeroRoot">
   <section class="ro-hero">
+    <div class="ro-hero-bg" aria-hidden="true">
+      <img src="https://vibecano.com/wp-content/uploads/2026/07/Boys-and-girls-300x167.png" alt="" loading="lazy" decoding="async">
+    </div>
+
     <div class="ro-hero-wrap">
       <div class="ro-hero-content">
         <div class="ro-hero-eyebrow">
           <span><i class="dot"></i> Spring / Summer '26</span>
         </div>
 
-        <h1>Premium Apparel, Built as a Brand<span>Ready-to-wear collections for every day.</span></h1>
+        <h1>Wear Your Vibe, Every Day<span>Men, Women, Kids &amp; more — curated for the whole family.</span></h1>
 
         <p class="lead">
-          Vibecano is a lifestyle brand built around quality essentials — curated tees, hoodies, and caps designed to look sharp straight out of the bag. No wait. No minimums. Just gear worth wearing.
+          Vibecano is a lifestyle brand built around quality essentials — tees, hoodies, caps, and accessories designed to look sharp straight out of the bag. Shop by collection and find your fit.
         </p>
 
         <div class="ro-hero-stats">
           <div class="ro-stat">
-            <strong>120+</strong>
-            <small>Ready-made styles</small>
+            <strong>5</strong>
+            <small>Shop collections</small>
           </div>
           <div class="ro-stat">
             <strong>4.9★</strong>
@@ -415,11 +493,11 @@
         </div>
 
         <div class="ro-cta">
-          <a class="ro-btn ro-btn-primary" id="roCtaReadyMade" href="/product-category/ready-made/">
-            Shop Ready Made
+          <a class="ro-btn ro-btn-primary" id="roCtaShop" href="/shop/">
+            Shop All
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
-          <a class="ro-btn ro-btn-outline" id="roCtaFeatured" href="/product-category/featured/">View Featured</a>
+          <a class="ro-btn ro-btn-accent" id="roCtaUnder999" href="/product-category/under999/">Under Rs. 999</a>
         </div>
 
         <div class="ro-trust-row">
@@ -440,7 +518,7 @@
 
       <div class="ro-hero-categories">
         <div class="ro-categories-header">
-          <h2>Collections</h2>
+          <h2>Shop by Category</h2>
         </div>
         <div class="ro-categories" id="roCategoryGrid" aria-live="polite"></div>
       </div>
@@ -454,11 +532,44 @@
 
   var CONFIG = {
     shopUrl: "/shop/",
+    heroBgImage: "https://vibecano.com/wp-content/uploads/2026/07/Boys-and-girls-300x167.png",
     categoriesEndpoint: "/wp-json/wc/store/v1/products/categories",
     mainCategories: [
-      { key: "customize", slugs: ["customize", "custom"], label: "Customize", toneClass: "is-customize" },
-      { key: "ready-made", slugs: ["ready-made", "ready-made-designs"], label: "Ready Made", toneClass: "is-ready-made" },
-      { key: "featured", slugs: ["featured"], label: "Featured", toneClass: "is-featured" }
+      {
+        key: "men",
+        slugs: ["men"],
+        label: "Men",
+        toneClass: "is-men",
+        fallbackImage: "https://vibecano.com/wp-content/uploads/2026/07/Men-251x300.jpg"
+      },
+      {
+        key: "women",
+        slugs: ["women"],
+        label: "Women",
+        toneClass: "is-women",
+        fallbackImage: "https://vibecano.com/wp-content/uploads/2026/07/women-251x300.jpg"
+      },
+      {
+        key: "kids",
+        slugs: ["kids"],
+        label: "Kids",
+        toneClass: "is-kids",
+        fallbackImage: "https://vibecano.com/wp-content/uploads/2026/07/kids-251x300.jpg"
+      },
+      {
+        key: "accessories",
+        slugs: ["accessories"],
+        label: "Accessories",
+        toneClass: "is-accessories",
+        fallbackImage: "https://vibecano.com/wp-content/uploads/2026/07/Accessories-251x300.jpg"
+      },
+      {
+        key: "under999",
+        slugs: ["under999", "under-999"],
+        label: "Under Rs. 999",
+        toneClass: "is-under999",
+        fallbackLabel: "999"
+      }
     ]
   };
 
@@ -466,8 +577,8 @@
   if (!root) return;
 
   var categoryGridEl = document.getElementById("roCategoryGrid");
-  var ctaReadyMade = document.getElementById("roCtaReadyMade");
-  var ctaFeatured = document.getElementById("roCtaFeatured");
+  var ctaShop = document.getElementById("roCtaShop");
+  var ctaUnder999 = document.getElementById("roCtaUnder999");
 
   expandHeroLayout();
   renderCategorySkeletons();
@@ -546,6 +657,8 @@
       key: item.key,
       label: item.label,
       toneClass: item.toneClass,
+      fallbackImage: item.fallbackImage || "",
+      fallbackLabel: item.fallbackLabel || "",
       category: category
     };
   }
@@ -562,6 +675,14 @@
     return CONFIG.shopUrl;
   }
 
+  function getCategoryImage(item) {
+    if (item.category && item.category.image && item.category.image.src) {
+      return item.category.image.src;
+    }
+    if (item.fallbackImage) return item.fallbackImage;
+    return "";
+  }
+
   function renderCategoryCards(items) {
     if (!categoryGridEl) return;
     categoryGridEl.innerHTML = items.map(renderCategoryCard).join("");
@@ -572,13 +693,14 @@
     var url = escapeAttr(getCategoryUrl(category));
     var name = escapeHtml(item.label || category.name || "Category");
     var toneClass = escapeAttr(item.toneClass || "");
-    var image = category.image && category.image.src ? category.image : null;
+    var imageSrc = getCategoryImage(item);
     var imageHtml;
 
-    if (image && image.src) {
-      imageHtml = '<img src="' + escapeAttr(image.src) + '" alt="' + escapeAttr(image.alt || category.name || item.label) + '" loading="lazy" decoding="async">';
+    if (imageSrc) {
+      imageHtml = '<img src="' + escapeAttr(imageSrc) + '" alt="' + escapeAttr(category.name || item.label) + '" loading="lazy" decoding="async">';
     } else {
-      imageHtml = '<div class="ro-category-fallback">' + escapeHtml((item.label || category.name || "VC").slice(0, 1)) + "</div>";
+      var fallbackText = escapeHtml(item.fallbackLabel || (item.label || category.name || "VC").slice(0, 1));
+      imageHtml = '<div class="ro-category-fallback">' + fallbackText + "</div>";
     }
 
     return [
@@ -596,15 +718,14 @@
   function bindCategoryLinks(items) {
     items.forEach(function (item) {
       var url = getCategoryUrl(item.category);
-      if (item.key === "ready-made" && ctaReadyMade) ctaReadyMade.href = url;
-      if (item.key === "featured" && ctaFeatured) ctaFeatured.href = url;
+      if (item.key === "under999" && ctaUnder999) ctaUnder999.href = url;
     });
   }
 
   function renderCategorySkeletons() {
     if (!categoryGridEl) return;
     categoryGridEl.innerHTML = "";
-    for (var i = 0; i < 3; i += 1) {
+    for (var i = 0; i < CONFIG.mainCategories.length; i += 1) {
       categoryGridEl.innerHTML += '<div class="ro-category-skeleton" aria-hidden="true"></div>';
     }
   }
@@ -617,6 +738,8 @@
         key: item.key,
         label: item.label,
         toneClass: item.toneClass,
+        fallbackImage: item.fallbackImage || "",
+        fallbackLabel: item.fallbackLabel || "",
         category: {
           name: item.label,
           slug: item.slugs[0],

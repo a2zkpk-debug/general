@@ -275,7 +275,7 @@
   .vibecano-header-root .ro-nav-links {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: clamp(14px, 2vw, 22px);
     list-style: none;
     margin: 0;
     padding: 0;
@@ -426,11 +426,13 @@
       <button class="ro-menu-toggle" id="roMenuToggle" type="button" aria-label="Toggle menu">☰</button>
       <ul class="ro-nav-links" id="roNavLinks">
         <li><a class="is-highlight" href="/shop/">Shop All</a></li>
-        <li><a id="roNavCustomize" href="/product-category/customize/">Customize</a></li>
-        <li><a id="roNavReadyMade" href="/product-category/ready-made/">Ready Made</a></li>
-        <li><a id="roNavFeatured" href="/product-category/featured/">Featured</a></li>
+        <li><a id="roNavMen" href="/product-category/men/">Men</a></li>
+        <li><a id="roNavWomen" href="/product-category/women/">Women</a></li>
+        <li><a id="roNavKids" href="/product-category/kids/">Kids</a></li>
+        <li><a id="roNavAccessories" href="/product-category/accessories/">Accessories</a></li>
+        <li><a id="roNavUnder999" href="/product-category/under999/">Under Rs. 999</a></li>
       </ul>
-      <a class="ro-design-btn" id="roShopBtn" href="/shop/">Shop Collection</a>
+      <a class="ro-design-btn" id="roShopBtn" href="/product-category/under999/">Under Rs. 999</a>
     </div>
   </nav>
 </div>
@@ -448,9 +450,11 @@
     cartEndpoint: "/wp-json/wc/store/v1/cart",
     categoriesEndpoint: "/wp-json/wc/store/v1/products/categories",
     mainCategories: [
-      { key: "customize", slugs: ["customize", "custom"], label: "Customize" },
-      { key: "ready-made", slugs: ["ready-made", "ready-made-designs"], label: "Ready Made" },
-      { key: "featured", slugs: ["featured"], label: "Featured" }
+      { key: "men", slugs: ["men"], label: "Men" },
+      { key: "women", slugs: ["women"], label: "Women" },
+      { key: "kids", slugs: ["kids"], label: "Kids" },
+      { key: "accessories", slugs: ["accessories"], label: "Accessories" },
+      { key: "under999", slugs: ["under999", "under-999"], label: "Under Rs. 999" }
     ]
   };
 
@@ -467,15 +471,17 @@
   var cartCountEl = document.getElementById("roCartCount");
   var shopBtn = document.getElementById("roShopBtn");
   var navLinks = {
-    customize: document.getElementById("roNavCustomize"),
-    "ready-made": document.getElementById("roNavReadyMade"),
-    featured: document.getElementById("roNavFeatured")
+    men: document.getElementById("roNavMen"),
+    women: document.getElementById("roNavWomen"),
+    kids: document.getElementById("roNavKids"),
+    accessories: document.getElementById("roNavAccessories"),
+    under999: document.getElementById("roNavUnder999")
   };
 
   if (loginLink) loginLink.href = CONFIG.loginUrl;
   if (registerLink) registerLink.href = CONFIG.registerUrl;
   if (userEl) userEl.href = CONFIG.accountUrl;
-  if (shopBtn) shopBtn.href = CONFIG.shopUrl;
+  if (shopBtn) shopBtn.href = "/product-category/under999/";
 
   if (toggle && nav) {
     toggle.addEventListener("click", function () {
@@ -534,6 +540,9 @@
           if (linkEl) {
             linkEl.href = url;
             linkEl.textContent = item.label || category.name;
+          }
+          if (item.key === "under999" && shopBtn) {
+            shopBtn.href = url;
           }
         });
       })
