@@ -4,52 +4,75 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 
 ## Files
 
-- `vibecano-header.html` — Site-wide header (top bar, logo, search, nav, cart count)
-- `vibecano-hero-section.html` — Homepage hero content only (category circles + CTAs)
-- `vibecano-footer.html` — Site-wide footer (links, contact, copyright)
-- `vibecano-single-product-page.html` — Single product page with size/color swatches
-- `vibecano-cart-page.html` — Custom cart page with Store API integration
-- `vibecano-checkout-page.html` — Custom checkout page with WhatsApp order flow
+| File | Purpose |
+|------|---------|
+| `vibecano-hero-section.html` | Homepage header + hero (paste into Elementor HTML widget) |
+| `vibecano-header.html` | Site-wide header (Theme Builder → Header) |
+| `vibecano-nav-shared.js` | Nav dropdown menus (Men, Women, Kids, Under 999) |
+| `vibecano-hero.css` / `vibecano-hero.js` | Styles + logic for homepage hero (loaded via CDN) |
+| `vibecano-header.css` / `vibecano-header.js` | Styles + logic for inner-page header (loaded via CDN) |
+| `vibecano-footer.html` | Site-wide footer |
+| `vibecano-single-product-page.html` | Single product page |
+| `vibecano-cart-page.html` | Custom cart page |
+| `vibecano-checkout-page.html` | Custom checkout page |
 
-## Header + hero + footer setup
+## Why external CSS/JS?
 
-1. **All pages:** paste `vibecano-header.html` into **Elementor → Theme Builder → Header** (HTML widget, width **100%**).
-2. **All pages:** paste `vibecano-footer.html` into **Elementor → Theme Builder → Footer** (HTML widget, width **100%**).
-3. **Homepage only:** paste `vibecano-hero-section.html` into the homepage content area below the header.
-4. Remove the old combined hero/header widget if it is still on the homepage.
+Elementor HTML widgets can strip or break inline `<style>` and `<script>` tags (especially when old code is pasted on top). The HTML files now contain **only** `<link>` tags, markup, and `<script src="...">` — no inline CSS or JS.
+
+Assets load from jsDelivr CDN (same repo branch):
+
+- `https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-nav-shared.js`
+- `https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-hero.css`
+- `https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-hero.js`
+- `https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-header.css`
+- `https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-header.js`
+
+## Homepage hero — deploy steps
+
+**The live site still has old broken code until you follow these steps exactly.**
+
+1. **Elementor → Pages → Homepage** → Edit with Elementor
+2. Click the **first HTML widget** (hero section)
+3. **Ctrl+A → Delete ALL** existing code (must be completely empty first)
+4. Paste the **entire** `vibecano-hero-section.html` file (~150 lines)
+5. Widget + section: **Full Width / 100%**
+6. **Disable Theme Builder header on homepage** (hero already includes header)
+7. Click **Update** → hard refresh **Ctrl+Shift+R**
+
+### Verify it worked
+
+View page source (Ctrl+U). You should see:
+
+- `cdn.jsdelivr.net/.../vibecano-hero.css`
+- `<div class="vibecano-hero-root" id="vibecanoHeroRoot">`
+- `ro-topbar` in the HTML
+
+You should **NOT** see:
+
+- `VIBECANO — HOMEPAGE HERO SECTION` as visible text
+- `--surface: #f8fafc` as plain text on the page
+- Old categories like "Customize" or "Ready Made"
+
+## Site header (shop, cart, product pages)
+
+1. **Elementor → Theme Builder → Header** → HTML widget
+2. **Ctrl+A → Delete ALL** old code
+3. Paste entire `vibecano-header.html` (~85 lines)
+4. Width **100%** → **Update** → hard refresh
+
+## Footer
+
+Paste `vibecano-footer.html` into **Theme Builder → Footer**.
+
+## Optional: self-host assets on WordPress
+
+Upload `vibecano-hero.css`, `vibecano-hero.js`, `vibecano-header.css`, `vibecano-header.js` to Media Library, then replace the jsDelivr URLs in the HTML files with your upload URLs.
 
 ## Checkout full-width fix
 
-The checkout section now stretches to full page width on Elementor. The live checkout HTML widget uses `elementor-widget__width-initial`, which limited the page to about 963px and left empty space on the right. The fix expands the Elementor host containers to `100%` width via JavaScript on load, render, and resize.
+The checkout section stretches to full page width on Elementor via JavaScript that expands host containers to `100%` on load and resize.
 
-## Checkout WhatsApp fix (color, size, receipt)
+## Cart checkout redirect
 
-WhatsApp messages now include Size/Color from Store API cart variations. Receipt uploads use the mobile Share API when available; desktop opens a receipt image tab for manual attach because `wa.me` links cannot include files.
-
-## Cart checkout redirect fix
-
-### Problem
-
-Clicking **Proceed to Checkout** returned to the cart page because the custom cart uses the WooCommerce Store API (`Cart-Token` in `sessionStorage`), while checkout uses the classic WooCommerce session. A plain `/checkout/` link does not carry the Store API cart, so WooCommerce sees an empty cart and redirects back to `/cart/`.
-
-### Fix
-
-Redirect to checkout with the cart session token:
-
-```
-/checkout/?session=CART_TOKEN
-```
-
-WooCommerce restores the Store API cart from the `session` query parameter. The fixed cart page refreshes the cart on checkout click and redirects with the stored token. The single product page uses the same pattern after add-to-cart.
-
-## Single product color swatches fix
-
-Color swatches were hidden because `renderColorOptions()` required `COLOR_VARIES`, which only became true when variation API data exposed parseable color values. The fix shows colors whenever the Color attribute has terms.
-
-## Usage
-
-Replace the Elementor HTML widget content on each template with the matching file contents.
-
-## Note on Variation Swatches plugin
-
-The GetWooPlugins swatches plugin styles the default WooCommerce variation form. These custom widgets render their own UI via the Store API. The swatches plugin can be uninstalled if all product/cart pages use these custom templates.
+Redirect to `/checkout/?session=CART_TOKEN` so the Store API cart carries into checkout.
