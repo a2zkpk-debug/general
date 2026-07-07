@@ -87,10 +87,13 @@
   }
 
   expandLayout();
-  renderCategorySkeletons();
   loadAccountState();
   loadCartCount();
   loadMainCategories();
+
+  function hasStaticCategoryCards() {
+    return categoryGridEl && categoryGridEl.querySelector(".ro-category");
+  }
 
   function afterCategoriesLoaded(categories) {
     if (window.VibecanoNav && typeof window.VibecanoNav.initNavDropdowns === "function") {
@@ -178,7 +181,20 @@
 
     renderCategoryCards(resolved);
     bindCategoryLinks(resolved);
+    syncStaticCategoryLinks(resolved);
     afterCategoriesLoaded(categories);
+  }
+
+  function syncStaticCategoryLinks(items) {
+    if (!categoryGridEl || !hasStaticCategoryCards()) return;
+
+    items.forEach(function (item) {
+      var card = categoryGridEl.querySelector('.ro-category[data-category="' + item.key + '"]');
+      if (!card) return;
+      card.href = getCategoryUrl(item.category);
+      var title = card.querySelector("h3");
+      if (title) title.textContent = item.label || item.category.name;
+    });
   }
 
   function resolveMainCategory(categories, item) {
@@ -226,7 +242,7 @@
   }
 
   function renderCategoryCards(items) {
-    if (!categoryGridEl) return;
+    if (!categoryGridEl || hasStaticCategoryCards()) return;
     categoryGridEl.innerHTML = items.map(renderCategoryCard).join("");
   }
 
@@ -301,6 +317,7 @@
 
     renderCategoryCards(fallback);
     bindCategoryLinks(fallback);
+    syncStaticCategoryLinks(fallback);
     afterCategoriesLoaded(categories || []);
   }
 
