@@ -8,6 +8,7 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 |------|---------|
 | `vibecano-hero-section.html` | Homepage header + hero (paste into Elementor HTML widget) |
 | `vibecano-header.html` | Site-wide header (Theme Builder → Header) |
+| `vibecano-nav-shared.js` | Nav dropdown menus (Men, Women, Kids, Under 999) |
 | `vibecano-hero.css` / `vibecano-hero.js` | Styles + logic for homepage hero (loaded via CDN) |
 | `vibecano-header.css` / `vibecano-header.js` | Styles + logic for inner-page header (loaded via CDN) |
 | `vibecano-footer.html` | Site-wide footer |
@@ -21,6 +22,7 @@ Elementor HTML widgets can strip or break inline `<style>` and `<script>` tags (
 
 Assets load from jsDelivr CDN (same repo branch):
 
+- `https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-nav-shared.js`
 - `https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-hero.css`
 - `https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-hero.js`
 - `https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-header.css`
