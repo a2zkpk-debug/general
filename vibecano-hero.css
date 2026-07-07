@@ -451,9 +451,7 @@
     position: relative;
     padding: 56px 24px 72px;
     overflow: hidden;
-    background:
-      linear-gradient(105deg, rgba(248, 250, 252, .98) 0%, rgba(248, 250, 252, .92) 34%, rgba(255, 255, 255, .55) 52%, rgba(255, 247, 237, .4) 100%),
-      linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
   }
 
   .vibecano-hero-root .ro-hero-bg {
@@ -461,23 +459,21 @@
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    mask-image: linear-gradient(90deg, transparent 0%, transparent 46%, rgba(0, 0, 0, .55) 54%, rgba(0, 0, 0, 1) 100%);
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 46%, rgba(0, 0, 0, .55) 54%, rgba(0, 0, 0, 1) 100%);
+    overflow: hidden;
   }
 
   .vibecano-hero-root .ro-hero-bg img {
     position: absolute;
-    left: 54%;
-    right: auto;
-    top: 48%;
-    bottom: auto;
-    transform: translateY(-50%);
-    width: min(46vw, 560px);
+    left: 50%;
+    top: 58%;
+    transform: translate(-50%, -50%);
+    width: 108%;
+    max-width: 520px;
     height: auto;
-    opacity: .48;
+    opacity: .72;
     object-fit: contain;
     object-position: center center;
-    filter: saturate(1.12) contrast(1.04);
+    filter: saturate(1.1);
   }
 
   .vibecano-hero-root .ro-hero::before {
@@ -667,13 +663,18 @@
   
   .vibecano-hero-root .ro-hero-categories {
     position: relative;
-    padding: 18px 16px 10px;
-    background: rgba(255, 255, 255, .78);
+    padding: 18px 16px 14px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .45) 0%, rgba(255, 255, 255, .72) 100%);
     border-radius: 20px;
-    border: 1px solid rgba(226, 232, 240, .9);
+    border: 1px solid rgba(226, 232, 240, .75);
     box-shadow: 0 10px 30px rgba(15, 23, 42, .06);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    overflow: hidden;
+  }
+
+  .vibecano-hero-root .ro-categories-header,
+  .vibecano-hero-root .ro-categories {
+    position: relative;
+    z-index: 1;
   }
 
   .vibecano-hero-root .ro-categories-header {
@@ -840,22 +841,14 @@
   @media (max-width: 1024px) {
     .vibecano-hero-root .ro-hero-wrap { grid-template-columns: 1fr; gap: 40px; }
     .vibecano-hero-root .ro-hero-content { max-width: none; }
-    .vibecano-hero-root .ro-hero-bg {
-      mask-image: linear-gradient(180deg, rgba(0, 0, 0, .15) 0%, rgba(0, 0, 0, .55) 40%, rgba(0, 0, 0, .35) 70%, transparent 100%);
-      -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, .15) 0%, rgba(0, 0, 0, .55) 40%, rgba(0, 0, 0, .35) 70%, transparent 100%);
-    }
     .vibecano-hero-root .ro-hero-bg img {
-      left: 50%;
-      right: auto;
-      top: auto;
-      bottom: 38%;
-      transform: translateX(-50%);
-      width: min(86vw, 540px);
-      opacity: .24;
-      object-position: center bottom;
+      top: 62%;
+      width: 100%;
+      max-width: 480px;
+      opacity: .65;
     }
     .vibecano-hero-root .ro-hero-categories {
-      background: rgba(255, 255, 255, .88);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .5) 0%, rgba(255, 255, 255, .82) 100%);
     }
   }
 
