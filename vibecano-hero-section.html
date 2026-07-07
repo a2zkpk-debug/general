@@ -199,9 +199,25 @@
             <h3>Under Rs. 999</h3>
           </a>
         </div>
+        <script>
+        (function () {
+          var grid = document.getElementById("roCategoryGrid");
+          if (!grid || !grid.querySelector(".ro-category")) return;
+          var snapshot = grid.innerHTML;
+          function keepCategories() {
+            if (!grid.querySelector(".ro-category.is-women") || !grid.querySelector(".ro-category.is-accessories")) {
+              grid.innerHTML = snapshot;
+            }
+          }
+          new MutationObserver(keepCategories).observe(grid, { childList: true });
+          document.addEventListener("DOMContentLoaded", keepCategories);
+          window.addEventListener("load", keepCategories);
+          window.VIBECANO_STATIC_CATEGORIES = true;
+        })();
+        </script>
       </div>
     </div>
   </section>
 </div>
-<script src="https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@049fa45/vibecano-nav-shared.js" defer></script>
-<script src="https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@049fa45/vibecano-hero.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-nav-shared.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-hero.js" defer></script>

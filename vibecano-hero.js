@@ -92,7 +92,8 @@
   loadMainCategories();
 
   function hasStaticCategoryCards() {
-    return categoryGridEl && categoryGridEl.querySelector(".ro-category");
+    return window.VIBECANO_STATIC_CATEGORIES === true ||
+      (categoryGridEl && categoryGridEl.querySelector(".ro-category[data-category]"));
   }
 
   function afterCategoriesLoaded(categories) {
@@ -141,6 +142,14 @@
   }
 
   function loadMainCategories() {
+    if (hasStaticCategoryCards()) {
+      var fallback = buildAllCategoryItems([]);
+      bindCategoryLinks(fallback);
+      syncStaticCategoryLinks(fallback);
+      fetchCategoriesForNav();
+      return;
+    }
+
     if (!window.fetch) {
       renderFallbackCategories([]);
       return;
@@ -152,16 +161,37 @@
         return response.json();
       })
       .then(function (categories) {
-        var safeCategories = Array.isArray(categories) ? categories : [];
-        renderAllCategories(safeCategories);
+        renderAllCategories(Array.isArray(categories) ? categories : []);
       })
       .catch(function () {
         renderFallbackCategories([]);
       });
   }
 
-  function renderAllCategories(categories) {
-    var resolved = CONFIG.mainCategories.map(function (item) {
+  function fetchCategoriesForNav() {
+    if (!window.fetch) {
+      afterCategoriesLoaded([]);
+      return;
+    }
+
+    fetch(CONFIG.categoriesEndpoint + "?per_page=100", { credentials: "same-origin" })
+      .then(function (response) {
+        return response.ok ? response.json() : [];
+      })
+      .then(function (categories) {
+        var safeCategories = Array.isArray(categories) ? categories : [];
+        var resolved = buildAllCategoryItems(safeCategories);
+        bindCategoryLinks(resolved);
+        syncStaticCategoryLinks(resolved);
+        afterCategoriesLoaded(safeCategories);
+      })
+      .catch(function () {
+        afterCategoriesLoaded([]);
+      });
+  }
+
+  function buildAllCategoryItems(categories) {
+    return CONFIG.mainCategories.map(function (item) {
       var match = resolveMainCategory(categories, item);
       if (match) return match;
 
@@ -178,6 +208,10 @@
         }
       };
     });
+  }
+
+  function renderAllCategories(categories) {
+    var resolved = buildAllCategoryItems(categories);
 
     renderCategoryCards(resolved);
     bindCategoryLinks(resolved);
@@ -289,31 +323,16 @@
     });
   }
 
-  function renderCategorySkeletons() {
-    if (!categoryGridEl) return;
-    categoryGridEl.innerHTML = "";
-    for (var i = 0; i < CONFIG.mainCategories.length; i += 1) {
-      categoryGridEl.innerHTML += '<div class="ro-category-skeleton" aria-hidden="true"></div>';
-    }
-  }
-
   function renderFallbackCategories(categories) {
-    if (!categoryGridEl) return;
+    if (!categoryGridEl || hasStaticCategoryCards()) {
+      var fallback = buildAllCategoryItems(categories || []);
+      bindCategoryLinks(fallback);
+      syncStaticCategoryLinks(fallback);
+      afterCategoriesLoaded(categories || []);
+      return;
+    }
 
-    var fallback = CONFIG.mainCategories.map(function (item) {
-      return {
-        key: item.key,
-        label: item.label,
-        toneClass: item.toneClass,
-        fallbackImage: item.fallbackImage || CONFIG.categoryImages[item.key] || "",
-        fallbackLabel: item.fallbackLabel || "",
-        category: {
-          name: item.label,
-          slug: item.slugs[0],
-          permalink: "/product-category/" + item.slugs[0] + "/"
-        }
-      };
-    });
+    var fallback = buildAllCategoryItems(categories || []);
 
     renderCategoryCards(fallback);
     bindCategoryLinks(fallback);
