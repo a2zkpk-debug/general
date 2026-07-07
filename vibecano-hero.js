@@ -86,6 +86,15 @@
   loadCartCount();
   loadMainCategories();
 
+  function afterCategoriesLoaded(categories) {
+    if (window.VibecanoNav && typeof window.VibecanoNav.initNavDropdowns === "function") {
+      window.VibecanoNav.initNavDropdowns(root, categories);
+    }
+    if (shopBtn && window.VibecanoNav) {
+      shopBtn.href = window.VibecanoNav.resolveParentUrl(categories || [], "under999");
+    }
+  }
+
   window.addEventListener("resize", expandLayout);
   window.addEventListener("load", function () {
       expandLayout();
@@ -124,7 +133,7 @@
 
   function loadMainCategories() {
     if (!window.fetch) {
-      renderFallbackCategories();
+      renderFallbackCategories([]);
       return;
     }
 
@@ -135,21 +144,35 @@
       })
       .then(function (categories) {
         var safeCategories = Array.isArray(categories) ? categories : [];
-        var resolved = CONFIG.mainCategories.map(function (item) {
-          return resolveMainCategory(safeCategories, item);
-        }).filter(Boolean);
-
-        if (!resolved.length) {
-          renderFallbackCategories();
-          return;
-        }
-
-        renderCategoryCards(resolved);
-        bindCategoryLinks(resolved);
+        renderAllCategories(safeCategories);
       })
       .catch(function () {
-        renderFallbackCategories();
+        renderFallbackCategories([]);
       });
+  }
+
+  function renderAllCategories(categories) {
+    var resolved = CONFIG.mainCategories.map(function (item) {
+      var match = resolveMainCategory(categories, item);
+      if (match) return match;
+
+      return {
+        key: item.key,
+        label: item.label,
+        toneClass: item.toneClass,
+        fallbackImage: item.fallbackImage || "",
+        fallbackLabel: item.fallbackLabel || "",
+        category: {
+          name: item.label,
+          slug: item.slugs[0],
+          permalink: "/product-category/" + item.slugs[0] + "/"
+        }
+      };
+    });
+
+    renderCategoryCards(resolved, categories);
+    bindCategoryLinks(resolved);
+    afterCategoriesLoaded(categories);
   }
 
   function resolveMainCategory(categories, item) {
@@ -193,12 +216,14 @@
     return "";
   }
 
-  function renderCategoryCards(items) {
+  function renderCategoryCards(items, categories) {
     if (!categoryGridEl) return;
-    categoryGridEl.innerHTML = items.map(renderCategoryCard).join("");
+    categoryGridEl.innerHTML = items.map(function (item) {
+      return renderCategoryCard(item, categories);
+    }).join("");
   }
 
-  function renderCategoryCard(item) {
+  function renderCategoryCard(item, categories) {
     var category = item.category;
     var url = escapeAttr(getCategoryUrl(category));
     var name = escapeHtml(item.label || category.name || "Category");
@@ -213,6 +238,13 @@
       imageHtml = '<div class="ro-category-fallback">' + fallbackText + "</div>";
     }
 
+    var subsHtml = "";
+    if (window.VibecanoNav && window.VibecanoNav.NAV_MENUS[item.key]) {
+      subsHtml = '<div class="ro-category-subs">' +
+        window.VibecanoNav.renderCategorySubLinks(item.key, categories || [], 4) +
+        "</div>";
+    }
+
     return [
       '<a href="' + url + '" class="ro-category ' + toneClass + '">',
         '<div class="ro-category-ring">',
@@ -221,6 +253,7 @@
           "</div>",
         "</div>",
         "<h3>" + name + "</h3>",
+        subsHtml,
       "</a>"
     ].join("");
   }
@@ -230,14 +263,13 @@
       var linkEl = navLinks[item.key];
       var url = getCategoryUrl(item.category);
 
-      if (linkEl) {
+      if (linkEl && !linkEl.classList.contains("ro-nav-trigger")) {
         linkEl.href = url;
         linkEl.textContent = item.label || item.category.name;
       }
 
       if (item.key === "under999") {
         if (ctaUnder999) ctaUnder999.href = url;
-        if (shopBtn) shopBtn.href = url;
       }
     });
   }
@@ -250,7 +282,7 @@
     }
   }
 
-  function renderFallbackCategories() {
+  function renderFallbackCategories(categories) {
     if (!categoryGridEl) return;
 
     var fallback = CONFIG.mainCategories.map(function (item) {
@@ -268,8 +300,9 @@
       };
     });
 
-    renderCategoryCards(fallback);
+    renderCategoryCards(fallback, categories || []);
     bindCategoryLinks(fallback);
+    afterCategoriesLoaded(categories || []);
   }
 
   function loadAccountState() {

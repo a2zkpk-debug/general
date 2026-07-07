@@ -73,14 +73,29 @@
       <button class="ro-menu-toggle" id="roMenuToggle" type="button" aria-label="Toggle menu">☰</button>
       <ul class="ro-nav-links" id="roNavLinks">
         <li><a class="is-highlight" href="/shop/">Shop All</a></li>
-        <li><a id="roNavMen" href="/product-category/men/">Men</a></li>
-        <li><a id="roNavWomen" href="/product-category/women/">Women</a></li>
-        <li><a id="roNavKids" href="/product-category/kids/">Kids</a></li>
-        <li><a id="roNavAccessories" href="/product-category/accessories/">Accessories</a></li>
-        <li><a id="roNavUnder999" href="/product-category/under999/">Under Rs. 999</a></li>
+        <li class="ro-nav-dd" data-menu="men">
+          <a id="roNavMen" class="ro-nav-trigger" href="/product-category/men/">Men <span class="ro-chev" aria-hidden="true">▾</span></a>
+          <div class="ro-dropdown-panel"></div>
+        </li>
+        <li class="ro-nav-dd" data-menu="women">
+          <a id="roNavWomen" class="ro-nav-trigger" href="/product-category/women/">Women <span class="ro-chev" aria-hidden="true">▾</span></a>
+          <div class="ro-dropdown-panel"></div>
+        </li>
+        <li class="ro-nav-dd" data-menu="kids">
+          <a id="roNavKids" class="ro-nav-trigger" href="/product-category/kids/">Kids <span class="ro-chev" aria-hidden="true">▾</span></a>
+          <div class="ro-dropdown-panel"></div>
+        </li>
+        <li>
+          <a id="roNavAccessories" href="/product-category/accessories/">Accessories</a>
+        </li>
+        <li class="ro-nav-dd is-flash" data-menu="under999">
+          <a id="roNavUnder999" class="ro-nav-trigger" href="/product-category/under999/">Under Rs. 999 <span class="ro-chev" aria-hidden="true">▾</span></a>
+          <div class="ro-dropdown-panel"></div>
+        </li>
       </ul>
-      <a class="ro-design-btn" id="roShopBtn" href="/product-category/under999/">Under Rs. 999</a>
+      <a class="ro-design-btn is-flash" id="roShopBtn" href="/product-category/under999/">Under Rs. 999</a>
     </div>
   </nav>
 </div>
+<script src="https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-nav-shared.js" defer></script>
 <script src="https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/brand-categories-hero-redesign-9b96/vibecano-header.js" defer></script>

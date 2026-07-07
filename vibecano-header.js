@@ -54,6 +54,15 @@
   loadCartCount();
   loadNavCategories();
 
+  function initHeaderNav(categories) {
+    if (window.VibecanoNav && typeof window.VibecanoNav.initNavDropdowns === "function") {
+      window.VibecanoNav.initNavDropdowns(root, categories);
+    }
+    if (shopBtn && window.VibecanoNav) {
+      shopBtn.href = window.VibecanoNav.resolveParentUrl(categories || [], "under999");
+    }
+  }
+
   window.addEventListener("resize", expandHeaderLayout);
   window.addEventListener("load", function () {
       expandHeaderLayout();
@@ -91,7 +100,10 @@
   }
 
   function loadNavCategories() {
-    if (!window.fetch) return;
+    if (!window.fetch) {
+      initHeaderNav([]);
+      return;
+    }
 
     fetch(CONFIG.categoriesEndpoint + "?per_page=100", { credentials: "same-origin" })
       .then(function (response) {
@@ -102,19 +114,17 @@
         var safeCategories = Array.isArray(categories) ? categories : [];
         CONFIG.mainCategories.forEach(function (item) {
           var category = resolveMainCategory(safeCategories, item);
-          if (!category) return;
           var linkEl = navLinks[item.key];
-          var url = getCategoryUrl(category);
-          if (linkEl) {
-            linkEl.href = url;
-            linkEl.textContent = item.label || category.name;
-          }
-          if (item.key === "under999" && shopBtn) {
-            shopBtn.href = url;
-          }
+          if (!linkEl || linkEl.classList.contains("ro-nav-trigger")) return;
+          if (!category) return;
+          linkEl.href = getCategoryUrl(category);
+          linkEl.textContent = item.label || category.name;
         });
+        initHeaderNav(safeCategories);
       })
-      .catch(function () {});
+      .catch(function () {
+        initHeaderNav([]);
+      });
   }
 
   function resolveMainCategory(categories, item) {
