@@ -11,11 +11,21 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 - `vibecano-cart-page.html` — Custom cart page with Store API integration
 - `vibecano-checkout-page.html` — Custom checkout page with WhatsApp order flow
 
-## Header + hero + footer setup
+## Homepage hero (IMPORTANT paste steps)
 
-1. **Homepage:** paste `vibecano-hero-section.html` into **one** Elementor HTML widget (full width). This file includes header + hero together — disable or remove the Theme Builder header on the homepage to avoid duplicates.
-2. **Other pages:** paste `vibecano-header.html` into **Elementor → Theme Builder → Header** (HTML widget, width **100%**).
-3. **All pages:** paste `vibecano-footer.html` into **Elementor → Theme Builder → Footer** (HTML widget, width **100%**).
+Elementor often breaks `<style>` tags and HTML comments, which makes CSS show as plain text on the page. The hero file now injects CSS via JavaScript instead.
+
+1. Open the homepage HTML widget in Elementor.
+2. **Select all existing code and delete it completely** (Ctrl+A → Delete). Do not paste on top of old code.
+3. Paste the **entire** `vibecano-hero-section.html` file.
+4. Set the section and widget width to **100% / Full Width**.
+5. **Disable the Theme Builder header on the homepage** (Templates → Theme Builder → Header → exclude homepage, or set homepage header to empty). Otherwise you get a double header.
+6. Update/Publish, then hard-refresh the browser (Ctrl+Shift+R).
+
+## Other pages (shop, cart, product, etc.)
+
+1. Paste `vibecano-header.html` into **Elementor → Theme Builder → Header** (HTML widget, width **100%**).
+2. Paste `vibecano-footer.html` into **Elementor → Theme Builder → Footer** (HTML widget, width **100%**).
 
 ## Checkout full-width fix
 
