@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap");
 #vibecanoHeaderRoot.vibecano-header-root{width:100vw!important;max-width:100vw!important;margin-left:calc(50% - 50vw)!important;margin-right:calc(50% - 50vw)!important;position:relative;left:0;right:0}
 .elementor-widget-html .elementor-widget-container:has(#vibecanoHeaderRoot),.elementor-element:has(#vibecanoHeaderRoot),.elementor-element:has(#vibecanoHeaderRoot)>.e-con-inner,.elementor-element:has(#vibecanoHeaderRoot)>.elementor-widget-container,.elementor-location-header .elementor-widget-container{max-width:100%!important;width:100%!important;padding-left:0!important;padding-right:0!important;overflow:visible!important}
 .vibecano-header-root {
