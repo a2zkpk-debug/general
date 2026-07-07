@@ -455,25 +455,7 @@
   }
 
   .vibecano-hero-root .ro-hero-bg {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
-  }
-
-  .vibecano-hero-root .ro-hero-bg img {
-    position: absolute;
-    left: 50%;
-    top: 58%;
-    transform: translate(-50%, -50%);
-    width: 108%;
-    max-width: 520px;
-    height: auto;
-    opacity: .72;
-    object-fit: contain;
-    object-position: center center;
-    filter: saturate(1.1);
+    display: none;
   }
 
   .vibecano-hero-root .ro-hero::before {
