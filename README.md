@@ -4,7 +4,8 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 
 ## Files
 
-- `vibecano-header.html` — Site-wide header for inner pages (top bar, logo, search, nav, cart count)
+- `vibecano-header.html` — Site-wide header HTML widget (Theme Builder → Header)
+- `vibecano-header.css` — Stylesheet for site header (upload to WordPress Media first)
 - `vibecano-hero.css` — Stylesheet for homepage hero (upload to WordPress Media first)
 - `vibecano-hero-section.html` — Homepage combined header + hero HTML widget
 - `vibecano-footer.html` — Site-wide footer (links, contact, copyright)
@@ -39,10 +40,25 @@ If you skip this step, the HTML widget will try a CDN fallback, but uploading to
 
 View page source and search for `ro-topbar` — you should see it inside HTML, NOT as visible CSS text like `--surface:` on the page.
 
-## Other pages (shop, cart, product, etc.)
+## Site header — Theme Builder (shop, cart, product pages)
 
-1. Paste `vibecano-header.html` into **Elementor → Theme Builder → Header** (HTML widget, width **100%**).
-2. Paste `vibecano-footer.html` into **Elementor → Theme Builder → Footer** (HTML widget, width **100%**).
+Same Elementor issue: `<!-- comments -->` and `<style>` in the header widget can break and show CSS as text.
+
+### Step 1 — Upload header CSS
+
+1. **Media → Add New** → upload `vibecano-header.css`
+2. URL should be: `https://vibecano.com/wp-content/uploads/2026/07/vibecano-header.css`
+
+### Step 2 — Replace header HTML widget
+
+1. **Elementor → Theme Builder → Header** → edit the HTML widget
+2. **Ctrl+A → Delete ALL** old code
+3. Paste entire `vibecano-header.html` (starts with `<link rel="stylesheet" href="...vibecano-header.css"`)
+4. Widget width **100%** → **Update** → hard refresh
+
+## Other pages (footer)
+
+1. Paste `vibecano-footer.html` into **Elementor → Theme Builder → Footer** (HTML widget, width **100%**).
 
 ## Checkout full-width fix
 
