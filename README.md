@@ -4,8 +4,8 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 
 ## Files
 
-- `vibecano-header.html` — Site-wide header (top bar, logo, search, nav, cart count)
-- `vibecano-hero-section.html` — Homepage hero content only (Men, Women, Kids, Accessories, Under Rs. 999)
+- `vibecano-header.html` — Site-wide header for inner pages (top bar, logo, search, nav, cart count)
+- `vibecano-hero-section.html` — Homepage combined header + hero (paste as ONE HTML widget)
 - `vibecano-footer.html` — Site-wide footer (links, contact, copyright)
 - `vibecano-single-product-page.html` — Single product page with size/color swatches
 - `vibecano-cart-page.html` — Custom cart page with Store API integration
@@ -13,10 +13,9 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 
 ## Header + hero + footer setup
 
-1. **All pages:** paste `vibecano-header.html` into **Elementor → Theme Builder → Header** (HTML widget, width **100%**).
-2. **All pages:** paste `vibecano-footer.html` into **Elementor → Theme Builder → Footer** (HTML widget, width **100%**).
-3. **Homepage only:** paste `vibecano-hero-section.html` into the homepage content area below the header.
-4. Remove the old combined hero/header widget if it is still on the homepage.
+1. **Homepage:** paste `vibecano-hero-section.html` into **one** Elementor HTML widget (full width). This file includes header + hero together — disable or remove the Theme Builder header on the homepage to avoid duplicates.
+2. **Other pages:** paste `vibecano-header.html` into **Elementor → Theme Builder → Header** (HTML widget, width **100%**).
+3. **All pages:** paste `vibecano-footer.html` into **Elementor → Theme Builder → Footer** (HTML widget, width **100%**).
 
 ## Checkout full-width fix
 
