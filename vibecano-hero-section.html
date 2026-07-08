@@ -1,31 +1,27 @@
 <!-- ============================================================
-     VIBECANO — HOMEPAGE HERO SECTION (hero content only)
+     VIBECANO — HOMEPAGE HERO SECTION
      Paste into homepage Elementor HTML widget BELOW the header.
-
-     Use vibecano-header.html separately in Theme Builder header.
-     Shows 3 main category cards: Customize, Ready Made, Featured
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
 
 <style>
   .vibecano-hero-root {
-    --ink: #0b1220;
-    --ink-soft: #1e293b;
-    --slate: #64748b;
-    --line: #e2e8f0;
-    --surface: #f8fafc;
-    --brand: #1d9bf0;
-    --brand-dark: #0b7ec7;
-    --accent: #f59e0b;
-    --hero-bg: linear-gradient(135deg, #f8fafc 0%, #eef2ff 42%, #fff7ed 100%);
-    --shadow-sm: 0 4px 14px rgba(15, 23, 42, .06);
-    --shadow-md: 0 18px 40px rgba(15, 23, 42, .10);
+    --vc-ink: #08111f;
+    --vc-ink-2: #172033;
+    --vc-muted: #64748b;
+    --vc-line: rgba(148, 163, 184, 0.28);
+    --vc-indigo: #4f46e5;
+    --vc-indigo-dark: #312e81;
+    --vc-orange: #f97316;
+    --vc-pink: #ec4899;
+    --vc-green: #16a34a;
+    --vc-shadow: 0 26px 70px -34px rgba(15, 23, 42, 0.62);
     width: 100%;
     max-width: none;
-    font-family: 'Inter', system-ui, -apple-system, Segoe UI, sans-serif;
-    color: var(--ink);
+    color: var(--vc-ink);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
@@ -34,415 +30,453 @@
   .vibecano-hero-root *::before,
   .vibecano-hero-root *::after { box-sizing: border-box; }
 
-  .vibecano-hero-root a { text-decoration: none; color: inherit; }
-  .vibecano-hero-root img { max-width: 100%; display: block; }
+  .vibecano-hero-root a { color: inherit; text-decoration: none; }
+  .vibecano-hero-root img { display: block; max-width: 100%; }
 
   .vibecano-hero-root .ro-hero {
     position: relative;
-    background: var(--hero-bg);
-    padding: 56px 24px 72px;
     overflow: hidden;
+    isolation: isolate;
+    padding: clamp(42px, 6vw, 82px) 20px clamp(46px, 7vw, 92px);
+    background:
+      radial-gradient(circle at 12% 18%, rgba(79, 70, 229, 0.18), transparent 34%),
+      radial-gradient(circle at 88% 12%, rgba(249, 115, 22, 0.18), transparent 31%),
+      radial-gradient(circle at 50% 100%, rgba(6, 182, 212, 0.12), transparent 30%),
+      linear-gradient(135deg, #f8fafc 0%, #eef2ff 44%, #fff7ed 100%);
   }
 
   .vibecano-hero-root .ro-hero::before {
     content: "";
     position: absolute;
-    top: -120px;
-    right: -80px;
-    width: 420px;
-    height: 420px;
-    background: radial-gradient(circle, rgba(29,155,240,.14) 0%, transparent 70%);
-    pointer-events: none;
+    inset: 0;
+    z-index: -2;
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+    background-size: 34px 34px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 76%);
   }
 
   .vibecano-hero-root .ro-hero::after {
     content: "";
     position: absolute;
-    bottom: -100px;
-    left: -60px;
-    width: 360px;
-    height: 360px;
-    background: radial-gradient(circle, rgba(245,158,11,.12) 0%, transparent 70%);
-    pointer-events: none;
+    z-index: -1;
+    right: min(-140px, -8vw);
+    top: 10%;
+    width: clamp(260px, 38vw, 560px);
+    height: clamp(260px, 38vw, 560px);
+    border-radius: 999px;
+    background: conic-gradient(from 110deg, rgba(79, 70, 229, 0.2), rgba(249, 115, 22, 0.18), rgba(236, 72, 153, 0.16), rgba(79, 70, 229, 0.2));
+    filter: blur(8px);
+    opacity: 0.9;
   }
 
   .vibecano-hero-root .ro-hero-wrap {
-    max-width: 1280px;
-    margin: 0 auto;
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: 1fr 1.05fr;
-    gap: 56px;
+    grid-template-columns: minmax(0, 1.02fr) minmax(280px, 0.98fr);
     align-items: center;
+    gap: clamp(28px, 5vw, 64px);
+    width: min(1280px, 100%);
+    margin: 0 auto;
   }
 
-  .vibecano-hero-root .ro-hero-content { max-width: 560px; }
+  .vibecano-hero-root .ro-hero-content { max-width: 660px; }
 
   .vibecano-hero-root .ro-hero-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--brand-dark);
-  }
-
-  .vibecano-hero-root .ro-hero-eyebrow span {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #fff;
-    border: 1px solid var(--line);
-    padding: 6px 12px;
+    gap: 9px;
+    margin-bottom: 18px;
+    padding: 8px 12px;
+    border: 1px solid rgba(79, 70, 229, 0.16);
     border-radius: 999px;
-    box-shadow: var(--shadow-sm);
+    background: rgba(255, 255, 255, 0.78);
+    color: var(--vc-indigo-dark);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: 0 18px 34px -28px rgba(79, 70, 229, 0.8);
+    backdrop-filter: blur(14px);
   }
 
   .vibecano-hero-root .ro-hero-eyebrow .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: vc-hero-pulse 2s ease infinite;
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--vc-green);
+    box-shadow: 0 0 0 7px rgba(22, 163, 74, 0.13);
+    animation: vc-hero-pulse 1.9s ease-in-out infinite;
   }
 
   @keyframes vc-hero-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: .5; transform: scale(.85); }
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.78); opacity: 0.62; }
   }
 
   .vibecano-hero-root .ro-hero h1 {
-    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-    font-size: clamp(34px, 4.2vw, 48px);
-    font-weight: 700;
-    line-height: 1.15;
-    color: var(--ink);
-    letter-spacing: -.025em;
-    margin: 0 0 20px;
+    max-width: 720px;
+    margin: 0 0 18px;
+    color: var(--vc-ink);
+    font-family: "Plus Jakarta Sans", Inter, sans-serif;
+    font-size: clamp(38px, 6vw, 74px);
+    font-weight: 900;
+    line-height: 0.96;
+    letter-spacing: -0.065em;
   }
 
   .vibecano-hero-root .ro-hero h1 span {
     display: block;
-    color: #1e3a8a;
-    font-weight: 600;
-    margin-top: 4px;
+    margin-top: 8px;
+    color: transparent;
+    background: linear-gradient(90deg, var(--vc-indigo), var(--vc-orange), var(--vc-pink));
+    background-clip: text;
+    -webkit-background-clip: text;
   }
 
   .vibecano-hero-root .ro-hero p.lead {
-    font-size: 18px;
+    max-width: 620px;
+    margin: 0 0 26px;
     color: #475569;
-    margin: 0 0 28px;
-    line-height: 1.65;
+    font-size: clamp(15px, 1.7vw, 18px);
+    font-weight: 600;
+    line-height: 1.75;
   }
 
-  .vibecano-hero-root .ro-hero-stats {
+  .vibecano-hero-root .ro-cta {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 32px;
+    gap: 12px;
+    margin-bottom: 28px;
   }
-
-  .vibecano-hero-root .ro-stat {
-    display: flex;
-    flex-direction: column;
-    padding-right: 20px;
-    border-right: 1px solid #cbd5e1;
-  }
-
-  .vibecano-hero-root .ro-stat:last-child { border-right: none; padding-right: 0; }
-  .vibecano-hero-root .ro-stat strong { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1.1; }
-  .vibecano-hero-root .ro-stat small { font-size: 12px; color: var(--slate); font-weight: 500; margin-top: 2px; }
-
-  .vibecano-hero-root .ro-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
 
   .vibecano-hero-root .ro-btn {
-    padding: 15px 32px;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 15px;
-    transition: all .22s;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    border: 2px solid transparent;
+    gap: 9px;
+    min-height: 50px;
+    padding: 0 22px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 950;
+    line-height: 1;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
   }
 
   .vibecano-hero-root .ro-btn-primary {
-    background: var(--ink);
+    background: var(--vc-ink);
     color: #fff;
-    box-shadow: 0 8px 24px rgba(11, 18, 32, .18);
+    box-shadow: 0 18px 36px -24px rgba(8, 17, 31, 0.82);
   }
 
-  .vibecano-hero-root .ro-btn-primary:hover {
+  .vibecano-hero-root .ro-btn-primary:hover,
+  .vibecano-hero-root .ro-btn-primary:focus-visible {
     background: #1e293b;
+    box-shadow: 0 22px 44px -24px rgba(8, 17, 31, 0.9);
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(11, 18, 32, .22);
   }
 
-  .vibecano-hero-root .ro-btn-outline {
-    background: #fff;
-    color: var(--ink);
-    border-color: #cbd5e1;
-  }
-
-  .vibecano-hero-root .ro-btn-outline:hover {
-    border-color: var(--ink);
-    background: var(--ink);
+  .vibecano-hero-root .ro-btn-accent {
+    background: var(--vc-orange);
     color: #fff;
+    box-shadow: 0 18px 36px -24px rgba(249, 115, 22, 0.88);
   }
 
-  .vibecano-hero-root .ro-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .vibecano-hero-root .ro-btn-accent:hover,
+  .vibecano-hero-root .ro-btn-accent:focus-visible {
+    background: #ea580c;
+    box-shadow: 0 22px 44px -24px rgba(249, 115, 22, 0.92);
+    transform: translateY(-2px);
+  }
+
+  .vibecano-hero-root .ro-btn-ghost {
+    border-color: rgba(15, 23, 42, 0.12);
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--vc-ink);
+    backdrop-filter: blur(14px);
+  }
+
+  .vibecano-hero-root .ro-btn-ghost:hover,
+  .vibecano-hero-root .ro-btn-ghost:focus-visible {
+    border-color: rgba(79, 70, 229, 0.26);
+    color: var(--vc-indigo-dark);
+    transform: translateY(-2px);
+  }
+
+  .vibecano-hero-root .ro-hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 560px;
+    gap: 10px;
+    margin: 0 0 22px;
+  }
+
+  .vibecano-hero-root .ro-stat {
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 16px 34px -30px rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(14px);
+  }
+
+  .vibecano-hero-root .ro-stat strong {
+    display: block;
+    color: var(--vc-ink);
+    font-size: clamp(19px, 2.2vw, 26px);
+    font-weight: 950;
+    line-height: 1;
+  }
+
+  .vibecano-hero-root .ro-stat small {
+    display: block;
+    margin-top: 6px;
+    color: var(--vc-muted);
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.25;
+  }
 
   .vibecano-hero-root .ro-trust-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px 24px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(148, 163, 184, .35);
+    gap: 10px;
   }
 
   .vibecano-hero-root .ro-trust-item {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink-soft);
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid rgba(226, 232, 240, 0.84);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.68);
+    color: var(--vc-ink-2);
+    font-size: 12px;
+    font-weight: 850;
+    backdrop-filter: blur(12px);
   }
 
   .vibecano-hero-root .ro-trust-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: #fff;
-    border: 1px solid var(--line);
-    display: grid;
+    display: inline-grid;
     place-items: center;
-    font-size: 16px;
-    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: rgba(22, 163, 74, 0.12);
+    color: #15803d;
+    font-size: 12px;
+    font-weight: 950;
+  }
+
+  .vibecano-hero-root .ro-hero-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: clamp(320px, 42vw, 560px);
+  }
+
+  .vibecano-hero-root .ro-hero-image-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: clamp(10px, 2vw, 18px);
+    border: 1px solid rgba(255, 255, 255, 0.82);
+    border-radius: clamp(24px, 3vw, 38px);
+    background:
+      radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.72), transparent 28%),
+      radial-gradient(circle at 84% 18%, rgba(249, 115, 22, 0.16), transparent 30%),
+      radial-gradient(circle at 42% 86%, rgba(79, 70, 229, 0.14), transparent 34%),
+      rgba(255, 255, 255, 0.58);
+    box-shadow: var(--vc-shadow);
+    backdrop-filter: blur(14px);
+  }
+
+  .vibecano-hero-root .ro-hero-image-wrap img {
+    width: 100%;
+    height: auto;
+    border-radius: clamp(18px, 2.4vw, 30px);
+    object-fit: contain;
+    object-position: center;
   }
 
   .vibecano-hero-root .ro-hero-categories {
-    position: relative;
-    padding: 10px 0 4px;
-  }
-
-  .vibecano-hero-root .ro-categories-header {
-    text-align: center;
-    margin-bottom: 26px;
-  }
-
-  .vibecano-hero-root .ro-categories-header h2 {
-    margin: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--slate);
+    width: min(1280px, 100%);
+    margin: clamp(24px, 4vw, 40px) auto 0;
   }
 
   .vibecano-hero-root .ro-categories {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: clamp(18px, 4vw, 42px);
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: clamp(8px, 1.4vw, 14px);
+    align-items: center;
   }
 
   .vibecano-hero-root .ro-category {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 14px;
-    width: clamp(132px, 16vw, 176px);
-    text-align: center;
-    transition: transform .24s ease;
+    justify-content: center;
+    min-width: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    transition: transform 0.2s ease;
   }
 
-  .vibecano-hero-root .ro-category:hover { transform: translateY(-6px); }
-
-  .vibecano-hero-root .ro-category-ring {
-    width: clamp(132px, 16vw, 176px);
-    height: clamp(132px, 16vw, 176px);
-    border-radius: 50%;
-    padding: 4px;
-    box-shadow: 0 20px 44px -28px rgba(15, 23, 42, .42);
-    transition: box-shadow .24s ease, transform .24s ease;
+  .vibecano-hero-root .ro-category:hover,
+  .vibecano-hero-root .ro-category:focus-visible {
+    transform: translateY(-4px);
   }
 
-  .vibecano-hero-root .ro-category.is-customize .ro-category-ring {
-    background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+  .vibecano-hero-root .ro-category-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(52px, 6.5vw, 64px);
+    height: clamp(52px, 6.5vw, 64px);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    color: var(--vc-ink);
+    font-size: clamp(13px, 1.4vw, 15px);
+    font-weight: 950;
+    font-style: normal;
+    line-height: 1;
+    box-shadow: 0 14px 30px -24px rgba(15, 23, 42, 0.75);
+    transition: background 0.18s ease, transform 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
   }
 
-  .vibecano-hero-root .ro-category.is-ready-made .ro-category-ring {
-    background: linear-gradient(135deg, #fb923c 0%, #f59e0b 100%);
+  .vibecano-hero-root .ro-category:hover .ro-category-icon,
+  .vibecano-hero-root .ro-category:focus-visible .ro-category-icon {
+    background: var(--vc-indigo);
+    border-color: rgba(79, 70, 229, 0.28);
+    color: #fff;
+    box-shadow: 0 18px 36px -22px rgba(79, 70, 229, 0.55);
+    transform: translateY(-1px);
   }
 
-  .vibecano-hero-root .ro-category.is-featured .ro-category-ring {
-    background: linear-gradient(135deg, #c084fc 0%, #ec4899 100%);
-  }
-
-  .vibecano-hero-root .ro-category:hover .ro-category-ring {
-    box-shadow: 0 26px 54px -24px rgba(15, 23, 42, .52);
-    transform: scale(1.03);
-  }
-
-  .vibecano-hero-root .ro-category-img {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    border-radius: 50%;
-    background: #f8fafc;
-    border: 4px solid #fff;
-  }
-
-  .vibecano-hero-root .ro-category-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform .4s ease;
-  }
-
-  .vibecano-hero-root .ro-category:hover .ro-category-img img { transform: scale(1.08); }
-
-  .vibecano-hero-root .ro-category-fallback {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    place-items: center;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 34px;
-    font-weight: 800;
-    color: rgba(15, 23, 42, .12);
-    letter-spacing: -.04em;
-    text-transform: uppercase;
-  }
-
-  .vibecano-hero-root .ro-category.is-customize .ro-category-fallback {
-    background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
-    color: rgba(37, 99, 235, .22);
-  }
-
-  .vibecano-hero-root .ro-category.is-ready-made .ro-category-fallback {
-    background: linear-gradient(145deg, #fff7ed 0%, #ffedd5 100%);
-    color: rgba(234, 88, 12, .22);
-  }
-
-  .vibecano-hero-root .ro-category.is-featured .ro-category-fallback {
-    background: linear-gradient(145deg, #faf5ff 0%, #f3e8ff 100%);
-    color: rgba(147, 51, 234, .22);
-  }
-
-  .vibecano-hero-root .ro-category h3 {
-    margin: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 800;
-    letter-spacing: -.01em;
-    color: var(--ink);
-  }
-
-  .vibecano-hero-root .ro-category.is-customize h3 { color: #2563eb; }
-  .vibecano-hero-root .ro-category.is-ready-made h3 { color: #ea580c; }
-  .vibecano-hero-root .ro-category.is-featured h3 { color: #9333ea; }
-
-  .vibecano-hero-root .ro-category-skeleton {
-    width: clamp(132px, 16vw, 176px);
-    height: clamp(132px, 16vw, 176px);
-    border-radius: 50%;
-    background:
-      linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.78), transparent),
-      rgba(226, 232, 240, 0.65);
-    background-size: 220% 100%;
-    animation: vc-hero-shimmer 1.35s linear infinite;
-  }
-
-  @keyframes vc-hero-shimmer {
-    to { background-position: -220% 0; }
-  }
-
-  @media (max-width: 1024px) {
-    .vibecano-hero-root .ro-hero-wrap { grid-template-columns: 1fr; gap: 40px; }
+  @media (max-width: 980px) {
+    .vibecano-hero-root .ro-hero-wrap { grid-template-columns: 1fr; }
     .vibecano-hero-root .ro-hero-content { max-width: none; }
+    .vibecano-hero-root .ro-hero-visual { min-height: auto; }
+    .vibecano-hero-root .ro-hero-image-wrap { max-width: 520px; }
+    .vibecano-hero-root .ro-categories { grid-template-columns: repeat(6, minmax(0, 1fr)); }
   }
 
-  @media (max-width: 768px) {
-    .vibecano-hero-root .ro-hero { padding: 40px 16px 56px; }
-    .vibecano-hero-root .ro-categories { gap: 22px; }
-    .vibecano-hero-root .ro-stat { border-right: none; padding-right: 0; }
-    .vibecano-hero-root .ro-hero-stats { gap: 12px; }
+  @media (max-width: 720px) {
+    .vibecano-hero-root .ro-hero { padding-right: 14px; padding-left: 14px; }
+    .vibecano-hero-root .ro-cta { display: grid; grid-template-columns: 1fr; }
+    .vibecano-hero-root .ro-btn { width: 100%; }
+    .vibecano-hero-root .ro-hero-stats { grid-template-columns: 1fr; max-width: none; }
+    .vibecano-hero-root .ro-categories {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .vibecano-hero-root .ro-category-icon {
+      width: 56px;
+      height: 56px;
+    }
   }
 
-  @media (max-width: 480px) {
-    .vibecano-hero-root .ro-btn { padding: 13px 22px; font-size: 14px; width: 100%; }
-    .vibecano-hero-root .ro-cta { flex-direction: column; }
+  @media (max-width: 440px) {
+    .vibecano-hero-root .ro-hero h1 { font-size: clamp(34px, 13vw, 46px); }
+    .vibecano-hero-root .ro-categories {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .vibecano-hero-root .ro-category-icon {
+      width: 50px;
+      height: 50px;
+      font-size: 12px;
+    }
   }
 </style>
 
 <div class="vibecano-hero-root" id="vibecanoHeroRoot">
-  <section class="ro-hero">
+  <section class="ro-hero" aria-labelledby="vcHeroTitle">
     <div class="ro-hero-wrap">
       <div class="ro-hero-content">
         <div class="ro-hero-eyebrow">
-          <span><i class="dot"></i> Spring / Summer '26</span>
+          <i class="dot" aria-hidden="true"></i>
+          <span>New drops for every vibe</span>
         </div>
 
-        <h1>Premium Apparel, Built as a Brand<span>Ready-to-wear collections for every day.</span></h1>
+        <h1 id="vcHeroTitle">Wear Your Vibe<span>Design it. Style it. Own it.</span></h1>
 
         <p class="lead">
-          Vibecano is a lifestyle brand built around quality essentials — curated tees, hoodies, and caps designed to look sharp straight out of the bag. No wait. No minimums. Just gear worth wearing.
+          Fresh essentials, custom-ready products, and everyday streetwear for Men, Women, Kids, Accessories, and budget-friendly finds under Rs. 999.
         </p>
 
-        <div class="ro-hero-stats">
-          <div class="ro-stat">
-            <strong>120+</strong>
-            <small>Ready-made styles</small>
-          </div>
-          <div class="ro-stat">
-            <strong>4.9★</strong>
-            <small>Customer rating</small>
-          </div>
-          <div class="ro-stat">
-            <strong>48hr</strong>
-            <small>Fast delivery</small>
-          </div>
+        <div class="ro-cta">
+          <a class="ro-btn ro-btn-primary" href="/shop/">
+            Shop All Products
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="ro-btn ro-btn-accent" href="/product-category/design-your-own/">Design Your Own</a>
+          <a class="ro-btn ro-btn-ghost" href="/product-category/under999/">Under Rs. 999</a>
         </div>
 
-        <div class="ro-cta">
-          <a class="ro-btn ro-btn-primary" id="roCtaReadyMade" href="/product-category/ready-made/">
-            Shop Ready Made
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </a>
-          <a class="ro-btn ro-btn-outline" id="roCtaFeatured" href="/product-category/featured/">View Featured</a>
+        <div class="ro-hero-stats" aria-label="Vibecano highlights">
+          <div class="ro-stat"><strong>6</strong><small>Main collections</small></div>
+          <div class="ro-stat"><strong>4.9★</strong><small>Customer rating</small></div>
+          <div class="ro-stat"><strong>48hr</strong><small>Fast delivery</small></div>
         </div>
 
         <div class="ro-trust-row">
-          <div class="ro-trust-item">
-            <span class="ro-trust-icon">✓</span>
-            Premium cotton &amp; fleece
-          </div>
-          <div class="ro-trust-item">
-            <span class="ro-trust-icon">↩</span>
-            Easy 7-day returns
-          </div>
-          <div class="ro-trust-item">
-            <span class="ro-trust-icon">🚚</span>
-            Free delivery Rs. 5,000+
-          </div>
+          <div class="ro-trust-item"><span class="ro-trust-icon">✓</span> Premium cotton &amp; fleece</div>
+          <div class="ro-trust-item"><span class="ro-trust-icon">↩</span> Easy 7-day returns</div>
+          <div class="ro-trust-item"><span class="ro-trust-icon">🚚</span> Free delivery Rs. 5,000+</div>
         </div>
       </div>
 
-      <div class="ro-hero-categories">
-        <div class="ro-categories-header">
-          <h2>Collections</h2>
+      <div class="ro-hero-visual" aria-label="Vibecano featured collection">
+        <div class="ro-hero-image-wrap">
+          <img
+            src="https://vibecano.com/wp-content/uploads/2026/07/boy-and-girl-chair-scaled.png"
+            alt="Boy and girl sitting on chairs wearing Vibecano apparel"
+            width="1200"
+            height="900"
+            loading="eager"
+            decoding="async"
+          >
         </div>
-        <div class="ro-categories" id="roCategoryGrid" aria-live="polite"></div>
+      </div>
+    </div>
+
+    <div class="ro-hero-categories">
+      <div class="ro-categories" id="roCategoryGrid" aria-label="Shop by category">
+        <a href="/product-category/men/" class="ro-category is-men" data-category="men" aria-label="Men">
+          <i class="ro-category-icon" aria-hidden="true">M</i>
+        </a>
+
+        <a href="/product-category/women/" class="ro-category is-women" data-category="women" aria-label="Women">
+          <i class="ro-category-icon" aria-hidden="true">W</i>
+        </a>
+
+        <a href="/product-category/kids/" class="ro-category is-kids" data-category="kids" aria-label="Kids">
+          <i class="ro-category-icon" aria-hidden="true">K</i>
+        </a>
+
+        <a href="/product-category/accessories/" class="ro-category is-accessories" data-category="accessories" aria-label="Accessories">
+          <i class="ro-category-icon" aria-hidden="true">A</i>
+        </a>
+
+        <a href="/product-category/under999/" class="ro-category is-under999" data-category="under999" aria-label="Under Rs. 999">
+          <i class="ro-category-icon" aria-hidden="true">999</i>
+        </a>
+
+        <a href="/product-category/design-your-own/" class="ro-category is-design" data-category="design-your-own" aria-label="Design your own">
+          <i class="ro-category-icon" aria-hidden="true">DIY</i>
+        </a>
       </div>
     </div>
   </section>
@@ -452,32 +486,20 @@
 (function () {
   "use strict";
 
-  var CONFIG = {
-    shopUrl: "/shop/",
-    categoriesEndpoint: "/wp-json/wc/store/v1/products/categories",
-    mainCategories: [
-      { key: "customize", slugs: ["customize", "custom"], label: "Customize", toneClass: "is-customize" },
-      { key: "ready-made", slugs: ["ready-made", "ready-made-designs"], label: "Ready Made", toneClass: "is-ready-made" },
-      { key: "featured", slugs: ["featured"], label: "Featured", toneClass: "is-featured" }
-    ]
-  };
-
   var root = document.getElementById("vibecanoHeroRoot");
+  var categoryGridEl = document.getElementById("roCategoryGrid");
+
   if (!root) return;
 
-  var categoryGridEl = document.getElementById("roCategoryGrid");
-  var ctaReadyMade = document.getElementById("roCtaReadyMade");
-  var ctaFeatured = document.getElementById("roCtaFeatured");
-
   expandHeroLayout();
-  renderCategorySkeletons();
-  loadMainCategories();
+  preserveStaticCategories();
 
   window.addEventListener("resize", expandHeroLayout);
   window.addEventListener("load", expandHeroLayout);
 
   function expandHeroLayout() {
     var node = root.parentElement;
+
     while (node && node !== document.documentElement) {
       if (
         node.classList &&
@@ -494,6 +516,7 @@
         node.style.setProperty("align-self", "stretch", "important");
         node.style.setProperty("flex", "1 1 100%", "important");
       }
+
       node = node.parentElement;
     }
 
@@ -501,148 +524,30 @@
     root.style.setProperty("max-width", "none", "important");
   }
 
-  function loadMainCategories() {
-    if (!window.fetch) {
-      renderFallbackCategories();
-      return;
+  function preserveStaticCategories() {
+    var snapshot;
+
+    if (!categoryGridEl || !categoryGridEl.querySelector(".ro-category")) return;
+
+    snapshot = categoryGridEl.innerHTML;
+
+    function keepCategories() {
+      if (
+        !categoryGridEl.querySelector(".ro-category.is-men") ||
+        !categoryGridEl.querySelector(".ro-category.is-women") ||
+        !categoryGridEl.querySelector(".ro-category.is-design")
+      ) {
+        categoryGridEl.innerHTML = snapshot;
+      }
     }
 
-    fetch(CONFIG.categoriesEndpoint + "?per_page=100", { credentials: "same-origin" })
-      .then(function (response) {
-        if (!response.ok) throw new Error("Categories request failed");
-        return response.json();
-      })
-      .then(function (categories) {
-        var safeCategories = Array.isArray(categories) ? categories : [];
-        var resolved = CONFIG.mainCategories.map(function (item) {
-          return resolveMainCategory(safeCategories, item);
-        }).filter(Boolean);
-
-        if (!resolved.length) {
-          renderFallbackCategories();
-          return;
-        }
-
-        renderCategoryCards(resolved);
-        bindCategoryLinks(resolved);
-      })
-      .catch(function () {
-        renderFallbackCategories();
-      });
-  }
-
-  function resolveMainCategory(categories, item) {
-    var category = null;
-    var i;
-
-    for (i = 0; i < item.slugs.length; i += 1) {
-      category = findCategoryBySlug(categories, item.slugs[i]);
-      if (category) break;
+    if (window.MutationObserver) {
+      new MutationObserver(keepCategories).observe(categoryGridEl, { childList: true });
     }
 
-    if (!category) return null;
-
-    return {
-      key: item.key,
-      label: item.label,
-      toneClass: item.toneClass,
-      category: category
-    };
-  }
-
-  function findCategoryBySlug(categories, slug) {
-    return categories.filter(function (category) {
-      return category && category.slug === slug;
-    })[0] || null;
-  }
-
-  function getCategoryUrl(category) {
-    if (category && category.permalink) return category.permalink;
-    if (category && category.slug) return "/product-category/" + category.slug + "/";
-    return CONFIG.shopUrl;
-  }
-
-  function renderCategoryCards(items) {
-    if (!categoryGridEl) return;
-    categoryGridEl.innerHTML = items.map(renderCategoryCard).join("");
-  }
-
-  function renderCategoryCard(item) {
-    var category = item.category;
-    var url = escapeAttr(getCategoryUrl(category));
-    var name = escapeHtml(item.label || category.name || "Category");
-    var toneClass = escapeAttr(item.toneClass || "");
-    var image = category.image && category.image.src ? category.image : null;
-    var imageHtml;
-
-    if (image && image.src) {
-      imageHtml = '<img src="' + escapeAttr(image.src) + '" alt="' + escapeAttr(image.alt || category.name || item.label) + '" loading="lazy" decoding="async">';
-    } else {
-      imageHtml = '<div class="ro-category-fallback">' + escapeHtml((item.label || category.name || "VC").slice(0, 1)) + "</div>";
-    }
-
-    return [
-      '<a href="' + url + '" class="ro-category ' + toneClass + '">',
-        '<div class="ro-category-ring">',
-          '<div class="ro-category-img">',
-            imageHtml,
-          "</div>",
-        "</div>",
-        "<h3>" + name + "</h3>",
-      "</a>"
-    ].join("");
-  }
-
-  function bindCategoryLinks(items) {
-    items.forEach(function (item) {
-      var url = getCategoryUrl(item.category);
-      if (item.key === "ready-made" && ctaReadyMade) ctaReadyMade.href = url;
-      if (item.key === "featured" && ctaFeatured) ctaFeatured.href = url;
-    });
-  }
-
-  function renderCategorySkeletons() {
-    if (!categoryGridEl) return;
-    categoryGridEl.innerHTML = "";
-    for (var i = 0; i < 3; i += 1) {
-      categoryGridEl.innerHTML += '<div class="ro-category-skeleton" aria-hidden="true"></div>';
-    }
-  }
-
-  function renderFallbackCategories() {
-    if (!categoryGridEl) return;
-
-    var fallback = CONFIG.mainCategories.map(function (item) {
-      return {
-        key: item.key,
-        label: item.label,
-        toneClass: item.toneClass,
-        category: {
-          name: item.label,
-          slug: item.slugs[0],
-          permalink: "/product-category/" + item.slugs[0] + "/"
-        }
-      };
-    });
-
-    renderCategoryCards(fallback);
-    bindCategoryLinks(fallback);
-  }
-
-  function escapeHtml(value) {
-    return String(value || "").replace(/[&<>"']/g, function (character) {
-      return {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      }[character];
-    });
-  }
-
-  function escapeAttr(value) {
-    return escapeHtml(value).replace(/`/g, "&#96;");
+    document.addEventListener("DOMContentLoaded", keepCategories);
+    window.addEventListener("load", keepCategories);
+    window.VIBECANO_STATIC_CATEGORIES = true;
   }
 })();
 </script>
