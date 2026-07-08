@@ -1,0 +1,934 @@
+<!-- ============================================================
+     VIBECANO — MEN CATEGORY PRODUCTS WIDGET
+     Paste this whole file into an Elementor HTML widget.
+
+     Navigation:
+     • Product image / name  → single product page
+     • Add to Cart           → single product page
+     • Buy Now               → single product page
+
+     Products must belong to the Men main category or its subcategories.
+     ============================================================ -->
+<style>
+  :root {
+    --vc-rm-bg: #f8fafc;
+    --vc-rm-card: rgba(255, 255, 255, 0.9);
+    --vc-rm-text: #0f172a;
+    --vc-rm-muted: #64748b;
+    --vc-rm-line: rgba(148, 163, 184, 0.28);
+    --vc-rm-primary: #4f46e5;
+    --vc-rm-primary-dark: #3730a3;
+    --vc-rm-accent: #f97316;
+    --vc-rm-success: #16a34a;
+    --vc-rm-shadow: 0 22px 60px -28px rgba(15, 23, 42, 0.45);
+  }
+
+  .vc-rm-wrap {
+    position: relative;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 44px 20px;
+    color: var(--vc-rm-text);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .vc-rm-shell {
+    position: relative;
+    overflow: hidden;
+    padding: 30px;
+    border: 1px solid var(--vc-rm-line);
+    border-radius: 30px;
+    background:
+      radial-gradient(circle at top left, rgba(79, 70, 229, 0.15), transparent 36%),
+      radial-gradient(circle at top right, rgba(249, 115, 22, 0.12), transparent 32%),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.78));
+    box-shadow: var(--vc-rm-shadow);
+    isolation: isolate;
+  }
+
+  .vc-rm-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: linear-gradient(to bottom, black, transparent 70%);
+  }
+
+  .vc-rm-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+
+  .vc-rm-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    padding: 7px 12px;
+    border: 1px solid rgba(22, 163, 74, 0.2);
+    border-radius: 999px;
+    background: rgba(220, 252, 231, 0.84);
+    color: #166534;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vc-rm-kicker::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--vc-rm-success);
+    box-shadow: 0 0 0 6px rgba(22, 163, 74, 0.12);
+  }
+
+  .vc-rm-title {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+
+  .vc-rm-sub {
+    max-width: 620px;
+    margin: 10px 0 0;
+    color: var(--vc-rm-muted);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .vc-rm-viewall {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border: 1px solid rgba(79, 70, 229, 0.18);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--vc-rm-primary);
+    font-size: 13px;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 12px 30px -22px rgba(79, 70, 229, 0.8);
+    transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .vc-rm-viewall:hover,
+  .vc-rm-viewall:focus-visible {
+    border-color: rgba(79, 70, 229, 0.45);
+    color: var(--vc-rm-primary-dark);
+    transform: translateY(-1px);
+  }
+
+  .vc-rm-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 22px;
+    padding: 10px;
+    border: 1px solid rgba(226, 232, 240, 0.82);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(14px);
+  }
+
+  .vc-rm-chips {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .vc-rm-chip {
+    border: 1px solid transparent;
+    border-radius: 999px;
+    padding: 9px 14px;
+    background: transparent;
+    color: var(--vc-rm-muted);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .vc-rm-chip:hover,
+  .vc-rm-chip:focus-visible {
+    border-color: rgba(79, 70, 229, 0.18);
+    background: rgba(79, 70, 229, 0.08);
+    color: var(--vc-rm-primary);
+  }
+
+  .vc-rm-chip.is-active {
+    border-color: var(--vc-rm-primary);
+    background: var(--vc-rm-primary);
+    color: #fff;
+    box-shadow: 0 12px 22px -16px rgba(79, 70, 229, 0.95);
+  }
+
+  .vc-rm-sort {
+    width: auto;
+    min-width: 168px;
+    max-width: 210px;
+    padding: 9px 36px 9px 12px;
+    border: 1px solid rgba(226, 232, 240, 0.96);
+    border-radius: 14px;
+    background:
+      #fff
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%2364748b' d='M1.41.59 6 5.17 10.59.59 12 2l-6 6-6-6z'/></svg>")
+      no-repeat right 13px center;
+    color: var(--vc-rm-text);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .vc-rm-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .vc-rm-card {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    min-width: 0;
+    border: 1px solid rgba(226, 232, 240, 0.86);
+    border-radius: 24px;
+    background: var(--vc-rm-card);
+    box-shadow: 0 16px 40px -32px rgba(15, 23, 42, 0.85);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    flex-direction: column;
+  }
+
+  .vc-rm-card:hover {
+    border-color: rgba(79, 70, 229, 0.28);
+    box-shadow: 0 24px 60px -34px rgba(15, 23, 42, 0.95);
+    transform: translateY(-5px);
+  }
+
+  .vc-rm-img {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    background:
+      linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(249, 115, 22, 0.08)),
+      #f1f5f9;
+  }
+
+  .vc-rm-img a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+  }
+
+  .vc-rm-img img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.45s ease, filter 0.45s ease;
+  }
+
+  .vc-rm-card:hover .vc-rm-img img {
+    filter: saturate(1.08);
+    transform: scale(1.07);
+  }
+
+  .vc-rm-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 15px;
+  }
+
+  .vc-rm-name {
+    display: -webkit-box;
+    overflow: hidden;
+    min-height: 41px;
+    margin: 0 0 8px;
+    color: var(--vc-rm-text);
+    font-size: 15px;
+    font-weight: 850;
+    line-height: 1.38;
+    text-decoration: none;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .vc-rm-name:hover,
+  .vc-rm-name:focus-visible {
+    color: var(--vc-rm-primary);
+  }
+
+  .vc-rm-desc {
+    display: -webkit-box;
+    overflow: hidden;
+    min-height: 42px;
+    margin: 0 0 12px;
+    color: var(--vc-rm-muted);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.55;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .vc-rm-price {
+    margin-bottom: 13px;
+    color: var(--vc-rm-text);
+    font-size: 18px;
+    font-weight: 950;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .vc-rm-price del {
+    margin-right: 7px;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .vc-rm-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  .vc-rm-btns a.vc-rm-btn {
+    width: 100%;
+  }
+
+  .vc-rm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 39px;
+    padding: 9px 10px;
+    border: 0;
+    border-radius: 13px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    font-family: inherit;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+  }
+
+  .vc-rm-btn:disabled {
+    opacity: 0.65;
+    cursor: wait;
+  }
+
+  .vc-rm-btn.cart {
+    background: #0f172a;
+    color: #fff;
+  }
+
+  .vc-rm-btn.buy {
+    background: var(--vc-rm-accent);
+    color: #fff;
+  }
+
+  .vc-rm-btn:hover,
+  .vc-rm-btn:focus-visible {
+    transform: translateY(-1px);
+  }
+
+  .vc-rm-btn.cart:hover,
+  .vc-rm-btn.cart:focus-visible {
+    background: #1e293b;
+    box-shadow: 0 14px 24px -18px rgba(15, 23, 42, 0.9);
+  }
+
+  .vc-rm-btn.buy:hover,
+  .vc-rm-btn.buy:focus-visible {
+    background: #ea580c;
+    box-shadow: 0 14px 24px -18px rgba(249, 115, 22, 0.9);
+  }
+
+  .vc-rm-message {
+    grid-column: 1 / -1;
+    padding: 36px 18px;
+    border: 1px dashed rgba(148, 163, 184, 0.55);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--vc-rm-muted);
+    font-size: 14px;
+    font-weight: 800;
+    text-align: center;
+  }
+
+  .vc-rm-message strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--vc-rm-text);
+    font-size: 16px;
+  }
+
+  .vc-rm-skeleton {
+    overflow: hidden;
+    min-height: 344px;
+    border-radius: 24px;
+    background:
+      linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.78), transparent),
+      rgba(226, 232, 240, 0.65);
+    background-size: 220% 100%;
+    animation: vc-rm-shimmer 1.35s linear infinite;
+  }
+
+  .vc-rm-shop-cta {
+    position: relative;
+    overflow: hidden;
+    margin-top: 26px;
+    padding: 22px;
+    border: 1px solid rgba(249, 115, 22, 0.24);
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at left, rgba(249, 115, 22, 0.18), transparent 34%),
+      linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(79, 70, 229, 0.92));
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 22px 48px -30px rgba(15, 23, 42, 0.9);
+  }
+
+  .vc-rm-shop-cta::after {
+    content: "";
+    position: absolute;
+    inset: -60% auto auto 50%;
+    width: 260px;
+    height: 260px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .vc-rm-shop-cta strong {
+    position: relative;
+    display: block;
+    margin-bottom: 6px;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 950;
+    letter-spacing: -0.03em;
+  }
+
+  .vc-rm-shop-cta span {
+    position: relative;
+    display: block;
+    max-width: 620px;
+    margin: 0 auto 16px;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 14px;
+    font-weight: 650;
+    line-height: 1.6;
+  }
+
+  .vc-rm-shop-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 22px;
+    border-radius: 999px;
+    background: #fff;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 950;
+    text-decoration: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .vc-rm-shop-btn:hover,
+  .vc-rm-shop-btn:focus-visible {
+    box-shadow: 0 18px 28px -22px rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+  }
+
+  @keyframes vc-rm-shimmer {
+    to { background-position: -220% 0; }
+  }
+
+  @media (max-width: 1100px) {
+    .vc-rm-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 800px) {
+    .vc-rm-wrap { padding: 28px 14px; }
+    .vc-rm-shell { padding: 22px; border-radius: 24px; }
+    .vc-rm-head { align-items: flex-start; flex-direction: column; }
+    .vc-rm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .vc-rm-toolbar { align-items: stretch; flex-direction: column; }
+    .vc-rm-sort { max-width: none; width: 100%; }
+  }
+
+  @media (max-width: 480px) {
+    .vc-rm-shell { padding: 18px; }
+    .vc-rm-grid { grid-template-columns: 1fr; }
+    .vc-rm-btns { grid-template-columns: 1fr; }
+  }
+</style>
+
+<section class="vc-rm-wrap" aria-labelledby="vcRmTitle">
+  <div class="vc-rm-shell">
+    <div class="vc-rm-head">
+      <div>
+        <span class="vc-rm-kicker">Men collection</span>
+        <h2 class="vc-rm-title" id="vcRmTitle">Men</h2>
+        <p class="vc-rm-sub">Fresh products from WooCommerce. Products in the Men main category and its subcategories are shown here.</p>
+      </div>
+      <a class="vc-rm-viewall" href="/product-category/men/">View all Men</a>
+    </div>
+
+    <div class="vc-rm-toolbar" aria-label="Men product controls">
+      <div class="vc-rm-chips" id="vcRmChips" role="list"></div>
+      <select class="vc-rm-sort" id="vcRmSort" aria-label="Sort Men products">
+        <option value="popularity">Most Popular</option>
+        <option value="date">Newest</option>
+        <option value="price">Price Low to High</option>
+        <option value="price-desc">Price High to Low</option>
+      </select>
+    </div>
+
+    <div id="vcRmGrid" class="vc-rm-grid" aria-live="polite"></div>
+
+    <div class="vc-rm-shop-cta">
+      <strong>Want to explore more Men products?</strong>
+      <span>We show only the top 8 here. Visit the shop to discover more products, styles, and fresh drops.</span>
+      <a class="vc-rm-shop-btn" href="/shop/">Go to Shop</a>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+
+  var CONFIG = {
+    requiredCategorySlug: "men",
+    filterChips: [
+      { slug: "all", label: "All Men", categoryIds: [], categorySlugs: [] }
+    ],
+    perPage: 8,
+    endpoints: {
+      products: "/wp-json/wc/store/v1/products",
+      categories: "/wp-json/wc/store/v1/products/categories"
+    }
+  };
+
+  var state = {
+    activeChip: CONFIG.filterChips[0].slug,
+    sort: "popularity"
+  };
+
+  var cache = Object.create(null);
+  var taxonomyCache = {
+    category: Object.create(null)
+  };
+
+  var chipsEl = document.getElementById("vcRmChips");
+  var gridEl = document.getElementById("vcRmGrid");
+  var sortEl = document.getElementById("vcRmSort");
+
+  if (!chipsEl || !gridEl || !sortEl || !window.fetch) {
+    return;
+  }
+
+  init();
+
+  function init() {
+    sortEl.addEventListener("change", function () {
+      state.sort = sortEl.value;
+      loadProducts();
+    });
+
+    setupCategoryChips()
+      .then(loadProducts)
+      .catch(function () {
+        renderChips();
+        loadProducts();
+      });
+  }
+
+  function setupCategoryChips() {
+    return fetch(CONFIG.endpoints.categories + "?per_page=100", { credentials: "same-origin" })
+      .then(checkResponse)
+      .then(function (categories) {
+        var parentCategory = findBySlug(categories, CONFIG.requiredCategorySlug);
+        var childCategories;
+        var allMenCategories;
+
+        if (!parentCategory || !parentCategory.id) {
+          renderChips();
+          return;
+        }
+
+        childCategories = categories.filter(function (category) {
+          return category && Number(category.parent) === Number(parentCategory.id);
+        });
+
+        allMenCategories = [parentCategory].concat(getDescendantCategories(categories, parentCategory.id));
+
+        CONFIG.filterChips[0].categoryIds = allMenCategories.map(getCategoryId).filter(Boolean);
+        CONFIG.filterChips[0].categorySlugs = allMenCategories.map(getCategorySlug).filter(Boolean);
+
+        allMenCategories.forEach(function (category) {
+          taxonomyCache.category[category.slug] = Number(category.id);
+        });
+
+        CONFIG.filterChips = [CONFIG.filterChips[0]].concat(childCategories.map(function (category) {
+          var chipCategories = [category].concat(getDescendantCategories(categories, category.id));
+
+          return {
+            slug: category.slug,
+            label: category.name,
+            categoryIds: chipCategories.map(getCategoryId).filter(Boolean),
+            categorySlugs: chipCategories.map(getCategorySlug).filter(Boolean)
+          };
+        }));
+
+        renderChips();
+      });
+  }
+
+  function renderChips() {
+    chipsEl.innerHTML = "";
+
+    CONFIG.filterChips.forEach(function (chip, index) {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "vc-rm-chip" + (index === 0 ? " is-active" : "");
+      button.textContent = chip.label;
+      button.setAttribute("aria-pressed", index === 0 ? "true" : "false");
+      button.dataset.slug = chip.slug;
+
+      button.addEventListener("click", function () {
+        if (state.activeChip === chip.slug) {
+          return;
+        }
+
+        state.activeChip = chip.slug;
+
+        Array.prototype.forEach.call(chipsEl.children, function (child) {
+          var isActive = child.dataset.slug === chip.slug;
+          child.classList.toggle("is-active", isActive);
+          child.setAttribute("aria-pressed", isActive ? "true" : "false");
+        });
+
+        loadProducts();
+      });
+
+      chipsEl.appendChild(button);
+    });
+  }
+
+  function loadProducts() {
+    var activeChip = getActiveChip();
+
+    renderLoading();
+
+    resolveTaxonomyId("category", CONFIG.requiredCategorySlug)
+      .then(function (requiredCategoryId) {
+        var categoryIds = activeChip.categoryIds && activeChip.categoryIds.length
+          ? activeChip.categoryIds
+          : [requiredCategoryId];
+
+        if (!requiredCategoryId || !categoryIds.length) {
+          renderMessage(
+            "No matching category found",
+            "Please check that the WooCommerce Men category slug in CONFIG is correct."
+          );
+          return [];
+        }
+
+        return fetchProducts(categoryIds, activeChip.categorySlugs);
+      })
+      .then(function (products) {
+        if (Array.isArray(products)) {
+          renderProducts(products);
+        }
+      })
+      .catch(function () {
+        renderMessage(
+          "Products could not be loaded",
+          "Please refresh the page or check that the WooCommerce Store API is enabled."
+        );
+      });
+  }
+
+  function resolveTaxonomyId(type, slug) {
+    var endpoint = CONFIG.endpoints.categories;
+    var bucket = taxonomyCache[type];
+
+    if (bucket[slug] !== undefined) {
+      return Promise.resolve(bucket[slug]);
+    }
+
+    return fetch(endpoint + "?per_page=100", { credentials: "same-origin" })
+      .then(checkResponse)
+      .then(function (items) {
+        var match = findBySlug(items, slug);
+        var id = match && match.id ? Number(match.id) : 0;
+        bucket[slug] = id;
+        return id;
+      })
+      .catch(function () {
+        bucket[slug] = 0;
+        return 0;
+      });
+  }
+
+  function fetchProducts(categoryIds, categorySlugs) {
+    var cacheKey = categoryIds.join(",") + "|sort:" + state.sort;
+
+    if (cache[cacheKey]) {
+      return Promise.resolve(cache[cacheKey]);
+    }
+
+    return fetch(buildProductsUrl(categoryIds), { credentials: "same-origin" })
+      .then(checkResponse)
+      .then(function (products) {
+        var allowedSlugs = categorySlugs && categorySlugs.length ? categorySlugs : [CONFIG.requiredCategorySlug];
+        var safeProducts = Array.isArray(products) ? products.filter(function (product) {
+          return productMatchesRequiredTerms(product, allowedSlugs);
+        }) : [];
+
+        cache[cacheKey] = safeProducts;
+        return safeProducts;
+      });
+  }
+
+  function buildProductsUrl(categoryIds) {
+    var params = new URLSearchParams();
+    params.set("per_page", String(CONFIG.perPage));
+    params.set("category", categoryIds.join(","));
+
+    if (state.sort === "price" || state.sort === "price-desc") {
+      params.set("orderby", "price");
+      params.set("order", state.sort === "price-desc" ? "desc" : "asc");
+    } else if (state.sort === "date") {
+      params.set("orderby", "date");
+      params.set("order", "desc");
+    } else {
+      params.set("orderby", "popularity");
+      params.set("order", "desc");
+    }
+
+    return CONFIG.endpoints.products + "?" + params.toString();
+  }
+
+  function checkResponse(response) {
+    if (!response.ok) {
+      throw new Error("WooCommerce Store API request failed: " + response.status);
+    }
+    return response.json();
+  }
+
+  function findBySlug(items, slug) {
+    if (!Array.isArray(items)) {
+      return null;
+    }
+
+    return items.filter(function (item) {
+      return item && item.slug === slug;
+    })[0] || null;
+  }
+
+  function getActiveChip() {
+    return CONFIG.filterChips.filter(function (chip) {
+      return chip.slug === state.activeChip;
+    })[0] || CONFIG.filterChips[0];
+  }
+
+  function getDescendantCategories(categories, parentId) {
+    var descendants = [];
+    var directChildren = categories.filter(function (category) {
+      return category && Number(category.parent) === Number(parentId);
+    });
+
+    directChildren.forEach(function (category) {
+      descendants.push(category);
+      descendants = descendants.concat(getDescendantCategories(categories, category.id));
+    });
+
+    return descendants;
+  }
+
+  function getCategoryId(category) {
+    return category && category.id ? Number(category.id) : 0;
+  }
+
+  function getCategorySlug(category) {
+    return category && category.slug ? category.slug : "";
+  }
+
+  function renderLoading() {
+    gridEl.innerHTML = "";
+
+    for (var i = 0; i < Math.min(CONFIG.perPage, 8); i += 1) {
+      var skeleton = document.createElement("div");
+      skeleton.className = "vc-rm-skeleton";
+      skeleton.setAttribute("aria-hidden", "true");
+      gridEl.appendChild(skeleton);
+    }
+  }
+
+  function renderProducts(products) {
+    if (!products.length) {
+      renderMessage(
+        "No Men products found",
+        "Add products to the Men category or its subcategories to show them here."
+      );
+      return;
+    }
+
+    gridEl.innerHTML = products.map(renderProductCard).join("");
+  }
+
+  function renderProductCard(product) {
+    var image = getProductImage(product);
+    var description = getProductDescription(product);
+    var productUrl = escapeAttr(product.permalink || "#");
+    var productName = escapeHtml(product.name || "Product");
+    var safeName = escapeAttr(product.name || "product");
+
+    return [
+      '<article class="vc-rm-card">',
+        '<div class="vc-rm-img">',
+          '<a href="' + productUrl + '" aria-label="View ' + safeName + '">',
+            image
+              ? '<img src="' + escapeAttr(image.src) + '" alt="' + escapeAttr(image.alt || product.name || "Men product") + '" loading="lazy" decoding="async">'
+              : "",
+          "</a>",
+        "</div>",
+        '<div class="vc-rm-body">',
+          '<a class="vc-rm-name" href="' + productUrl + '">' + productName + "</a>",
+          description ? '<p class="vc-rm-desc">' + escapeHtml(description) + "</p>" : "",
+          '<div class="vc-rm-price">' + formatPrice(product.prices) + "</div>",
+          '<div class="vc-rm-btns">',
+            '<a class="vc-rm-btn cart" href="' + productUrl + '">Add to Cart</a>',
+            '<a class="vc-rm-btn buy" href="' + productUrl + '">Buy Now</a>',
+          "</div>",
+        "</div>",
+      "</article>"
+    ].join("");
+  }
+
+  function getProductImage(product) {
+    return product && product.images && product.images.length ? product.images[0] : null;
+  }
+
+  function getProductDescription(product) {
+    var text = stripHtml((product && product.short_description) || (product && product.description) || "");
+    var maxLength = 120;
+
+    if (text.length <= maxLength) {
+      return text;
+    }
+
+    return text.slice(0, maxLength).replace(/\s+\S*$/, "") + "...";
+  }
+
+  function productMatchesRequiredTerms(product, categorySlugs) {
+    return categorySlugs.some(function (slug) {
+      return productHasTerm(product, "categories", slug);
+    });
+  }
+
+  function productHasTerm(product, key, slug) {
+    var terms = product && Array.isArray(product[key]) ? product[key] : [];
+
+    return terms.some(function (term) {
+      return term && term.slug === slug;
+    });
+  }
+
+  function formatPrice(prices) {
+    var currentPrice = prices && prices.price;
+    var regularPrice = prices && prices.regular_price;
+    var salePrice = prices && prices.sale_price;
+
+    if (!currentPrice) {
+      return "";
+    }
+
+    if (regularPrice && salePrice && regularPrice !== salePrice) {
+      return "<del>" + escapeHtml(formatMoney(prices, regularPrice)) + "</del>" + escapeHtml(formatMoney(prices, salePrice));
+    }
+
+    return escapeHtml(formatMoney(prices, currentPrice));
+  }
+
+  function formatMoney(prices, value) {
+    var minorUnit = Number(prices.currency_minor_unit);
+    var decimals = Number.isFinite(minorUnit) ? minorUnit : 2;
+    var amount = Number.parseInt(value, 10);
+    var symbol = prices.currency_prefix || prices.currency_symbol || "";
+    var suffix = prices.currency_suffix || "";
+    var decimalSeparator = prices.currency_decimal_separator || ".";
+    var thousandSeparator = prices.currency_thousand_separator || ",";
+    var numberString;
+    var parts;
+
+    if (!Number.isFinite(amount)) {
+      return "";
+    }
+
+    numberString = (amount / Math.pow(10, decimals)).toFixed(decimals);
+    parts = numberString.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+
+    return symbol + parts.join(decimalSeparator) + suffix;
+  }
+
+  function renderMessage(title, body) {
+    gridEl.innerHTML = '<div class="vc-rm-message"><strong>' + escapeHtml(title) + "</strong>" + escapeHtml(body) + "</div>";
+  }
+
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, function (character) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[character];
+    });
+  }
+
+  function stripHtml(value) {
+    var node = document.createElement("div");
+    node.innerHTML = String(value || "");
+    return (node.textContent || node.innerText || "").replace(/\s+/g, " ").trim();
+  }
+
+  function escapeAttr(value) {
+    return escapeHtml(value).replace(/`/g, "&#96;");
+  }
+})();
+</script>
