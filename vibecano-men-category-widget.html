@@ -254,6 +254,41 @@
     transform: scale(1.07);
   }
 
+  .vc-rm-wish {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 950;
+    line-height: 1;
+    box-shadow: 0 14px 28px -20px rgba(15, 23, 42, 0.9);
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  }
+
+  .vc-rm-wish:hover,
+  .vc-rm-wish:focus-visible {
+    border-color: rgba(239, 68, 68, 0.36);
+    background: #fff;
+    transform: translateY(-1px) scale(1.03);
+  }
+
+  .vc-rm-wish.is-active {
+    border-color: rgba(239, 68, 68, 0.32);
+    background: #ef4444;
+    color: #fff;
+  }
+
   .vc-rm-body {
     display: flex;
     flex: 1;
@@ -353,6 +388,12 @@
     color: #fff;
   }
 
+  .vc-rm-btn.quick {
+    grid-column: 1 / -1;
+    background: var(--vc-rm-primary);
+    color: #fff;
+  }
+
   .vc-rm-btn:hover,
   .vc-rm-btn:focus-visible {
     transform: translateY(-1px);
@@ -368,6 +409,12 @@
   .vc-rm-btn.buy:focus-visible {
     background: #ea580c;
     box-shadow: 0 14px 24px -18px rgba(249, 115, 22, 0.9);
+  }
+
+  .vc-rm-btn.quick:hover,
+  .vc-rm-btn.quick:focus-visible {
+    background: var(--vc-rm-primary-dark);
+    box-shadow: 0 14px 24px -18px rgba(79, 70, 229, 0.9);
   }
 
   .vc-rm-message {
@@ -469,6 +516,130 @@
     transform: translateY(-2px);
   }
 
+  .vc-rm-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+  }
+
+  .vc-rm-modal.is-open {
+    display: flex;
+  }
+
+  .vc-rm-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.64);
+    backdrop-filter: blur(10px);
+  }
+
+  .vc-rm-modal-dialog {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    width: min(880px, 100%);
+    max-height: min(720px, 92vh);
+    overflow: auto;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 0;
+    border: 1px solid rgba(226, 232, 240, 0.88);
+    border-radius: 26px;
+    background: #fff;
+    box-shadow: 0 32px 80px -28px rgba(15, 23, 42, 0.9);
+  }
+
+  .vc-rm-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--vc-rm-text);
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .vc-rm-modal-close:hover,
+  .vc-rm-modal-close:focus-visible {
+    color: var(--vc-rm-primary);
+  }
+
+  .vc-rm-modal-img {
+    min-height: 100%;
+    background:
+      linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(249, 115, 22, 0.08)),
+      #f1f5f9;
+  }
+
+  .vc-rm-modal-img img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 360px;
+    object-fit: cover;
+  }
+
+  .vc-rm-modal-body {
+    padding: 34px;
+  }
+
+  .vc-rm-modal-kicker {
+    display: inline-flex;
+    margin-bottom: 10px;
+    color: var(--vc-rm-primary);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .vc-rm-modal-title {
+    margin: 0 42px 12px 0;
+    color: var(--vc-rm-text);
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: 950;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+  }
+
+  .vc-rm-modal-price {
+    margin-bottom: 14px;
+    color: var(--vc-rm-text);
+    font-size: 20px;
+    font-weight: 950;
+  }
+
+  .vc-rm-modal-desc {
+    margin: 0 0 22px;
+    color: var(--vc-rm-muted);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.7;
+  }
+
+  .vc-rm-modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .vc-rm-modal-actions .vc-rm-btn {
+    min-width: 132px;
+  }
+
   @keyframes vc-rm-shimmer {
     to { background-position: -220% 0; }
   }
@@ -484,12 +655,16 @@
     .vc-rm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
     .vc-rm-toolbar { align-items: stretch; flex-direction: column; }
     .vc-rm-sort { max-width: none; width: 100%; }
+    .vc-rm-modal-dialog { grid-template-columns: 1fr; }
+    .vc-rm-modal-img img { min-height: 260px; max-height: 340px; }
   }
 
   @media (max-width: 480px) {
     .vc-rm-shell { padding: 18px; }
     .vc-rm-grid { grid-template-columns: 1fr; }
     .vc-rm-btns { grid-template-columns: 1fr; }
+    .vc-rm-modal { padding: 14px; }
+    .vc-rm-modal-body { padding: 24px; }
   }
 </style>
 
@@ -516,6 +691,24 @@
 
     <div id="vcRmGrid" class="vc-rm-grid" aria-live="polite"></div>
 
+    <div class="vc-rm-modal" id="vcRmQuickView" aria-hidden="true">
+      <div class="vc-rm-modal-backdrop" data-vc-rm-close></div>
+      <div class="vc-rm-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="vcRmQuickTitle">
+        <button class="vc-rm-modal-close" type="button" data-vc-rm-close aria-label="Close quick view">x</button>
+        <div class="vc-rm-modal-img" id="vcRmQuickImage"></div>
+        <div class="vc-rm-modal-body">
+          <span class="vc-rm-modal-kicker">Quick view</span>
+          <h3 class="vc-rm-modal-title" id="vcRmQuickTitle"></h3>
+          <div class="vc-rm-modal-price" id="vcRmQuickPrice"></div>
+          <p class="vc-rm-modal-desc" id="vcRmQuickDesc"></p>
+          <div class="vc-rm-modal-actions">
+            <a class="vc-rm-btn cart" id="vcRmQuickCart" href="#">Add to Cart</a>
+            <a class="vc-rm-btn buy" id="vcRmQuickBuy" href="#">Buy Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="vc-rm-shop-cta">
       <strong>Want to explore more Men products?</strong>
       <span>We show only the top 8 here. Visit the shop to discover more products, styles, and fresh drops.</span>
@@ -530,6 +723,7 @@
 
   var CONFIG = {
     requiredCategorySlug: "men",
+    wishlistStorageKey: "vcMenWishlist",
     filterChips: [
       { slug: "all", label: "All Men", categoryIds: [], categorySlugs: [] }
     ],
@@ -546,6 +740,8 @@
   };
 
   var cache = Object.create(null);
+  var productLookup = Object.create(null);
+  var wishlist = loadWishlist();
   var taxonomyCache = {
     category: Object.create(null)
   };
@@ -553,6 +749,13 @@
   var chipsEl = document.getElementById("vcRmChips");
   var gridEl = document.getElementById("vcRmGrid");
   var sortEl = document.getElementById("vcRmSort");
+  var quickViewEl = document.getElementById("vcRmQuickView");
+  var quickImageEl = document.getElementById("vcRmQuickImage");
+  var quickTitleEl = document.getElementById("vcRmQuickTitle");
+  var quickPriceEl = document.getElementById("vcRmQuickPrice");
+  var quickDescEl = document.getElementById("vcRmQuickDesc");
+  var quickCartEl = document.getElementById("vcRmQuickCart");
+  var quickBuyEl = document.getElementById("vcRmQuickBuy");
 
   if (!chipsEl || !gridEl || !sortEl || !window.fetch) {
     return;
@@ -565,6 +768,21 @@
       state.sort = sortEl.value;
       loadProducts();
     });
+
+    gridEl.addEventListener("click", handleProductAction);
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeQuickView();
+      }
+    });
+
+    if (quickViewEl) {
+      quickViewEl.addEventListener("click", function (event) {
+        if (event.target && event.target.hasAttribute("data-vc-rm-close")) {
+          closeQuickView();
+        }
+      });
+    }
 
     setupCategoryChips()
       .then(loadProducts)
@@ -812,13 +1030,22 @@
   function renderProductCard(product) {
     var image = getProductImage(product);
     var description = getProductDescription(product);
+    var productId = getProductId(product);
     var productUrl = escapeAttr(product.permalink || "#");
     var productName = escapeHtml(product.name || "Product");
     var safeName = escapeAttr(product.name || "product");
+    var isWishlisted = productId && wishlist[productId];
+
+    if (productId) {
+      productLookup[productId] = product;
+    }
 
     return [
-      '<article class="vc-rm-card">',
+      '<article class="vc-rm-card" data-product-id="' + escapeAttr(productId) + '">',
         '<div class="vc-rm-img">',
+          '<button class="vc-rm-wish' + (isWishlisted ? " is-active" : "") + '" type="button" data-action="wishlist" data-product-id="' + escapeAttr(productId) + '" aria-label="' + (isWishlisted ? "Remove " : "Add ") + safeName + (isWishlisted ? " from wishlist" : " to wishlist") + '" aria-pressed="' + (isWishlisted ? "true" : "false") + '">',
+            '<span aria-hidden="true">' + (isWishlisted ? "&#9829;" : "&#9825;") + "</span>",
+          "</button>",
           '<a href="' + productUrl + '" aria-label="View ' + safeName + '">',
             image
               ? '<img src="' + escapeAttr(image.src) + '" alt="' + escapeAttr(image.alt || product.name || "Men product") + '" loading="lazy" decoding="async">'
@@ -832,10 +1059,125 @@
           '<div class="vc-rm-btns">',
             '<a class="vc-rm-btn cart" href="' + productUrl + '">Add to Cart</a>',
             '<a class="vc-rm-btn buy" href="' + productUrl + '">Buy Now</a>',
+            '<button class="vc-rm-btn quick" type="button" data-action="quick-view" data-product-id="' + escapeAttr(productId) + '">Quick View</button>',
           "</div>",
         "</div>",
       "</article>"
     ].join("");
+  }
+
+  function handleProductAction(event) {
+    var actionButton = event.target && event.target.closest("[data-action]");
+    var productId;
+
+    if (!actionButton || !gridEl.contains(actionButton)) {
+      return;
+    }
+
+    productId = actionButton.getAttribute("data-product-id");
+
+    if (actionButton.dataset.action === "wishlist") {
+      event.preventDefault();
+      toggleWishlist(actionButton, productId);
+    } else if (actionButton.dataset.action === "quick-view") {
+      event.preventDefault();
+      openQuickView(productId);
+    }
+  }
+
+  function toggleWishlist(button, productId) {
+    var product = productLookup[productId];
+    var name = product && product.name ? product.name : "product";
+    var isActive;
+
+    if (!productId) {
+      return;
+    }
+
+    if (wishlist[productId]) {
+      delete wishlist[productId];
+      isActive = false;
+    } else {
+      wishlist[productId] = true;
+      isActive = true;
+    }
+
+    saveWishlist();
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
+    button.setAttribute("aria-label", (isActive ? "Remove " : "Add ") + name + (isActive ? " from wishlist" : " to wishlist"));
+    button.innerHTML = '<span aria-hidden="true">' + (isActive ? "&#9829;" : "&#9825;") + "</span>";
+  }
+
+  function openQuickView(productId) {
+    var product = productLookup[productId];
+    var image = getProductImage(product);
+    var productUrl;
+
+    if (!product || !quickViewEl || !quickImageEl || !quickTitleEl || !quickPriceEl || !quickDescEl || !quickCartEl || !quickBuyEl) {
+      return;
+    }
+
+    productUrl = product.permalink || "#";
+    quickImageEl.innerHTML = image
+      ? '<img src="' + escapeAttr(image.src) + '" alt="' + escapeAttr(image.alt || product.name || "Men product") + '">'
+      : "";
+    quickTitleEl.textContent = product.name || "Product";
+    quickPriceEl.innerHTML = formatPrice(product.prices);
+    quickDescEl.textContent = stripHtml((product && product.description) || (product && product.short_description) || "No product description available.");
+    quickCartEl.href = productUrl;
+    quickBuyEl.href = productUrl;
+
+    quickViewEl.classList.add("is-open");
+    quickViewEl.setAttribute("aria-hidden", "false");
+    document.documentElement.style.overflow = "hidden";
+  }
+
+  function closeQuickView() {
+    if (!quickViewEl || !quickViewEl.classList.contains("is-open")) {
+      return;
+    }
+
+    quickViewEl.classList.remove("is-open");
+    quickViewEl.setAttribute("aria-hidden", "true");
+    document.documentElement.style.overflow = "";
+  }
+
+  function getProductId(product) {
+    return product && product.id !== undefined ? String(product.id) : "";
+  }
+
+  function loadWishlist() {
+    var stored;
+    var ids;
+    var items = Object.create(null);
+
+    try {
+      stored = window.localStorage && window.localStorage.getItem(CONFIG.wishlistStorageKey);
+      ids = stored ? JSON.parse(stored) : [];
+    } catch (error) {
+      ids = [];
+    }
+
+    if (Array.isArray(ids)) {
+      ids.forEach(function (id) {
+        if (id) {
+          items[String(id)] = true;
+        }
+      });
+    }
+
+    return items;
+  }
+
+  function saveWishlist() {
+    try {
+      if (window.localStorage) {
+        window.localStorage.setItem(CONFIG.wishlistStorageKey, JSON.stringify(Object.keys(wishlist)));
+      }
+    } catch (error) {
+      return;
+    }
   }
 
   function getProductImage(product) {
