@@ -31,12 +31,12 @@
   .vibecano-hero-root *::after { box-sizing: border-box; }
 
   .vibecano-hero-root a { color: inherit; text-decoration: none; }
-  .vibecano-hero-root img { display: block; max-width: 100%; height: auto; }
+  .vibecano-hero-root img { display: block; max-width: 100%; }
 
   .vibecano-hero-root .ro-hero {
     position: relative;
     overflow: hidden;
-    padding: clamp(28px, 5vw, 72px) clamp(14px, 3vw, 24px) clamp(32px, 6vw, 80px);
+    padding: clamp(24px, 5vw, 72px) clamp(12px, 3vw, 24px) clamp(28px, 6vw, 80px);
     background: var(--vc-hero-bg);
   }
 
@@ -58,7 +58,7 @@
     z-index: 1;
     display: flex;
     flex-direction: column;
-    gap: clamp(24px, 4vw, 48px);
+    gap: clamp(20px, 4vw, 44px);
     width: min(1240px, 100%);
     margin: 0 auto;
   }
@@ -68,48 +68,55 @@
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
-      gap: clamp(24px, 4vw, 56px);
+      gap: clamp(20px, 3.5vw, 48px);
     }
   }
 
   .vibecano-hero-root .ro-hero-content {
-    flex: 1 1 340px;
+    flex: 1 1 300px;
     min-width: 0;
     width: 100%;
   }
 
   @media (min-width: 900px) {
     .vibecano-hero-root .ro-hero-content {
-      max-width: 580px;
+      max-width: 560px;
     }
   }
 
   .vibecano-hero-root .ro-hero-visual {
-    flex: 1 1 320px;
+    flex: 1 1 280px;
     min-width: 0;
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: clamp(14px, 2.5vw, 20px);
+    align-items: center;
+    gap: clamp(12px, 2.5vw, 18px);
     background: transparent;
   }
 
   @media (min-width: 900px) {
     .vibecano-hero-root .ro-hero-visual {
-      max-width: 560px;
+      align-items: stretch;
+      max-width: 420px;
     }
   }
 
   .vibecano-hero-root .ro-hero-image {
     position: relative;
     width: 100%;
-    margin: 0;
-    aspect-ratio: 300 / 109;
+    max-width: min(100%, 380px);
+    margin: 0 auto;
+    aspect-ratio: 300 / 241;
     overflow: visible;
     background: transparent;
-    border: 0;
-    box-shadow: none;
+  }
+
+  @media (min-width: 900px) {
+    .vibecano-hero-root .ro-hero-image {
+      max-width: 100%;
+      margin: 0;
+    }
   }
 
   .vibecano-hero-root .ro-hero-image::after {
@@ -120,12 +127,11 @@
     pointer-events: none;
     background:
       linear-gradient(90deg,
-        #eef2ff 0%,
-        rgba(238, 242, 255, 0.72) 16%,
-        rgba(248, 250, 252, 0.2) 34%,
-        transparent 52%
+        rgba(238, 242, 255, 0.9) 0%,
+        rgba(238, 242, 255, 0.35) 14%,
+        transparent 32%
       ),
-      linear-gradient(180deg, transparent 70%, rgba(255, 247, 237, 0.35) 100%);
+      linear-gradient(180deg, transparent 78%, rgba(255, 247, 237, 0.45) 100%);
   }
 
   .vibecano-hero-root .ro-hero-image img {
@@ -134,9 +140,7 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    object-position: right center;
-    border: 0;
-    border-radius: 0;
+    object-position: center bottom;
     background: transparent;
     mix-blend-mode: multiply;
     filter: contrast(1.03) saturate(1.02);
@@ -160,7 +164,7 @@
   .vibecano-hero-root .ro-category-icons {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(8px, 2vw, 12px);
+    gap: clamp(6px, 2vw, 12px);
     width: 100%;
     margin: 0;
     padding: 0;
@@ -176,7 +180,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
     gap: 6px;
     min-width: 0;
     padding: 4px 2px;
@@ -194,8 +197,8 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: clamp(36px, 10vw, 48px);
-    height: clamp(36px, 10vw, 48px);
+    width: clamp(34px, 9vw, 48px);
+    height: clamp(34px, 9vw, 48px);
     border-radius: 999px;
     overflow: hidden;
     border: 2px solid rgba(255, 255, 255, 0.95);
@@ -225,7 +228,7 @@
     display: block;
     width: 100%;
     color: var(--vc-ink-2);
-    font-size: clamp(9px, 2.4vw, 11px);
+    font-size: clamp(9px, 2.3vw, 11px);
     font-weight: 850;
     line-height: 1.25;
     letter-spacing: -0.01em;
@@ -277,9 +280,9 @@
     margin: 0 0 14px;
     color: var(--vc-ink);
     font-family: "Plus Jakarta Sans", Inter, sans-serif;
-    font-size: clamp(30px, 7.5vw, 68px);
+    font-size: clamp(28px, 7.2vw, 64px);
     font-weight: 900;
-    line-height: 1;
+    line-height: 1.02;
     letter-spacing: -0.06em;
   }
 
@@ -295,7 +298,7 @@
   .vibecano-hero-root .ro-hero p.lead {
     margin: 0 0 20px;
     color: #475569;
-    font-size: clamp(14px, 3.6vw, 18px);
+    font-size: clamp(14px, 3.5vw, 18px);
     font-weight: 600;
     line-height: 1.65;
   }
@@ -479,15 +482,15 @@
       <div class="ro-hero-visual">
         <figure class="ro-hero-image">
           <img
-            src="https://vibecano.com/wp-content/uploads/2026/07/Heroimage-300x109.png"
+            src="https://vibecano.com/wp-content/uploads/2026/07/Heroimag-300x241.png"
             srcset="
-              https://vibecano.com/wp-content/uploads/2026/07/Heroimage-300x109.png 300w,
-              https://vibecano.com/wp-content/uploads/2026/07/Heroimage.png 1024w
+              https://vibecano.com/wp-content/uploads/2026/07/Heroimag-300x241.png 300w,
+              https://vibecano.com/wp-content/uploads/2026/07/Heroimag.png 1024w
             "
-            sizes="(max-width: 899px) 100vw, min(560px, 46vw)"
-            alt="Vibecano lifestyle collection"
+            sizes="(max-width: 899px) min(380px, 88vw), min(420px, 38vw)"
+            alt="Vibecano models collection"
             width="300"
-            height="109"
+            height="241"
             loading="eager"
             decoding="async"
           >
