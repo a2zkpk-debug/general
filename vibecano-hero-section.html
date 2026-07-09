@@ -36,7 +36,6 @@
   .vibecano-hero-root .ro-hero {
     position: relative;
     overflow: hidden;
-    isolation: isolate;
     padding: clamp(28px, 5vw, 72px) clamp(14px, 3vw, 24px) clamp(32px, 6vw, 80px);
     background: var(--vc-hero-bg);
   }
@@ -93,6 +92,7 @@
     flex-direction: column;
     align-items: stretch;
     gap: clamp(14px, 2.5vw, 20px);
+    background: transparent;
   }
 
   @media (min-width: 900px) {
@@ -106,22 +106,45 @@
     width: 100%;
     margin: 0;
     aspect-ratio: 300 / 109;
-    overflow: hidden;
+    overflow: visible;
     background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .vibecano-hero-root .ro-hero-image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg,
+        #eef2ff 0%,
+        rgba(238, 242, 255, 0.72) 16%,
+        rgba(248, 250, 252, 0.2) 34%,
+        transparent 52%
+      ),
+      linear-gradient(180deg, transparent 70%, rgba(255, 247, 237, 0.35) 100%);
   }
 
   .vibecano-hero-root .ro-hero-image img {
+    position: relative;
+    z-index: 1;
     width: 100%;
     height: 100%;
     object-fit: contain;
-    object-position: center;
+    object-position: right center;
     border: 0;
     border-radius: 0;
     background: transparent;
+    mix-blend-mode: multiply;
+    filter: contrast(1.03) saturate(1.02);
   }
 
   .vibecano-hero-root .ro-category-block {
     width: 100%;
+    background: transparent;
   }
 
   .vibecano-hero-root .ro-category-heading {
@@ -556,6 +579,9 @@
         node.style.setProperty("align-self", "stretch", "important");
         node.style.setProperty("flex", "1 1 100%", "important");
         node.style.setProperty("overflow-x", "clip", "important");
+        node.style.setProperty("background", "transparent", "important");
+        node.style.setProperty("background-color", "transparent", "important");
+        node.style.setProperty("background-image", "none", "important");
       }
 
       node = node.parentElement;
@@ -563,6 +589,7 @@
 
     root.style.setProperty("width", "100%", "important");
     root.style.setProperty("max-width", "none", "important");
+    root.style.setProperty("background", "transparent", "important");
   }
 
   function preserveStaticCategories() {
