@@ -281,32 +281,67 @@
   .vibecano-header-root .ro-nav-links {
     display: flex;
     align-items: center;
-    gap: 4px;
-    flex-wrap: wrap;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
-  .vibecano-header-root .ro-nav-links > li > a,
-  .vibecano-header-root .ro-nav-dropdown-btn {
+  .vibecano-header-root .ro-nav-links::-webkit-scrollbar { display: none; }
+
+  .vibecano-header-root .ro-nav-item-wrap {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 14px 14px;
+    gap: 2px;
+    padding: 6px 4px 6px 8px;
+    border-radius: 8px;
+    transition: background .2s;
+  }
+
+  .vibecano-header-root .ro-has-dropdown:hover .ro-nav-item-wrap,
+  .vibecano-header-root .ro-has-dropdown.is-open .ro-nav-item-wrap,
+  .vibecano-header-root .ro-has-dropdown:focus-within .ro-nav-item-wrap {
+    background: #f0f9ff;
+  }
+
+  .vibecano-header-root .ro-nav-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 6px;
     font-size: 14px;
     font-weight: 600;
     color: var(--ink-soft);
-    border-radius: 8px;
-    transition: color .2s, background .2s;
+    border-radius: 6px;
+    transition: color .2s;
     white-space: nowrap;
-    background: none;
-    border: none;
   }
 
-  .vibecano-header-root .ro-nav-links > li > a:hover,
-  .vibecano-header-root .ro-nav-links > li > a.is-highlight,
-  .vibecano-header-root .ro-nav-dropdown-btn:hover,
-  .vibecano-header-root .ro-has-dropdown.is-open .ro-nav-dropdown-btn {
+  .vibecano-header-root .ro-nav-label:hover,
+  .vibecano-header-root .ro-has-dropdown:hover .ro-nav-label,
+  .vibecano-header-root .ro-has-dropdown.is-open .ro-nav-label {
     color: var(--brand);
-    background: #f0f9ff;
+  }
+
+  .vibecano-header-root .ro-nav-caret-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink-soft);
+    transition: color .2s, background .2s;
+  }
+
+  .vibecano-header-root .ro-nav-caret-btn:hover,
+  .vibecano-header-root .ro-has-dropdown.is-open .ro-nav-caret-btn {
+    color: var(--brand);
+    background: rgba(29, 155, 240, .1);
   }
 
   .vibecano-header-root .ro-nav-caret {
@@ -323,12 +358,22 @@
     position: relative;
   }
 
+  .vibecano-header-root .ro-has-dropdown.ro-no-children .ro-nav-caret-btn {
+    display: none;
+  }
+
+  .vibecano-header-root .ro-has-dropdown.ro-no-children .ro-nav-dropdown {
+    display: none !important;
+  }
+
   .vibecano-header-root .ro-nav-dropdown {
     position: absolute;
     top: calc(100% + 4px);
     left: 0;
     z-index: 1200;
     min-width: 220px;
+    max-height: min(70vh, 420px);
+    overflow-y: auto;
     padding: 8px;
     border: 1px solid var(--line);
     border-radius: 14px;
@@ -358,27 +403,77 @@
     transition: color .2s, background .2s;
   }
 
+  .vibecano-header-root .ro-nav-dropdown a.is-view-all {
+    color: var(--brand);
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 4px;
+    border-radius: 8px 8px 0 0;
+  }
+
   .vibecano-header-root .ro-nav-dropdown a:hover {
     color: var(--brand);
     background: #f0f9ff;
   }
 
+  .vibecano-header-root .ro-nav-dropdown-empty {
+    display: block;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--slate);
+    font-style: italic;
+  }
+
   .vibecano-header-root .ro-design-btn {
-    background: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #0b1220 0%, #1e293b 100%);
     color: #fff !important;
     padding: 11px 22px;
     border-radius: 999px;
     font-weight: 700;
     font-size: 14px;
-    transition: background .2s, transform .2s, box-shadow .2s;
+    border: 2px solid transparent;
+    transition: transform .2s;
     white-space: nowrap;
     flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    animation: vc-design-flash 2s ease-in-out infinite;
+  }
+
+  .vibecano-header-root .ro-design-btn::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(245, 158, 11, .55), transparent);
+    opacity: 0;
+    animation: vc-design-shine 2s ease-in-out infinite;
+    pointer-events: none;
   }
 
   .vibecano-header-root .ro-design-btn:hover {
-    background: #1e293b;
     transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
+    animation-play-state: paused;
+  }
+
+  @keyframes vc-design-flash {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(245, 158, 11, .55), 0 4px 14px rgba(15, 23, 42, .15);
+      border-color: rgba(245, 158, 11, .35);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgba(245, 158, 11, 0), 0 6px 20px rgba(245, 158, 11, .35);
+      border-color: rgba(245, 158, 11, .85);
+    }
+  }
+
+  @keyframes vc-design-shine {
+    0%, 100% { opacity: 0; transform: translateX(-120%); }
+    45%, 55% { opacity: 1; }
+    60% { opacity: 0; transform: translateX(120%); }
   }
 
   .vibecano-header-root .ro-menu-toggle {
@@ -418,12 +513,16 @@
       border-bottom: 1px solid #f1f5f9;
     }
 
-    .vibecano-header-root .ro-nav-links > li > a,
-    .vibecano-header-root .ro-nav-dropdown-btn {
+    .vibecano-header-root .ro-nav-item-wrap {
       width: 100%;
       justify-content: space-between;
-      padding: 14px 6px;
+      padding: 8px 6px;
       border-radius: 0;
+    }
+
+    .vibecano-header-root .ro-nav-label {
+      flex: 1;
+      padding: 8px 4px;
     }
 
     .vibecano-header-root .ro-nav-dropdown {
@@ -453,9 +552,18 @@
 
     .vibecano-header-root .ro-design-btn {
       margin-left: auto;
-      padding: 9px 16px;
-      font-size: 13px;
+      padding: 9px 14px;
+      font-size: 12px;
     }
+  }
+
+  @media (max-width: 480px) {
+    .vibecano-header-root .ro-design-btn span.ro-design-long { display: none; }
+    .vibecano-header-root .ro-design-btn span.ro-design-short { display: inline; }
+  }
+
+  @media (min-width: 481px) {
+    .vibecano-header-root .ro-design-btn span.ro-design-short { display: none; }
   }
 
   @media (max-width: 768px) {
@@ -488,6 +596,11 @@
     }
 
     .vibecano-header-root .ro-marquee-item { white-space: normal; text-align: center; }
+
+    .vibecano-header-root .ro-design-btn,
+    .vibecano-header-root .ro-design-btn::before {
+      animation: none;
+    }
   }
 </style>
 
@@ -573,29 +686,67 @@
       <button class="ro-menu-toggle" id="roMenuToggle" type="button" aria-label="Toggle menu" aria-expanded="false">☰</button>
 
       <ul class="ro-nav-links" id="roNavLinks">
-        <li><a class="is-highlight" href="/shop/">Shop All</a></li>
-        <li><a id="roNavCustomize" href="/product-category/customize/">Customize</a></li>
-        <li><a id="roNavReadyMade" href="/product-category/ready-made/">Ready Made</a></li>
-        <li><a id="roNavFeatured" href="/product-category/featured/">Featured</a></li>
-        <li class="ro-has-dropdown" id="roCategoryDropdown">
-          <button class="ro-nav-dropdown-btn" type="button" aria-expanded="false" aria-haspopup="true">
-            Categories
-            <svg class="ro-nav-caret" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-              <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="ro-nav-dropdown" role="menu">
-            <a id="roNavMen" href="/product-category/men/" role="menuitem">Men</a>
-            <a id="roNavWomen" href="/product-category/women/" role="menuitem">Women</a>
-            <a id="roNavKids" href="/product-category/kids/" role="menuitem">Kids</a>
-            <a id="roNavAccessories" href="/product-category/accessories/" role="menuitem">Accessories</a>
-            <a id="roNavUnder999" href="/product-category/under999/" role="menuitem">Under Rs. 999</a>
-            <a id="roNavDesign" href="/product-category/design-your-own/" role="menuitem">Design Your Own</a>
-          </div>
+        <li class="ro-has-dropdown" data-nav-key="men">
+          <span class="ro-nav-item-wrap">
+            <a class="ro-nav-label" href="/product-category/men/">Men</a>
+            <button class="ro-nav-caret-btn" type="button" aria-expanded="false" aria-label="Show Men subcategories">
+              <svg class="ro-nav-caret" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </span>
+          <div class="ro-nav-dropdown" role="menu" aria-label="Men subcategories"></div>
+        </li>
+        <li class="ro-has-dropdown" data-nav-key="women">
+          <span class="ro-nav-item-wrap">
+            <a class="ro-nav-label" href="/product-category/women/">Women</a>
+            <button class="ro-nav-caret-btn" type="button" aria-expanded="false" aria-label="Show Women subcategories">
+              <svg class="ro-nav-caret" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </span>
+          <div class="ro-nav-dropdown" role="menu" aria-label="Women subcategories"></div>
+        </li>
+        <li class="ro-has-dropdown" data-nav-key="kids">
+          <span class="ro-nav-item-wrap">
+            <a class="ro-nav-label" href="/product-category/kids/">Kids</a>
+            <button class="ro-nav-caret-btn" type="button" aria-expanded="false" aria-label="Show Kids subcategories">
+              <svg class="ro-nav-caret" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </span>
+          <div class="ro-nav-dropdown" role="menu" aria-label="Kids subcategories"></div>
+        </li>
+        <li class="ro-has-dropdown" data-nav-key="accessories">
+          <span class="ro-nav-item-wrap">
+            <a class="ro-nav-label" href="/product-category/accessories/">Accessories</a>
+            <button class="ro-nav-caret-btn" type="button" aria-expanded="false" aria-label="Show Accessories subcategories">
+              <svg class="ro-nav-caret" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </span>
+          <div class="ro-nav-dropdown" role="menu" aria-label="Accessories subcategories"></div>
+        </li>
+        <li class="ro-has-dropdown" data-nav-key="under999">
+          <span class="ro-nav-item-wrap">
+            <a class="ro-nav-label" href="/product-category/under999/">Under 999</a>
+            <button class="ro-nav-caret-btn" type="button" aria-expanded="false" aria-label="Show Under 999 subcategories">
+              <svg class="ro-nav-caret" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </span>
+          <div class="ro-nav-dropdown" role="menu" aria-label="Under 999 subcategories"></div>
         </li>
       </ul>
 
-      <a class="ro-design-btn" id="roShopBtn" href="/shop/">Shop Collection</a>
+      <a class="ro-design-btn" id="roDesignBtn" href="/product-category/design-your-own/">
+        <span class="ro-design-long">Design Your Own</span>
+        <span class="ro-design-short">Design</span>
+      </a>
     </div>
   </nav>
 </div>
@@ -605,23 +756,19 @@
   "use strict";
 
   var CONFIG = {
-    shopUrl: "/shop/",
     loginUrl: "/my-account/",
     registerUrl: "/my-account/?action=register",
     accountUrl: "/my-account/",
     userEndpoint: "/wp-json/wp/v2/users/me?context=edit",
     cartEndpoint: "/wp-json/wc/store/v1/cart",
-    categoriesEndpoint: "/wp-json/wc/store/v1/products/categories",
-    mainCategories: [
-      { key: "customize", slugs: ["customize", "custom"], label: "Customize" },
-      { key: "ready-made", slugs: ["ready-made", "ready-made-designs"], label: "Ready Made" },
-      { key: "featured", slugs: ["featured"], label: "Featured" },
-      { key: "men", slugs: ["men"], label: "Men" },
-      { key: "women", slugs: ["women"], label: "Women" },
-      { key: "kids", slugs: ["kids"], label: "Kids" },
-      { key: "accessories", slugs: ["accessories"], label: "Accessories" },
-      { key: "under999", slugs: ["under999"], label: "Under Rs. 999" },
-      { key: "design", slugs: ["design-your-own"], label: "Design Your Own" }
+    categoriesEndpoint: "/wp-json/wp/v2/product_cat",
+    designUrl: "/product-category/design-your-own/",
+    mainNavCategories: [
+      { key: "men", slugs: ["men"], label: "Men", viewAll: "Shop All Men" },
+      { key: "women", slugs: ["women"], label: "Women", viewAll: "Shop All Women" },
+      { key: "kids", slugs: ["kids"], label: "Kids", viewAll: "Shop All Kids" },
+      { key: "accessories", slugs: ["accessories"], label: "Accessories", viewAll: "Shop All Accessories" },
+      { key: "under999", slugs: ["under999"], label: "Under 999", viewAll: "Shop All Under 999" }
     ]
   };
 
@@ -630,56 +777,74 @@
 
   var toggle = document.getElementById("roMenuToggle");
   var nav = document.getElementById("roNavLinks");
-  var categoryDropdown = document.getElementById("roCategoryDropdown");
-  var dropdownBtn = categoryDropdown ? categoryDropdown.querySelector(".ro-nav-dropdown-btn") : null;
   var guestEl = document.getElementById("roAccountGuest");
   var userEl = document.getElementById("roAccountUser");
   var greetingEl = document.getElementById("roAccountGreeting");
   var loginLink = document.getElementById("roLoginLink");
   var registerLink = document.getElementById("roRegisterLink");
   var cartCountEl = document.getElementById("roCartCount");
-  var shopBtn = document.getElementById("roShopBtn");
-  var navLinks = {
-    customize: document.getElementById("roNavCustomize"),
-    "ready-made": document.getElementById("roNavReadyMade"),
-    featured: document.getElementById("roNavFeatured"),
-    men: document.getElementById("roNavMen"),
-    women: document.getElementById("roNavWomen"),
-    kids: document.getElementById("roNavKids"),
-    accessories: document.getElementById("roNavAccessories"),
-    under999: document.getElementById("roNavUnder999"),
-    design: document.getElementById("roNavDesign")
-  };
+  var designBtn = document.getElementById("roDesignBtn");
+  var navDropdownItems = root.querySelectorAll(".ro-has-dropdown[data-nav-key]");
+  var MOBILE_NAV_BREAKPOINT = 992;
 
   if (loginLink) loginLink.href = CONFIG.loginUrl;
   if (registerLink) registerLink.href = CONFIG.registerUrl;
   if (userEl) userEl.href = CONFIG.accountUrl;
-  if (shopBtn) shopBtn.href = CONFIG.shopUrl;
+  if (designBtn) designBtn.href = CONFIG.designUrl;
 
   if (toggle && nav) {
     toggle.addEventListener("click", function () {
       var isOpen = nav.classList.toggle("is-open");
       toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      if (!isOpen) closeAllDropdowns();
     });
   }
 
-  if (dropdownBtn && categoryDropdown) {
-    dropdownBtn.addEventListener("click", function (event) {
-      if (window.innerWidth > 992) return;
+  navDropdownItems.forEach(function (item) {
+    var caretBtn = item.querySelector(".ro-nav-caret-btn");
+    if (!caretBtn) return;
+
+    caretBtn.addEventListener("click", function (event) {
+      if (window.innerWidth > MOBILE_NAV_BREAKPOINT) return;
       event.preventDefault();
       event.stopPropagation();
-      var isOpen = categoryDropdown.classList.toggle("is-open");
-      dropdownBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      var willOpen = !item.classList.contains("is-open");
+      closeAllDropdowns();
+      if (willOpen) {
+        item.classList.add("is-open");
+        caretBtn.setAttribute("aria-expanded", "true");
+      }
     });
-  }
+  });
+
+  document.addEventListener("click", function (event) {
+    if (!root.contains(event.target)) {
+      closeAllDropdowns();
+      return;
+    }
+    if (window.innerWidth <= MOBILE_NAV_BREAKPOINT && !event.target.closest(".ro-has-dropdown")) {
+      closeAllDropdowns();
+    }
+  });
 
   expandHeaderLayout();
   loadAccountState();
   loadCartCount();
   loadNavCategories();
 
-  window.addEventListener("resize", expandHeaderLayout);
+  window.addEventListener("resize", function () {
+    expandHeaderLayout();
+    if (window.innerWidth > MOBILE_NAV_BREAKPOINT) closeAllDropdowns();
+  });
   window.addEventListener("load", expandHeaderLayout);
+
+  function closeAllDropdowns() {
+    navDropdownItems.forEach(function (item) {
+      item.classList.remove("is-open");
+      var caretBtn = item.querySelector(".ro-nav-caret-btn");
+      if (caretBtn) caretBtn.setAttribute("aria-expanded", "false");
+    });
+  }
 
   function expandHeaderLayout() {
     var node = root.parentElement;
@@ -712,29 +877,90 @@
   function loadNavCategories() {
     if (!window.fetch) return;
 
-    fetch(CONFIG.categoriesEndpoint + "?per_page=100", { credentials: "same-origin" })
+    fetch(CONFIG.categoriesEndpoint + "?per_page=100&orderby=name&order=asc", { credentials: "same-origin" })
       .then(function (response) {
         if (!response.ok) throw new Error("Categories request failed");
         return response.json();
       })
       .then(function (categories) {
         var safeCategories = Array.isArray(categories) ? categories : [];
-        CONFIG.mainCategories.forEach(function (item) {
-          var category = resolveMainCategory(safeCategories, item);
-          if (!category) return;
-          var linkEl = navLinks[item.key];
-          var url = getCategoryUrl(category);
-          if (linkEl) {
-            linkEl.href = url;
-            if (linkEl.getAttribute("role") === "menuitem") {
-              linkEl.textContent = item.label || category.name;
-            } else {
-              linkEl.textContent = item.label || category.name;
-            }
+        var categoryMap = {};
+        var childrenMap = {};
+
+        safeCategories.forEach(function (category) {
+          if (!category || !category.slug) return;
+          categoryMap[category.slug] = category;
+          if (!childrenMap[category.parent]) childrenMap[category.parent] = [];
+          childrenMap[category.parent].push(category);
+        });
+
+        Object.keys(childrenMap).forEach(function (parentId) {
+          childrenMap[parentId].sort(function (a, b) {
+            return String(a.name).localeCompare(String(b.name));
+          });
+        });
+
+        CONFIG.mainNavCategories.forEach(function (item) {
+          var navItem = root.querySelector('.ro-has-dropdown[data-nav-key="' + item.key + '"]');
+          if (!navItem) return;
+
+          var parentCategory = resolveMainCategory(safeCategories, item);
+          var labelEl = navItem.querySelector(".ro-nav-label");
+          var dropdownEl = navItem.querySelector(".ro-nav-dropdown");
+          var caretBtn = navItem.querySelector(".ro-nav-caret-btn");
+
+          if (!labelEl || !dropdownEl) return;
+
+          if (parentCategory) {
+            labelEl.href = getCategoryUrl(parentCategory);
+            labelEl.textContent = item.label || parentCategory.name;
+            buildSubcategoryMenu(dropdownEl, parentCategory, childrenMap, item);
+          } else {
+            labelEl.textContent = item.label;
+            dropdownEl.innerHTML = '<span class="ro-nav-dropdown-empty">Coming soon</span>';
+          }
+
+          if (caretBtn) {
+            var childCount = parentCategory ? (childrenMap[parentCategory.id] || []).length : 0;
+            caretBtn.hidden = childCount === 0;
+            navItem.classList.toggle("ro-no-children", childCount === 0);
           }
         });
+
+        var designCategory = resolveMainCategory(safeCategories, { slugs: ["design-your-own"] });
+        if (designCategory && designBtn) designBtn.href = getCategoryUrl(designCategory);
       })
       .catch(function () {});
+  }
+
+  function buildSubcategoryMenu(dropdownEl, parentCategory, childrenMap, item) {
+    var children = childrenMap[parentCategory.id] || [];
+    var html = "";
+    var viewAllLabel = item.viewAll || ("Shop All " + (item.label || parentCategory.name));
+
+    html += '<a class="is-view-all" href="' + escapeAttr(getCategoryUrl(parentCategory)) + '" role="menuitem">' + escapeHtml(viewAllLabel) + "</a>";
+
+    if (!children.length) {
+      html += '<span class="ro-nav-dropdown-empty">Browse all products</span>';
+    } else {
+      children.forEach(function (child) {
+        html += '<a href="' + escapeAttr(getCategoryUrl(child)) + '" role="menuitem">' + escapeHtml(child.name) + "</a>";
+      });
+    }
+
+    dropdownEl.innerHTML = html;
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function escapeAttr(value) {
+    return escapeHtml(value).replace(/'/g, "&#39;");
   }
 
   function resolveMainCategory(categories, item) {
@@ -749,9 +975,10 @@
   }
 
   function getCategoryUrl(category) {
+    if (category && category.link) return category.link;
     if (category && category.permalink) return category.permalink;
     if (category && category.slug) return "/product-category/" + category.slug + "/";
-    return CONFIG.shopUrl;
+    return "/shop/";
   }
 
   function loadAccountState() {
