@@ -13,6 +13,11 @@
     --vc-orange: #f97316;
     --vc-pink: #ec4899;
     --vc-green: #16a34a;
+    --vc-hero-bg:
+      radial-gradient(circle at 12% 18%, rgba(79, 70, 229, 0.18), transparent 34%),
+      radial-gradient(circle at 88% 12%, rgba(249, 115, 22, 0.18), transparent 31%),
+      radial-gradient(circle at 50% 100%, rgba(6, 182, 212, 0.12), transparent 30%),
+      linear-gradient(135deg, #f8fafc 0%, #eef2ff 44%, #fff7ed 100%);
     width: 100%;
     max-width: none;
     color: var(--vc-ink);
@@ -33,11 +38,7 @@
     overflow: hidden;
     isolation: isolate;
     padding: clamp(42px, 6vw, 82px) 20px clamp(46px, 7vw, 92px);
-    background:
-      radial-gradient(circle at 12% 18%, rgba(79, 70, 229, 0.18), transparent 34%),
-      radial-gradient(circle at 88% 12%, rgba(249, 115, 22, 0.18), transparent 31%),
-      radial-gradient(circle at 50% 100%, rgba(6, 182, 212, 0.12), transparent 30%),
-      linear-gradient(135deg, #f8fafc 0%, #eef2ff 44%, #fff7ed 100%);
+    background: var(--vc-hero-bg);
   }
 
   .vibecano-hero-root .ro-hero::before {
@@ -85,25 +86,167 @@
   }
 
   .vibecano-hero-root .ro-hero-visual {
-    flex: 1 1 360px;
+    flex: 1 1 380px;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
-    gap: clamp(14px, 2.4vw, 22px);
+    gap: clamp(16px, 2.6vw, 24px);
+    background: transparent;
   }
 
   .vibecano-hero-root .ro-hero-image {
+    position: relative;
+    overflow: hidden;
     width: 100%;
-    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .vibecano-hero-root .ro-hero-image::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, var(--vc-hero-bg) 0%, transparent 14%, transparent 86%, var(--vc-hero-bg) 100%),
+      linear-gradient(180deg, transparent 72%, var(--vc-hero-bg) 100%);
+    opacity: 0.92;
   }
 
   .vibecano-hero-root .ro-hero-image img {
     width: 100%;
-    height: auto;
-    object-fit: contain;
-    border-radius: 18px;
+    height: clamp(210px, 30vw, 380px);
+    object-fit: cover;
+    object-position: center 42%;
+    transform: scale(1.28);
+    transform-origin: center center;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    mix-blend-mode: multiply;
+    filter: saturate(1.04) contrast(1.02);
+  }
+
+  .vibecano-hero-root .ro-category-block {
+    width: 100%;
+    background: transparent;
+  }
+
+  .vibecano-hero-root .ro-category-heading {
+    margin: 0 0 12px;
+    color: var(--vc-indigo-dark);
+    font-family: "Plus Jakarta Sans", Inter, sans-serif;
+    font-size: clamp(14px, 1.6vw, 17px);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+
+  .vibecano-hero-root .ro-category-icons {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: center;
+    gap: clamp(4px, 1vw, 10px);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .vibecano-hero-root .ro-category-icons::-webkit-scrollbar { display: none; }
+
+  .vibecano-hero-root .ro-category-chip {
+    flex: 1 1 0;
+    min-width: clamp(54px, 9vw, 88px);
+    max-width: 108px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 4px;
+    border-radius: 16px;
+    background: transparent;
+    text-align: center;
+    transition: transform 0.18s ease;
+  }
+
+  .vibecano-hero-root .ro-category-chip:hover,
+  .vibecano-hero-root .ro-category-chip:focus-visible {
+    transform: translateY(-3px);
+  }
+
+  .vibecano-hero-root .ro-cat-graphic {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(40px, 5.4vw, 50px);
+    height: clamp(40px, 5.4vw, 50px);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.92);
+    background: var(--vc-ink);
+    color: #fff;
+    box-shadow: 0 10px 24px -16px rgba(15, 23, 42, 0.55);
+    transition: background 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+
+  .vibecano-hero-root .ro-cat-graphic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .vibecano-hero-root .ro-cat-graphic svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .vibecano-hero-root .ro-cat-label {
+    display: block;
+    color: var(--vc-ink-2);
+    font-size: clamp(9px, 1.15vw, 12px);
+    font-weight: 850;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .vibecano-hero-root .ro-category-chip:hover .ro-cat-graphic,
+  .vibecano-hero-root .ro-category-chip:focus-visible .ro-cat-graphic {
+    background: var(--vc-indigo);
+    border-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 14px 28px -14px rgba(79, 70, 229, 0.75);
+  }
+
+  .vibecano-hero-root .ro-category-chip.is-accessories .ro-cat-graphic {
+    background: #2563eb;
+  }
+
+  .vibecano-hero-root .ro-category-chip.is-accessories:hover .ro-cat-graphic,
+  .vibecano-hero-root .ro-category-chip.is-accessories:focus-visible .ro-cat-graphic {
+    background: #1d4ed8;
+  }
+
+  .vibecano-hero-root .ro-category-chip.is-under999 .ro-cat-graphic {
+    background: #ea580c;
+  }
+
+  .vibecano-hero-root .ro-category-chip.is-design .ro-cat-graphic {
+    background: #7c3aed;
   }
 
   .vibecano-hero-root .ro-hero-eyebrow {
@@ -296,62 +439,6 @@
     font-weight: 950;
   }
 
-  .vibecano-hero-root .ro-category-icons {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(6px, 1.4vw, 14px);
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .vibecano-hero-root .ro-category-icon-link {
-    flex: 0 0 auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.18s ease;
-  }
-
-  .vibecano-hero-root .ro-category-icon-link:hover,
-  .vibecano-hero-root .ro-category-icon-link:focus-visible {
-    transform: translateY(-3px);
-  }
-
-  .vibecano-hero-root .ro-category-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: clamp(38px, 5.2vw, 52px);
-    height: clamp(38px, 5.2vw, 52px);
-    border-radius: 999px;
-    background: var(--vc-ink);
-    color: #fff;
-    font-size: clamp(11px, 1.4vw, 15px);
-    font-weight: 950;
-    font-style: normal;
-    line-height: 1;
-    transition: background 0.18s ease, box-shadow 0.18s ease;
-  }
-
-  .vibecano-hero-root .ro-category-icon-link:hover .ro-category-icon,
-  .vibecano-hero-root .ro-category-icon-link:focus-visible .ro-category-icon {
-    background: var(--vc-indigo);
-    box-shadow: 0 12px 24px -14px rgba(79, 70, 229, 0.9);
-  }
-
-  .vibecano-hero-root .ro-category-icon-link.is-accessories .ro-category-icon {
-    background: #2563eb;
-  }
-
-  .vibecano-hero-root .ro-category-icon-link.is-accessories:hover .ro-category-icon,
-  .vibecano-hero-root .ro-category-icon-link.is-accessories:focus-visible .ro-category-icon {
-    background: #1d4ed8;
-  }
-
   @media (max-width: 980px) {
     .vibecano-hero-root .ro-hero-wrap {
       flex-direction: column;
@@ -364,7 +451,7 @@
 
     .vibecano-hero-root .ro-hero-visual {
       width: 100%;
-      max-width: 560px;
+      max-width: 640px;
       margin: 0 auto;
     }
   }
@@ -374,20 +461,23 @@
     .vibecano-hero-root .ro-cta { display: grid; grid-template-columns: 1fr; }
     .vibecano-hero-root .ro-btn { width: 100%; }
     .vibecano-hero-root .ro-hero-stats { grid-template-columns: 1fr; max-width: none; }
-    .vibecano-hero-root .ro-category-icons { gap: clamp(4px, 1.2vw, 10px); }
-    .vibecano-hero-root .ro-category-icon {
-      width: clamp(34px, 8.5vw, 44px);
-      height: clamp(34px, 8.5vw, 44px);
-      font-size: clamp(10px, 2.6vw, 13px);
+    .vibecano-hero-root .ro-hero-image img {
+      height: clamp(190px, 52vw, 280px);
+      transform: scale(1.22);
+    }
+    .vibecano-hero-root .ro-category-icons {
+      justify-content: flex-start;
+      padding-bottom: 2px;
     }
   }
 
   @media (max-width: 440px) {
     .vibecano-hero-root .ro-hero h1 { font-size: clamp(34px, 13vw, 46px); }
-    .vibecano-hero-root .ro-category-icon {
-      width: clamp(30px, 9vw, 38px);
-      height: clamp(30px, 9vw, 38px);
-      font-size: clamp(9px, 2.8vw, 11px);
+    .vibecano-hero-root .ro-category-chip {
+      min-width: 62px;
+    }
+    .vibecano-hero-root .ro-cat-label {
+      font-size: 10px;
     }
   }
 </style>
@@ -441,50 +531,57 @@
           >
         </figure>
 
-        <nav class="ro-category-icons" id="roCategoryGrid" aria-label="Shop by category">
-          <a href="/product-category/men/" class="ro-category-icon-link is-men" data-category="men" title="Men">
-            <i class="ro-category-icon" aria-hidden="true">M</i>
-            <span class="screen-reader-text">Men</span>
-          </a>
-          <a href="/product-category/women/" class="ro-category-icon-link is-women" data-category="women" title="Women">
-            <i class="ro-category-icon" aria-hidden="true">W</i>
-            <span class="screen-reader-text">Women</span>
-          </a>
-          <a href="/product-category/kids/" class="ro-category-icon-link is-kids" data-category="kids" title="Kids">
-            <i class="ro-category-icon" aria-hidden="true">K</i>
-            <span class="screen-reader-text">Kids</span>
-          </a>
-          <a href="/product-category/accessories/" class="ro-category-icon-link is-accessories" data-category="accessories" title="Accessories">
-            <i class="ro-category-icon" aria-hidden="true">A</i>
-            <span class="screen-reader-text">Accessories</span>
-          </a>
-          <a href="/product-category/under999/" class="ro-category-icon-link is-under999" data-category="under999" title="Under Rs. 999">
-            <i class="ro-category-icon" aria-hidden="true">999</i>
-            <span class="screen-reader-text">Under Rs. 999</span>
-          </a>
-          <a href="/product-category/design-your-own/" class="ro-category-icon-link is-design" data-category="design-your-own" title="Design Your Own">
-            <i class="ro-category-icon" aria-hidden="true">DIY</i>
-            <span class="screen-reader-text">Design Your Own</span>
-          </a>
-        </nav>
+        <div class="ro-category-block">
+          <h2 class="ro-category-heading">Shop as per Category</h2>
+
+          <nav class="ro-category-icons" id="roCategoryGrid" aria-label="Shop by category">
+            <a href="/product-category/men/" class="ro-category-chip is-men" data-category="men">
+              <span class="ro-cat-graphic" aria-hidden="true">
+                <img src="https://vibecano.com/wp-content/uploads/2026/07/Men-251x300.jpg" alt="" loading="lazy" decoding="async">
+              </span>
+              <span class="ro-cat-label">Men</span>
+            </a>
+
+            <a href="/product-category/women/" class="ro-category-chip is-women" data-category="women">
+              <span class="ro-cat-graphic" aria-hidden="true">
+                <img src="https://vibecano.com/wp-content/uploads/2026/07/women-251x300.jpg" alt="" loading="lazy" decoding="async">
+              </span>
+              <span class="ro-cat-label">Women</span>
+            </a>
+
+            <a href="/product-category/kids/" class="ro-category-chip is-kids" data-category="kids">
+              <span class="ro-cat-graphic" aria-hidden="true">
+                <img src="https://vibecano.com/wp-content/uploads/2026/07/kids-251x300.jpg" alt="" loading="lazy" decoding="async">
+              </span>
+              <span class="ro-cat-label">Kids</span>
+            </a>
+
+            <a href="/product-category/accessories/" class="ro-category-chip is-accessories" data-category="accessories">
+              <span class="ro-cat-graphic" aria-hidden="true">
+                <img src="https://vibecano.com/wp-content/uploads/2026/07/Accessories-251x300.jpg" alt="" loading="lazy" decoding="async">
+              </span>
+              <span class="ro-cat-label">Accessories</span>
+            </a>
+
+            <a href="/product-category/under999/" class="ro-category-chip is-under999" data-category="under999">
+              <span class="ro-cat-graphic" aria-hidden="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+              </span>
+              <span class="ro-cat-label">Under 999</span>
+            </a>
+
+            <a href="/product-category/design-your-own/" class="ro-category-chip is-design" data-category="design-your-own">
+              <span class="ro-cat-graphic" aria-hidden="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+              </span>
+              <span class="ro-cat-label">Design Your Own</span>
+            </a>
+          </nav>
+        </div>
       </div>
     </div>
   </section>
 </div>
-
-<style>
-  .vibecano-hero-root .screen-reader-text {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-</style>
 
 <script>
 (function () {
@@ -531,15 +628,15 @@
   function preserveStaticCategories() {
     var snapshot;
 
-    if (!categoryGridEl || !categoryGridEl.querySelector(".ro-category-icon-link")) return;
+    if (!categoryGridEl || !categoryGridEl.querySelector(".ro-category-chip")) return;
 
     snapshot = categoryGridEl.innerHTML;
 
     function keepCategories() {
       if (
-        !categoryGridEl.querySelector(".ro-category-icon-link.is-men") ||
-        !categoryGridEl.querySelector(".ro-category-icon-link.is-women") ||
-        !categoryGridEl.querySelector(".ro-category-icon-link.is-design")
+        !categoryGridEl.querySelector(".ro-category-chip.is-men") ||
+        !categoryGridEl.querySelector(".ro-category-chip.is-women") ||
+        !categoryGridEl.querySelector(".ro-category-chip.is-design")
       ) {
         categoryGridEl.innerHTML = snapshot;
       }
