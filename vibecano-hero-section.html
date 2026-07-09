@@ -7,7 +7,6 @@
     --vc-ink: #08111f;
     --vc-ink-2: #172033;
     --vc-muted: #64748b;
-    --vc-line: rgba(148, 163, 184, 0.28);
     --vc-indigo: #4f46e5;
     --vc-indigo-dark: #312e81;
     --vc-orange: #f97316;
@@ -19,7 +18,8 @@
       radial-gradient(circle at 50% 100%, rgba(6, 182, 212, 0.12), transparent 30%),
       linear-gradient(135deg, #f8fafc 0%, #eef2ff 44%, #fff7ed 100%);
     width: 100%;
-    max-width: none;
+    max-width: 100%;
+    overflow-x: clip;
     color: var(--vc-ink);
     font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     line-height: 1.5;
@@ -31,13 +31,13 @@
   .vibecano-hero-root *::after { box-sizing: border-box; }
 
   .vibecano-hero-root a { color: inherit; text-decoration: none; }
-  .vibecano-hero-root img { display: block; max-width: 100%; }
+  .vibecano-hero-root img { display: block; max-width: 100%; height: auto; }
 
   .vibecano-hero-root .ro-hero {
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    padding: clamp(42px, 6vw, 82px) 20px clamp(46px, 7vw, 92px);
+    padding: clamp(28px, 5vw, 72px) clamp(14px, 3vw, 24px) clamp(32px, 6vw, 80px);
     background: var(--vc-hero-bg);
   }
 
@@ -45,159 +45,141 @@
     content: "";
     position: absolute;
     inset: 0;
-    z-index: -2;
+    z-index: 0;
+    pointer-events: none;
     background-image:
-      linear-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+      linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
     background-size: 34px 34px;
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 76%);
-  }
-
-  .vibecano-hero-root .ro-hero::after {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    right: min(-140px, -8vw);
-    top: 10%;
-    width: clamp(260px, 38vw, 560px);
-    height: clamp(260px, 38vw, 560px);
-    border-radius: 999px;
-    background: conic-gradient(from 110deg, rgba(79, 70, 229, 0.2), rgba(249, 115, 22, 0.18), rgba(236, 72, 153, 0.16), rgba(79, 70, 229, 0.2));
-    filter: blur(8px);
-    opacity: 0.9;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), transparent 78%);
   }
 
   .vibecano-hero-root .ro-hero-wrap {
     position: relative;
     z-index: 1;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: clamp(28px, 5vw, 64px);
-    width: min(1280px, 100%);
+    flex-direction: column;
+    gap: clamp(24px, 4vw, 48px);
+    width: min(1240px, 100%);
     margin: 0 auto;
   }
 
+  @media (min-width: 900px) {
+    .vibecano-hero-root .ro-hero-wrap {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: clamp(24px, 4vw, 56px);
+    }
+  }
+
   .vibecano-hero-root .ro-hero-content {
-    flex: 1 1 420px;
+    flex: 1 1 340px;
     min-width: 0;
-    max-width: 660px;
+    width: 100%;
+  }
+
+  @media (min-width: 900px) {
+    .vibecano-hero-root .ro-hero-content {
+      max-width: 580px;
+    }
   }
 
   .vibecano-hero-root .ro-hero-visual {
-    flex: 1 1 380px;
+    flex: 1 1 320px;
     min-width: 0;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    justify-content: center;
-    gap: clamp(16px, 2.6vw, 24px);
-    background: transparent;
+    gap: clamp(14px, 2.5vw, 20px);
+  }
+
+  @media (min-width: 900px) {
+    .vibecano-hero-root .ro-hero-visual {
+      max-width: 560px;
+    }
   }
 
   .vibecano-hero-root .ro-hero-image {
     position: relative;
-    overflow: hidden;
     width: 100%;
     margin: 0;
-    padding: 0;
+    aspect-ratio: 300 / 109;
+    overflow: hidden;
     background: transparent;
-    border: 0;
-    border-radius: 0;
-    box-shadow: none;
-  }
-
-  .vibecano-hero-root .ro-hero-image::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background:
-      linear-gradient(90deg, var(--vc-hero-bg) 0%, transparent 14%, transparent 86%, var(--vc-hero-bg) 100%),
-      linear-gradient(180deg, transparent 72%, var(--vc-hero-bg) 100%);
-    opacity: 0.92;
   }
 
   .vibecano-hero-root .ro-hero-image img {
     width: 100%;
-    height: clamp(210px, 30vw, 380px);
-    object-fit: cover;
-    object-position: center 42%;
-    transform: scale(1.28);
-    transform-origin: center center;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
     border: 0;
     border-radius: 0;
     background: transparent;
-    mix-blend-mode: multiply;
-    filter: saturate(1.04) contrast(1.02);
   }
 
   .vibecano-hero-root .ro-category-block {
     width: 100%;
-    background: transparent;
   }
 
   .vibecano-hero-root .ro-category-heading {
-    margin: 0 0 12px;
+    margin: 0 0 10px;
     color: var(--vc-indigo-dark);
     font-family: "Plus Jakarta Sans", Inter, sans-serif;
-    font-size: clamp(14px, 1.6vw, 17px);
+    font-size: clamp(13px, 2.8vw, 17px);
     font-weight: 900;
     letter-spacing: -0.02em;
     text-align: center;
   }
 
   .vibecano-hero-root .ro-category-icons {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: flex-start;
-    justify-content: center;
-    gap: clamp(4px, 1vw, 10px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(8px, 2vw, 12px);
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
   }
 
-  .vibecano-hero-root .ro-category-icons::-webkit-scrollbar { display: none; }
+  @media (min-width: 640px) {
+    .vibecano-hero-root .ro-category-icons {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
 
   .vibecano-hero-root .ro-category-chip {
-    flex: 1 1 0;
-    min-width: clamp(54px, 9vw, 88px);
-    max-width: 108px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 7px;
-    padding: 6px 4px;
-    border-radius: 16px;
-    background: transparent;
+    justify-content: flex-start;
+    gap: 6px;
+    min-width: 0;
+    padding: 4px 2px;
     text-align: center;
     transition: transform 0.18s ease;
   }
 
   .vibecano-hero-root .ro-category-chip:hover,
   .vibecano-hero-root .ro-category-chip:focus-visible {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
   }
 
   .vibecano-hero-root .ro-cat-graphic {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: clamp(40px, 5.4vw, 50px);
-    height: clamp(40px, 5.4vw, 50px);
+    flex-shrink: 0;
+    width: clamp(36px, 10vw, 48px);
+    height: clamp(36px, 10vw, 48px);
     border-radius: 999px;
     overflow: hidden;
-    border: 2px solid rgba(255, 255, 255, 0.92);
+    border: 2px solid rgba(255, 255, 255, 0.95);
     background: var(--vc-ink);
     color: #fff;
-    box-shadow: 0 10px 24px -16px rgba(15, 23, 42, 0.55);
-    transition: background 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    box-shadow: 0 8px 20px -14px rgba(15, 23, 42, 0.55);
+    transition: background 0.18s ease, box-shadow 0.18s ease;
   }
 
   .vibecano-hero-root .ro-cat-graphic img {
@@ -207,8 +189,8 @@
   }
 
   .vibecano-hero-root .ro-cat-graphic svg {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     stroke: currentColor;
     fill: none;
     stroke-width: 2;
@@ -218,78 +200,64 @@
 
   .vibecano-hero-root .ro-cat-label {
     display: block;
+    width: 100%;
     color: var(--vc-ink-2);
-    font-size: clamp(9px, 1.15vw, 12px);
+    font-size: clamp(9px, 2.4vw, 11px);
     font-weight: 850;
-    line-height: 1.2;
+    line-height: 1.25;
     letter-spacing: -0.01em;
+    word-break: break-word;
   }
 
   .vibecano-hero-root .ro-category-chip:hover .ro-cat-graphic,
   .vibecano-hero-root .ro-category-chip:focus-visible .ro-cat-graphic {
     background: var(--vc-indigo);
-    border-color: rgba(255, 255, 255, 1);
-    box-shadow: 0 14px 28px -14px rgba(79, 70, 229, 0.75);
+    box-shadow: 0 12px 24px -12px rgba(79, 70, 229, 0.7);
   }
 
-  .vibecano-hero-root .ro-category-chip.is-accessories .ro-cat-graphic {
-    background: #2563eb;
-  }
-
-  .vibecano-hero-root .ro-category-chip.is-accessories:hover .ro-cat-graphic,
-  .vibecano-hero-root .ro-category-chip.is-accessories:focus-visible .ro-cat-graphic {
-    background: #1d4ed8;
-  }
-
-  .vibecano-hero-root .ro-category-chip.is-under999 .ro-cat-graphic {
-    background: #ea580c;
-  }
-
-  .vibecano-hero-root .ro-category-chip.is-design .ro-cat-graphic {
-    background: #7c3aed;
-  }
+  .vibecano-hero-root .ro-category-chip.is-accessories .ro-cat-graphic { background: #2563eb; }
+  .vibecano-hero-root .ro-category-chip.is-under999 .ro-cat-graphic { background: #ea580c; }
+  .vibecano-hero-root .ro-category-chip.is-design .ro-cat-graphic { background: #7c3aed; }
 
   .vibecano-hero-root .ro-hero-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 9px;
-    margin-bottom: 18px;
-    padding: 8px 12px;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 7px 12px;
     border: 1px solid rgba(79, 70, 229, 0.16);
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.78);
     color: var(--vc-indigo-dark);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 900;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    box-shadow: 0 18px 34px -28px rgba(79, 70, 229, 0.8);
-    backdrop-filter: blur(14px);
+    backdrop-filter: blur(12px);
   }
 
   .vibecano-hero-root .ro-hero-eyebrow .dot {
-    width: 9px;
-    height: 9px;
+    width: 8px;
+    height: 8px;
     border-radius: 999px;
     background: var(--vc-green);
-    box-shadow: 0 0 0 7px rgba(22, 163, 74, 0.13);
+    box-shadow: 0 0 0 6px rgba(22, 163, 74, 0.12);
     animation: vc-hero-pulse 1.9s ease-in-out infinite;
   }
 
   @keyframes vc-hero-pulse {
     0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(0.78); opacity: 0.62; }
+    50% { transform: scale(0.8); opacity: 0.65; }
   }
 
   .vibecano-hero-root .ro-hero h1 {
-    max-width: 720px;
-    margin: 0 0 18px;
+    margin: 0 0 14px;
     color: var(--vc-ink);
     font-family: "Plus Jakarta Sans", Inter, sans-serif;
-    font-size: clamp(38px, 6vw, 74px);
+    font-size: clamp(30px, 7.5vw, 68px);
     font-weight: 900;
-    line-height: 0.96;
-    letter-spacing: -0.065em;
+    line-height: 1;
+    letter-spacing: -0.06em;
   }
 
   .vibecano-hero-root .ro-hero h1 span {
@@ -302,67 +270,73 @@
   }
 
   .vibecano-hero-root .ro-hero p.lead {
-    max-width: 620px;
-    margin: 0 0 26px;
+    margin: 0 0 20px;
     color: #475569;
-    font-size: clamp(15px, 1.7vw, 18px);
+    font-size: clamp(14px, 3.6vw, 18px);
     font-weight: 600;
-    line-height: 1.75;
+    line-height: 1.65;
   }
 
   .vibecano-hero-root .ro-cta {
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 28px;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  @media (min-width: 520px) {
+    .vibecano-hero-root .ro-cta {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
   }
 
   .vibecano-hero-root .ro-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 9px;
-    min-height: 50px;
-    padding: 0 22px;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0 20px;
     border: 1px solid transparent;
     border-radius: 999px;
     font-size: 14px;
-    font-weight: 950;
+    font-weight: 900;
     line-height: 1;
-    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  }
+
+  @media (max-width: 519px) {
+    .vibecano-hero-root .ro-btn { width: 100%; }
   }
 
   .vibecano-hero-root .ro-btn-primary {
     background: var(--vc-ink);
     color: #fff;
-    box-shadow: 0 18px 36px -24px rgba(8, 17, 31, 0.82);
+    box-shadow: 0 14px 30px -20px rgba(8, 17, 31, 0.85);
   }
 
   .vibecano-hero-root .ro-btn-primary:hover,
   .vibecano-hero-root .ro-btn-primary:focus-visible {
     background: #1e293b;
-    box-shadow: 0 22px 44px -24px rgba(8, 17, 31, 0.9);
     transform: translateY(-2px);
   }
 
   .vibecano-hero-root .ro-btn-accent {
     background: var(--vc-orange);
     color: #fff;
-    box-shadow: 0 18px 36px -24px rgba(249, 115, 22, 0.88);
   }
 
   .vibecano-hero-root .ro-btn-accent:hover,
   .vibecano-hero-root .ro-btn-accent:focus-visible {
     background: #ea580c;
-    box-shadow: 0 22px 44px -24px rgba(249, 115, 22, 0.92);
     transform: translateY(-2px);
   }
 
   .vibecano-hero-root .ro-btn-ghost {
     border-color: rgba(15, 23, 42, 0.12);
-    background: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.75);
     color: var(--vc-ink);
-    backdrop-filter: blur(14px);
   }
 
   .vibecano-hero-root .ro-btn-ghost:hover,
@@ -375,110 +349,70 @@
   .vibecano-hero-root .ro-hero-stats {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    max-width: 560px;
-    gap: 10px;
-    margin: 0 0 22px;
+    gap: 8px;
+    margin: 0 0 18px;
+  }
+
+  @media (max-width: 420px) {
+    .vibecano-hero-root .ro-hero-stats {
+      grid-template-columns: 1fr;
+    }
   }
 
   .vibecano-hero-root .ro-stat {
     min-width: 0;
-    padding: 14px;
+    padding: 12px;
     border: 1px solid rgba(226, 232, 240, 0.9);
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 16px 34px -30px rgba(15, 23, 42, 0.8);
-    backdrop-filter: blur(14px);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(12px);
   }
 
   .vibecano-hero-root .ro-stat strong {
     display: block;
-    color: var(--vc-ink);
-    font-size: clamp(19px, 2.2vw, 26px);
+    font-size: clamp(17px, 4vw, 24px);
     font-weight: 950;
     line-height: 1;
   }
 
   .vibecano-hero-root .ro-stat small {
     display: block;
-    margin-top: 6px;
+    margin-top: 5px;
     color: var(--vc-muted);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 800;
-    line-height: 1.25;
+    line-height: 1.2;
   }
 
   .vibecano-hero-root .ro-trust-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
   }
 
   .vibecano-hero-root .ro-trust-item {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 10px;
+    gap: 7px;
+    padding: 7px 10px;
     border: 1px solid rgba(226, 232, 240, 0.84);
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.68);
     color: var(--vc-ink-2);
-    font-size: 12px;
-    font-weight: 850;
-    backdrop-filter: blur(12px);
+    font-size: 11px;
+    font-weight: 800;
   }
 
   .vibecano-hero-root .ro-trust-icon {
     display: inline-grid;
     place-items: center;
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     border-radius: 999px;
     background: rgba(22, 163, 74, 0.12);
     color: #15803d;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 950;
-  }
-
-  @media (max-width: 980px) {
-    .vibecano-hero-root .ro-hero-wrap {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .vibecano-hero-root .ro-hero-content {
-      max-width: none;
-    }
-
-    .vibecano-hero-root .ro-hero-visual {
-      width: 100%;
-      max-width: 640px;
-      margin: 0 auto;
-    }
-  }
-
-  @media (max-width: 720px) {
-    .vibecano-hero-root .ro-hero { padding-right: 14px; padding-left: 14px; }
-    .vibecano-hero-root .ro-cta { display: grid; grid-template-columns: 1fr; }
-    .vibecano-hero-root .ro-btn { width: 100%; }
-    .vibecano-hero-root .ro-hero-stats { grid-template-columns: 1fr; max-width: none; }
-    .vibecano-hero-root .ro-hero-image img {
-      height: clamp(190px, 52vw, 280px);
-      transform: scale(1.22);
-    }
-    .vibecano-hero-root .ro-category-icons {
-      justify-content: flex-start;
-      padding-bottom: 2px;
-    }
-  }
-
-  @media (max-width: 440px) {
-    .vibecano-hero-root .ro-hero h1 { font-size: clamp(34px, 13vw, 46px); }
-    .vibecano-hero-root .ro-category-chip {
-      min-width: 62px;
-    }
-    .vibecano-hero-root .ro-cat-label {
-      font-size: 10px;
-    }
   }
 </style>
 
@@ -500,7 +434,7 @@
         <div class="ro-cta">
           <a class="ro-btn ro-btn-primary" href="/shop/">
             Shop All Products
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
           <a class="ro-btn ro-btn-accent" href="/product-category/design-your-own/">Design Your Own</a>
           <a class="ro-btn ro-btn-ghost" href="/product-category/under999/">Under Rs. 999</a>
@@ -522,10 +456,15 @@
       <div class="ro-hero-visual">
         <figure class="ro-hero-image">
           <img
-            src="https://vibecano.com/wp-content/uploads/2026/07/boy-and-girl-chair-300x167.png"
+            src="https://vibecano.com/wp-content/uploads/2026/07/Heroimage-300x109.png"
+            srcset="
+              https://vibecano.com/wp-content/uploads/2026/07/Heroimage-300x109.png 300w,
+              https://vibecano.com/wp-content/uploads/2026/07/Heroimage.png 1024w
+            "
+            sizes="(max-width: 899px) 100vw, min(560px, 46vw)"
             alt="Vibecano lifestyle collection"
             width="300"
-            height="167"
+            height="109"
             loading="eager"
             decoding="async"
           >
@@ -537,28 +476,28 @@
           <nav class="ro-category-icons" id="roCategoryGrid" aria-label="Shop by category">
             <a href="/product-category/men/" class="ro-category-chip is-men" data-category="men">
               <span class="ro-cat-graphic" aria-hidden="true">
-                <img src="https://vibecano.com/wp-content/uploads/2026/07/Men-251x300.jpg" alt="" loading="lazy" decoding="async">
+                <img src="https://vibecano.com/wp-content/uploads/2026/07/Men-251x300.jpg" alt="" loading="lazy" decoding="async" width="48" height="48">
               </span>
               <span class="ro-cat-label">Men</span>
             </a>
 
             <a href="/product-category/women/" class="ro-category-chip is-women" data-category="women">
               <span class="ro-cat-graphic" aria-hidden="true">
-                <img src="https://vibecano.com/wp-content/uploads/2026/07/women-251x300.jpg" alt="" loading="lazy" decoding="async">
+                <img src="https://vibecano.com/wp-content/uploads/2026/07/women-251x300.jpg" alt="" loading="lazy" decoding="async" width="48" height="48">
               </span>
               <span class="ro-cat-label">Women</span>
             </a>
 
             <a href="/product-category/kids/" class="ro-category-chip is-kids" data-category="kids">
               <span class="ro-cat-graphic" aria-hidden="true">
-                <img src="https://vibecano.com/wp-content/uploads/2026/07/kids-251x300.jpg" alt="" loading="lazy" decoding="async">
+                <img src="https://vibecano.com/wp-content/uploads/2026/07/kids-251x300.jpg" alt="" loading="lazy" decoding="async" width="48" height="48">
               </span>
               <span class="ro-cat-label">Kids</span>
             </a>
 
             <a href="/product-category/accessories/" class="ro-category-chip is-accessories" data-category="accessories">
               <span class="ro-cat-graphic" aria-hidden="true">
-                <img src="https://vibecano.com/wp-content/uploads/2026/07/Accessories-251x300.jpg" alt="" loading="lazy" decoding="async">
+                <img src="https://vibecano.com/wp-content/uploads/2026/07/Accessories-251x300.jpg" alt="" loading="lazy" decoding="async" width="48" height="48">
               </span>
               <span class="ro-cat-label">Accessories</span>
             </a>
@@ -616,6 +555,7 @@
         node.style.setProperty("max-width", "none", "important");
         node.style.setProperty("align-self", "stretch", "important");
         node.style.setProperty("flex", "1 1 100%", "important");
+        node.style.setProperty("overflow-x", "clip", "important");
       }
 
       node = node.parentElement;
