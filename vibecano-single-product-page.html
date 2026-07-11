@@ -76,6 +76,8 @@
   .vc-sp-gallery {
     position: sticky;
     top: 20px;
+    width: 100%;
+    min-width: 0;
   }
 
   .vc-sp-gallery-inner {
@@ -83,12 +85,24 @@
     grid-template-columns: 72px minmax(0, 1fr);
     gap: 12px;
     align-items: start;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .vc-sp-gallery-inner.is-single {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .vc-sp-gallery-inner.is-single .vc-sp-thumbs-col {
+    display: none !important;
   }
 
   .vc-sp-thumbs-col {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    width: 72px;
+    flex-shrink: 0;
     max-height: min(560px, 72vw);
     overflow-y: auto;
     overflow-x: hidden;
@@ -109,13 +123,24 @@
   .vc-sp-main {
     position: relative;
     overflow: hidden;
+    width: 100%;
+    min-width: 0;
     aspect-ratio: 1 / 1;
     border: 1px solid var(--vc-sp-line);
     border-radius: 24px;
-    background:
-      linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(37, 99, 235, 0.08)),
-      var(--vc-sp-soft);
+    background: #fff;
     box-shadow: 0 30px 80px -58px rgba(15, 23, 42, 0.8);
+  }
+
+  .vc-sp-main-media-host {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
   }
 
   .vc-sp-main-media {
@@ -187,8 +212,8 @@
     position: relative;
     flex: 0 0 auto;
     overflow: hidden;
-    width: 100%;
-    aspect-ratio: 3 / 4;
+    width: 64px;
+    height: 84px;
     padding: 0;
     border: 2px solid #d1d5db;
     border-radius: 14px;
@@ -743,6 +768,8 @@
     }
 
     .vc-sp-thumb {
+      width: 52px;
+      height: 68px;
       border-radius: 12px;
     }
   }
@@ -1220,26 +1247,28 @@
     var main = document.getElementById("vcSpMain");
     var thumbs = document.getElementById("vcSpThumbs");
     var thumbsCol = document.getElementById("vcSpThumbsCol");
+    var galleryInner = main && main.parentElement;
     GALLERY_MEDIA = media;
 
     if (!media.length) {
-      main.innerHTML = '<div style="display:grid;place-items:center;height:100%;color:#94a3b8;font-weight:800">No media</div>';
-      thumbs.innerHTML = "";
-      if (thumbsCol) thumbsCol.style.display = "none";
+      if (galleryInner) galleryInner.classList.add("is-single");
+      main.innerHTML = '<div class="vc-sp-main-media-host" style="position:absolute;inset:0;display:grid;place-items:center;color:#94a3b8;font-weight:800">No media</div>';
+      if (thumbs) thumbs.innerHTML = "";
       return;
     }
 
     if (activeGalleryIndex >= media.length) activeGalleryIndex = 0;
+    if (galleryInner) {
+      galleryInner.classList.toggle("is-single", media.length <= 1);
+    }
     if (thumbsCol) thumbsCol.style.display = media.length > 1 ? "" : "none";
 
-    main.innerHTML = '<span class="vc-sp-badge">' + escapeHtml(IS_CUSTOM ? "Customizable" : "Ready-made") + '</span><div id="vcSpMainMedia"></div>';
+    main.innerHTML = '<span class="vc-sp-badge">' + escapeHtml(IS_CUSTOM ? "Customizable" : "Ready-made") + '</span><div class="vc-sp-main-media-host" id="vcSpMainMedia"></div>';
     thumbs.innerHTML = media.map(function (item, index) {
-      var thumbSrc = item.thumbnail || item.poster || "";
+      var thumbSrc = item.thumbnail || item.poster || item.src || "";
       var thumbHtml = thumbSrc
         ? '<img src="' + escapeAttr(thumbSrc) + '" alt="" loading="lazy">'
-        : (item.type === "video"
-          ? '<div class="vc-sp-thumb-placeholder"></div>'
-          : '<img src="' + escapeAttr(item.src) + '" alt="" loading="lazy">');
+        : '<div class="vc-sp-thumb-placeholder"></div>';
       var playIcon = item.type === "video" ? '<span class="vc-sp-thumb-play" aria-hidden="true"></span>' : "";
       return '<button class="vc-sp-thumb ' + (index === activeGalleryIndex ? "is-active" : "") + '" type="button" data-index="' + index + '" aria-label="' + escapeAttr(item.alt || ("View item " + (index + 1))) + '">' + thumbHtml + playIcon + "</button>";
     }).join("");
@@ -1336,18 +1365,23 @@
 
   function getDisplayMedia(product) {
     if (selectedVariation && Array.isArray(selectedVariation.images) && selectedVariation.images.length) {
-      return selectedVariation.images.map(function (image) {
+      var variationMedia = selectedVariation.images.map(function (image) {
         return normalizeMediaItem(image, product);
       }).filter(Boolean);
+      if (variationMedia.length) return variationMedia;
     }
 
     if (product.__galleryMedia && product.__galleryMedia.length) {
       return product.__galleryMedia;
     }
 
-    return getStoreApiImages(product).map(function (image) {
+    var storeImages = getStoreApiImages(product).map(function (image) {
       return normalizeMediaItem(image, product);
     }).filter(Boolean);
+
+    if (storeImages.length) return storeImages;
+
+    return GALLERY_MEDIA.length ? GALLERY_MEDIA : [];
   }
 
   function getStoreApiImages(product) {
@@ -1358,8 +1392,11 @@
     if (!item) return null;
 
     var src = item.src || item.url || item.source_url || item.guid || item.link || "";
+    var thumb = item.thumbnail || item.thumbnail_src || item.poster || item.image || "";
     var mime = item.mime || item.mime_type || item.post_mime_type || "";
     var type = item.type;
+
+    if (!src && thumb) src = thumb;
 
     if (!type) {
       if (isVideoMime(mime) || isVideoUrl(src)) type = "video";
@@ -1374,8 +1411,8 @@
       id: item.id || 0,
       type: type,
       src: src,
-      thumbnail: item.thumbnail || item.thumbnail_src || item.poster || item.image || "",
-      poster: item.poster || item.thumbnail || item.thumbnail_src || "",
+      thumbnail: thumb || src,
+      poster: item.poster || thumb || "",
       alt: item.alt || item.name || item.title || (product && product.name) || "",
       mime: mime || guessVideoMime(src)
     };
@@ -1940,6 +1977,38 @@
   function escapeAttr(value) {
     return escapeHtml(value).replace(/`/g, "&#96;");
   }
+
+  function expandProductHost() {
+    var root = document.getElementById("vcSpRoot");
+    if (!root) return;
+
+    var node = root.parentElement;
+    while (node && node !== document.documentElement) {
+      if (
+        node.classList &&
+        (
+          node.classList.contains("elementor-widget") ||
+          node.classList.contains("elementor-element") ||
+          node.classList.contains("e-con") ||
+          node.classList.contains("elementor-widget-wrap") ||
+          node.classList.contains("elementor")
+        )
+      ) {
+        node.style.setProperty("width", "100%", "important");
+        node.style.setProperty("max-width", "none", "important");
+        node.style.setProperty("align-self", "stretch", "important");
+        node.style.setProperty("flex", "1 1 100%", "important");
+      }
+      node = node.parentElement;
+    }
+
+    root.style.setProperty("width", "100%", "important");
+    root.style.setProperty("max-width", "none", "important");
+  }
+
+  expandProductHost();
+  window.addEventListener("resize", expandProductHost);
+  window.addEventListener("load", expandProductHost);
 
   loadProduct();
 })();

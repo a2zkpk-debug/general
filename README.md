@@ -48,7 +48,7 @@ Color swatches were hidden because `renderColorOptions()` required `COLOR_VARIES
 
 ## Single product gallery fix (Amazon-style)
 
-The gallery now uses an Amazon-style layout: vertical thumbnails on the left and a large main viewer on the right. Images and videos from the WooCommerce product gallery are loaded from the Store API plus WordPress media attachments (`/wp-json/wp/v2/media?parent=PRODUCT_ID`), so video files attached to the product appear with a play icon. Clicking a video thumbnail plays it in the main viewer (HTML5 video or YouTube/Vimeo embed).
+The gallery uses an Amazon-style layout: vertical thumbnails on the left and a large main viewer on the right. Images and videos load from the Store API plus WordPress media attachments. A sizing fix ensures the main viewer fills the gallery column (`width: 100%` chain and absolute-positioned media host), which prevents the tiny thumbnail-in-corner bug inside Elementor containers.
 
 ## Usage
 
