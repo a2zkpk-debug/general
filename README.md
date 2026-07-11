@@ -46,6 +46,10 @@ WooCommerce restores the Store API cart from the `session` query parameter. The 
 
 Color swatches were hidden because `renderColorOptions()` required `COLOR_VARIES`, which only became true when variation API data exposed parseable color values. The fix shows colors whenever the Color attribute has terms.
 
+## Single product gallery fix (Amazon-style)
+
+The gallery now uses an Amazon-style layout: vertical thumbnails on the left and a large main viewer on the right. Images and videos from the WooCommerce product gallery are loaded from the Store API plus WordPress media attachments (`/wp-json/wp/v2/media?parent=PRODUCT_ID`), so video files attached to the product appear with a play icon. Clicking a video thumbnail plays it in the main viewer (HTML5 video or YouTube/Vimeo embed).
+
 ## Usage
 
 Replace the Elementor HTML widget content on each template with the matching file contents.
