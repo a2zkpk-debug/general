@@ -46,6 +46,10 @@ WooCommerce restores the Store API cart from the `session` query parameter. The 
 
 Color swatches were hidden because `renderColorOptions()` required `COLOR_VARIES`, which only became true when variation API data exposed parseable color values. The fix shows colors whenever the Color attribute has terms.
 
+## Single product gallery fix (Amazon-style)
+
+The gallery uses an Amazon-style layout: vertical thumbnails on the left and a large main viewer on the right. Variable products keep the full parent product gallery visible (all Store API images); selecting a size no longer replaces the gallery with the variation's single image. Thumbnails are hidden only when the product truly has one image.
+
 ## Usage
 
 Replace the Elementor HTML widget content on each template with the matching file contents.
