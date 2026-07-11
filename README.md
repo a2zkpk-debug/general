@@ -48,7 +48,7 @@ Color swatches were hidden because `renderColorOptions()` required `COLOR_VARIES
 
 ## Single product gallery fix (Amazon-style)
 
-The gallery uses an Amazon-style layout: vertical thumbnails on the left and a large main viewer on the right. Images and videos load from the Store API plus WordPress media attachments. A sizing fix ensures the main viewer fills the gallery column (`width: 100%` chain and absolute-positioned media host), which prevents the tiny thumbnail-in-corner bug inside Elementor containers.
+The gallery uses an Amazon-style layout: vertical thumbnails on the left and a large main viewer on the right. Variable products keep the full parent product gallery visible (all Store API images); selecting a size no longer replaces the gallery with the variation's single image. Thumbnails are hidden only when the product truly has one image.
 
 ## Usage
 

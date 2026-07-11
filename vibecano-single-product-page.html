@@ -922,6 +922,7 @@
   var selectedSize = "";
   var CART_TOKEN_KEY = "vcWcCartToken";
   var GALLERY_MEDIA = [];
+  var PRODUCT_GALLERY = [];
   var activeGalleryIndex = 0;
   var VIDEO_EXT_PATTERN = /\.(mp4|webm|mov|m4v|ogv|ogg)(\?|#|$)/i;
 
@@ -1224,8 +1225,8 @@
     title.textContent = product.name || "Product";
 
     renderPrice(product);
-    renderGallery(product);
     renderAttributes(product);
+    renderGallery(product);
     renderMainButton();
   }
 
@@ -1273,6 +1274,7 @@
       return '<button class="vc-sp-thumb ' + (index === activeGalleryIndex ? "is-active" : "") + '" type="button" data-index="' + index + '" aria-label="' + escapeAttr(item.alt || ("View item " + (index + 1))) + '">' + thumbHtml + playIcon + "</button>";
     }).join("");
 
+    highlightVariationImage();
     showGalleryItem(activeGalleryIndex);
 
     Array.prototype.forEach.call(thumbs.querySelectorAll(".vc-sp-thumb"), function (button) {
@@ -1328,7 +1330,8 @@
   function loadGalleryMedia(product) {
     return buildGalleryMedia(product).then(function (media) {
       product.__galleryMedia = media;
-      GALLERY_MEDIA = media;
+      PRODUCT_GALLERY = media.slice();
+      GALLERY_MEDIA = PRODUCT_GALLERY.slice();
       activeGalleryIndex = 0;
     });
   }
@@ -1364,24 +1367,33 @@
   }
 
   function getDisplayMedia(product) {
-    if (selectedVariation && Array.isArray(selectedVariation.images) && selectedVariation.images.length) {
-      var variationMedia = selectedVariation.images.map(function (image) {
-        return normalizeMediaItem(image, product);
-      }).filter(Boolean);
-      if (variationMedia.length) return variationMedia;
-    }
+    if (PRODUCT_GALLERY.length) return PRODUCT_GALLERY;
 
     if (product.__galleryMedia && product.__galleryMedia.length) {
       return product.__galleryMedia;
     }
 
-    var storeImages = getStoreApiImages(product).map(function (image) {
+    return getStoreApiImages(product).map(function (image) {
       return normalizeMediaItem(image, product);
     }).filter(Boolean);
+  }
 
-    if (storeImages.length) return storeImages;
+  function highlightVariationImage() {
+    if (!selectedVariation || !PRODUCT_GALLERY.length) return;
 
-    return GALLERY_MEDIA.length ? GALLERY_MEDIA : [];
+    var variationImages = Array.isArray(selectedVariation.images) ? selectedVariation.images : [];
+    if (!variationImages.length) return;
+
+    var match = variationImages[0];
+    var matchId = match && match.id;
+    var matchSrc = match && match.src;
+
+    for (var i = 0; i < PRODUCT_GALLERY.length; i += 1) {
+      if ((matchId && PRODUCT_GALLERY[i].id === matchId) || (matchSrc && PRODUCT_GALLERY[i].src === matchSrc)) {
+        activeGalleryIndex = i;
+        return;
+      }
+    }
   }
 
   function getStoreApiImages(product) {
@@ -1625,21 +1637,31 @@
       return term && term.default;
     });
     if (activeIndex < 0) activeIndex = 0;
+    var activeSizeName = terms[activeIndex] && terms[activeIndex].name ? String(terms[activeIndex].name).trim() : "";
 
-    terms.forEach(function (term, index) {
+    var seenSizes = {};
+    terms.forEach(function (term) {
+      var sizeName = term && term.name ? String(term.name).trim() : "";
+      if (!sizeName) return;
+      var sizeKey = sizeName.toLowerCase();
+      if (seenSizes[sizeKey]) return;
+      seenSizes[sizeKey] = true;
+
+      var isActive = sizeKey === activeSizeName.toLowerCase();
       var button = document.createElement("button");
       button.type = "button";
-      button.className = "vc-sp-size" + (index === activeIndex ? " is-active" : "");
-      button.textContent = term.name;
-      if (index === activeIndex) selectedSize = term.name;
+      button.className = "vc-sp-size" + (isActive ? " is-active" : "");
+      button.textContent = sizeName;
+      if (isActive) selectedSize = sizeName;
       button.addEventListener("click", function () {
         Array.prototype.forEach.call(target.querySelectorAll(".vc-sp-size"), function (item) { item.classList.remove("is-active"); });
         button.classList.add("is-active");
-        selectedSize = term.name;
+        selectedSize = sizeName;
         syncSelectedVariation();
       });
       target.appendChild(button);
     });
+    if (!selectedSize && activeSizeName) selectedSize = activeSizeName;
     syncSelectedVariation();
   }
 
@@ -1717,8 +1739,10 @@
   function syncSelectedVariation() {
     selectVariationForCurrentOptions();
     renderPrice(PRODUCT);
-    activeGalleryIndex = 0;
-    renderGallery(PRODUCT);
+    highlightVariationImage();
+    if (GALLERY_MEDIA.length && document.getElementById("vcSpMainMedia")) {
+      showGalleryItem(activeGalleryIndex);
+    }
   }
 
   function selectVariationForCurrentOptions() {
