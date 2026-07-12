@@ -1,8 +1,7 @@
 <!--
   Premium Product Designer — Elementor Pro HTML Widget
-  Paste entire file into Elementor HTML widget. Fabric.js + jsPDF via CDN.
+  Paste entire file into Elementor HTML widget at 100% width.
 -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bebas+Neue&family=Pacifico&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
 <div id="pds-app" class="pds-app">
   <header class="pds-topbar">
     <div class="pds-topbar__left">
@@ -227,8 +226,32 @@
 </div>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bebas+Neue&family=Pacifico&family=Roboto+Slab:wght@700&display=swap');
+/* ===== ELEMENTOR / THEME ISOLATION ===== */
+#pds-app.pds-app{width:100%!important;max-width:100%!important;min-height:720px!important;display:flex!important;flex-direction:column!important;position:relative!important;z-index:1!important;isolation:isolate}
+#pds-app.pds-app button,#pds-app.pds-app input,#pds-app.pds-app select,#pds-app.pds-app textarea{font-family:inherit!important;line-height:inherit!important;letter-spacing:normal!important;text-transform:none!important;appearance:none;-webkit-appearance:none;max-width:none!important}
+#pds-app.pds-app button{cursor:pointer!important;width:auto!important;background-image:none!important}
+#pds-app .pds-iconnav__btn,#pds-app .pds-iconnav__toggle{background:transparent!important;background-color:transparent!important;color:var(--muted)!important;border:none!important;padding:12px 6px!important}
+#pds-app .pds-iconnav__btn.active{color:#fff!important}
+#pds-app .pds-topbtn{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important;padding:6px 14px!important}
+#pds-app .pds-btn--primary{background:var(--blue)!important;color:#fff!important;border:none!important}
+#pds-app .pds-btn--outline{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important}
+#pds-app .pds-wstool{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important;padding:8px 12px!important}
+#pds-app .pds-view-card,#pds-app .pds-rutil,#pds-app .pds-share-btn{background:var(--surface)!important;color:var(--muted)!important;border:1px solid var(--border)!important}
+#pds-app .pds-fbtn{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important;padding:9px 16px!important}
+#pds-app .pds-fbtn--primary{background:linear-gradient(135deg,var(--blue),#3b82f6)!important;color:#fff!important;border:none!important}
+#pds-app .pds-te-icon,#pds-app .pds-te-row,#pds-app .pds-te-close,#pds-app .pds-lang-tab{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important}
+#pds-app .pds-te-row,#pds-app .pds-te-close,#pds-app .pds-lang-tab{border:none!important}
+#pds-app .pds-qact{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important}
+#pds-app .pds-body{display:flex!important;flex:1 1 auto!important;min-height:500px!important}
+#pds-app .pds-iconnav{display:flex!important;flex-direction:column!important}
+#pds-app .pds-iconnav__btn,#pds-app .pds-iconnav__toggle{display:flex!important;flex-direction:column!important;width:auto!important}
+#pds-app .pds-workspace{display:flex!important;flex:1 1 auto!important}
+#pds-app .pds-rightbar{display:flex!important;flex-direction:column!important}
+#pds-app .pds-topbar,#pds-app .pds-footer{display:flex!important}
+#pds-app svg,#pds-app canvas{max-width:none!important}
 /* ===== RESET & VARIABLES ===== */
-.pds-app,.pds-app *{box-sizing:border-box;margin:0;padding:0}
+#pds-app.pds-app,#pds-app.pds-app *{box-sizing:border-box!important;margin:0;padding:0}
 .pds-app{
   --blue:#007bff;--blue-h:#0069d9;--blue-l:#e8f4ff;--bg:#f5f6f8;--surface:#fff;
   --border:#e2e8f0;--text:#0f172a;--muted:#64748b;--r:16px;--r-sm:10px;
@@ -453,10 +476,49 @@
 }
 </style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+(function(){
+'use strict';
+if(window.__PDS_BOOTED__)return;
+window.__PDS_BOOTED__=true;
+
+var PDS_SCRIPTS=[
+  'https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+];
+
+function pdsFatal(msg){
+  var app=document.getElementById('pds-app');
+  if(!app)return;
+  app.innerHTML='<div style="padding:32px 24px;text-align:center;font-family:Inter,system-ui,sans-serif;color:#0f172a"><h3 style="margin:0 0 8px;color:#dc2626;font-size:18px">Designer failed to load</h3><p style="margin:0;font-size:14px;color:#64748b">'+msg+'</p></div>';
+}
+
+function pdsLoadScript(url,cb){
+  if(url.indexOf('fabric')!==-1&&typeof fabric!=='undefined'){cb();return}
+  if(url.indexOf('jspdf')!==-1&&typeof jspdf!=='undefined'){cb();return}
+  if(url.indexOf('qrcode')!==-1&&typeof QRCode!=='undefined'){cb();return}
+  var existing=document.querySelector('script[data-pds-src="'+url+'"]');
+  if(existing){
+    if(existing.getAttribute('data-pds-ready')==='1'){cb();return}
+    existing.addEventListener('load',cb);existing.addEventListener('error',function(){pdsFatal('Could not load required library.')});
+    return;
+  }
+  var s=document.createElement('script');
+  s.src=url;s.async=false;s.setAttribute('data-pds-src',url);
+  s.onload=function(){s.setAttribute('data-pds-ready','1');cb()};
+  s.onerror=function(){pdsFatal('Could not load required library from CDN. Check script permissions on your site.')};
+  (document.head||document.body||document.documentElement).appendChild(s);
+}
+
+function pdsLoadAll(i,cb){
+  if(i>=PDS_SCRIPTS.length)return cb();
+  pdsLoadScript(PDS_SCRIPTS[i],function(){pdsLoadAll(i+1,cb)});
+}
+
+function pdsStart(){
+if(typeof fabric==='undefined'){pdsFatal('Fabric.js did not load. Allow CDN scripts or disable script blocking.');return}
+
 (function(){
 'use strict';
 
@@ -531,7 +593,7 @@ var S = {
   productId:'tshirt', color:'#ffffff', view:'front', method:'printing',
   canvas:null, zoom:1, panning:false, lastPan:{x:0,y:0},
   viewData:{}, history:{}, histIdx:{}, restoring:false,
-  uploads:[], autosaveTimer:null, productPickerOpen:false, nnEditing:null
+  uploads:[], autosaveTimer:null, productPickerOpen:false, nnEditing:null, booted:false
 };
 var $=function(s,r){return(r||document).querySelector(s)};
 var $$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
@@ -1405,16 +1467,43 @@ function bindUI(){
    SECTION 14: INITIALIZATION
    ============================================================ */
 function init(){
+  if(S.booted)return;
+  S.booted=true;
   setupCustomControls();
   renderProductPicker();renderProduct();renderClipTabs();renderShapes();renderTemplates();
   bindUI();
-  requestAnimationFrame(function(){
-    loadView();initHistory();
-    setInterval(triggerAutosave,30000);
-  });
+  startCanvas(0);
+  setInterval(triggerAutosave,30000);
 }
 
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
-else init();
+function startCanvas(attempt){
+  var size=canvasSize();
+  if((size.w<20||size.h<20)&&attempt<40){
+    return setTimeout(function(){startCanvas(attempt+1)},100);
+  }
+  loadView();
+}
+
+function boot(){
+  var app=document.getElementById('pds-app');
+  if(!app)return;
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',init);
+  }else{
+    init();
+  }
+}
+boot();
+})();
+}
+
+function pdsBoot(){
+  var app=document.getElementById('pds-app');
+  if(!app){setTimeout(pdsBoot,50);return}
+  pdsLoadAll(0,pdsStart);
+}
+
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',pdsBoot);
+else pdsBoot();
 })();
 </script>
