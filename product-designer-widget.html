@@ -1,0 +1,1392 @@
+<!--
+  Product Designer Widget for Elementor Pro HTML Widget
+  Paste this entire file into an Elementor HTML widget.
+  Dependencies: Fabric.js 5.3.1 (CDN)
+-->
+<div id="pd-root" class="pd-root">
+  <!-- ==================== HEADER ==================== -->
+  <header class="pd-header">
+    <div class="pd-header__brand">
+      <svg class="pd-header__logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+      </svg>
+      <span class="pd-header__title">Product Designer</span>
+    </div>
+    <div class="pd-header__meta">
+      <span class="pd-header__badge" id="pd-object-count">0 objects</span>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN LAYOUT ==================== -->
+  <div class="pd-layout">
+
+    <!-- ==================== LEFT SIDEBAR ==================== -->
+    <aside class="pd-sidebar" id="pd-sidebar">
+      <nav class="pd-sidebar__nav" id="pd-nav">
+        <button class="pd-nav-btn active" data-panel="product" title="Product">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.38 3.46L16 2 12 3.5 8 2 3.62 3.46A2 2 0 002 5.42V19a2 2 0 002 1.52L8 21l4-1.5 4 1.5 4-1.48a2 2 0 002-1.52V5.42a2 2 0 00-.62-1.96z"/></svg>
+          <span>Product</span>
+        </button>
+        <button class="pd-nav-btn" data-panel="text" title="Add Text">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          <span>Text</span>
+        </button>
+        <button class="pd-nav-btn" data-panel="upload" title="Upload Image">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span>Upload</span>
+        </button>
+        <button class="pd-nav-btn" data-panel="clipart" title="Clipart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          <span>Clipart</span>
+        </button>
+        <button class="pd-nav-btn" data-panel="shapes" title="Shapes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><circle cx="17.5" cy="6.5" r="3.5"/><path d="M14 14l7 7"/></svg>
+          <span>Shapes</span>
+        </button>
+        <button class="pd-nav-btn" data-panel="layers" title="Layers">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          <span>Layers</span>
+        </button>
+        <button class="pd-nav-btn" data-panel="templates" title="Templates">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          <span>Templates</span>
+        </button>
+      </nav>
+
+      <div class="pd-sidebar__panel" id="pd-panel">
+
+        <!-- Product Panel -->
+        <div class="pd-panel active" data-panel="product">
+          <h3 class="pd-panel__title">Order Details</h3>
+          <div class="pd-field">
+            <label class="pd-label">Product</label>
+            <select class="pd-select" id="pd-product-select">
+              <option value="tshirt" selected>Gildan Heavy Cotton T-Shirt</option>
+              <option value="hoodie">Premium Pullover Hoodie</option>
+              <option value="polo">Classic Polo Shirt</option>
+              <option value="tank">Tank Top</option>
+            </select>
+          </div>
+          <div class="pd-field">
+            <label class="pd-label">Color</label>
+            <div class="pd-colors" id="pd-colors">
+              <button class="pd-color-swatch active" data-color="#ffffff" data-name="White" style="background:#ffffff" title="White"></button>
+              <button class="pd-color-swatch" data-color="#1a1a2e" data-name="Navy" style="background:#1a1a2e" title="Navy"></button>
+              <button class="pd-color-swatch" data-color="#e63946" data-name="Red" style="background:#e63946" title="Red"></button>
+              <button class="pd-color-swatch" data-color="#2d6a4f" data-name="Forest" style="background:#2d6a4f" title="Forest"></button>
+              <button class="pd-color-swatch" data-color="#f4a261" data-name="Orange" style="background:#f4a261" title="Orange"></button>
+              <button class="pd-color-swatch" data-color="#264653" data-name="Teal" style="background:#264653" title="Teal"></button>
+              <button class="pd-color-swatch" data-color="#6c757d" data-name="Gray" style="background:#6c757d" title="Gray"></button>
+              <button class="pd-color-swatch" data-color="#212529" data-name="Black" style="background:#212529" title="Black"></button>
+            </div>
+            <span class="pd-color-name" id="pd-color-name">White</span>
+          </div>
+          <div class="pd-field">
+            <label class="pd-label">Quantity</label>
+            <div class="pd-quantity">
+              <button class="pd-qty-btn" id="pd-qty-minus">−</button>
+              <input type="number" class="pd-qty-input" id="pd-quantity" value="1" min="1" max="9999">
+              <button class="pd-qty-btn" id="pd-qty-plus">+</button>
+            </div>
+            <p class="pd-hint">Minimum order: 6 units</p>
+          </div>
+          <div class="pd-divider"></div>
+          <div class="pd-history-row">
+            <button class="pd-btn pd-btn--ghost pd-btn--sm" id="pd-undo-sidebar" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6.69 3.03L3 13"/></svg>
+              Undo
+            </button>
+            <button class="pd-btn pd-btn--ghost pd-btn--sm" id="pd-redo-sidebar" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016.69 3.03L21 13"/></svg>
+              Redo
+            </button>
+          </div>
+        </div>
+
+        <!-- Text Panel -->
+        <div class="pd-panel" data-panel="text">
+          <h3 class="pd-panel__title">Add Text</h3>
+          <button class="pd-btn pd-btn--primary pd-btn--block" id="pd-add-text">+ Add Text Box</button>
+          <div class="pd-divider"></div>
+          <div class="pd-field">
+            <label class="pd-label">Font Family</label>
+            <select class="pd-select" id="pd-font-family">
+              <option value="Inter, sans-serif">Inter</option>
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="Impact, sans-serif">Impact</option>
+              <option value="'Courier New', monospace">Courier New</option>
+              <option value="'Times New Roman', serif">Times New Roman</option>
+              <option value="'Comic Sans MS', cursive">Comic Sans</option>
+            </select>
+          </div>
+          <div class="pd-field">
+            <label class="pd-label">Font Size</label>
+            <div class="pd-range-row">
+              <input type="range" class="pd-range" id="pd-font-size" min="12" max="120" value="36">
+              <span class="pd-range-val" id="pd-font-size-val">36</span>
+            </div>
+          </div>
+          <div class="pd-field">
+            <label class="pd-label">Style</label>
+            <div class="pd-btn-group">
+              <button class="pd-toggle-btn" id="pd-bold" title="Bold"><b>B</b></button>
+              <button class="pd-toggle-btn" id="pd-italic" title="Italic"><i>I</i></button>
+            </div>
+          </div>
+          <div class="pd-field">
+            <label class="pd-label">Text Color</label>
+            <input type="color" class="pd-color-input" id="pd-text-color" value="#1a1a2e">
+          </div>
+        </div>
+
+        <!-- Upload Panel -->
+        <div class="pd-panel" data-panel="upload">
+          <h3 class="pd-panel__title">Upload Image</h3>
+          <label class="pd-upload-zone" id="pd-upload-zone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <span>Drop image here or click to browse</span>
+            <small>PNG, JPG, SVG — max 10 MB</small>
+            <input type="file" id="pd-file-input" accept="image/png,image/jpeg,image/jpg,image/svg+xml" hidden>
+          </label>
+        </div>
+
+        <!-- Clipart Panel -->
+        <div class="pd-panel" data-panel="clipart">
+          <h3 class="pd-panel__title">Clipart</h3>
+          <div class="pd-clipart-grid" id="pd-clipart-grid"></div>
+        </div>
+
+        <!-- Shapes Panel -->
+        <div class="pd-panel" data-panel="shapes">
+          <h3 class="pd-panel__title">Shapes</h3>
+          <div class="pd-shapes-grid">
+            <button class="pd-shape-btn" data-shape="rect" title="Rectangle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/></svg>
+            </button>
+            <button class="pd-shape-btn" data-shape="circle" title="Circle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+            </button>
+            <button class="pd-shape-btn" data-shape="triangle" title="Triangle">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3L22 21H2L12 3z"/></svg>
+            </button>
+            <button class="pd-shape-btn" data-shape="star" title="Star">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            </button>
+            <button class="pd-shape-btn" data-shape="line" title="Line">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="19" x2="19" y2="5"/></svg>
+            </button>
+          </div>
+          <div class="pd-field">
+            <label class="pd-label">Fill Color</label>
+            <input type="color" class="pd-color-input" id="pd-shape-color" value="#3b82f6">
+          </div>
+        </div>
+
+        <!-- Layers Panel -->
+        <div class="pd-panel" data-panel="layers">
+          <h3 class="pd-panel__title">Layers</h3>
+          <ul class="pd-layers-list" id="pd-layers-list">
+            <li class="pd-layers-empty">No objects yet</li>
+          </ul>
+        </div>
+
+        <!-- Templates Panel -->
+        <div class="pd-panel" data-panel="templates">
+          <h3 class="pd-panel__title">Templates</h3>
+          <div class="pd-templates-grid" id="pd-templates-grid"></div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- ==================== CANVAS AREA ==================== -->
+    <main class="pd-canvas-area">
+      <div class="pd-canvas-wrapper" id="pd-canvas-wrapper">
+        <!-- T-Shirt Mockup -->
+        <div class="pd-mockup" id="pd-mockup">
+          <svg class="pd-tshirt" id="pd-tshirt-svg" viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="pd-shadow" x="-10%" y="-10%" width="120%" height="120%">
+                <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000" flood-opacity="0.08"/>
+              </filter>
+            </defs>
+            <!-- T-shirt body -->
+            <path id="pd-shirt-body" filter="url(#pd-shadow)"
+              d="M140 60 C140 60 130 30 100 20 L60 35 L20 90 L55 110 L70 85 L70 420 C70 440 90 455 200 455 C310 455 330 440 330 420 L330 85 L345 110 L380 90 L340 35 L300 20 C270 30 260 60 260 60 L240 75 C220 65 180 65 160 75 Z"
+              fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+            <!-- Collar -->
+            <path d="M160 75 C180 65 220 65 240 75 C230 90 210 98 200 98 C190 98 170 90 160 75 Z"
+              fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+            <!-- Sleeves shading -->
+            <path d="M60 35 L20 90 L55 110 L70 85 L70 130" fill="none" stroke="#f1f5f9" stroke-width="0"/>
+          </svg>
+          <!-- Print area boundary -->
+          <div class="pd-print-area" id="pd-print-area">
+            <canvas id="pd-canvas"></canvas>
+            <div class="pd-print-label">Print Area</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Floating Toolbar -->
+      <div class="pd-float-toolbar" id="pd-float-toolbar">
+        <button class="pd-tool-btn" id="pd-zoom-in" title="Zoom In">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </button>
+        <button class="pd-tool-btn" id="pd-zoom-out" title="Zoom Out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </button>
+        <div class="pd-tool-divider"></div>
+        <button class="pd-tool-btn" id="pd-rotate" title="Rotate 15°">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+        </button>
+        <button class="pd-tool-btn" id="pd-center" title="Center Object">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+        </button>
+        <div class="pd-tool-divider"></div>
+        <button class="pd-tool-btn" id="pd-duplicate" title="Duplicate">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+        <button class="pd-tool-btn" id="pd-lock" title="Lock / Unlock">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </button>
+        <button class="pd-tool-btn pd-tool-btn--danger" id="pd-delete" title="Delete">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+        </button>
+        <div class="pd-tool-divider"></div>
+        <button class="pd-tool-btn" id="pd-bring-forward" title="Bring Forward">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="12" height="12" rx="1"/><path d="M4 16V4h12"/></svg>
+        </button>
+        <button class="pd-tool-btn" id="pd-send-backward" title="Send Backward">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="12" height="12" rx="1"/><path d="M8 20V8h12"/></svg>
+        </button>
+      </div>
+
+      <!-- Zoom indicator -->
+      <div class="pd-zoom-badge" id="pd-zoom-badge">100%</div>
+    </main>
+  </div>
+
+  <!-- ==================== BOTTOM TOOLBAR ==================== -->
+  <footer class="pd-bottom-bar">
+    <div class="pd-bottom-bar__left">
+      <button class="pd-btn pd-btn--ghost" id="pd-save">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save Design
+      </button>
+      <button class="pd-btn pd-btn--ghost" id="pd-load">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Load Design
+      </button>
+      <input type="file" id="pd-load-input" accept=".json" hidden>
+      <button class="pd-btn pd-btn--ghost" id="pd-download">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download PNG
+      </button>
+      <button class="pd-btn pd-btn--ghost" id="pd-reset">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 119-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset Canvas
+      </button>
+    </div>
+    <div class="pd-bottom-bar__right">
+      <span class="pd-price" id="pd-price">Est. $12.99 / unit</span>
+      <button class="pd-btn pd-btn--primary pd-btn--lg" id="pd-add-cart">Add to Cart</button>
+    </div>
+  </footer>
+
+  <!-- Toast notification -->
+  <div class="pd-toast" id="pd-toast"></div>
+</div>
+
+<!-- ==================== STYLES ==================== -->
+<style>
+  /* ---- Reset & Base ---- */
+  .pd-root, .pd-root * { box-sizing: border-box; margin: 0; padding: 0; }
+  .pd-root {
+    --pd-primary: #2563eb;
+    --pd-primary-hover: #1d4ed8;
+    --pd-bg: #f8fafc;
+    --pd-surface: #ffffff;
+    --pd-border: #e2e8f0;
+    --pd-text: #0f172a;
+    --pd-muted: #64748b;
+    --pd-radius: 12px;
+    --pd-radius-sm: 8px;
+    --pd-shadow: 0 4px 24px -4px rgba(0,0,0,.08);
+    --pd-sidebar-w: 320px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    color: var(--pd-text);
+    background: var(--pd-bg);
+    border-radius: var(--pd-radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 680px;
+    max-height: 100vh;
+    position: relative;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Header ---- */
+  .pd-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px; background: var(--pd-surface);
+    border-bottom: 1px solid var(--pd-border); flex-shrink: 0;
+  }
+  .pd-header__brand { display: flex; align-items: center; gap: 10px; }
+  .pd-header__logo { width: 22px; height: 22px; color: var(--pd-primary); }
+  .pd-header__title { font-weight: 600; font-size: 15px; }
+  .pd-header__badge {
+    font-size: 12px; color: var(--pd-muted); background: var(--pd-bg);
+    padding: 4px 10px; border-radius: 20px;
+  }
+
+  /* ---- Layout ---- */
+  .pd-layout { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+
+  /* ---- Sidebar ---- */
+  .pd-sidebar {
+    display: flex; width: var(--pd-sidebar-w); flex-shrink: 0;
+    background: var(--pd-surface); border-right: 1px solid var(--pd-border);
+    overflow: hidden;
+  }
+  .pd-sidebar__nav {
+    display: flex; flex-direction: column; width: 64px; flex-shrink: 0;
+    border-right: 1px solid var(--pd-border); padding: 8px 0;
+    background: #fafbfc;
+  }
+  .pd-nav-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 10px 4px; border: none; background: none; cursor: pointer;
+    color: var(--pd-muted); font-size: 10px; font-weight: 500;
+    transition: all .2s ease; border-left: 3px solid transparent;
+  }
+  .pd-nav-btn svg { width: 20px; height: 20px; }
+  .pd-nav-btn:hover { color: var(--pd-text); background: #f1f5f9; }
+  .pd-nav-btn.active {
+    color: var(--pd-primary); background: #eff6ff;
+    border-left-color: var(--pd-primary);
+  }
+  .pd-sidebar__panel { flex: 1; overflow-y: auto; padding: 16px; }
+  .pd-panel { display: none; animation: pdFadeIn .25s ease; }
+  .pd-panel.active { display: block; }
+  @keyframes pdFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  .pd-panel__title { font-size: 15px; font-weight: 600; margin-bottom: 16px; }
+
+  /* ---- Form Elements ---- */
+  .pd-field { margin-bottom: 14px; }
+  .pd-label { display: block; font-size: 12px; font-weight: 500; color: var(--pd-muted); margin-bottom: 6px; }
+  .pd-select, .pd-qty-input {
+    width: 100%; padding: 8px 12px; border: 1px solid var(--pd-border);
+    border-radius: var(--pd-radius-sm); font-size: 13px; background: var(--pd-surface);
+    color: var(--pd-text); outline: none; transition: border-color .2s;
+  }
+  .pd-select:focus, .pd-qty-input:focus { border-color: var(--pd-primary); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+  .pd-hint { font-size: 11px; color: var(--pd-muted); margin-top: 4px; }
+  .pd-divider { height: 1px; background: var(--pd-border); margin: 14px 0; }
+
+  /* ---- Color Swatches ---- */
+  .pd-colors { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pd-color-swatch {
+    width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--pd-border);
+    cursor: pointer; transition: transform .15s, box-shadow .15s; position: relative;
+  }
+  .pd-color-swatch:hover { transform: scale(1.1); }
+  .pd-color-swatch.active { border-color: var(--pd-primary); box-shadow: 0 0 0 2px rgba(37,99,235,.3); }
+  .pd-color-name { display: block; font-size: 12px; color: var(--pd-muted); margin-top: 6px; }
+
+  /* ---- Quantity ---- */
+  .pd-quantity { display: flex; align-items: center; gap: 0; }
+  .pd-qty-btn {
+    width: 36px; height: 36px; border: 1px solid var(--pd-border); background: var(--pd-bg);
+    cursor: pointer; font-size: 16px; color: var(--pd-text); transition: background .15s;
+  }
+  .pd-qty-btn:first-child { border-radius: var(--pd-radius-sm) 0 0 var(--pd-radius-sm); }
+  .pd-qty-btn:last-child { border-radius: 0 var(--pd-radius-sm) var(--pd-radius-sm) 0; }
+  .pd-qty-btn:hover { background: #e2e8f0; }
+  .pd-qty-input { border-radius: 0; text-align: center; width: 60px; flex-shrink: 0; -moz-appearance: textfield; }
+  .pd-qty-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  /* ---- Buttons ---- */
+  .pd-btn {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px;
+    border: none; border-radius: var(--pd-radius-sm); font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all .2s; white-space: nowrap;
+  }
+  .pd-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .pd-btn--primary { background: var(--pd-primary); color: #fff; }
+  .pd-btn--primary:hover { background: var(--pd-primary-hover); }
+  .pd-btn--ghost { background: transparent; color: var(--pd-text); border: 1px solid var(--pd-border); }
+  .pd-btn--ghost:hover { background: var(--pd-bg); }
+  .pd-btn--ghost:disabled { opacity: .4; cursor: not-allowed; }
+  .pd-btn--block { width: 100%; justify-content: center; }
+  .pd-btn--sm { padding: 6px 10px; font-size: 12px; }
+  .pd-btn--lg { padding: 10px 24px; font-size: 14px; }
+  .pd-history-row { display: flex; gap: 8px; }
+
+  /* ---- Toggle & Range ---- */
+  .pd-btn-group { display: flex; gap: 4px; }
+  .pd-toggle-btn {
+    width: 36px; height: 36px; border: 1px solid var(--pd-border); border-radius: var(--pd-radius-sm);
+    background: var(--pd-surface); cursor: pointer; font-size: 14px; transition: all .15s;
+  }
+  .pd-toggle-btn.active { background: var(--pd-primary); color: #fff; border-color: var(--pd-primary); }
+  .pd-range-row { display: flex; align-items: center; gap: 10px; }
+  .pd-range { flex: 1; accent-color: var(--pd-primary); }
+  .pd-range-val { font-size: 12px; color: var(--pd-muted); min-width: 28px; text-align: right; }
+  .pd-color-input { width: 100%; height: 36px; border: 1px solid var(--pd-border); border-radius: var(--pd-radius-sm); cursor: pointer; padding: 2px; }
+
+  /* ---- Upload Zone ---- */
+  .pd-upload-zone {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 32px 16px; border: 2px dashed var(--pd-border); border-radius: var(--pd-radius);
+    cursor: pointer; text-align: center; transition: all .2s; color: var(--pd-muted);
+  }
+  .pd-upload-zone svg { width: 32px; height: 32px; color: var(--pd-primary); }
+  .pd-upload-zone small { font-size: 11px; }
+  .pd-upload-zone:hover, .pd-upload-zone.dragover { border-color: var(--pd-primary); background: #eff6ff; }
+
+  /* ---- Clipart & Shapes Grid ---- */
+  .pd-clipart-grid, .pd-templates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .pd-clipart-item, .pd-template-item {
+    aspect-ratio: 1; border: 1px solid var(--pd-border); border-radius: var(--pd-radius-sm);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    transition: all .15s; padding: 8px; background: var(--pd-surface);
+  }
+  .pd-clipart-item:hover, .pd-template-item:hover { border-color: var(--pd-primary); background: #eff6ff; transform: scale(1.03); }
+  .pd-clipart-item svg { width: 100%; height: 100%; }
+  .pd-shapes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+  .pd-shape-btn {
+    aspect-ratio: 1; border: 1px solid var(--pd-border); border-radius: var(--pd-radius-sm);
+    background: var(--pd-surface); cursor: pointer; display: flex; align-items: center;
+    justify-content: center; transition: all .15s;
+  }
+  .pd-shape-btn svg { width: 28px; height: 28px; color: var(--pd-text); }
+  .pd-shape-btn:hover { border-color: var(--pd-primary); background: #eff6ff; }
+
+  /* ---- Layers ---- */
+  .pd-layers-list { list-style: none; }
+  .pd-layers-empty { font-size: 12px; color: var(--pd-muted); padding: 12px 0; text-align: center; }
+  .pd-layer-item {
+    display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+    border-radius: var(--pd-radius-sm); cursor: pointer; font-size: 12px;
+    transition: background .15s; border: 1px solid transparent;
+  }
+  .pd-layer-item:hover { background: var(--pd-bg); }
+  .pd-layer-item.active { background: #eff6ff; border-color: #bfdbfe; }
+  .pd-layer-item svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--pd-muted); }
+  .pd-layer-item span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ---- Canvas Area ---- */
+  .pd-canvas-area {
+    flex: 1; position: relative; display: flex; align-items: center;
+    justify-content: center; background: var(--pd-bg); overflow: hidden; min-width: 0;
+  }
+  .pd-canvas-wrapper {
+    position: relative; width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .pd-mockup { position: relative; max-width: 420px; width: 100%; }
+  .pd-tshirt { width: 100%; height: auto; display: block; }
+  .pd-print-area {
+    position: absolute;
+    top: 22%; left: 28%; width: 44%; height: 38%;
+    border: 2px dashed rgba(37,99,235,.35);
+    border-radius: 4px; overflow: hidden;
+    transition: border-color .3s;
+  }
+  .pd-print-area:hover { border-color: rgba(37,99,235,.6); }
+  .pd-print-area canvas { display: block; width: 100% !important; height: 100% !important; }
+  .pd-print-label {
+    position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
+    font-size: 10px; color: var(--pd-muted); white-space: nowrap; pointer-events: none;
+  }
+
+  /* ---- Floating Toolbar ---- */
+  .pd-float-toolbar {
+    position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 4px; padding: 8px;
+    background: var(--pd-surface); border-radius: var(--pd-radius);
+    box-shadow: var(--pd-shadow); border: 1px solid var(--pd-border); z-index: 10;
+  }
+  .pd-tool-btn {
+    width: 36px; height: 36px; border: none; border-radius: var(--pd-radius-sm);
+    background: transparent; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; color: var(--pd-text); transition: all .15s;
+  }
+  .pd-tool-btn svg { width: 18px; height: 18px; }
+  .pd-tool-btn:hover { background: var(--pd-bg); color: var(--pd-primary); }
+  .pd-tool-btn.active { background: #eff6ff; color: var(--pd-primary); }
+  .pd-tool-btn--danger:hover { background: #fef2f2; color: #ef4444; }
+  .pd-tool-divider { height: 1px; background: var(--pd-border); margin: 2px 4px; }
+  .pd-zoom-badge {
+    position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; color: var(--pd-muted); background: var(--pd-surface);
+    padding: 4px 12px; border-radius: 20px; border: 1px solid var(--pd-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  }
+
+  /* ---- Bottom Bar ---- */
+  .pd-bottom-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 20px; background: var(--pd-surface);
+    border-top: 1px solid var(--pd-border); flex-shrink: 0; gap: 12px; flex-wrap: wrap;
+  }
+  .pd-bottom-bar__left, .pd-bottom-bar__right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .pd-price { font-size: 13px; font-weight: 600; color: var(--pd-muted); }
+
+  /* ---- Toast ---- */
+  .pd-toast {
+    position: absolute; bottom: 70px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--pd-text); color: #fff; padding: 10px 20px; border-radius: var(--pd-radius-sm);
+    font-size: 13px; opacity: 0; pointer-events: none; transition: all .3s; z-index: 100;
+    white-space: nowrap;
+  }
+  .pd-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 900px) {
+    .pd-root { --pd-sidebar-w: 280px; min-height: 600px; }
+    .pd-nav-btn span { display: none; }
+    .pd-sidebar__nav { width: 52px; }
+    .pd-float-toolbar { right: 8px; padding: 6px; }
+    .pd-tool-btn { width: 32px; height: 32px; }
+  }
+  @media (max-width: 640px) {
+    .pd-layout { flex-direction: column; }
+    .pd-sidebar { width: 100%; max-height: 220px; flex-direction: column; }
+    .pd-sidebar__nav { flex-direction: row; width: 100%; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--pd-border); padding: 4px; }
+    .pd-nav-btn { flex-direction: row; padding: 8px 12px; border-left: none; border-bottom: 3px solid transparent; font-size: 11px; }
+    .pd-nav-btn.active { border-bottom-color: var(--pd-primary); border-left-color: transparent; }
+    .pd-sidebar__panel { max-height: 160px; }
+    .pd-bottom-bar { flex-direction: column; align-items: stretch; }
+    .pd-bottom-bar__left, .pd-bottom-bar__right { justify-content: center; }
+    .pd-mockup { max-width: 280px; }
+  }
+</style>
+
+<!-- ==================== FABRIC.JS CDN ==================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     SECTION 1: Configuration & State
+     ============================================================ */
+  var CONFIG = {
+    printArea: { top: 0.22, left: 0.28, width: 0.44, height: 0.38 },
+    maxHistory: 40,
+    defaultFont: 'Inter, sans-serif',
+    defaultFontSize: 36,
+    defaultTextColor: '#1a1a2e',
+    basePrice: 12.99,
+    minQty: 6
+  };
+
+  var state = {
+    canvas: null,
+    zoom: 1,
+    history: [],
+    historyIndex: -1,
+    isRestoring: false,
+    shirtColor: '#ffffff',
+    quantity: 1
+  };
+
+  /* ============================================================
+     SECTION 2: DOM References
+     ============================================================ */
+  var $ = function (sel) { return document.querySelector(sel); };
+  var $$ = function (sel) { return document.querySelectorAll(sel); };
+
+  var els = {
+    canvas: $('#pd-canvas'),
+    printArea: $('#pd-print-area'),
+    mockup: $('#pd-mockup'),
+    shirtBody: $('#pd-shirt-body'),
+    layersList: $('#pd-layers-list'),
+    objectCount: $('#pd-object-count'),
+    zoomBadge: $('#pd-zoom-badge'),
+    toast: $('#pd-toast'),
+    fontFamily: $('#pd-font-family'),
+    fontSize: $('#pd-font-size'),
+    fontSizeVal: $('#pd-font-size-val'),
+    textColor: $('#pd-text-color'),
+    shapeColor: $('#pd-shape-color'),
+    colorName: $('#pd-color-name'),
+    quantity: $('#pd-quantity'),
+    price: $('#pd-price'),
+    fileInput: $('#pd-file-input'),
+    loadInput: $('#pd-load-input'),
+    uploadZone: $('#pd-upload-zone'),
+    clipartGrid: $('#pd-clipart-grid'),
+    templatesGrid: $('#pd-templates-grid')
+  };
+
+  /* ============================================================
+     SECTION 3: Clipart & Template Data
+     ============================================================ */
+  var CLIPART = [
+    { name: 'Star', svg: '<svg viewBox="0 0 100 100"><polygon points="50,5 61,39 97,39 68,60 79,94 50,73 21,94 32,60 3,39 39,39" fill="#f59e0b"/></svg>' },
+    { name: 'Heart', svg: '<svg viewBox="0 0 100 100"><path d="M50,88 C20,60 5,45 5,28 C5,14 15,5 28,5 C38,5 46,12 50,20 C54,12 62,5 72,5 C85,5 95,14 95,28 C95,45 80,60 50,88Z" fill="#ef4444"/></svg>' },
+    { name: 'Lightning', svg: '<svg viewBox="0 0 100 100"><polygon points="55,5 20,55 45,55 35,95 80,40 52,40" fill="#eab308"/></svg>' },
+    { name: 'Crown', svg: '<svg viewBox="0 0 100 100"><path d="M10,70 L10,40 L30,55 L50,25 L70,55 L90,40 L90,70 Z" fill="#8b5cf6" stroke="#7c3aed" stroke-width="2"/><rect x="10" y="70" width="80" height="12" rx="2" fill="#8b5cf6"/></svg>' },
+    { name: 'Flame', svg: '<svg viewBox="0 0 100 100"><path d="M50,5 C50,5 30,35 30,55 C30,72 40,85 50,90 C60,85 70,72 70,55 C70,35 50,5 50,5ZM50,95 C35,95 20,80 20,60 C20,45 35,25 50,10 C65,25 80,45 80,60 C80,80 65,95 50,95Z" fill="#f97316"/></svg>' },
+    { name: 'Trophy', svg: '<svg viewBox="0 0 100 100"><path d="M30,15 L70,15 L75,50 C75,65 63,75 50,75 C37,75 25,65 25,50 Z" fill="#fbbf24"/><rect x="42" y="75" width="16" height="10" fill="#d97706"/><rect x="35" y="85" width="30" height="8" rx="2" fill="#d97706"/><path d="M30,20 L15,20 C15,20 10,20 10,30 C10,40 20,45 30,40" fill="none" stroke="#fbbf24" stroke-width="4"/><path d="M70,20 L85,20 C85,20 90,20 90,30 C90,40 80,45 70,40" fill="none" stroke="#fbbf24" stroke-width="4"/></svg>' },
+    { name: 'Music', svg: '<svg viewBox="0 0 100 100"><circle cx="30" cy="75" r="12" fill="#3b82f6"/><circle cx="65" cy="65" r="12" fill="#3b82f6"/><rect x="38" y="15" width="6" height="55" fill="#3b82f6"/><rect x="68" y="10" width="6" height="50" fill="#3b82f6"/><rect x="38" y="15" width="36" height="6" fill="#3b82f6"/></svg>' },
+    { name: 'Globe', svg: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#06b6d4" stroke-width="3"/><ellipse cx="50" cy="50" rx="18" ry="42" fill="none" stroke="#06b6d4" stroke-width="2"/><line x1="8" y1="50" x2="92" y2="50" stroke="#06b6d4" stroke-width="2"/><path d="M15,30 Q50,45 85,30" fill="none" stroke="#06b6d4" stroke-width="1.5"/><path d="M15,70 Q50,55 85,70" fill="none" stroke="#06b6d4" stroke-width="1.5"/></svg>' },
+    { name: 'Leaf', svg: '<svg viewBox="0 0 100 100"><path d="M50,90 C20,70 10,40 50,10 C90,40 80,70 50,90Z" fill="#22c55e"/><path d="M50,90 L50,30" fill="none" stroke="#16a34a" stroke-width="2"/></svg>' }
+  ];
+
+  var TEMPLATES = [
+    { name: 'Bold Title', apply: function (c) { addTextToCanvas(c, 'YOUR TEXT', { fontSize: 48, fontWeight: 'bold', top: 60 }); } },
+    { name: 'Subtitle', apply: function (c) { addTextToCanvas(c, 'Subtitle Here', { fontSize: 24, fill: '#64748b', top: 120 }); } },
+    { name: 'Logo Stack', apply: function (c) {
+      addTextToCanvas(c, 'BRAND', { fontSize: 42, fontWeight: 'bold', fontFamily: 'Impact, sans-serif', top: 40 });
+      addTextToCanvas(c, 'est. 2024', { fontSize: 14, fill: '#64748b', top: 100 });
+    }}
+  ];
+
+  /* ============================================================
+     SECTION 4: Utility Functions
+     ============================================================ */
+  function toast(msg) {
+    els.toast.textContent = msg;
+    els.toast.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function () { els.toast.classList.remove('show'); }, 2500);
+  }
+
+  function getCanvasSize() {
+    var rect = els.printArea.getBoundingClientRect();
+    return { width: Math.round(rect.width), height: Math.round(rect.height) };
+  }
+
+  function getActiveObject() {
+    if (!state.canvas) return null;
+    var obj = state.canvas.getActiveObject();
+    return obj || null;
+  }
+
+  function getActiveObjects() {
+    if (!state.canvas) return [];
+    var obj = state.canvas.getActiveObject();
+    if (!obj) return [];
+    if (obj.type === 'activeSelection') return obj.getObjects();
+    return [obj];
+  }
+
+  function updateObjectCount() {
+    var count = state.canvas ? state.canvas.getObjects().length : 0;
+    els.objectCount.textContent = count + ' object' + (count !== 1 ? 's' : '');
+  }
+
+  function updatePrice() {
+    var qty = state.quantity;
+    var unit = CONFIG.basePrice;
+    if (qty >= 50) unit *= 0.75;
+    else if (qty >= 24) unit *= 0.85;
+    else if (qty >= CONFIG.minQty) unit *= 0.92;
+    els.price.textContent = 'Est. $' + unit.toFixed(2) + ' / unit';
+  }
+
+  function updateUndoRedoButtons() {
+    var undoBtns = [$('#pd-undo-sidebar')];
+    var redoBtns = [$('#pd-redo-sidebar')];
+    var canUndo = state.historyIndex > 0;
+    var canRedo = state.historyIndex < state.history.length - 1;
+    undoBtns.forEach(function (b) { if (b) b.disabled = !canUndo; });
+    redoBtns.forEach(function (b) { if (b) b.disabled = !canRedo; });
+  }
+
+  /* ============================================================
+     SECTION 5: Canvas Initialization
+     ============================================================ */
+  function initCanvas() {
+    var size = getCanvasSize();
+    state.canvas = new fabric.Canvas('pd-canvas', {
+      width: size.width,
+      height: size.height,
+      selection: true,
+      preserveObjectStacking: true,
+      backgroundColor: 'transparent'
+    });
+
+    /* Clip objects to print area */
+    state.canvas.clipPath = new fabric.Rect({
+      width: size.width,
+      height: size.height,
+      absolutePositioned: true
+    });
+
+    bindCanvasEvents();
+    saveHistory();
+    updateObjectCount();
+  }
+
+  function resizeCanvas() {
+    if (!state.canvas) return;
+    var size = getCanvasSize();
+    var zoom = state.canvas.getZoom();
+    state.canvas.setWidth(size.width);
+    state.canvas.setHeight(size.height);
+    state.canvas.clipPath = new fabric.Rect({
+      width: size.width,
+      height: size.height,
+      absolutePositioned: true
+    });
+    state.canvas.setZoom(zoom);
+    state.canvas.renderAll();
+  }
+
+  /* ============================================================
+     SECTION 6: History (Undo / Redo)
+     ============================================================ */
+  function saveHistory() {
+    if (state.isRestoring || !state.canvas) return;
+    var json = JSON.stringify(state.canvas.toJSON(['pdId', 'pdName', 'pdLocked']));
+    state.history = state.history.slice(0, state.historyIndex + 1);
+    state.history.push(json);
+    if (state.history.length > CONFIG.maxHistory) state.history.shift();
+    state.historyIndex = state.history.length - 1;
+    updateUndoRedoButtons();
+  }
+
+  function restoreHistory(index) {
+    if (!state.canvas || index < 0 || index >= state.history.length) return;
+    state.isRestoring = true;
+    state.canvas.loadFromJSON(state.history[index], function () {
+      state.canvas.renderAll();
+      state.isRestoring = false;
+      state.historyIndex = index;
+      updateLayers();
+      updateObjectCount();
+      updateUndoRedoButtons();
+      syncTextControls();
+    });
+  }
+
+  function undo() { if (state.historyIndex > 0) restoreHistory(state.historyIndex - 1); }
+  function redo() { if (state.historyIndex < state.history.length - 1) restoreHistory(state.historyIndex + 1); }
+
+  /* ============================================================
+     SECTION 7: Object Creation
+     ============================================================ */
+  function generateId() { return 'pd_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5); }
+
+  function addTextToCanvas(canvas, text, opts) {
+    canvas = canvas || state.canvas;
+    opts = opts || {};
+    var size = getCanvasSize();
+    var textObj = new fabric.IText(text || 'Your Text', {
+      left: opts.left || size.width / 2,
+      top: opts.top || size.height / 2,
+      originX: 'center',
+      originY: 'center',
+      fontFamily: opts.fontFamily || els.fontFamily.value,
+      fontSize: opts.fontSize || parseInt(els.fontSize.value, 10),
+      fill: opts.fill || els.textColor.value,
+      fontWeight: opts.fontWeight || 'normal',
+      fontStyle: opts.fontStyle || 'normal',
+      pdId: generateId(),
+      pdName: 'Text'
+    });
+    canvas.add(textObj);
+    canvas.setActiveObject(textObj);
+    canvas.renderAll();
+    saveHistory();
+    updateLayers();
+    updateObjectCount();
+    return textObj;
+  }
+
+  function addImageToCanvas(src) {
+    fabric.Image.fromURL(src, function (img) {
+      var size = getCanvasSize();
+      var scale = Math.min(
+        (size.width * 0.6) / img.width,
+        (size.height * 0.6) / img.height,
+        1
+      );
+      img.set({
+        left: size.width / 2,
+        top: size.height / 2,
+        originX: 'center',
+        originY: 'center',
+        scaleX: scale,
+        scaleY: scale,
+        pdId: generateId(),
+        pdName: 'Image'
+      });
+      state.canvas.add(img);
+      state.canvas.setActiveObject(img);
+      state.canvas.renderAll();
+      saveHistory();
+      updateLayers();
+      updateObjectCount();
+      toast('Image added');
+    }, { crossOrigin: 'anonymous' });
+  }
+
+  function addShape(type) {
+    var size = getCanvasSize();
+    var color = els.shapeColor.value;
+    var cx = size.width / 2;
+    var cy = size.height / 2;
+    var shape;
+
+    switch (type) {
+      case 'rect':
+        shape = new fabric.Rect({ width: 80, height: 60, fill: color, rx: 4, ry: 4 });
+        break;
+      case 'circle':
+        shape = new fabric.Circle({ radius: 40, fill: color });
+        break;
+      case 'triangle':
+        shape = new fabric.Triangle({ width: 80, height: 70, fill: color });
+        break;
+      case 'star':
+        shape = createStar(40, 5, color);
+        break;
+      case 'line':
+        shape = new fabric.Line([-50, 0, 50, 0], { stroke: color, strokeWidth: 4 });
+        break;
+      default: return;
+    }
+
+    shape.set({
+      left: cx, top: cy, originX: 'center', originY: 'center',
+      pdId: generateId(), pdName: type.charAt(0).toUpperCase() + type.slice(1)
+    });
+    state.canvas.add(shape);
+    state.canvas.setActiveObject(shape);
+    state.canvas.renderAll();
+    saveHistory();
+    updateLayers();
+    updateObjectCount();
+    toast(type.charAt(0).toUpperCase() + type.slice(1) + ' added');
+  }
+
+  function createStar(radius, fill, color) {
+    var points = [];
+    for (var i = 0; i < 10; i++) {
+      var r = i % 2 === 0 ? radius : radius * 0.4;
+      var angle = (Math.PI / 5) * i - Math.PI / 2;
+      points.push({ x: r * Math.cos(angle), y: r * Math.sin(angle) });
+    }
+    return new fabric.Polygon(points, { fill: color });
+  }
+
+  function addClipart(item) {
+    fabric.loadSVGFromString(item.svg, function (results, options) {
+      var obj = fabric.util.groupSVGElements(results, options);
+      var size = getCanvasSize();
+      var scale = Math.min((size.width * 0.4) / obj.width, (size.height * 0.4) / obj.height, 1);
+      obj.set({
+        left: size.width / 2, top: size.height / 2,
+        originX: 'center', originY: 'center',
+        scaleX: scale, scaleY: scale,
+        pdId: generateId(), pdName: item.name
+      });
+      state.canvas.add(obj);
+      state.canvas.setActiveObject(obj);
+      state.canvas.renderAll();
+      saveHistory();
+      updateLayers();
+      updateObjectCount();
+      toast(item.name + ' added');
+    });
+  }
+
+  /* ============================================================
+     SECTION 8: Object Manipulation
+     ============================================================ */
+  function deleteSelected() {
+    var objs = getActiveObjects();
+    if (!objs.length) return;
+    objs.forEach(function (o) { state.canvas.remove(o); });
+    state.canvas.discardActiveObject();
+    state.canvas.renderAll();
+    saveHistory();
+    updateLayers();
+    updateObjectCount();
+    toast('Deleted');
+  }
+
+  function duplicateSelected() {
+    var obj = getActiveObject();
+    if (!obj) return;
+    obj.clone(function (cloned) {
+      cloned.set({ left: (cloned.left || 0) + 20, top: (cloned.top || 0) + 20, pdId: generateId() });
+      if (cloned.type === 'activeSelection') {
+        cloned.canvas = state.canvas;
+        cloned.forEachObject(function (o) { state.canvas.add(o); });
+        cloned.setCoords();
+      } else {
+        state.canvas.add(cloned);
+      }
+      state.canvas.setActiveObject(cloned);
+      state.canvas.renderAll();
+      saveHistory();
+      updateLayers();
+      updateObjectCount();
+      toast('Duplicated');
+    });
+  }
+
+  function toggleLock() {
+    var obj = getActiveObject();
+    if (!obj) return;
+    var locked = !obj.pdLocked;
+    if (obj.type === 'activeSelection') {
+      obj.forEachObject(function (o) { setObjectLock(o, locked); });
+    } else {
+      setObjectLock(obj, locked);
+    }
+    state.canvas.renderAll();
+    saveHistory();
+    toast(locked ? 'Locked' : 'Unlocked');
+  }
+
+  function setObjectLock(obj, locked) {
+    obj.pdLocked = locked;
+    obj.set({
+      lockMovementX: locked, lockMovementY: locked,
+      lockScalingX: locked, lockScalingY: locked,
+      lockRotation: locked, selectable: !locked, evented: !locked
+    });
+  }
+
+  function rotateSelected() {
+    var obj = getActiveObject();
+    if (!obj) return;
+    obj.rotate((obj.angle || 0) + 15);
+    state.canvas.renderAll();
+    saveHistory();
+  }
+
+  function centerSelected() {
+    var obj = getActiveObject();
+    if (!obj) return;
+    var size = getCanvasSize();
+    obj.set({ left: size.width / 2, top: size.height / 2, originX: 'center', originY: 'center' });
+    obj.setCoords();
+    state.canvas.renderAll();
+    saveHistory();
+    toast('Centered');
+  }
+
+  function bringForward() {
+    var obj = getActiveObject();
+    if (!obj) return;
+    state.canvas.bringForward(obj);
+    state.canvas.renderAll();
+    saveHistory();
+    updateLayers();
+  }
+
+  function sendBackward() {
+    var obj = getActiveObject();
+    if (!obj) return;
+    state.canvas.sendBackwards(obj);
+    state.canvas.renderAll();
+    saveHistory();
+    updateLayers();
+  }
+
+  function setZoom(delta) {
+    state.zoom = Math.max(0.25, Math.min(3, state.zoom + delta));
+    state.canvas.setZoom(state.zoom);
+    state.canvas.renderAll();
+    els.zoomBadge.textContent = Math.round(state.zoom * 100) + '%';
+  }
+
+  /* ============================================================
+     SECTION 9: Text Controls Sync
+     ============================================================ */
+  function syncTextControls() {
+    var obj = getActiveObject();
+    if (!obj || (obj.type !== 'i-text' && obj.type !== 'text')) return;
+    els.fontFamily.value = obj.fontFamily || CONFIG.defaultFont;
+    els.fontSize.value = obj.fontSize || CONFIG.defaultFontSize;
+    els.fontSizeVal.textContent = obj.fontSize || CONFIG.defaultFontSize;
+    els.textColor.value = rgbToHex(obj.fill) || CONFIG.defaultTextColor;
+    $('#pd-bold').classList.toggle('active', obj.fontWeight === 'bold');
+    $('#pd-italic').classList.toggle('active', obj.fontStyle === 'italic');
+  }
+
+  function applyTextStyle(prop, value) {
+    var obj = getActiveObject();
+    if (!obj) return;
+    if (obj.type === 'activeSelection') {
+      obj.forEachObject(function (o) {
+        if (o.type === 'i-text' || o.type === 'text') o.set(prop, value);
+      });
+    } else if (obj.type === 'i-text' || obj.type === 'text') {
+      obj.set(prop, value);
+    }
+    state.canvas.renderAll();
+    saveHistory();
+  }
+
+  function rgbToHex(color) {
+    if (!color || color.indexOf('#') === 0) return color || '#000000';
+    var match = color.match(/\d+/g);
+    if (!match) return '#000000';
+    return '#' + match.slice(0, 3).map(function (n) {
+      return parseInt(n, 10).toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  /* ============================================================
+     SECTION 10: Layers Panel
+     ============================================================ */
+  function updateLayers() {
+    if (!state.canvas) return;
+    var objects = state.canvas.getObjects().slice().reverse();
+    els.layersList.innerHTML = '';
+    if (!objects.length) {
+      els.layersList.innerHTML = '<li class="pd-layers-empty">No objects yet</li>';
+      return;
+    }
+    var active = getActiveObject();
+    objects.forEach(function (obj, i) {
+      var li = document.createElement('li');
+      li.className = 'pd-layer-item' + (obj === active ? ' active' : '');
+      var icon = obj.type === 'i-text' || obj.type === 'text' ? 'T' :
+        obj.type === 'image' ? 'I' : 'S';
+      li.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg><span>' + (obj.pdName || obj.type || 'Object') + '</span>';
+      li.addEventListener('click', function () {
+        state.canvas.setActiveObject(obj);
+        state.canvas.renderAll();
+        updateLayers();
+        syncTextControls();
+      });
+      els.layersList.appendChild(li);
+    });
+  }
+
+  /* ============================================================
+     SECTION 11: Save / Load / Export
+     ============================================================ */
+  function saveDesign() {
+    var data = {
+      version: 1,
+      canvas: state.canvas.toJSON(['pdId', 'pdName', 'pdLocked']),
+      shirtColor: state.shirtColor,
+      quantity: state.quantity,
+      savedAt: new Date().toISOString()
+    };
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'design-' + Date.now() + '.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast('Design saved');
+  }
+
+  function loadDesign(file) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        var data = JSON.parse(e.target.result);
+        state.isRestoring = true;
+        state.canvas.loadFromJSON(data.canvas, function () {
+          state.canvas.renderAll();
+          state.isRestoring = false;
+          if (data.shirtColor) setShirtColor(data.shirtColor);
+          if (data.quantity) { state.quantity = data.quantity; els.quantity.value = data.quantity; updatePrice(); }
+          saveHistory();
+          updateLayers();
+          updateObjectCount();
+          toast('Design loaded');
+        });
+      } catch (err) {
+        toast('Invalid design file');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  function downloadPNG() {
+    var size = getCanvasSize();
+    var exportCanvas = document.createElement('canvas');
+    exportCanvas.width = size.width * 2;
+    exportCanvas.height = size.height * 2;
+    var ctx = exportCanvas.getContext('2d');
+
+    /* Render fabric canvas at 2x */
+    var dataUrl = state.canvas.toDataURL({ format: 'png', multiplier: 2 });
+    var img = new Image();
+    img.onload = function () {
+      ctx.drawImage(img, 0, 0);
+      var link = document.createElement('a');
+      link.download = 'design-' + Date.now() + '.png';
+      link.href = exportCanvas.toDataURL('image/png');
+      link.click();
+      toast('PNG downloaded');
+    };
+    img.src = dataUrl;
+  }
+
+  function resetCanvas() {
+    if (!confirm('Reset canvas? All objects will be removed.')) return;
+    state.canvas.clear();
+    state.canvas.backgroundColor = 'transparent';
+    state.canvas.renderAll();
+    saveHistory();
+    updateLayers();
+    updateObjectCount();
+    toast('Canvas reset');
+  }
+
+  /* ============================================================
+     SECTION 12: Product Color
+     ============================================================ */
+  function setShirtColor(color) {
+    state.shirtColor = color;
+    if (els.shirtBody) els.shirtBody.setAttribute('fill', color);
+  }
+
+  /* ============================================================
+     SECTION 13: File Upload Handler
+     ============================================================ */
+  function handleFileUpload(file) {
+    if (!file) return;
+    var valid = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+    if (valid.indexOf(file.type) === -1) { toast('Unsupported file type'); return; }
+    if (file.size > 10 * 1024 * 1024) { toast('File too large (max 10 MB)'); return; }
+
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      if (file.type === 'image/svg+xml') {
+        fabric.loadSVGFromURL(e.target.result, function (results, options) {
+          var obj = fabric.util.groupSVGElements(results, options);
+          var size = getCanvasSize();
+          var scale = Math.min((size.width * 0.6) / obj.width, (size.height * 0.6) / obj.height, 1);
+          obj.set({
+            left: size.width / 2, top: size.height / 2,
+            originX: 'center', originY: 'center',
+            scaleX: scale, scaleY: scale,
+            pdId: generateId(), pdName: 'SVG'
+          });
+          state.canvas.add(obj);
+          state.canvas.setActiveObject(obj);
+          state.canvas.renderAll();
+          saveHistory();
+          updateLayers();
+          updateObjectCount();
+          toast('SVG added');
+        });
+      } else {
+        addImageToCanvas(e.target.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  /* ============================================================
+     SECTION 14: Canvas Event Bindings
+     ============================================================ */
+  function bindCanvasEvents() {
+    var c = state.canvas;
+    c.on('object:modified', function () { saveHistory(); updateLayers(); });
+    c.on('object:added', function () { if (!state.isRestoring) { updateLayers(); updateObjectCount(); } });
+    c.on('object:removed', function () { if (!state.isRestoring) { updateLayers(); updateObjectCount(); } });
+    c.on('selection:created', function () { updateLayers(); syncTextControls(); });
+    c.on('selection:updated', function () { updateLayers(); syncTextControls(); });
+    c.on('selection:cleared', function () { updateLayers(); });
+
+    /* Mouse wheel zoom */
+    c.on('mouse:wheel', function (opt) {
+      var delta = opt.e.deltaY > 0 ? -0.05 : 0.05;
+      setZoom(delta);
+      opt.e.preventDefault();
+      opt.e.stopPropagation();
+    });
+  }
+
+  /* ============================================================
+     SECTION 15: UI Event Bindings
+     ============================================================ */
+  function bindUI() {
+    /* Sidebar navigation */
+    $$('.pd-nav-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var panel = btn.getAttribute('data-panel');
+        $$('.pd-nav-btn').forEach(function (b) { b.classList.remove('active'); });
+        $$('.pd-panel').forEach(function (p) { p.classList.remove('active'); });
+        btn.classList.add('active');
+        var target = $('.pd-panel[data-panel="' + panel + '"]');
+        if (target) target.classList.add('active');
+      });
+    });
+
+    /* Text controls */
+    $('#pd-add-text').addEventListener('click', function () { addTextToCanvas(); toast('Text added — double-click to edit'); });
+    els.fontFamily.addEventListener('change', function () { applyTextStyle('fontFamily', this.value); });
+    els.fontSize.addEventListener('input', function () {
+      els.fontSizeVal.textContent = this.value;
+      applyTextStyle('fontSize', parseInt(this.value, 10));
+    });
+    els.textColor.addEventListener('input', function () { applyTextStyle('fill', this.value); });
+    $('#pd-bold').addEventListener('click', function () {
+      var obj = getActiveObject();
+      var val = (obj && obj.fontWeight === 'bold') ? 'normal' : 'bold';
+      applyTextStyle('fontWeight', val);
+      this.classList.toggle('active', val === 'bold');
+    });
+    $('#pd-italic').addEventListener('click', function () {
+      var obj = getActiveObject();
+      var val = (obj && obj.fontStyle === 'italic') ? 'normal' : 'italic';
+      applyTextStyle('fontStyle', val);
+      this.classList.toggle('active', val === 'italic');
+    });
+
+    /* Shapes */
+    $$('.pd-shape-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () { addShape(btn.getAttribute('data-shape')); });
+    });
+
+    /* Color swatches */
+    $$('.pd-color-swatch').forEach(function (swatch) {
+      swatch.addEventListener('click', function () {
+        $$('.pd-color-swatch').forEach(function (s) { s.classList.remove('active'); });
+        swatch.classList.add('active');
+        setShirtColor(swatch.getAttribute('data-color'));
+        els.colorName.textContent = swatch.getAttribute('data-name');
+      });
+    });
+
+    /* Quantity */
+    $('#pd-qty-minus').addEventListener('click', function () {
+      var v = Math.max(1, parseInt(els.quantity.value, 10) - 1);
+      els.quantity.value = v; state.quantity = v; updatePrice();
+    });
+    $('#pd-qty-plus').addEventListener('click', function () {
+      var v = Math.min(9999, parseInt(els.quantity.value, 10) + 1);
+      els.quantity.value = v; state.quantity = v; updatePrice();
+    });
+    els.quantity.addEventListener('change', function () {
+      state.quantity = Math.max(1, parseInt(this.value, 10) || 1);
+      this.value = state.quantity;
+      updatePrice();
+    });
+
+    /* Upload */
+    els.fileInput.addEventListener('change', function () { handleFileUpload(this.files[0]); this.value = ''; });
+    els.uploadZone.addEventListener('dragover', function (e) { e.preventDefault(); this.classList.add('dragover'); });
+    els.uploadZone.addEventListener('dragleave', function () { this.classList.remove('dragover'); });
+    els.uploadZone.addEventListener('drop', function (e) {
+      e.preventDefault(); this.classList.remove('dragover');
+      if (e.dataTransfer.files[0]) handleFileUpload(e.dataTransfer.files[0]);
+    });
+
+    /* Floating toolbar */
+    $('#pd-zoom-in').addEventListener('click', function () { setZoom(0.1); });
+    $('#pd-zoom-out').addEventListener('click', function () { setZoom(-0.1); });
+    $('#pd-rotate').addEventListener('click', rotateSelected);
+    $('#pd-center').addEventListener('click', centerSelected);
+    $('#pd-duplicate').addEventListener('click', duplicateSelected);
+    $('#pd-lock').addEventListener('click', toggleLock);
+    $('#pd-delete').addEventListener('click', deleteSelected);
+    $('#pd-bring-forward').addEventListener('click', bringForward);
+    $('#pd-send-backward').addEventListener('click', sendBackward);
+
+    /* Undo / Redo */
+    $('#pd-undo-sidebar').addEventListener('click', undo);
+    $('#pd-redo-sidebar').addEventListener('click', redo);
+
+    /* Bottom toolbar */
+    $('#pd-save').addEventListener('click', saveDesign);
+    $('#pd-load').addEventListener('click', function () { els.loadInput.click(); });
+    els.loadInput.addEventListener('change', function () { if (this.files[0]) loadDesign(this.files[0]); this.value = ''; });
+    $('#pd-download').addEventListener('click', downloadPNG);
+    $('#pd-reset').addEventListener('click', resetCanvas);
+    $('#pd-add-cart').addEventListener('click', function () { toast('Added to cart!'); });
+
+    /* Keyboard shortcuts */
+    document.addEventListener('keydown', function (e) {
+      if (!state.canvas) return;
+      var tag = (e.target.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+      if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); deleteSelected(); }
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === 'z') { e.preventDefault(); undo(); }
+        if (e.key === 'y') { e.preventDefault(); redo(); }
+        if (e.key === 'd') { e.preventDefault(); duplicateSelected(); }
+        if (e.key === 'a') {
+          e.preventDefault();
+          state.canvas.discardActiveObject();
+          var sel = new fabric.ActiveSelection(state.canvas.getObjects(), { canvas: state.canvas });
+          state.canvas.setActiveObject(sel);
+          state.canvas.renderAll();
+        }
+      }
+    });
+
+    /* Resize handler */
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resizeCanvas, 200);
+    });
+  }
+
+  /* ============================================================
+     SECTION 16: Populate Clipart & Templates
+     ============================================================ */
+  function populateGrids() {
+    CLIPART.forEach(function (item) {
+      var div = document.createElement('div');
+      div.className = 'pd-clipart-item';
+      div.title = item.name;
+      div.innerHTML = item.svg;
+      div.addEventListener('click', function () { addClipart(item); });
+      els.clipartGrid.appendChild(div);
+    });
+
+    TEMPLATES.forEach(function (tpl) {
+      var div = document.createElement('div');
+      div.className = 'pd-template-item';
+      div.title = tpl.name;
+      div.innerHTML = '<span style="font-size:11px;font-weight:600;color:#64748b">' + tpl.name + '</span>';
+      div.addEventListener('click', function () {
+        tpl.apply(state.canvas);
+        saveHistory();
+        updateLayers();
+        updateObjectCount();
+        toast('Template applied: ' + tpl.name);
+      });
+      els.templatesGrid.appendChild(div);
+    });
+  }
+
+  /* ============================================================
+     SECTION 17: Initialization
+     ============================================================ */
+  function init() {
+    populateGrids();
+    bindUI();
+    /* Delay canvas init to ensure layout is rendered */
+    requestAnimationFrame(function () {
+      initCanvas();
+      updatePrice();
+    });
+  }
+
+  /* Boot */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
