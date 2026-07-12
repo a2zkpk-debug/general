@@ -20,7 +20,7 @@
     <nav class="pds-iconnav" id="pds-iconnav">
       <button class="pds-iconnav__btn active" data-panel="products" title="Products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.38 3.46L16 2 12 3.5 8 2 3.62 3.46A2 2 0 002 5.42V19a2 2 0 002 1.52L8 21l4-1.5 4 1.5 4-1.48a2 2 0 002-1.52V5.42a2 2 0 00-.62-1.96z"/></svg><span>Products</span></button>
       <button class="pds-iconnav__btn" data-panel="text" title="Add Text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg><span>Add Text</span></button>
-      <button class="pds-iconnav__btn" data-panel="upload" title="Upload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span>Upload</span></button>
+      <button class="pds-iconnav__btn" data-panel="upload" title="Upload Art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span>Upload Art</span></button>
       <button class="pds-iconnav__btn" data-panel="ai" title="AI Art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/><path d="M19 15l.75 2.25L22 18l-2.25.75L19 21l-.75-2.25L16 18l2.25-.75z"/></svg><span>AI Art</span><em class="pds-tag">AI</em></button>
       <button class="pds-iconnav__btn" data-panel="clipart" title="Clipart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Clipart</span></button>
       <button class="pds-iconnav__btn" data-panel="shapes" title="Shapes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><circle cx="17.5" cy="6.5" r="3.5"/></svg><span>Shapes</span></button>
@@ -53,21 +53,39 @@
       </div>
 
       <div class="pds-panel__section" data-panel="text">
-        <h2 class="pds-panel__title">Add Text</h2>
-        <div class="pds-quick-btns">
-          <button class="pds-btn pds-btn--primary" id="pds-add-heading">Add Heading</button>
-          <button class="pds-btn pds-btn--outline" id="pds-add-paragraph">Add Paragraph</button>
+        <div class="pds-te-header">
+          <div>
+            <span class="pds-te-label">TEXT EDITOR</span>
+            <h2 class="pds-te-title" id="pds-te-title">Add New Text</h2>
+          </div>
+          <button class="pds-te-close" id="pds-te-close" title="Close">×</button>
         </div>
-        <div class="pds-field"><label>Font Family</label><select class="pds-input" id="pds-font"><option value="Inter">Inter</option><option value="Bebas Neue">Bebas Neue</option><option value="Pacifico">Pacifico</option><option value="Roboto Slab">Roboto Slab</option><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Impact">Impact</option></select></div>
-        <div class="pds-field"><label>Font Size <span id="pds-fs-val">36</span>px</label><input type="range" class="pds-range" id="pds-font-size" min="10" max="120" value="36"></div>
-        <div class="pds-style-row">
-          <button class="pds-style-btn" id="pds-bold" title="Bold"><b>B</b></button>
-          <button class="pds-style-btn" id="pds-italic" title="Italic"><i>I</i></button>
-          <button class="pds-style-btn" id="pds-underline" title="Underline"><u>U</u></button>
-          <input type="color" class="pds-color-sm" id="pds-text-color" value="#1e293b" title="Text Color">
+        <div class="pds-lang-tabs">
+          <button class="pds-lang-tab active" data-lang="en">English</button>
+          <button class="pds-lang-tab" data-lang="el">Greek</button>
+          <button class="pds-lang-tab" data-lang="he">Hebrew</button>
         </div>
-        <div class="pds-field"><label>Outline</label><input type="range" class="pds-range" id="pds-outline" min="0" max="5" value="0"><label>Shadow</label><input type="range" class="pds-range" id="pds-shadow" min="0" max="20" value="0"></div>
-        <div class="pds-field"><label>Curve Text</label><input type="range" class="pds-range" id="pds-curve" min="0" max="360" value="0"></div>
+        <textarea class="pds-te-input" id="pds-te-input" placeholder="Begin Typing..." rows="4"></textarea>
+        <div class="pds-te-toolbar">
+          <button class="pds-te-icon" id="pds-te-center" title="Center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
+          <button class="pds-te-icon" id="pds-te-layer" title="Layer Order"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h18"/></svg></button>
+          <button class="pds-te-icon" id="pds-te-flip" title="Flip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v14a2 2 0 002 2h3"/><line x1="12" y1="2" x2="12" y2="22"/></svg></button>
+          <button class="pds-te-icon" id="pds-te-lock" title="Lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></button>
+          <button class="pds-te-icon" id="pds-te-dup" title="Duplicate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+        </div>
+        <div class="pds-te-settings">
+          <button class="pds-te-row" id="pds-te-font-row"><span>Font</span><span class="pds-te-val" id="pds-te-font-val">Inter</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <div class="pds-te-dropdown" id="pds-te-font-drop">
+            <select class="pds-input" id="pds-font"><option value="Inter">Inter</option><option value="Bebas Neue">Bebas Neue</option><option value="Pacifico">Pacifico</option><option value="Roboto Slab">Roboto Slab</option><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Impact">Impact</option></select>
+          </div>
+          <button class="pds-te-row" id="pds-te-color-row"><span>Color</span><span class="pds-te-val" id="pds-te-color-val">Black</span><span class="pds-te-swatch" id="pds-te-swatch" style="background:#000"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <div class="pds-te-dropdown" id="pds-te-color-drop"><input type="color" class="pds-input" id="pds-text-color" value="#000000"></div>
+          <button class="pds-te-row" id="pds-te-outline-row"><span>Outline</span><span class="pds-te-val" id="pds-te-outline-val">None</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <div class="pds-te-dropdown" id="pds-te-outline-drop"><input type="range" class="pds-range" id="pds-outline" min="0" max="5" value="0"></div>
+        </div>
+        <div class="pds-te-slider"><div class="pds-te-slider-head"><span>Size</span><span id="pds-fs-val">36</span></div><input type="range" class="pds-range" id="pds-font-size" min="10" max="120" value="36"></div>
+        <div class="pds-te-slider"><div class="pds-te-slider-head"><span>Arc</span><span id="pds-arc-val">0</span></div><input type="range" class="pds-range" id="pds-curve" min="0" max="360" value="0"></div>
+        <button class="pds-btn pds-btn--primary pds-btn--block" id="pds-add-text-btn" style="margin-top:12px">Add to Design</button>
       </div>
 
       <div class="pds-panel__section" data-panel="upload">
@@ -133,9 +151,9 @@
     <!-- CENTER CANVAS -->
     <main class="pds-workspace" id="pds-workspace">
       <div class="pds-workspace__tools">
-        <button class="pds-wstool" id="pds-ws-undo" disabled>Undo</button>
-        <button class="pds-wstool" id="pds-ws-redo" disabled>Redo</button>
-        <button class="pds-wstool" id="pds-ws-reset">Start Over</button>
+        <button class="pds-wstool" id="pds-ws-undo" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6.69 3.03L3 13"/></svg>UNDO</button>
+        <button class="pds-wstool" id="pds-ws-redo" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016.69 3.03L21 13"/></svg>REDO</button>
+        <button class="pds-wstool pds-wstool--text" id="pds-ws-reset">START OVER</button>
       </div>
       <div class="pds-mockup-wrap" id="pds-mockup-wrap">
         <div class="pds-mockup" id="pds-mockup">
@@ -155,27 +173,19 @@
     <!-- RIGHT SIDEBAR -->
     <aside class="pds-rightbar" id="pds-rightbar">
       <div class="pds-views" id="pds-views"></div>
-      <div class="pds-float-tools" id="pds-float-tools">
-        <button class="pds-ftool" id="pds-ft-undo" title="Undo" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6.69 3.03L3 13"/></svg></button>
-        <button class="pds-ftool" id="pds-ft-redo" title="Redo" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016.69 3.03L21 13"/></svg></button>
-        <hr>
-        <button class="pds-ftool" id="pds-ft-zoomin" title="Zoom In"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
-        <button class="pds-ftool" id="pds-ft-zoomout" title="Zoom Out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg></button>
-        <span class="pds-zoom-lbl" id="pds-zoom-lbl">100%</span>
-        <hr>
-        <button class="pds-ftool" id="pds-ft-rotate" title="Rotate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg></button>
-        <button class="pds-ftool" id="pds-ft-fliph" title="Flip H"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v14a2 2 0 002 2h3"/><path d="M16 3h3a2 2 0 012 2v14a2 2 0 01-2 2h-3"/><line x1="12" y1="2" x2="12" y2="22"/></svg></button>
-        <button class="pds-ftool" id="pds-ft-flipv" title="Flip V"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8V5a2 2 0 012-2h14a2 2 0 012 2v3"/><path d="M3 16v3a2 2 0 002 2h14a2 2 0 002-2v-3"/><line x1="2" y1="12" x2="22" y2="12"/></svg></button>
-        <button class="pds-ftool" id="pds-ft-center" title="Center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
-        <hr>
-        <button class="pds-ftool" id="pds-ft-up" title="Forward"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="12" height="12" rx="1"/><path d="M4 16V4h12"/></svg></button>
-        <button class="pds-ftool" id="pds-ft-down" title="Backward"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="12" height="12" rx="1"/><path d="M8 20V8h12"/></svg></button>
-        <button class="pds-ftool" id="pds-ft-dup" title="Duplicate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
-        <button class="pds-ftool pds-ftool--red" id="pds-ft-del" title="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></button>
-        <button class="pds-ftool" id="pds-ft-lock" title="Lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></button>
-        <div class="pds-opacity"><label>Opacity</label><input type="range" id="pds-opacity" min="0" max="100" value="100"></div>
-      </div>
+      <button class="pds-rutil" id="pds-sleeves-btn">SLEEVES<br>&amp; MORE</button>
+      <button class="pds-rutil" id="pds-zoom-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>ZOOM</button>
+      <button class="pds-rutil pds-rutil--disabled" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>EFFECT</button>
+      <button class="pds-share-btn" id="pds-share-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>SHARE</button>
+      <span class="pds-zoom-lbl" id="pds-zoom-lbl">100%</span>
     </aside>
+    <!-- Hidden tool refs for JS -->
+    <div style="display:none">
+      <button id="pds-ft-undo"></button><button id="pds-ft-redo"></button><button id="pds-ft-zoomin"></button><button id="pds-ft-zoomout"></button>
+      <button id="pds-ft-rotate"></button><button id="pds-ft-fliph"></button><button id="pds-ft-flipv"></button><button id="pds-ft-center"></button>
+      <button id="pds-ft-up"></button><button id="pds-ft-down"></button><button id="pds-ft-dup"></button><button id="pds-ft-del"></button><button id="pds-ft-lock"></button>
+      <input id="pds-opacity" value="100">
+    </div>
   </div>
 
   <footer class="pds-footer">
@@ -204,7 +214,7 @@
 /* ===== RESET & VARIABLES ===== */
 .pds-app,.pds-app *{box-sizing:border-box;margin:0;padding:0}
 .pds-app{
-  --blue:#2563eb;--blue-h:#1d4ed8;--blue-l:#eff6ff;--bg:#f1f5f9;--surface:#fff;
+  --blue:#007bff;--blue-h:#0069d9;--blue-l:#e8f4ff;--bg:#f5f6f8;--surface:#fff;
   --border:#e2e8f0;--text:#0f172a;--muted:#64748b;--r:16px;--r-sm:10px;
   --shadow:0 4px 24px -6px rgba(0,0,0,.08);--shadow-lg:0 12px 40px -12px rgba(0,0,0,.12);
   font-family:'Inter',system-ui,sans-serif;font-size:14px;color:var(--text);
@@ -228,15 +238,17 @@
 /* ===== ICON NAV ===== */
 .pds-iconnav{display:flex;flex-direction:column;width:72px;background:var(--surface);border-right:1px solid var(--border);padding:8px 0;overflow-y:auto;flex-shrink:0;transition:width .3s}
 .pds-iconnav.collapsed{width:0;padding:0;overflow:hidden;border:none}
-.pds-iconnav__btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;border:none;background:none;cursor:pointer;color:var(--muted);font-size:9px;font-weight:600;position:relative;transition:.2s;border-left:3px solid transparent}
-.pds-iconnav__btn svg{width:22px;height:22px}
-.pds-iconnav__btn:hover{color:var(--text);background:var(--bg)}
-.pds-iconnav__btn.active{color:var(--blue);background:var(--blue-l);border-left-color:var(--blue)}
+.pds-iconnav__btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border:none;background:none;cursor:pointer;color:var(--muted);font-size:10px;font-weight:600;position:relative;transition:.2s;margin:2px 6px;border-radius:10px}
+.pds-iconnav__btn svg{width:24px;height:24px;padding:6px;border-radius:8px;transition:.2s}
+.pds-iconnav__btn:hover{color:var(--text)}
+.pds-iconnav__btn.active{color:#fff}
+.pds-iconnav__btn.active svg{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(0,123,255,.35)}
+.pds-iconnav__btn.active span{color:var(--text)}
 .pds-tag{position:absolute;top:4px;right:4px;font-size:8px;font-style:normal;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;padding:1px 4px;border-radius:4px;font-weight:700}
 .pds-iconnav__toggle{margin-top:auto;border-top:1px solid var(--border)}
 /* ===== LEFT PANEL ===== */
-.pds-panel{width:280px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:20px 16px;flex-shrink:0;transition:transform .3s,opacity .3s}
-.pds-panel__section{display:none;animation:pdsSlide .25s ease}
+.pds-panel{width:300px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:0;flex-shrink:0;transition:transform .3s,opacity .3s}
+.pds-panel__section{display:none;animation:pdsSlide .25s ease;padding:20px 18px}
 .pds-panel__section.active{display:block}
 @keyframes pdsSlide{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
 .pds-panel__title{font-size:16px;font-weight:700;margin-bottom:4px}
@@ -307,12 +319,43 @@
 .pds-layer.active{background:var(--blue-l);border-color:#bfdbfe}
 .pds-layer span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pds-layer-empty{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+/* ===== TEXT EDITOR (RushOrder style) ===== */
+.pds-te-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.pds-te-label{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.pds-te-title{font-size:22px;font-weight:700;color:var(--text);line-height:1.2}
+.pds-te-close{width:32px;height:32px;border:none;background:none;font-size:22px;color:var(--muted);cursor:pointer;border-radius:8px;transition:.15s;line-height:1}
+.pds-te-close:hover{background:var(--bg);color:var(--text)}
+.pds-lang-tabs{display:flex;gap:20px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.pds-lang-tab{padding:8px 0;border:none;background:none;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px;transition:.2s}
+.pds-lang-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.pds-te-input{width:100%;padding:14px;border:2px solid #b8daff;border-radius:8px;font-size:15px;font-family:inherit;resize:vertical;min-height:100px;outline:none;transition:.2s;color:var(--text)}
+.pds-te-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,123,255,.15)}
+.pds-te-input::placeholder{color:#94a3b8}
+.pds-te-toolbar{display:flex;gap:6px;margin:14px 0;padding:4px 0}
+.pds-te-icon{width:40px;height:40px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:.15s}
+.pds-te-icon svg{width:18px;height:18px}
+.pds-te-icon:hover{border-color:var(--blue);color:var(--blue)}
+.pds-te-icon.active{background:var(--blue-l);border-color:var(--blue);color:var(--blue)}
+.pds-te-settings{border-top:1px solid var(--border);margin-top:8px}
+.pds-te-row{display:flex;align-items:center;width:100%;padding:14px 4px;border:none;background:none;cursor:pointer;font-size:14px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border);gap:8px;transition:.15s}
+.pds-te-row:hover{background:var(--bg)}
+.pds-te-row span:first-child{flex:1;text-align:left}
+.pds-te-val{color:var(--muted);font-weight:500;font-size:13px}
+.pds-te-swatch{width:18px;height:18px;border-radius:4px;border:1px solid var(--border)}
+.pds-te-row svg{width:16px;height:16px;color:var(--muted);flex-shrink:0}
+.pds-te-dropdown{display:none;padding:10px 4px 14px;background:var(--bg);border-bottom:1px solid var(--border)}
+.pds-te-dropdown.open{display:block}
+.pds-te-slider{margin-top:14px}
+.pds-te-slider-head{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px}
+.pds-te-slider-head span:last-child{color:var(--blue)}
 /* ===== WORKSPACE ===== */
 .pds-workspace{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;background:var(--bg);overflow:hidden;min-width:0;padding:16px}
-.pds-workspace__tools{position:absolute;top:12px;left:12px;display:flex;flex-direction:column;gap:4px;z-index:5}
-.pds-wstool{padding:6px 10px;border:none;background:var(--surface);border-radius:var(--r-sm);font-size:11px;font-weight:600;color:var(--muted);cursor:pointer;box-shadow:var(--shadow);transition:.15s;border:1px solid var(--border)}
-.pds-wstool:hover:not(:disabled){color:var(--blue)}
+.pds-workspace__tools{position:absolute;top:16px;left:16px;display:flex;flex-direction:column;gap:8px;z-index:5}
+.pds-wstool{display:flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--border);background:var(--surface);border-radius:10px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:.15s;letter-spacing:.03em;min-width:120px}
+.pds-wstool svg{width:16px;height:16px;flex-shrink:0}
+.pds-wstool:hover:not(:disabled){color:var(--blue);border-color:#b8daff}
 .pds-wstool:disabled{opacity:.35;cursor:not-allowed}
+.pds-wstool--text{justify-content:center}
 .pds-mockup-wrap{position:relative;display:flex;flex-direction:column;align-items:center}
 .pds-mockup{position:relative;max-width:380px;width:100%;transition:transform .3s}
 .pds-shirt{width:100%;display:block}
@@ -325,24 +368,25 @@
 .pds-view-info{font-size:11px;color:var(--muted);margin-top:12px;text-align:center}
 .pds-autosave{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted);background:var(--surface);padding:4px 14px;border-radius:20px;border:1px solid var(--border);opacity:0;transition:opacity .3s}
 .pds-autosave.show{opacity:1}
-/* ===== RIGHT BAR ===== */
-.pds-rightbar{width:80px;display:flex;flex-direction:column;align-items:center;padding:12px 8px;background:var(--surface);border-left:1px solid var(--border);flex-shrink:0;gap:12px;overflow-y:auto}
-.pds-views{display:flex;flex-direction:column;gap:8px;width:100%}
-.pds-view-btn{width:100%;aspect-ratio:.75;border:2px solid var(--border);border-radius:var(--r-sm);cursor:pointer;overflow:hidden;position:relative;transition:.2s;background:var(--bg)}
-.pds-view-btn img,.pds-view-btn svg{width:100%;height:100%;object-fit:cover}
-.pds-view-btn span{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);color:#fff;font-size:9px;font-weight:600;text-align:center;padding:3px}
-.pds-view-btn.active{border-color:var(--blue);box-shadow:0 0 0 2px rgba(37,99,235,.25)}
-.pds-float-tools{display:flex;flex-direction:column;gap:3px;padding:8px;background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow-lg);border:1px solid var(--border);width:100%}
-.pds-ftool{width:100%;aspect-ratio:1;border:none;border-radius:var(--r-sm);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);transition:.15s;max-height:40px}
-.pds-ftool svg{width:18px;height:18px}
-.pds-ftool:hover{background:var(--bg);color:var(--blue)}
-.pds-ftool:disabled{opacity:.3;cursor:not-allowed}
-.pds-ftool--red:hover{background:#fef2f2;color:#ef4444}
-.pds-float-tools hr{border:none;height:1px;background:var(--border);margin:2px 0}
-.pds-zoom-lbl{font-size:10px;text-align:center;color:var(--muted);font-weight:600}
-.pds-opacity{padding:6px 4px}
-.pds-opacity label{font-size:9px;color:var(--muted);font-weight:600;display:block;margin-bottom:4px}
-.pds-opacity input{width:100%;accent-color:var(--blue)}
+/* ===== RIGHT BAR (View cards) ===== */
+.pds-rightbar{width:110px;display:flex;flex-direction:column;align-items:center;padding:16px 10px;background:var(--bg);border-left:none;flex-shrink:0;gap:10px;overflow-y:auto}
+.pds-views{display:flex;flex-direction:column;gap:12px;width:100%}
+.pds-view-card{width:100%;background:var(--surface);border:2px solid transparent;border-radius:12px;cursor:pointer;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.08);transition:.2s;padding-bottom:0}
+.pds-view-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.pds-view-card.active{border-color:var(--blue);box-shadow:0 4px 20px rgba(0,123,255,.2)}
+.pds-view-card__img{padding:10px 10px 6px;display:flex;align-items:center;justify-content:center;background:#fff}
+.pds-view-card__img svg{width:100%;height:auto;max-height:72px}
+.pds-view-card__accent{height:4px;background:transparent;margin:0 10px;border-radius:2px}
+.pds-view-card.active .pds-view-card__accent{background:var(--blue)}
+.pds-view-card__label{text-align:center;font-size:13px;font-weight:600;color:var(--text);padding:8px 6px 10px}
+.pds-rutil{width:100%;padding:10px 6px;border:1px solid var(--border);border-radius:10px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.04em;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:.15s;line-height:1.3}
+.pds-rutil svg{width:20px;height:20px}
+.pds-rutil:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
+.pds-rutil--disabled{opacity:.35;cursor:not-allowed}
+.pds-share-btn{width:100%;padding:16px 10px;border:1px solid var(--border);border-radius:12px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;box-shadow:0 4px 16px rgba(0,0,0,.08);transition:.15s;margin-top:auto}
+.pds-share-btn svg{width:22px;height:22px}
+.pds-share-btn:hover{border-color:var(--blue);color:var(--blue)}
+.pds-zoom-lbl{font-size:10px;text-align:center;color:var(--muted);font-weight:600;width:100%}
 /* ===== FOOTER ===== */
 .pds-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;gap:12px;flex-wrap:wrap;z-index:20}
 .pds-footer__left{display:flex;gap:8px;flex-wrap:wrap}
@@ -720,14 +764,54 @@ function setupGuides(){
    SECTION 7: TEXT UI SYNC
    ============================================================ */
 function syncTextUI(){
-  var o=getActive();if(!o||(o.type!=='i-text'&&o.type!=='text'))return;
-  $('#pds-font').value=o.fontFamily||'Inter';
-  $('#pds-font-size').value=o.fontSize||36;$('#pds-fs-val').textContent=o.fontSize||36;
-  $('#pds-text-color').value=(o.fill&&o.fill.indexOf('#')===0)?o.fill:'#1e293b';
-  $('#pds-bold').classList.toggle('active',o.fontWeight==='bold');
-  $('#pds-italic').classList.toggle('active',o.fontStyle==='italic');
-  $('#pds-underline').classList.toggle('active',!!o.underline);
-  $('#pds-opacity').value=Math.round((o.opacity||1)*100);
+  var o=getActive();
+  var teInput=$('#pds-te-input'),teTitle=$('#pds-te-title'),addBtn=$('#pds-add-text-btn');
+  if(o&&(o.type==='i-text'||o.type==='text')){
+    teTitle.textContent='Edit Your Text';
+    addBtn.textContent='Update Text';
+    teInput.value=o.text||'';
+    $('#pds-font').value=o.fontFamily||'Inter';
+    $('#pds-te-font-val').textContent=o.fontFamily||'Inter';
+    $('#pds-font-size').value=o.fontSize||36;$('#pds-fs-val').textContent=o.fontSize||36;
+    var col=(o.fill&&o.fill.indexOf('#')===0)?o.fill:'#000000';
+    $('#pds-text-color').value=col;
+    $('#pds-te-swatch').style.background=col;
+    $('#pds-te-color-val').textContent=col==='#000000'?'Black':col;
+    $('#pds-te-lock').classList.toggle('active',!!o.pdsLocked);
+    var ow=o.strokeWidth||0;
+    $('#pds-outline').value=ow;
+    $('#pds-te-outline-val').textContent=ow>0?ow+'px':'None';
+  } else {
+    teTitle.textContent='Add New Text';
+    addBtn.textContent='Add to Design';
+  }
+}
+function applyTextFromEditor(){
+  var txt=$('#pds-te-input').value.trim()||'Your Text';
+  var o=getActive();
+  if(o&&(o.type==='i-text'||o.type==='text')){
+    o.set('text',txt);S.canvas.renderAll();pushHistory();toast('Text updated');
+  } else {
+    addText(txt,{fontSize:parseInt($('#pds-font-size').value),fill:$('#pds-text-color').value,fontFamily:$('#pds-font').value});
+  }
+}
+function setupCustomControls(){
+  fabric.Object.prototype.set({
+    borderColor:'#007bff',cornerColor:'#fff',cornerStrokeColor:'#94a3b8',
+    cornerSize:12,transparentCorners:false,padding:6,
+    borderDashArray:[6,4]
+  });
+  fabric.Object.prototype.controls.deleteControl=new fabric.Control({
+    x:-.5,y:-.5,offsetX:-14,offsetY:-14,cursorStyle:'pointer',mouseUpHandler:deleteObject,mouseDownHandler:function(){},render:renderDelIcon,cornerSize:24
+  });
+  function deleteObject(e,transform){var t=transform.target;S.canvas.remove(t);S.canvas.requestRenderAll();pushHistory();updateLayers();return true}
+  function renderDelIcon(ctx,left,top){
+    ctx.save();ctx.fillStyle='#fff';ctx.strokeStyle='#94a3b8';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(left,top,10,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.strokeStyle='#64748b';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(left-4,top-2);ctx.lineTo(left+4,top-2);ctx.moveTo(left-3,top-2);ctx.lineTo(left-3,top+4);ctx.lineTo(left+3,top+4);ctx.lineTo(left+3,top-2);ctx.stroke();
+    ctx.restore();
+  }
 }
 function applyText(prop,val){
   var o=getActive();if(!o)return;
@@ -902,16 +986,25 @@ function renderSwatches(){
 
 function renderViews(){
   var p=getProduct(),el=$('#pds-views');el.innerHTML='';
-  Object.keys(p.views).forEach(function(vk){
-    var v=p.views[vk],btn=document.createElement('button');
-    btn.className='pds-view-btn'+(vk===S.view?' active':'');
-    btn.innerHTML='<svg viewBox="0 0 60 72"><path d="M21 9 C21 9 19.5 4.5 15 3 L9 5.25 L3 13.5 L8.25 16.5 L10.5 12.75 L10.5 63 C10.5 66 13.5 67.5 30 67.5 C46.5 67.5 49.5 66 49.5 63 L49.5 12.75 L51.75 16.5 L57 13.5 L51 5.25 L45 3 C40.5 4.5 39 9 39 9 L36 11.25 C33 9.75 27 9.75 24 11.25 Z" fill="'+S.color+'" stroke="#cbd5e1" stroke-width=".8"/></svg><span>'+v.label+'</span>';
-    btn.onclick=function(){
-      saveCurrentView();S.view=vk;$$('.pds-view-btn',el).forEach(function(b){b.classList.remove('active')});
-      btn.classList.add('active');loadView();
+  var mainViews=['front','back'];
+  var extraViews=Object.keys(p.views).filter(function(v){return mainViews.indexOf(v)===-1});
+  function shirtSvg(color,flip){
+    var path='M21 9 C21 9 19.5 4.5 15 3 L9 5.25 L3 13.5 L8.25 16.5 L10.5 12.75 L10.5 63 C10.5 66 13.5 67.5 30 67.5 C46.5 67.5 49.5 66 49.5 63 L49.5 12.75 L51.75 16.5 L57 13.5 L51 5.25 L45 3 C40.5 4.5 39 9 39 9 L36 11.25 C33 9.75 27 9.75 24 11.25 Z';
+    if(flip) return '<svg viewBox="0 0 60 72" style="transform:scaleX(-1)"><path d="'+path+'" fill="'+color+'" stroke="#cbd5e1" stroke-width=".8"/></svg>';
+    return '<svg viewBox="0 0 60 72"><path d="'+path+'" fill="'+color+'" stroke="#cbd5e1" stroke-width=".8"/></svg>';
+  }
+  mainViews.forEach(function(vk){
+    if(!p.views[vk])return;
+    var v=p.views[vk],card=document.createElement('button');
+    card.className='pds-view-card'+(vk===S.view?' active':'');
+    card.innerHTML='<div class="pds-view-card__img">'+shirtSvg(S.color,vk==='back')+'</div><div class="pds-view-card__accent"></div><div class="pds-view-card__label">'+v.label+'</div>';
+    card.onclick=function(){
+      saveCurrentView();S.view=vk;$$('.pds-view-card',el).forEach(function(b){b.classList.remove('active')});
+      card.classList.add('active');loadView();
     };
-    el.appendChild(btn);
+    el.appendChild(card);
   });
+  S.extraViews=extraViews;
 }
 
 function updateViewInfo(){
@@ -1034,20 +1127,45 @@ function bindUI(){
       t.classList.add('active');S.method=t.getAttribute('data-method')};
   });
 
-  /* Text */
-  $('#pds-add-heading').onclick=function(){addText('Heading',{fontSize:48,fontWeight:'bold'})};
-  $('#pds-add-paragraph').onclick=function(){addText('Add your paragraph text here',{fontSize:18})};
-  $('#pds-font').onchange=function(){applyText('fontFamily',this.value)};
+  /* Text editor */
+  $('#pds-add-text-btn').onclick=applyTextFromEditor;
+  $('#pds-te-input').oninput=function(){
+    var o=getActive();
+    if(o&&(o.type==='i-text'||o.type==='text')){o.set('text',this.value);S.canvas.renderAll()}
+  };
+  $('#pds-te-close').onclick=function(){$('[data-panel="products"]').click()};
+  $$('.pds-lang-tab').forEach(function(t){
+    t.onclick=function(){$$('.pds-lang-tab').forEach(function(x){x.classList.remove('active')});t.classList.add('active')};
+  });
+  ['font','color','outline'].forEach(function(k){
+    var row=$('#pds-te-'+k+'-row'),drop=$('#pds-te-'+k+'-drop');
+    if(row&&drop)row.onclick=function(){drop.classList.toggle('open')};
+  });
+  $('#pds-te-center').onclick=centerSel;
+  $('#pds-te-layer').onclick=function(){bringUp()};
+  $('#pds-te-flip').onclick=flipH;
+  $('#pds-te-lock').onclick=function(){lockSel();syncTextUI()};
+  $('#pds-te-dup').onclick=dupSel;
+  $('#pds-font').onchange=function(){applyText('fontFamily',this.value);$('#pds-te-font-val').textContent=this.value};
   $('#pds-font-size').oninput=function(){$('#pds-fs-val').textContent=this.value;applyText('fontSize',parseInt(this.value))};
-  $('#pds-text-color').oninput=function(){applyText('fill',this.value)};
-  $('#pds-bold').onclick=function(){var o=getActive(),v=(o&&o.fontWeight==='bold')?'normal':'bold';applyText('fontWeight',v);this.classList.toggle('active',v==='bold')};
-  $('#pds-italic').onclick=function(){var o=getActive(),v=(o&&o.fontStyle==='italic')?'normal':'italic';applyText('fontStyle',v);this.classList.toggle('active',v==='italic')};
-  $('#pds-underline').onclick=function(){var o=getActive(),v=!o||!o.underline;applyText('underline',v);this.classList.toggle('active',v)};
-  $('#pds-outline').oninput=function(){var w=parseInt(this.value);applyText('stroke',w>0?'#000':'');applyText('strokeWidth',w)};
-  $('#pds-shadow').oninput=function(){var b=parseInt(this.value);applyText('shadow',b>0?new fabric.Shadow({blur:b,offsetX:2,offsetY:2,color:'rgba(0,0,0,.4)'}):null)};
-  $('#pds-curve').oninput=function(){/* curve placeholder - visual indicator */toast('Curve: '+this.value+'°')};
+  $('#pds-text-color').oninput=function(){applyText('fill',this.value);$('#pds-te-swatch').style.background=this.value;$('#pds-te-color-val').textContent=this.value==='#000000'?'Black':this.value};
+  $('#pds-outline').oninput=function(){var w=parseInt(this.value);applyText('stroke',w>0?'#000':'');applyText('strokeWidth',w);$('#pds-te-outline-val').textContent=w>0?w+'px':'None'};
+  $('#pds-curve').oninput=function(){$('#pds-arc-val').textContent=this.value};
 
-  /* Upload */
+  /* Right sidebar utils */
+  $('#pds-sleeves-btn').onclick=function(){
+    if(S.extraViews&&S.extraViews.length){saveCurrentView();S.view=S.extraViews[0];loadView();renderViews();toast('Switched to '+getViewCfg().label)}
+    else toast('No extra views for this product');
+  };
+  $('#pds-zoom-btn').onclick=function(){setZoom(0.15);setTimeout(function(){setZoom(-0.15)},0)};
+  var zoomIn=function(){setZoom(0.1)},zoomOut=function(){setZoom(-0.1)};
+  $('#pds-ft-zoomin').onclick=zoomIn;$('#pds-ft-zoomout').onclick=zoomOut;
+  $('#pds-zoom-btn').ondblclick=function(){S.zoom=1;S.canvas.setZoom(1);S.canvas.renderAll();$('#pds-zoom-lbl').textContent='100%'};
+  $('#pds-share-btn').onclick=function(){
+    saveDesign();toast('Design saved — share the JSON file');
+  };
+
+  /* Products - remove old text handlers */
   $('#pds-file').onchange=function(){handleUpload(this.files[0]);this.value=''};
   var dz=$('#pds-dropzone');
   dz.ondragover=function(e){e.preventDefault();dz.classList.add('over')};
@@ -1128,6 +1246,7 @@ function bindUI(){
    SECTION 14: INITIALIZATION
    ============================================================ */
 function init(){
+  setupCustomControls();
   renderProductPicker();renderProduct();renderClipTabs();renderShapes();renderTemplates();
   bindUI();
   requestAnimationFrame(function(){
