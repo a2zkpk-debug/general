@@ -531,7 +531,7 @@ var S = {
   productId:'tshirt', color:'#ffffff', view:'front', method:'printing',
   canvas:null, zoom:1, panning:false, lastPan:{x:0,y:0},
   viewData:{}, history:{}, histIdx:{}, restoring:false,
-  uploads:[], autosaveTimer:null, productPickerOpen:false
+  uploads:[], autosaveTimer:null, productPickerOpen:false, nnEditing:null
 };
 var $=function(s,r){return(r||document).querySelector(s)};
 var $$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
@@ -553,7 +553,7 @@ function saveCurrentView(){
   S.viewData[k]=JSON.stringify(S.canvas.toJSON(JSON_PROPS));
 }
 
-function loadView(){
+function loadView(cb){
   saveCurrentView();
   var k=viewKey(),size=canvasSize();
   if(!S.canvas){
@@ -563,14 +563,12 @@ function loadView(){
   S.canvas.setWidth(size.w);S.canvas.setHeight(size.h);
   S.canvas.clipPath=new fabric.Rect({width:size.w,height:size.h,absolutePositioned:true});
   S.restoring=true;
+  function done(){S.restoring=false;updateLayers();syncTextUI();updateHistBtns();rebindNameNumberObjects();if(cb)cb()}
   if(S.viewData[k]){
-    S.canvas.loadFromJSON(S.viewData[k],function(){
-      S.canvas.renderAll();S.restoring=false;updateLayers();syncTextUI();updateHistBtns();
-      rebindNameNumberObjects();
-    });
+    S.canvas.loadFromJSON(S.viewData[k],function(){S.canvas.renderAll();done()});
   } else {
     S.canvas.clear();S.canvas.backgroundColor='transparent';S.canvas.renderAll();
-    S.restoring=false;initHistory();updateLayers();
+    initHistory();done();
   }
   applyPrintZone();updateViewInfo();
 }
@@ -651,11 +649,12 @@ function addText(txt,opts){
   pushHistory();updateLayers();toast('Text added');return o;
 }
 
-/* Lock name/number text — no drag after user clicks outside */
+/* Lock name/number — finalized, no drag */
 function lockNameNumber(obj){
   if(!obj||!obj.pdsNameNumber||obj.pdsLocked)return;
-  if(obj.isEditing)obj.exitEditing();
+  if(obj.isEditing)try{obj.exitEditing()}catch(e){}
   obj.pdsLocked=true;
+  S.nnEditing=null;
   obj.set({
     lockMovementX:true,lockMovementY:true,
     lockScalingX:true,lockScalingY:true,lockRotation:true,
@@ -668,6 +667,7 @@ function lockNameNumber(obj){
 
 function bindNameNumberEvents(obj){
   if(!obj||!obj.pdsNameNumber)return;
+  obj.off('editing:exited');
   obj.on('editing:exited',function(){
     lockNameNumber(obj);
     pushHistory();
@@ -676,7 +676,6 @@ function bindNameNumberEvents(obj){
   });
 }
 
-/* Add name/number text — starts in edit mode, locks on click outside */
 function addNameNumberText(txt,opts){
   opts=opts||{};var c=canvasSize();
   var o=new fabric.IText(txt,{
@@ -684,13 +683,14 @@ function addNameNumberText(txt,opts){
     fontFamily:opts.fontFamily||'Impact',fontSize:opts.fontSize||28,
     fill:opts.fill||'#000000',fontWeight:'bold',
     pdsId:uid(),pdsName:opts.label||'Name',pdsNameNumber:true,pdsLocked:false,
-    editable:true,hasControls:true,hasBorders:true,
+    editable:true,hasControls:false,hasBorders:true,
     lockMovementX:true,lockMovementY:true,lockScalingX:true,lockScalingY:true,lockRotation:true
   });
   S.canvas.add(o);
   S.canvas.setActiveObject(o);
+  S.nnEditing=o;
   bindNameNumberEvents(o);
-  setTimeout(function(){o.enterEditing();o.selectAll()},100);
+  setTimeout(function(){o.enterEditing();o.selectAll()},150);
   S.canvas.renderAll();
   updateLayers();
   return o;
@@ -700,32 +700,36 @@ var NN_QUEUE=[];
 function processNameNumberQueue(){
   if(!NN_QUEUE.length)return;
   var next=NN_QUEUE.shift();
-  setTimeout(function(){addNameNumberText(next.txt,next.opts)},200);
+  setTimeout(function(){addNameNumberText(next.txt,next.opts)},300);
 }
 
-function getNNSize(){
-  var s=$('#pds-nn-size').value;
-  if(s==='large')return{nameSize:28,numSize:64};
-  if(s==='medium')return{nameSize:22,numSize:48};
-  return{nameSize:16,numSize:36};
-}
-
-function addJersey(){
+function placeNameNumbers(){
   var addNames=$('#pds-nn-names').checked;
   var addNums=$('#pds-nn-nums').checked;
   if(!addNames&&!addNums){toast('Select at least one option');return}
-  var side=$('#pds-nn-side').value;
-  if(side!==S.view){saveCurrentView();S.view=side;renderViews();loadView()}
   var sizes=getNNSize(),font=$('#pds-nn-font').value,color=$('#pds-nn-color').value;
   var c=canvasSize();
   NN_QUEUE=[];
   if(addNames&&addNums){
     NN_QUEUE.push({txt:'00',opts:{label:'Number',fontFamily:font,fontSize:sizes.numSize,fill:color,top:c.h*.58,left:c.w/2}});
     addNameNumberText('NAME',{label:'Name',fontFamily:font,fontSize:sizes.nameSize,fill:color,top:c.h*.32,left:c.w/2});
+    toast('Type name, then click outside canvas');
   } else if(addNames){
     addNameNumberText('NAME',{label:'Name',fontFamily:font,fontSize:sizes.nameSize,fill:color,top:c.h*.4,left:c.w/2});
+    toast('Type name, then click outside canvas');
   } else {
     addNameNumberText('00',{label:'Number',fontFamily:font,fontSize:sizes.numSize,fill:color,top:c.h*.45,left:c.w/2});
+    toast('Type number, then click outside canvas');
+  }
+}
+
+function addJersey(){
+  var side=$('#pds-nn-side').value;
+  if(side!==S.view){
+    saveCurrentView();S.view=side;renderViews();
+    loadView(function(){placeNameNumbers()});
+  } else {
+    placeNameNumbers();
   }
 }
 
@@ -848,7 +852,9 @@ function setOpacity(v){
    ============================================================ */
 function setupGuides(){
   S.canvas.on('object:moving',function(e){
-    var o=e.target,c=canvasSize(),snap=8;
+    var o=e.target;
+    if(o.pdsNameNumber&&(o.pdsLocked||o.isEditing))return;
+    var c=canvasSize(),snap=8;
     if(Math.abs(o.left-c.w/2)<snap)o.left=c.w/2;
     if(Math.abs(o.top-c.h/2)<snap)o.top=c.h/2;
     if(Math.abs(o.left)<snap)o.left=0;
@@ -911,8 +917,19 @@ function setupCustomControls(){
     ctx.restore();
   }
 }
+function getNNSize(){
+  var s=$('#pds-nn-size').value;
+  if(s==='large')return{nameSize:28,numSize:64};
+  if(s==='medium')return{nameSize:22,numSize:48};
+  return{nameSize:16,numSize:36};
+}
+
 function finalizeEditingNameNumber(){
   if(!S.canvas)return;
+  if(S.nnEditing&&S.nnEditing.isEditing){
+    S.nnEditing.exitEditing();
+    return;
+  }
   S.canvas.getObjects().forEach(function(o){
     if(o.type==='i-text'&&o.pdsNameNumber&&o.isEditing)o.exitEditing();
   });
@@ -926,6 +943,8 @@ function rebindNameNumberObjects(){
       else bindNameNumberEvents(o);
     }
   });
+}
+
 function openTextPanelIfText(){
   var o=getActive();
   if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber){
@@ -1197,19 +1216,25 @@ function bindCanvasEvents(){
   c.on('object:removed',function(){if(!S.restoring)updateLayers()});
   c.on('selection:created',function(){updateLayers();syncTextUI();openTextPanelIfText()});
   c.on('selection:updated',function(){updateLayers();syncTextUI();openTextPanelIfText()});
-  c.on('selection:cleared',function(){finalizeEditingNameNumber();updateLayers()});
+  c.on('selection:cleared',function(){updateLayers()});
   c.on('mouse:down',function(opt){
-    /* Click outside text — finalize name/number editing */
-    if(!opt.target)finalizeEditingNameNumber();
+    if(S.nnEditing&&S.nnEditing.isEditing){
+      var t=opt.target;
+      if(!t||t!==S.nnEditing)finalizeEditingNameNumber();
+    }
   });
   c.on('mouse:wheel',function(opt){setZoom(opt.e.deltaY>0?-.05:.05);opt.e.preventDefault();opt.e.stopPropagation()});
   setupGuides();
-  document.addEventListener('mousedown',function(e){
-    var cv=document.getElementById('pds-canvas');
-    if(cv&&!cv.contains(e.target)&&!e.target.closest('.pds-panel')&&!e.target.closest('.pds-iconnav')){
+  if(!S._nnDocBound){
+    S._nnDocBound=true;
+    document.addEventListener('mousedown',function(e){
+      if(!S.nnEditing||!S.nnEditing.isEditing)return;
+      var zone=document.getElementById('pds-printzone');
+      if(zone&&zone.contains(e.target))return;
       finalizeEditingNameNumber();
-    }
-  });
+    });
+  }
+  document.addEventListener('keydown',function(e){
     if(e.code==='Space'&&!S.panning&&e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'&&e.target.tagName!=='SELECT'){
       S.panning=true;S.canvas.defaultCursor='grab';S.canvas.selection=false;e.preventDefault();
     }
