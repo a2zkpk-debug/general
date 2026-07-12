@@ -141,10 +141,26 @@
       </div>
 
       <div class="pds-panel__section" data-panel="names">
-        <h2 class="pds-panel__title">Names & Numbers</h2>
-        <div class="pds-field"><label>Name</label><input type="text" class="pds-input" id="pds-player-name" placeholder="SMITH"></div>
-        <div class="pds-field"><label>Number</label><input type="text" class="pds-input" id="pds-player-num" placeholder="23"></div>
-        <button class="pds-btn pds-btn--primary pds-btn--block" id="pds-add-jersey">Add to Design</button>
+        <div class="pds-te-header">
+          <div>
+            <span class="pds-te-label">NAMES &amp; NUMBERS</span>
+            <h2 class="pds-te-title">Names &amp; Numbers Tools</h2>
+          </div>
+          <button class="pds-te-close" id="pds-nn-close" title="Close">×</button>
+        </div>
+        <div class="pds-nn-checks">
+          <label class="pds-nn-check"><input type="checkbox" id="pds-nn-names" checked> Add Names</label>
+          <label class="pds-nn-check pds-nn-check--off"><input type="checkbox" id="pds-nn-subs" disabled> Add Subtitles</label>
+          <label class="pds-nn-check"><input type="checkbox" id="pds-nn-nums" checked> Add Numbers</label>
+        </div>
+        <div class="pds-te-settings">
+          <div class="pds-nn-row"><span>Side</span><select class="pds-nn-select" id="pds-nn-side"><option value="back" selected>Back</option><option value="front">Front</option></select></div>
+          <div class="pds-nn-row"><span>Size</span><select class="pds-nn-select" id="pds-nn-size"><option value="large" selected>Large</option><option value="medium">Medium</option><option value="small">Small</option></select></div>
+          <div class="pds-nn-row"><span>Font</span><select class="pds-nn-select pds-nn-select--wide" id="pds-nn-font"><option value="Impact">Interstate Black</option><option value="Bebas Neue">Bebas Neue</option><option value="Inter">Inter Bold</option><option value="Arial">Arial Black</option></select></div>
+          <button class="pds-te-row" id="pds-nn-color-row"><span>Color</span><span class="pds-te-val" id="pds-nn-color-val">Black</span><span class="pds-te-swatch" id="pds-nn-swatch" style="background:#000"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <div class="pds-te-dropdown" id="pds-nn-color-drop"><input type="color" class="pds-input" id="pds-nn-color" value="#000000"></div>
+        </div>
+        <button class="pds-btn pds-btn--primary pds-btn--block" id="pds-add-jersey" style="margin-top:16px">Enter Names/Numbers</button>
       </div>
     </aside>
 
@@ -236,7 +252,7 @@
 /* ===== BODY LAYOUT ===== */
 .pds-body{display:flex;flex:1;overflow:hidden;min-height:0}
 /* ===== ICON NAV ===== */
-.pds-iconnav{display:flex;flex-direction:column;width:72px;background:var(--surface);border-right:1px solid var(--border);padding:8px 0;overflow-y:auto;flex-shrink:0;transition:width .3s}
+.pds-iconnav{display:flex;flex-direction:column;width:88px;background:var(--surface);border-right:1px solid var(--border);padding:10px 0;overflow-y:auto;flex-shrink:0;transition:width .3s}
 .pds-iconnav.collapsed{width:0;padding:0;overflow:hidden;border:none}
 .pds-iconnav__btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border:none;background:none;cursor:pointer;color:var(--muted);font-size:10px;font-weight:600;position:relative;transition:.2s;margin:2px 6px;border-radius:10px}
 .pds-iconnav__btn svg{width:24px;height:24px;padding:6px;border-radius:8px;transition:.2s}
@@ -348,6 +364,15 @@
 .pds-te-slider{margin-top:14px}
 .pds-te-slider-head{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px}
 .pds-te-slider-head span:last-child{color:var(--blue)}
+/* ===== NAMES & NUMBERS ===== */
+.pds-nn-checks{display:flex;flex-direction:column;gap:10px;padding:12px 0;border-bottom:1px solid var(--border);margin-bottom:4px}
+.pds-nn-check{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text);cursor:pointer}
+.pds-nn-check--off{opacity:.4;cursor:not-allowed}
+.pds-nn-check input{accent-color:var(--blue);width:16px;height:16px}
+.pds-nn-row{display:flex;align-items:center;justify-content:space-between;padding:14px 4px;border-bottom:1px solid var(--border);gap:12px}
+.pds-nn-row span{font-size:14px;font-weight:600;color:var(--text);flex-shrink:0}
+.pds-nn-select{padding:8px 14px;border:1px solid var(--border);border-radius:20px;font-size:13px;font-weight:600;background:#f0f2f5;color:var(--text);outline:none;cursor:pointer;min-width:100px;text-align:center}
+.pds-nn-select--wide{min-width:160px;flex:1}
 /* ===== WORKSPACE ===== */
 .pds-workspace{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;background:var(--bg);overflow:hidden;min-width:0;padding:16px}
 .pds-workspace__tools{position:absolute;top:16px;left:16px;display:flex;flex-direction:column;gap:8px;z-index:5}
@@ -525,7 +550,7 @@ function viewKey(){return S.productId+'_'+S.view}
 function saveCurrentView(){
   if(!S.canvas||S.restoring)return;
   var k=viewKey();
-  S.viewData[k]=JSON.stringify(S.canvas.toJSON(['pdsId','pdsName','pdsLocked']));
+  S.viewData[k]=JSON.stringify(S.canvas.toJSON(JSON_PROPS));
 }
 
 function loadView(){
@@ -541,6 +566,7 @@ function loadView(){
   if(S.viewData[k]){
     S.canvas.loadFromJSON(S.viewData[k],function(){
       S.canvas.renderAll();S.restoring=false;updateLayers();syncTextUI();updateHistBtns();
+      rebindNameNumberObjects();
     });
   } else {
     S.canvas.clear();S.canvas.backgroundColor='transparent';S.canvas.renderAll();
@@ -564,13 +590,13 @@ function applyPrintZone(){
 }
 
 function initHistory(){
-  var k=viewKey();S.history[k]=[JSON.stringify(S.canvas.toJSON(['pdsId','pdsName','pdsLocked']))];
+  var k=viewKey();S.history[k]=[JSON.stringify(S.canvas.toJSON(JSON_PROPS))];
   S.histIdx[k]=0;updateHistBtns();
 }
 
 function pushHistory(){
   if(S.restoring||!S.canvas)return;
-  var k=viewKey(),j=JSON.stringify(S.canvas.toJSON(['pdsId','pdsName','pdsLocked']));
+  var k=viewKey(),j=JSON.stringify(S.canvas.toJSON(JSON_PROPS));
   if(!S.history[k])S.history[k]=[];
   S.history[k]=S.history[k].slice(0,(S.histIdx[k]||0)+1);
   S.history[k].push(j);
@@ -584,7 +610,7 @@ function undo(){
   if(i<=0)return;
   S.restoring=true;
   S.canvas.loadFromJSON(S.history[k][i-1],function(){
-    S.canvas.renderAll();S.restoring=false;S.histIdx[k]=i-1;updateHistBtns();updateLayers();syncTextUI();
+    S.canvas.renderAll();S.restoring=false;S.histIdx[k]=i-1;updateHistBtns();updateLayers();syncTextUI();rebindNameNumberObjects();
   });
 }
 
@@ -593,7 +619,7 @@ function redo(){
   if(i>=h.length-1)return;
   S.restoring=true;
   S.canvas.loadFromJSON(h[i+1],function(){
-    S.canvas.renderAll();S.restoring=false;S.histIdx[k]=i+1;updateHistBtns();updateLayers();syncTextUI();
+    S.canvas.renderAll();S.restoring=false;S.histIdx[k]=i+1;updateHistBtns();updateLayers();syncTextUI();rebindNameNumberObjects();
   });
 }
 
@@ -609,6 +635,8 @@ function updateHistBtns(){
 function getActive(){return S.canvas?S.canvas.getActiveObject():null}
 function getActives(){var o=getActive();if(!o)return[];return o.type==='activeSelection'?o.getObjects():[o]}
 
+var JSON_PROPS=['pdsId','pdsName','pdsLocked','pdsNameNumber'];
+
 function addText(txt,opts){
   opts=opts||{};var c=canvasSize();
   var o=new fabric.IText(txt||'Your Text',{
@@ -617,10 +645,88 @@ function addText(txt,opts){
     fill:opts.fill||$('#pds-text-color').value,fontWeight:opts.fontWeight||'normal',
     fontStyle:opts.fontStyle||'normal',underline:opts.underline||false,
     stroke:opts.stroke||'',strokeWidth:opts.strokeWidth||0,
-    shadow:opts.shadow||null,pdsId:uid(),pdsName:'Text'
+    shadow:opts.shadow||null,pdsId:uid(),pdsName:'Text',pdsNameNumber:false
   });
   S.canvas.add(o);S.canvas.setActiveObject(o);S.canvas.renderAll();
-  pushHistory();updateLayers();toast('Text added');
+  pushHistory();updateLayers();toast('Text added');return o;
+}
+
+/* Lock name/number text — no drag after user clicks outside */
+function lockNameNumber(obj){
+  if(!obj||!obj.pdsNameNumber||obj.pdsLocked)return;
+  if(obj.isEditing)obj.exitEditing();
+  obj.pdsLocked=true;
+  obj.set({
+    lockMovementX:true,lockMovementY:true,
+    lockScalingX:true,lockScalingY:true,lockRotation:true,
+    hasControls:false,hasBorders:false,
+    selectable:false,evented:false,editable:false
+  });
+  S.canvas.discardActiveObject();
+  S.canvas.renderAll();
+}
+
+function bindNameNumberEvents(obj){
+  if(!obj||!obj.pdsNameNumber)return;
+  obj.on('editing:exited',function(){
+    lockNameNumber(obj);
+    pushHistory();
+    toast((obj.pdsName||'Text')+' placed');
+    processNameNumberQueue();
+  });
+}
+
+/* Add name/number text — starts in edit mode, locks on click outside */
+function addNameNumberText(txt,opts){
+  opts=opts||{};var c=canvasSize();
+  var o=new fabric.IText(txt,{
+    left:opts.left||c.w/2,top:opts.top||c.h/2,originX:'center',originY:'center',
+    fontFamily:opts.fontFamily||'Impact',fontSize:opts.fontSize||28,
+    fill:opts.fill||'#000000',fontWeight:'bold',
+    pdsId:uid(),pdsName:opts.label||'Name',pdsNameNumber:true,pdsLocked:false,
+    editable:true,hasControls:true,hasBorders:true,
+    lockMovementX:true,lockMovementY:true,lockScalingX:true,lockScalingY:true,lockRotation:true
+  });
+  S.canvas.add(o);
+  S.canvas.setActiveObject(o);
+  bindNameNumberEvents(o);
+  setTimeout(function(){o.enterEditing();o.selectAll()},100);
+  S.canvas.renderAll();
+  updateLayers();
+  return o;
+}
+
+var NN_QUEUE=[];
+function processNameNumberQueue(){
+  if(!NN_QUEUE.length)return;
+  var next=NN_QUEUE.shift();
+  setTimeout(function(){addNameNumberText(next.txt,next.opts)},200);
+}
+
+function getNNSize(){
+  var s=$('#pds-nn-size').value;
+  if(s==='large')return{nameSize:28,numSize:64};
+  if(s==='medium')return{nameSize:22,numSize:48};
+  return{nameSize:16,numSize:36};
+}
+
+function addJersey(){
+  var addNames=$('#pds-nn-names').checked;
+  var addNums=$('#pds-nn-nums').checked;
+  if(!addNames&&!addNums){toast('Select at least one option');return}
+  var side=$('#pds-nn-side').value;
+  if(side!==S.view){saveCurrentView();S.view=side;renderViews();loadView()}
+  var sizes=getNNSize(),font=$('#pds-nn-font').value,color=$('#pds-nn-color').value;
+  var c=canvasSize();
+  NN_QUEUE=[];
+  if(addNames&&addNums){
+    NN_QUEUE.push({txt:'00',opts:{label:'Number',fontFamily:font,fontSize:sizes.numSize,fill:color,top:c.h*.58,left:c.w/2}});
+    addNameNumberText('NAME',{label:'Name',fontFamily:font,fontSize:sizes.nameSize,fill:color,top:c.h*.32,left:c.w/2});
+  } else if(addNames){
+    addNameNumberText('NAME',{label:'Name',fontFamily:font,fontSize:sizes.nameSize,fill:color,top:c.h*.4,left:c.w/2});
+  } else {
+    addNameNumberText('00',{label:'Number',fontFamily:font,fontSize:sizes.numSize,fill:color,top:c.h*.45,left:c.w/2});
+  }
 }
 
 function addImage(src,name){
@@ -672,14 +778,6 @@ function addQR(){
     var img=tmp.querySelector('img');if(!img){toast('QR generation failed');return}
     addImage(img.src,'QR Code');
   },200);
-}
-
-function addJersey(){
-  var name=$('#pds-player-name').value.trim()||'NAME';
-  var num=$('#pds-player-num').value.trim()||'00';
-  var c=canvasSize();
-  addText(name,{fontSize:22,fontWeight:'bold',fontFamily:'Impact',top:c.h*.3});
-  addText(num,{fontSize:56,fontWeight:'bold',fontFamily:'Bebas Neue',fill:'#dc2626',top:c.h*.55});
 }
 
 function generateAI(){
@@ -766,7 +864,7 @@ function setupGuides(){
 function syncTextUI(){
   var o=getActive();
   var teInput=$('#pds-te-input'),teTitle=$('#pds-te-title'),addBtn=$('#pds-add-text-btn');
-  if(o&&(o.type==='i-text'||o.type==='text')){
+  if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber){
     teTitle.textContent='Edit Your Text';
     addBtn.textContent='Update Text';
     teInput.value=o.text||'';
@@ -789,7 +887,7 @@ function syncTextUI(){
 function applyTextFromEditor(){
   var txt=$('#pds-te-input').value.trim()||'Your Text';
   var o=getActive();
-  if(o&&(o.type==='i-text'||o.type==='text')){
+  if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber){
     o.set('text',txt);S.canvas.renderAll();pushHistory();toast('Text updated');
   } else {
     addText(txt,{fontSize:parseInt($('#pds-font-size').value),fill:$('#pds-text-color').value,fontFamily:$('#pds-font').value});
@@ -811,6 +909,28 @@ function setupCustomControls(){
     ctx.strokeStyle='#64748b';ctx.lineWidth=1.2;
     ctx.beginPath();ctx.moveTo(left-4,top-2);ctx.lineTo(left+4,top-2);ctx.moveTo(left-3,top-2);ctx.lineTo(left-3,top+4);ctx.lineTo(left+3,top+4);ctx.lineTo(left+3,top-2);ctx.stroke();
     ctx.restore();
+  }
+}
+function finalizeEditingNameNumber(){
+  if(!S.canvas)return;
+  S.canvas.getObjects().forEach(function(o){
+    if(o.type==='i-text'&&o.pdsNameNumber&&o.isEditing)o.exitEditing();
+  });
+}
+
+function rebindNameNumberObjects(){
+  if(!S.canvas)return;
+  S.canvas.getObjects().forEach(function(o){
+    if(o.pdsNameNumber){
+      if(o.pdsLocked)lockNameNumber(o);
+      else bindNameNumberEvents(o);
+    }
+  });
+function openTextPanelIfText(){
+  var o=getActive();
+  if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber){
+    var btn=$('[data-panel="text"]');
+    if(btn&&!btn.classList.contains('active'))btn.click();
   }
 }
 function applyText(prop,val){
@@ -1075,13 +1195,21 @@ function bindCanvasEvents(){
   c.on('object:modified',function(){pushHistory();updateLayers()});
   c.on('object:added',function(){if(!S.restoring)updateLayers()});
   c.on('object:removed',function(){if(!S.restoring)updateLayers()});
-  c.on('selection:created',function(){updateLayers();syncTextUI()});
-  c.on('selection:updated',function(){updateLayers();syncTextUI()});
-  c.on('selection:cleared',function(){updateLayers()});
+  c.on('selection:created',function(){updateLayers();syncTextUI();openTextPanelIfText()});
+  c.on('selection:updated',function(){updateLayers();syncTextUI();openTextPanelIfText()});
+  c.on('selection:cleared',function(){finalizeEditingNameNumber();updateLayers()});
+  c.on('mouse:down',function(opt){
+    /* Click outside text — finalize name/number editing */
+    if(!opt.target)finalizeEditingNameNumber();
+  });
   c.on('mouse:wheel',function(opt){setZoom(opt.e.deltaY>0?-.05:.05);opt.e.preventDefault();opt.e.stopPropagation()});
   setupGuides();
-  /* Spacebar pan */
-  document.addEventListener('keydown',function(e){
+  document.addEventListener('mousedown',function(e){
+    var cv=document.getElementById('pds-canvas');
+    if(cv&&!cv.contains(e.target)&&!e.target.closest('.pds-panel')&&!e.target.closest('.pds-iconnav')){
+      finalizeEditingNameNumber();
+    }
+  });
     if(e.code==='Space'&&!S.panning&&e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'&&e.target.tagName!=='SELECT'){
       S.panning=true;S.canvas.defaultCursor='grab';S.canvas.selection=false;e.preventDefault();
     }
@@ -1131,7 +1259,7 @@ function bindUI(){
   $('#pds-add-text-btn').onclick=applyTextFromEditor;
   $('#pds-te-input').oninput=function(){
     var o=getActive();
-    if(o&&(o.type==='i-text'||o.type==='text')){o.set('text',this.value);S.canvas.renderAll()}
+    if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber){o.set('text',this.value);S.canvas.renderAll()}
   };
   $('#pds-te-close').onclick=function(){$('[data-panel="products"]').click()};
   $$('.pds-lang-tab').forEach(function(t){
@@ -1178,13 +1306,19 @@ function bindUI(){
   $('#pds-ai-generate').onclick=generateAI;
   $('#pds-add-qr').onclick=addQR;
   $('#pds-add-jersey').onclick=addJersey;
+  $('#pds-nn-close').onclick=function(){$('[data-panel="products"]').click()};
+  $('#pds-nn-color-row').onclick=function(){$('#pds-nn-color-drop').classList.toggle('open')};
+  $('#pds-nn-color').oninput=function(){
+    $('#pds-nn-swatch').style.background=this.value;
+    $('#pds-nn-color-val').textContent=this.value==='#000000'?'Black':this.value;
+  };
   $('#pds-clip-search').oninput=function(){var act=$('.pds-tab.active');renderClipart(act?act.textContent:Object.keys(CLIPART)[0])};
 
   /* Quick actions */
   $$('.pds-qact').forEach(function(btn){
     btn.onclick=function(){
       var a=btn.getAttribute('data-action');
-      if(a==='text'){$('[data-panel="text"]').click();addText('Your Text')}
+      if(a==='text'){$('[data-panel="text"]').click();$('#pds-te-input').focus()}
       if(a==='upload')$('[data-panel="upload"]').click();
       if(a==='ai')$('[data-panel="ai"]').click();
     };
