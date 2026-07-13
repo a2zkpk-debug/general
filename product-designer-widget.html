@@ -52,12 +52,19 @@
       </div>
 
       <div class="pds-panel__section" data-panel="text">
+        <p class="pds-text-intro">Click or drag to add text</p>
+        <button type="button" class="pds-text-bigbtn" id="pds-quick-add-text" title="Add Text to Product">
+          <span>T</span>
+        </button>
+        <div class="pds-text-presets" id="pds-text-presets"></div>
+        <div class="pds-text-fonts" id="pds-text-fonts"></div>
+        <div class="pds-text-divider"><span>Edit selected text</span></div>
         <div class="pds-te-header">
           <div>
             <span class="pds-te-label">TEXT EDITOR</span>
             <h2 class="pds-te-title" id="pds-te-title">Add New Text</h2>
           </div>
-          <button class="pds-te-close" id="pds-te-close" title="Close">×</button>
+          <button type="button" class="pds-te-close" id="pds-te-close" title="Close">×</button>
         </div>
         <div class="pds-lang-tabs">
           <button class="pds-lang-tab active" data-lang="en">English</button>
@@ -248,8 +255,13 @@
 #pds-app .pds-te-row,#pds-app .pds-te-close,#pds-app .pds-lang-tab{border:none!important}
 #pds-app .pds-qact{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important}
 #pds-app .pds-body{display:flex!important;flex:1 1 auto!important;min-height:500px!important}
-#pds-app .pds-iconnav{display:flex!important;flex-direction:column!important}
-#pds-app .pds-iconnav__btn,#pds-app .pds-iconnav__toggle{display:flex!important;flex-direction:column!important;width:auto!important}
+#pds-app .pds-iconnav{width:88px!important;min-width:72px!important;max-width:88px!important;flex:0 0 88px!important;visibility:visible!important;overflow:visible!important}
+#pds-app .pds-iconnav__btn,#pds-app .pds-iconnav__toggle{display:flex!important;flex-direction:column!important;align-items:center!important;width:100%!important;min-width:60px!important;min-height:52px!important;visibility:visible!important;opacity:1!important}
+#pds-app .pds-panel{width:280px!important;min-width:240px!important;flex:0 0 280px!important;visibility:visible!important;opacity:1!important;transform:none!important;position:relative!important;left:auto!important;top:auto!important;bottom:auto!important}
+#pds-app .pds-text-bigbtn,#pds-app .pds-text-preset,#pds-app .pds-font-chip,#pds-app .pds-toggle{display:flex!important;visibility:visible!important;opacity:1!important;cursor:pointer!important}
+#pds-app .pds-text-bigbtn{width:100%!important;min-height:72px!important;border:2px dashed #cbd5e1!important;background:#f5f6f8!important}
+#pds-app .pds-text-preset,#pds-app .pds-font-chip{width:100%!important;min-height:40px!important;padding:10px!important;border:1px solid #e2e8f0!important;background:#fff!important;color:#0f172a!important}
+#pds-app .pds-btn--primary{background:#007bff!important;color:#fff!important;border:none!important}
 #pds-app .pds-workspace{display:flex!important;flex:1 1 auto!important}
 #pds-app .pds-rightbar{display:flex!important;flex-direction:column!important}
 #pds-app .pds-topbar,#pds-app .pds-footer{display:flex!important}
@@ -375,6 +387,18 @@
 .pds-te-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,123,255,.15)}
 .pds-te-input::placeholder{color:#94a3b8}
 .pds-te-hint{font-size:11px;color:var(--muted);line-height:1.4;margin:0 0 14px;text-align:center}
+.pds-text-intro{font-size:13px;font-weight:600;color:var(--muted);text-align:center;margin:0 0 10px}
+.pds-text-bigbtn{width:100%;height:72px;border:2px dashed var(--border);border-radius:12px;background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;margin-bottom:12px;transition:.15s}
+.pds-text-bigbtn:hover{border-color:var(--blue);background:var(--blue-l)}
+.pds-text-bigbtn span{font-size:44px;font-weight:700;color:var(--blue);line-height:1;font-family:Georgia,'Times New Roman',serif}
+.pds-text-presets{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.pds-text-preset{padding:10px 8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);font-size:11px;font-weight:700;cursor:pointer;text-align:center;transition:.15s;color:var(--text)}
+.pds-text-preset:hover{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
+.pds-text-fonts{display:flex;flex-direction:column;gap:6px;max-height:150px;overflow-y:auto;margin-bottom:12px}
+.pds-font-chip{padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-align:left;cursor:pointer;font-size:14px;font-weight:600;transition:.15s;color:var(--text)}
+.pds-font-chip:hover{border-color:var(--blue);background:var(--blue-l)}
+.pds-text-divider{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.pds-text-divider::before,.pds-text-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 .pds-te-toolbar{display:flex;gap:6px;margin:0 0 14px;padding:4px 0}
 .pds-te-icon{width:40px;height:40px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:.15s}
 .pds-te-icon svg{width:18px;height:18px}
@@ -462,14 +486,14 @@
 /* ===== RESPONSIVE ===== */
 @media(max-width:1100px){.pds-panel{width:240px}.pds-rightbar{width:68px}}
 @media(max-width:900px){
-  .pds-panel{position:absolute;left:72px;top:0;bottom:56px;z-index:15;box-shadow:var(--shadow-lg);transform:translateX(-110%);opacity:0}
-  .pds-panel.open{transform:none;opacity:1}
+  #pds-app .pds-panel{position:absolute!important;left:72px!important;top:0!important;bottom:56px!important;z-index:15!important;box-shadow:var(--shadow-lg)!important;transform:translateX(-110%)!important;opacity:0!important;flex:0 0 280px!important}
+  #pds-app .pds-panel.open{transform:none!important;opacity:1!important}
   .pds-rightbar{position:absolute;right:0;top:0;bottom:56px;z-index:10}
   .pds-mockup{max-width:300px}
 }
 @media(max-width:640px){
-  .pds-iconnav{width:0;overflow:hidden;border:none;padding:0}
-  .pds-panel{left:0;width:100%}
+  #pds-app .pds-iconnav{width:56px!important;min-width:56px!important;flex:0 0 56px!important;overflow-y:auto!important;padding:6px 0!important}
+  #pds-app .pds-panel{left:56px!important;width:calc(100% - 56px)!important;min-width:0!important;flex:1 1 auto!important}
   .pds-rightbar{width:56px;padding:8px 4px}
   .pds-float-tools{padding:4px}
   .pds-ftool{max-height:32px}
@@ -756,6 +780,69 @@ function ensureLiveText(){
 function prepareTextEditor(){
   var fill=getAutoTextColor();
   if(!getLiveTextObj())syncTextColorUI(fill);
+}
+
+function quickAddText(opts){
+  if(!S.canvas){toast('Canvas loading…');return}
+  opts=opts||{};
+  var c=canvasSize();
+  var fill=getAutoTextColor();
+  syncTextColorUI(fill);
+  if(opts.font){$('#pds-font').value=opts.font;$('#pds-te-font-val').textContent=opts.font}
+  if(opts.size){$('#pds-font-size').value=opts.size;$('#pds-fs-val').textContent=opts.size}
+  var txt=opts.t||'Your Text';
+  var o=new fabric.IText(txt,{
+    left:c.w/2,top:c.h/2,originX:'center',originY:'center',
+    fontFamily:opts.font||$('#pds-font').value,
+    fontSize:canvasFontSize(opts.size||parseInt($('#pds-font-size').value)||36),
+    fill:fill,pdsId:uid(),pdsName:'Text',pdsNameNumber:false,pdsDraft:false
+  });
+  S.textDraftId=null;
+  S.canvas.add(o);S.canvas.setActiveObject(o);
+  $('#pds-te-input').value=txt;
+  $('#pds-panel').classList.add('open');
+  setTimeout(function(){
+    try{o.enterEditing();o.selectAll()}catch(e){}
+    S.canvas.renderAll();
+  },120);
+  pushHistory();updateLayers();syncTextUI();
+  toast('Type directly on the product');
+}
+
+function renderTextPresets(){
+  var el=$('#pds-text-presets');if(!el)return;
+  var presets=[
+    {l:'Add Text',t:'Your Text'},
+    {l:'Heading',t:'HEADING',font:'Bebas Neue',size:56},
+    {l:'Script',t:'Script',font:'Pacifico',size:42},
+    {l:'Number',t:'00',font:'Impact',size:64}
+  ];
+  el.innerHTML='';
+  presets.forEach(function(p){
+    var b=document.createElement('button');
+    b.type='button';b.className='pds-text-preset';b.textContent=p.l;
+    b.onclick=function(){quickAddText(p)};
+    el.appendChild(b);
+  });
+}
+
+function renderTextFonts(){
+  var el=$('#pds-text-fonts');if(!el)return;
+  var fonts=['Inter','Bebas Neue','Pacifico','Impact','Arial','Georgia'];
+  el.innerHTML='';
+  fonts.forEach(function(f){
+    var b=document.createElement('button');
+    b.type='button';b.className='pds-font-chip';
+    b.style.fontFamily=f;b.textContent=f;
+    b.onclick=function(){
+      $('#pds-font').value=f;$('#pds-te-font-val').textContent=f;
+      var o=getLiveTextObj();
+      if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber){
+        o.set('fontFamily',f);S.canvas.renderAll();pushHistory();
+      }else{quickAddText({t:'Your Text',font:f})}
+    };
+    el.appendChild(b);
+  });
 }
 
 function addText(txt,opts){
@@ -1433,7 +1520,8 @@ function bindUI(){
       t.classList.add('active');S.method=t.getAttribute('data-method')};
   });
 
-  /* Text editor — live preview on canvas while typing */
+  /* Text editor — live preview + Lumise-style quick add */
+  $('#pds-quick-add-text').onclick=function(){quickAddText({t:'Your Text'})};
   $('#pds-add-text-btn').onclick=applyTextFromEditor;
   $('#pds-te-input').onfocus=function(){prepareTextEditor()};
   $('#pds-te-input').oninput=function(){
@@ -1566,7 +1654,9 @@ function init(){
   S.booted=true;
   setupCustomControls();
   renderProductPicker();renderProduct();renderClipTabs();renderShapes();renderTemplates();
+  renderTextPresets();renderTextFonts();
   bindUI();
+  var panel=$('#pds-panel');if(panel)panel.classList.add('open');
   startCanvas(0);
   setInterval(triggerAutosave,30000);
 }
