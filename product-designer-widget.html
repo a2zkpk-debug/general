@@ -1,0 +1,1694 @@
+<!--
+  Premium Product Designer — Elementor Pro HTML Widget
+  Paste entire file into Elementor HTML widget at 100% width.
+-->
+<div id="pds-app" class="pds-app">
+  <header class="pds-topbar">
+    <div class="pds-topbar__left">
+      <div class="pds-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span>Design Studio</span></div>
+      <nav class="pds-steps"><span class="pds-step active">1. Design</span><span class="pds-step">2. Quantity</span><span class="pds-step">3. Review</span></nav>
+    </div>
+    <div class="pds-topbar__right">
+      <button class="pds-topbtn" id="pds-help">Help</button>
+      <button class="pds-topbtn pds-topbtn--cart" id="pds-cart">Cart <span class="pds-badge">0</span></button>
+    </div>
+  </header>
+
+  <div class="pds-body">
+    <!-- LEFT ICON NAV -->
+    <nav class="pds-iconnav" id="pds-iconnav">
+      <button class="pds-iconnav__btn active" data-panel="products" title="Products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.38 3.46L16 2 12 3.5 8 2 3.62 3.46A2 2 0 002 5.42V19a2 2 0 002 1.52L8 21l4-1.5 4 1.5 4-1.48a2 2 0 002-1.52V5.42a2 2 0 00-.62-1.96z"/></svg><span>Products</span></button>
+      <button class="pds-iconnav__btn" data-panel="text" title="Add Text"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg><span>Add Text</span></button>
+      <button class="pds-iconnav__btn" data-panel="upload" title="Upload Art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg><span>Upload Art</span></button>
+      <button class="pds-iconnav__btn" data-panel="ai" title="AI Art"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/><path d="M19 15l.75 2.25L22 18l-2.25.75L19 21l-.75-2.25L16 18l2.25-.75z"/></svg><span>AI Art</span><em class="pds-tag">AI</em></button>
+      <button class="pds-iconnav__btn" data-panel="clipart" title="Clipart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Clipart</span></button>
+      <button class="pds-iconnav__btn" data-panel="shapes" title="Shapes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><circle cx="17.5" cy="6.5" r="3.5"/></svg><span>Shapes</span></button>
+      <button class="pds-iconnav__btn" data-panel="templates" title="Templates"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Templates</span></button>
+      <button class="pds-iconnav__btn" data-panel="layers" title="Layers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/></svg><span>Layers</span></button>
+      <button class="pds-iconnav__btn" data-panel="myuploads" title="My Uploads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg><span>Uploads</span></button>
+      <button class="pds-iconnav__btn" data-panel="qrcode" title="QR Code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/></svg><span>QR Code</span></button>
+      <button class="pds-iconnav__btn" data-panel="names" title="Names"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg><span>Names</span></button>
+      <button class="pds-iconnav__btn pds-iconnav__toggle" id="pds-collapse-nav" title="Collapse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="15 18 9 12 15 6"/></svg></button>
+    </nav>
+
+    <!-- LEFT CONTENT PANEL -->
+    <aside class="pds-panel" id="pds-panel">
+      <div class="pds-panel__section active" data-panel="products">
+        <h2 class="pds-panel__title">Manage Your Products</h2>
+        <p class="pds-panel__sub">Select products and colors for your order.</p>
+        <div class="pds-product-card" id="pds-product-card">
+          <div class="pds-product-card__thumb" id="pds-product-thumb"></div>
+          <div class="pds-product-card__info">
+            <strong id="pds-product-name">Classic Tee</strong>
+            <button class="pds-linkbtn" id="pds-change-product">Change Product</button>
+          </div>
+        </div>
+        <div class="pds-field"><label>Color</label><div class="pds-swatches" id="pds-swatches"></div><span class="pds-swatch-label" id="pds-color-label">White</span></div>
+        <div class="pds-field"><label>Printing Method</label>
+          <div class="pds-toggle-group"><button class="pds-toggle active" data-method="printing">Printing</button><button class="pds-toggle" data-method="embroidery">Embroidery</button></div>
+        </div>
+        <div class="pds-product-picker" id="pds-product-picker"></div>
+        <button class="pds-btn pds-btn--outline pds-btn--block" id="pds-add-product">+ Add Another Product</button>
+      </div>
+
+      <div class="pds-panel__section" data-panel="text">
+        <p class="pds-text-intro">Click or drag to add text</p>
+        <button type="button" class="pds-text-bigbtn" id="pds-quick-add-text" title="Add Text to Product">
+          <span>T</span>
+        </button>
+        <div class="pds-text-presets" id="pds-text-presets"></div>
+        <div class="pds-text-fonts" id="pds-text-fonts"></div>
+        <div class="pds-text-divider"><span>Edit selected text</span></div>
+        <div class="pds-te-header">
+          <div>
+            <span class="pds-te-label">TEXT EDITOR</span>
+            <h2 class="pds-te-title" id="pds-te-title">Add New Text</h2>
+          </div>
+          <button type="button" class="pds-te-close" id="pds-te-close" title="Close">×</button>
+        </div>
+        <div class="pds-lang-tabs">
+          <button class="pds-lang-tab active" data-lang="en">English</button>
+          <button class="pds-lang-tab" data-lang="el">Greek</button>
+          <button class="pds-lang-tab" data-lang="he">Hebrew</button>
+        </div>
+        <textarea class="pds-te-input" id="pds-te-input" placeholder="Begin Typing..." rows="4"></textarea>
+        <button type="button" class="pds-btn pds-btn--primary pds-btn--block" id="pds-add-text-btn">Place on Product</button>
+        <p class="pds-te-hint">Text appears on the product as you type. Click the button above when finished.</p>
+        <div class="pds-te-toolbar">
+          <button class="pds-te-icon" id="pds-te-center" title="Center"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></button>
+          <button class="pds-te-icon" id="pds-te-layer" title="Layer Order"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h18"/></svg></button>
+          <button class="pds-te-icon" id="pds-te-flip" title="Flip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v14a2 2 0 002 2h3"/><line x1="12" y1="2" x2="12" y2="22"/></svg></button>
+          <button class="pds-te-icon" id="pds-te-lock" title="Lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></button>
+          <button class="pds-te-icon" id="pds-te-dup" title="Duplicate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+        </div>
+        <div class="pds-te-settings">
+          <button class="pds-te-row" id="pds-te-font-row"><span>Font</span><span class="pds-te-val" id="pds-te-font-val">Inter</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <div class="pds-te-dropdown" id="pds-te-font-drop">
+            <select class="pds-input" id="pds-font"><option value="Inter">Inter</option><option value="Bebas Neue">Bebas Neue</option><option value="Pacifico">Pacifico</option><option value="Roboto Slab">Roboto Slab</option><option value="Arial">Arial</option><option value="Georgia">Georgia</option><option value="Impact">Impact</option></select>
+          </div>
+          <button class="pds-te-row" id="pds-te-color-row"><span>Color</span><span class="pds-te-val" id="pds-te-color-val">Black</span><span class="pds-te-swatch" id="pds-te-swatch" style="background:#000"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <div class="pds-te-dropdown" id="pds-te-color-drop"><input type="color" class="pds-input" id="pds-text-color" value="#000000"></div>
+          <button class="pds-te-row" id="pds-te-outline-row"><span>Outline</span><span class="pds-te-val" id="pds-te-outline-val">None</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <div class="pds-te-dropdown" id="pds-te-outline-drop"><input type="range" class="pds-range" id="pds-outline" min="0" max="5" value="0"></div>
+        </div>
+        <div class="pds-te-slider"><div class="pds-te-slider-head"><span>Size</span><span id="pds-fs-val">36</span></div><input type="range" class="pds-range" id="pds-font-size" min="10" max="120" value="36"></div>
+        <div class="pds-te-slider"><div class="pds-te-slider-head"><span>Arc</span><span id="pds-arc-val">0</span></div><input type="range" class="pds-range" id="pds-curve" min="0" max="360" value="0"></div>
+      </div>
+
+      <div class="pds-panel__section" data-panel="upload">
+        <h2 class="pds-panel__title">Upload Artwork</h2>
+        <label class="pds-dropzone" id="pds-dropzone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span>Drag & drop or click to upload</span><small>PNG, JPG, SVG, WebP — max 15 MB</small>
+          <input type="file" id="pds-file" accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp" hidden>
+        </label>
+        <div class="pds-preview" id="pds-upload-preview"></div>
+        <div class="pds-btn-row"><button class="pds-btn pds-btn--outline" id="pds-replace-img" disabled>Replace</button><button class="pds-btn pds-btn--danger" id="pds-del-img" disabled>Delete</button></div>
+      </div>
+
+      <div class="pds-panel__section" data-panel="ai">
+        <h2 class="pds-panel__title">AI Image Generator</h2>
+        <div class="pds-field"><label>Describe your artwork</label><textarea class="pds-input pds-textarea" id="pds-ai-prompt" rows="3" placeholder="A mountain sunset with eagles..."></textarea></div>
+        <button class="pds-btn pds-btn--primary pds-btn--block" id="pds-ai-generate">✨ Generate Artwork</button>
+        <p class="pds-hint">Demo mode generates a styled placeholder graphic.</p>
+      </div>
+
+      <div class="pds-panel__section" data-panel="clipart">
+        <h2 class="pds-panel__title">Clipart Library</h2>
+        <input type="search" class="pds-input" id="pds-clip-search" placeholder="Search clipart...">
+        <div class="pds-tabs" id="pds-clip-tabs"></div>
+        <div class="pds-grid" id="pds-clip-grid"></div>
+      </div>
+
+      <div class="pds-panel__section" data-panel="shapes">
+        <h2 class="pds-panel__title">Shapes</h2>
+        <div class="pds-shape-grid" id="pds-shape-grid"></div>
+        <div class="pds-field"><label>Fill Color</label><input type="color" class="pds-input" id="pds-shape-color" value="#3b82f6"></div>
+      </div>
+
+      <div class="pds-panel__section" data-panel="templates">
+        <h2 class="pds-panel__title">Templates</h2>
+        <div class="pds-grid" id="pds-template-grid"></div>
+      </div>
+
+      <div class="pds-panel__section" data-panel="layers">
+        <h2 class="pds-panel__title">Layers</h2>
+        <ul class="pds-layers" id="pds-layers"></ul>
+      </div>
+
+      <div class="pds-panel__section" data-panel="myuploads">
+        <h2 class="pds-panel__title">My Uploads</h2>
+        <div class="pds-grid" id="pds-myuploads"></div>
+      </div>
+
+      <div class="pds-panel__section" data-panel="qrcode">
+        <h2 class="pds-panel__title">QR Code</h2>
+        <div class="pds-field"><label>URL or Text</label><input type="text" class="pds-input" id="pds-qr-text" placeholder="https://yoursite.com"></div>
+        <button class="pds-btn pds-btn--primary pds-btn--block" id="pds-add-qr">Add QR Code</button>
+      </div>
+
+      <div class="pds-panel__section" data-panel="names">
+        <div class="pds-te-header">
+          <div>
+            <span class="pds-te-label">NAMES &amp; NUMBERS</span>
+            <h2 class="pds-te-title">Names &amp; Numbers Tools</h2>
+          </div>
+          <button class="pds-te-close" id="pds-nn-close" title="Close">×</button>
+        </div>
+        <div class="pds-nn-checks">
+          <label class="pds-nn-check"><input type="checkbox" id="pds-nn-names" checked> Add Names</label>
+          <label class="pds-nn-check pds-nn-check--off"><input type="checkbox" id="pds-nn-subs" disabled> Add Subtitles</label>
+          <label class="pds-nn-check"><input type="checkbox" id="pds-nn-nums" checked> Add Numbers</label>
+        </div>
+        <div class="pds-te-settings">
+          <div class="pds-nn-row"><span>Side</span><select class="pds-nn-select" id="pds-nn-side"><option value="back" selected>Back</option><option value="front">Front</option></select></div>
+          <div class="pds-nn-row"><span>Size</span><select class="pds-nn-select" id="pds-nn-size"><option value="large" selected>Large</option><option value="medium">Medium</option><option value="small">Small</option></select></div>
+          <div class="pds-nn-row"><span>Font</span><select class="pds-nn-select pds-nn-select--wide" id="pds-nn-font"><option value="Impact">Interstate Black</option><option value="Bebas Neue">Bebas Neue</option><option value="Inter">Inter Bold</option><option value="Arial">Arial Black</option></select></div>
+          <button class="pds-te-row" id="pds-nn-color-row"><span>Color</span><span class="pds-te-val" id="pds-nn-color-val">Black</span><span class="pds-te-swatch" id="pds-nn-swatch" style="background:#000"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+          <div class="pds-te-dropdown" id="pds-nn-color-drop"><input type="color" class="pds-input" id="pds-nn-color" value="#000000"></div>
+        </div>
+        <button class="pds-btn pds-btn--primary pds-btn--block" id="pds-add-jersey" style="margin-top:16px">Enter Names/Numbers</button>
+      </div>
+    </aside>
+
+    <!-- CENTER CANVAS -->
+    <main class="pds-workspace" id="pds-workspace">
+      <div class="pds-workspace__tools">
+        <button class="pds-wstool" id="pds-ws-undo" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6.69 3.03L3 13"/></svg>UNDO</button>
+        <button class="pds-wstool" id="pds-ws-redo" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 019-9 9 9 0 016.69 3.03L21 13"/></svg>REDO</button>
+        <button class="pds-wstool pds-wstool--text" id="pds-ws-reset">START OVER</button>
+      </div>
+      <div class="pds-mockup-wrap" id="pds-mockup-wrap">
+        <div class="pds-mockup" id="pds-mockup">
+          <svg class="pds-shirt" id="pds-shirt-svg" viewBox="0 0 400 480"><defs><filter id="pds-sh"><feDropShadow dx="0" dy="6" stdDeviation="10" flood-opacity=".07"/></filter></defs><path id="pds-shirt-path" filter="url(#pds-sh)" d="M140 60 C140 60 130 30 100 20 L60 35 L20 90 L55 110 L70 85 L70 420 C70 440 90 455 200 455 C310 455 330 440 330 420 L330 85 L345 110 L380 90 L340 35 L300 20 C270 30 260 60 260 60 L240 75 C220 65 180 65 160 75 Z" fill="#fff" stroke="#e2e8f0" stroke-width="1.5"/><path d="M160 75 C180 65 220 65 240 75 C230 90 210 98 200 98 C190 98 170 90 160 75 Z" fill="none" stroke="#e2e8f0" stroke-width="1.5"/></svg>
+          <div class="pds-printzone" id="pds-printzone"><canvas id="pds-canvas"></canvas></div>
+        </div>
+        <div class="pds-quick-actions">
+          <button class="pds-qact" data-action="text">T Add Text</button>
+          <button class="pds-qact" data-action="upload">☁ Upload Art</button>
+          <button class="pds-qact" data-action="ai">✨ Add Art</button>
+        </div>
+      </div>
+      <p class="pds-view-info" id="pds-view-info"></p>
+      <div class="pds-autosave" id="pds-autosave">All changes saved</div>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="pds-rightbar" id="pds-rightbar">
+      <div class="pds-views" id="pds-views"></div>
+      <button class="pds-rutil" id="pds-sleeves-btn">SLEEVES<br>&amp; MORE</button>
+      <button class="pds-rutil" id="pds-zoom-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>ZOOM</button>
+      <button class="pds-rutil pds-rutil--disabled" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>EFFECT</button>
+      <button class="pds-share-btn" id="pds-share-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>SHARE</button>
+      <span class="pds-zoom-lbl" id="pds-zoom-lbl">100%</span>
+    </aside>
+    <!-- Hidden tool refs for JS -->
+    <div style="display:none">
+      <button id="pds-ft-undo"></button><button id="pds-ft-redo"></button><button id="pds-ft-zoomin"></button><button id="pds-ft-zoomout"></button>
+      <button id="pds-ft-rotate"></button><button id="pds-ft-fliph"></button><button id="pds-ft-flipv"></button><button id="pds-ft-center"></button>
+      <button id="pds-ft-up"></button><button id="pds-ft-down"></button><button id="pds-ft-dup"></button><button id="pds-ft-del"></button><button id="pds-ft-lock"></button>
+      <input id="pds-opacity" value="100">
+    </div>
+  </div>
+
+  <footer class="pds-footer">
+    <div class="pds-footer__left">
+      <button class="pds-fbtn pds-fbtn--outline" id="pds-price">🏷 Get Price</button>
+      <button class="pds-fbtn pds-fbtn--outline" id="pds-save">💾 Save Design</button>
+      <button class="pds-fbtn pds-fbtn--outline" id="pds-load">📂 Load Design</button>
+      <input type="file" id="pds-load-file" accept=".json" hidden>
+      <button class="pds-fbtn pds-fbtn--outline" id="pds-dl-png">⬇ PNG</button>
+      <button class="pds-fbtn pds-fbtn--outline" id="pds-dl-svg">⬇ SVG</button>
+      <button class="pds-fbtn pds-fbtn--outline" id="pds-dl-pdf">⬇ PDF</button>
+      <button class="pds-fbtn pds-fbtn--outline" id="pds-reset">↺ Reset</button>
+      <button class="pds-fbtn pds-fbtn--outline" id="pds-preview">👁 Preview</button>
+    </div>
+    <button class="pds-fbtn pds-fbtn--primary" id="pds-next">Next Step →</button>
+  </footer>
+
+  <div class="pds-toast" id="pds-toast"></div>
+  <div class="pds-modal" id="pds-modal"><div class="pds-modal__box"><button class="pds-modal__close" id="pds-modal-close">×</button><div id="pds-modal-body"></div></div></div>
+  <div class="pds-mobile-bar" id="pds-mobile-bar">
+    <button data-panel="products">Products</button><button data-panel="text">Text</button><button data-panel="upload">Upload</button><button data-panel="clipart">Art</button><button data-panel="layers">Layers</button>
+  </div>
+</div>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bebas+Neue&family=Pacifico&family=Roboto+Slab:wght@700&display=swap');
+/* ===== ELEMENTOR / THEME ISOLATION ===== */
+#pds-app.pds-app{width:100%!important;max-width:100%!important;min-height:720px!important;display:flex!important;flex-direction:column!important;position:relative!important;z-index:1!important;isolation:isolate}
+#pds-app.pds-app button,#pds-app.pds-app input,#pds-app.pds-app select,#pds-app.pds-app textarea{font-family:inherit!important;line-height:inherit!important;letter-spacing:normal!important;text-transform:none!important;appearance:none;-webkit-appearance:none;max-width:none!important}
+#pds-app.pds-app button{cursor:pointer!important;width:auto!important;background-image:none!important}
+#pds-app .pds-iconnav__btn,#pds-app .pds-iconnav__toggle{background:transparent!important;background-color:transparent!important;color:var(--muted)!important;border:none!important;padding:12px 6px!important}
+#pds-app .pds-iconnav__btn.active{color:#fff!important}
+#pds-app .pds-topbtn{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important;padding:6px 14px!important}
+#pds-app .pds-btn--primary{background:var(--blue)!important;color:#fff!important;border:none!important}
+#pds-app .pds-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;visibility:visible!important;opacity:1!important}
+#pds-app .pds-btn--block,#pds-app #pds-add-text-btn{width:100%!important;min-height:46px!important;padding:12px 16px!important;font-size:14px!important;font-weight:700!important;border-radius:10px!important}
+#pds-app #pds-add-text-btn{background:var(--blue)!important;color:#fff!important;border:none!important;box-shadow:0 4px 14px rgba(0,123,255,.35)!important;margin:12px 0 6px!important}
+#pds-app .pds-btn--outline{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important}
+#pds-app .pds-wstool{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important;padding:8px 12px!important}
+#pds-app .pds-view-card,#pds-app .pds-rutil,#pds-app .pds-share-btn{background:var(--surface)!important;color:var(--muted)!important;border:1px solid var(--border)!important}
+#pds-app .pds-fbtn{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important;padding:9px 16px!important}
+#pds-app .pds-fbtn--primary{background:linear-gradient(135deg,var(--blue),#3b82f6)!important;color:#fff!important;border:none!important}
+#pds-app .pds-te-icon,#pds-app .pds-te-row,#pds-app .pds-te-close,#pds-app .pds-lang-tab{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important}
+#pds-app .pds-te-row,#pds-app .pds-te-close,#pds-app .pds-lang-tab{border:none!important}
+#pds-app .pds-qact{background:var(--surface)!important;color:var(--text)!important;border:1px solid var(--border)!important}
+#pds-app .pds-body{display:flex!important;flex:1 1 auto!important;min-height:500px!important}
+#pds-app .pds-iconnav{width:88px!important;min-width:72px!important;max-width:88px!important;flex:0 0 88px!important;visibility:visible!important;overflow:visible!important}
+#pds-app .pds-iconnav__btn,#pds-app .pds-iconnav__toggle{display:flex!important;flex-direction:column!important;align-items:center!important;width:100%!important;min-width:60px!important;min-height:52px!important;visibility:visible!important;opacity:1!important}
+#pds-app .pds-panel{width:280px!important;min-width:240px!important;flex:0 0 280px!important;visibility:visible!important;opacity:1!important;transform:none!important;position:relative!important;left:auto!important;top:auto!important;bottom:auto!important}
+#pds-app .pds-text-bigbtn,#pds-app .pds-text-preset,#pds-app .pds-font-chip,#pds-app .pds-toggle{display:flex!important;visibility:visible!important;opacity:1!important;cursor:pointer!important}
+#pds-app .pds-text-bigbtn{width:100%!important;min-height:72px!important;border:2px dashed #cbd5e1!important;background:#f5f6f8!important}
+#pds-app .pds-text-preset,#pds-app .pds-font-chip{width:100%!important;min-height:40px!important;padding:10px!important;border:1px solid #e2e8f0!important;background:#fff!important;color:#0f172a!important}
+#pds-app .pds-btn--primary{background:#007bff!important;color:#fff!important;border:none!important}
+#pds-app .pds-workspace{display:flex!important;flex:1 1 auto!important}
+#pds-app .pds-rightbar{display:flex!important;flex-direction:column!important}
+#pds-app .pds-topbar,#pds-app .pds-footer{display:flex!important}
+#pds-app svg,#pds-app canvas{max-width:none!important}
+/* ===== RESET & VARIABLES ===== */
+#pds-app.pds-app,#pds-app.pds-app *{box-sizing:border-box!important;margin:0;padding:0}
+.pds-app{
+  --blue:#007bff;--blue-h:#0069d9;--blue-l:#e8f4ff;--bg:#f5f6f8;--surface:#fff;
+  --border:#e2e8f0;--text:#0f172a;--muted:#64748b;--r:16px;--r-sm:10px;
+  --shadow:0 4px 24px -6px rgba(0,0,0,.08);--shadow-lg:0 12px 40px -12px rgba(0,0,0,.12);
+  font-family:'Inter',system-ui,sans-serif;font-size:14px;color:var(--text);
+  background:var(--bg);border-radius:var(--r);overflow:hidden;
+  display:flex;flex-direction:column;min-height:720px;max-height:100vh;position:relative;
+  line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+/* ===== TOP BAR ===== */
+.pds-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;z-index:20}
+.pds-topbar__left,.pds-topbar__right{display:flex;align-items:center;gap:16px}
+.pds-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--blue)}
+.pds-logo svg{width:22px;height:22px}
+.pds-steps{display:flex;gap:4px}
+.pds-step{font-size:12px;padding:6px 12px;border-radius:20px;color:var(--muted);font-weight:500}
+.pds-step.active{background:var(--blue-l);color:var(--blue)}
+.pds-topbtn{padding:6px 14px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);cursor:pointer;font-size:13px;font-weight:500;transition:.2s}
+.pds-topbtn:hover{background:var(--bg)}
+.pds-badge{background:var(--blue);color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:4px}
+/* ===== BODY LAYOUT ===== */
+.pds-body{display:flex;flex:1;overflow:hidden;min-height:0}
+/* ===== ICON NAV ===== */
+.pds-iconnav{display:flex;flex-direction:column;width:88px;background:var(--surface);border-right:1px solid var(--border);padding:10px 0;overflow-y:auto;flex-shrink:0;transition:width .3s}
+.pds-iconnav.collapsed{width:0;padding:0;overflow:hidden;border:none}
+.pds-iconnav__btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px;border:none;background:none;cursor:pointer;color:var(--muted);font-size:10px;font-weight:600;position:relative;transition:.2s;margin:2px 6px;border-radius:10px}
+.pds-iconnav__btn svg{width:24px;height:24px;padding:6px;border-radius:8px;transition:.2s}
+.pds-iconnav__btn:hover{color:var(--text)}
+.pds-iconnav__btn.active{color:#fff}
+.pds-iconnav__btn.active svg{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(0,123,255,.35)}
+.pds-iconnav__btn.active span{color:var(--text)}
+.pds-tag{position:absolute;top:4px;right:4px;font-size:8px;font-style:normal;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;padding:1px 4px;border-radius:4px;font-weight:700}
+.pds-iconnav__toggle{margin-top:auto;border-top:1px solid var(--border)}
+/* ===== LEFT PANEL ===== */
+.pds-panel{width:300px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:0;flex-shrink:0;transition:transform .3s,opacity .3s}
+.pds-panel__section{display:none;animation:pdsSlide .25s ease;padding:20px 18px}
+.pds-panel__section.active{display:block}
+@keyframes pdsSlide{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+.pds-panel__title{font-size:16px;font-weight:700;margin-bottom:4px}
+.pds-panel__sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+.pds-field{margin-bottom:14px}
+.pds-field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.pds-input{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:13px;background:var(--surface);color:var(--text);outline:none;transition:.2s;font-family:inherit}
+.pds-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.pds-textarea{resize:vertical;min-height:72px}
+.pds-hint{font-size:11px;color:var(--muted);margin-top:8px}
+.pds-range{width:100%;accent-color:var(--blue)}
+.pds-product-card{display:flex;gap:12px;padding:14px;border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:16px;background:var(--bg);transition:.2s}
+.pds-product-card:hover{box-shadow:var(--shadow)}
+.pds-product-card__thumb{width:56px;height:56px;border-radius:8px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pds-product-card__thumb svg{width:40px;height:40px}
+.pds-product-card__info{display:flex;flex-direction:column;gap:4px;justify-content:center}
+.pds-product-card__info strong{font-size:14px}
+.pds-linkbtn{background:none;border:none;color:var(--blue);font-size:12px;font-weight:600;cursor:pointer;text-align:left;padding:0}
+.pds-linkbtn:hover{text-decoration:underline}
+.pds-swatches{display:flex;flex-wrap:wrap;gap:8px}
+.pds-swatch{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.pds-swatch:hover{transform:scale(1.12)}
+.pds-swatch.active{border-color:var(--blue);box-shadow:0 0 0 2px rgba(37,99,235,.3)}
+.pds-swatch-label{font-size:12px;color:var(--muted);margin-top:6px;display:block}
+.pds-toggle-group{display:flex;border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden}
+.pds-toggle{flex:1;padding:8px;border:none;background:var(--surface);cursor:pointer;font-size:12px;font-weight:600;color:var(--muted);transition:.2s}
+.pds-toggle.active{background:var(--blue-l);color:var(--blue)}
+.pds-product-picker{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;max-height:0;overflow:hidden;transition:max-height .3s}
+.pds-product-picker.open{max-height:300px;overflow-y:auto;margin-bottom:12px}
+.pds-prod-opt{padding:10px;border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;text-align:center;font-size:11px;font-weight:600;transition:.15s;background:var(--surface)}
+.pds-prod-opt:hover,.pds-prod-opt.active{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
+.pds-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 16px;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit}
+.pds-btn--primary{background:var(--blue);color:#fff}
+.pds-btn--primary:hover{background:var(--blue-h);transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,99,235,.3)}
+.pds-btn--outline{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.pds-btn--outline:hover{background:var(--bg);border-color:var(--blue);color:var(--blue)}
+.pds-btn--danger{background:#fef2f2;color:#ef4444;border:1px solid #fecaca}
+.pds-btn--block{width:100%}
+.pds-quick-btns{display:flex;gap:8px;margin-bottom:14px}
+.pds-quick-btns .pds-btn{flex:1}
+.pds-style-row{display:flex;gap:6px;align-items:center;margin-bottom:14px}
+.pds-style-btn{width:36px;height:36px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);cursor:pointer;font-size:14px;transition:.15s}
+.pds-style-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.pds-color-sm{width:36px;height:36px;border:1px solid var(--border);border-radius:var(--r-sm);cursor:pointer;padding:2px}
+.pds-dropzone{display:flex;flex-direction:column;align-items:center;gap:8px;padding:28px 16px;border:2px dashed var(--border);border-radius:var(--r);cursor:pointer;text-align:center;color:var(--muted);transition:.2s;margin-bottom:12px}
+.pds-dropzone svg{width:32px;height:32px;color:var(--blue)}
+.pds-dropzone small{font-size:11px}
+.pds-dropzone:hover,.pds-dropzone.over{border-color:var(--blue);background:var(--blue-l)}
+.pds-preview{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;min-height:0}
+.pds-preview img{width:64px;height:64px;object-fit:cover;border-radius:8px;border:2px solid var(--border);cursor:pointer;transition:.15s}
+.pds-preview img:hover,.pds-preview img.active{border-color:var(--blue)}
+.pds-btn-row{display:flex;gap:8px}
+.pds-btn-row .pds-btn{flex:1}
+.pds-tabs{display:flex;flex-wrap:wrap;gap:4px;margin:10px 0}
+.pds-tab{padding:5px 10px;border:1px solid var(--border);border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;background:var(--surface);color:var(--muted);transition:.15s}
+.pds-tab.active,.pds-tab:hover{background:var(--blue-l);color:var(--blue);border-color:var(--blue)}
+.pds-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pds-grid-item{aspect-ratio:1;border:1px solid var(--border);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:8px;transition:.15s;background:var(--surface)}
+.pds-grid-item:hover{border-color:var(--blue);background:var(--blue-l);transform:scale(1.04)}
+.pds-grid-item svg{width:100%;height:100%}
+.pds-shape-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.pds-shape-btn{aspect-ratio:1;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s}
+.pds-shape-btn svg{width:24px;height:24px}
+.pds-shape-btn:hover{border-color:var(--blue);background:var(--blue-l)}
+.pds-layers{list-style:none}
+.pds-layer{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--r-sm);cursor:pointer;font-size:12px;border:1px solid transparent;transition:.15s;margin-bottom:4px}
+.pds-layer:hover{background:var(--bg)}
+.pds-layer.active{background:var(--blue-l);border-color:#bfdbfe}
+.pds-layer span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pds-layer-empty{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+/* ===== TEXT EDITOR (RushOrder style) ===== */
+.pds-te-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.pds-te-label{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px}
+.pds-te-title{font-size:22px;font-weight:700;color:var(--text);line-height:1.2}
+.pds-te-close{width:32px;height:32px;border:none;background:none;font-size:22px;color:var(--muted);cursor:pointer;border-radius:8px;transition:.15s;line-height:1}
+.pds-te-close:hover{background:var(--bg);color:var(--text)}
+.pds-lang-tabs{display:flex;gap:20px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.pds-lang-tab{padding:8px 0;border:none;background:none;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px;transition:.2s}
+.pds-lang-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.pds-te-input{width:100%;padding:14px;border:2px solid #b8daff;border-radius:8px;font-size:15px;font-family:inherit;resize:vertical;min-height:100px;outline:none;transition:.2s;color:var(--text)}
+.pds-te-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,123,255,.15)}
+.pds-te-input::placeholder{color:#94a3b8}
+.pds-te-hint{font-size:11px;color:var(--muted);line-height:1.4;margin:0 0 14px;text-align:center}
+.pds-text-intro{font-size:13px;font-weight:600;color:var(--muted);text-align:center;margin:0 0 10px}
+.pds-text-bigbtn{width:100%;height:72px;border:2px dashed var(--border);border-radius:12px;background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;margin-bottom:12px;transition:.15s}
+.pds-text-bigbtn:hover{border-color:var(--blue);background:var(--blue-l)}
+.pds-text-bigbtn span{font-size:44px;font-weight:700;color:var(--blue);line-height:1;font-family:Georgia,'Times New Roman',serif}
+.pds-text-presets{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.pds-text-preset{padding:10px 8px;border:1px solid var(--border);border-radius:8px;background:var(--surface);font-size:11px;font-weight:700;cursor:pointer;text-align:center;transition:.15s;color:var(--text)}
+.pds-text-preset:hover{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
+.pds-text-fonts{display:flex;flex-direction:column;gap:6px;max-height:150px;overflow-y:auto;margin-bottom:12px}
+.pds-font-chip{padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);text-align:left;cursor:pointer;font-size:14px;font-weight:600;transition:.15s;color:var(--text)}
+.pds-font-chip:hover{border-color:var(--blue);background:var(--blue-l)}
+.pds-text-divider{display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.pds-text-divider::before,.pds-text-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.pds-te-toolbar{display:flex;gap:6px;margin:0 0 14px;padding:4px 0}
+.pds-te-icon{width:40px;height:40px;border:1px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:.15s}
+.pds-te-icon svg{width:18px;height:18px}
+.pds-te-icon:hover{border-color:var(--blue);color:var(--blue)}
+.pds-te-icon.active{background:var(--blue-l);border-color:var(--blue);color:var(--blue)}
+.pds-te-settings{border-top:1px solid var(--border);margin-top:8px}
+.pds-te-row{display:flex;align-items:center;width:100%;padding:14px 4px;border:none;background:none;cursor:pointer;font-size:14px;font-weight:600;color:var(--text);border-bottom:1px solid var(--border);gap:8px;transition:.15s}
+.pds-te-row:hover{background:var(--bg)}
+.pds-te-row span:first-child{flex:1;text-align:left}
+.pds-te-val{color:var(--muted);font-weight:500;font-size:13px}
+.pds-te-swatch{width:18px;height:18px;border-radius:4px;border:1px solid var(--border)}
+.pds-te-row svg{width:16px;height:16px;color:var(--muted);flex-shrink:0}
+.pds-te-dropdown{display:none;padding:10px 4px 14px;background:var(--bg);border-bottom:1px solid var(--border)}
+.pds-te-dropdown.open{display:block}
+.pds-te-slider{margin-top:14px}
+.pds-te-slider-head{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px}
+.pds-te-slider-head span:last-child{color:var(--blue)}
+/* ===== NAMES & NUMBERS ===== */
+.pds-nn-checks{display:flex;flex-direction:column;gap:10px;padding:12px 0;border-bottom:1px solid var(--border);margin-bottom:4px}
+.pds-nn-check{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--text);cursor:pointer}
+.pds-nn-check--off{opacity:.4;cursor:not-allowed}
+.pds-nn-check input{accent-color:var(--blue);width:16px;height:16px}
+.pds-nn-row{display:flex;align-items:center;justify-content:space-between;padding:14px 4px;border-bottom:1px solid var(--border);gap:12px}
+.pds-nn-row span{font-size:14px;font-weight:600;color:var(--text);flex-shrink:0}
+.pds-nn-select{padding:8px 14px;border:1px solid var(--border);border-radius:20px;font-size:13px;font-weight:600;background:#f0f2f5;color:var(--text);outline:none;cursor:pointer;min-width:100px;text-align:center}
+.pds-nn-select--wide{min-width:160px;flex:1}
+/* ===== WORKSPACE ===== */
+.pds-workspace{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;background:var(--bg);overflow:hidden;min-width:0;padding:16px}
+.pds-workspace__tools{position:absolute;top:16px;left:16px;display:flex;flex-direction:column;gap:8px;z-index:5}
+.pds-wstool{display:flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--border);background:var(--surface);border-radius:10px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.06);transition:.15s;letter-spacing:.03em;min-width:120px}
+.pds-wstool svg{width:16px;height:16px;flex-shrink:0}
+.pds-wstool:hover:not(:disabled){color:var(--blue);border-color:#b8daff}
+.pds-wstool:disabled{opacity:.35;cursor:not-allowed}
+.pds-wstool--text{justify-content:center}
+.pds-mockup-wrap{position:relative;display:flex;flex-direction:column;align-items:center}
+.pds-mockup{position:relative;max-width:380px;width:100%;transition:transform .3s}
+.pds-shirt{width:100%;display:block;position:relative;z-index:1}
+.pds-printzone{position:absolute;z-index:5;pointer-events:auto;border:2px dashed rgba(37,99,235,.3);border-radius:4px;overflow:visible;transition:border-color .3s}
+.pds-printzone:hover{border-color:rgba(37,99,235,.55)}
+.pds-printzone canvas{display:block!important;width:100%!important;height:100%!important}
+.pds-printzone .canvas-container{position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;z-index:5!important}
+.pds-quick-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+.pds-qact{padding:8px 16px;border:1px solid var(--border);border-radius:24px;background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;box-shadow:var(--shadow);transition:.2s}
+.pds-qact:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px)}
+.pds-view-info{font-size:11px;color:var(--muted);margin-top:12px;text-align:center}
+.pds-autosave{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--muted);background:var(--surface);padding:4px 14px;border-radius:20px;border:1px solid var(--border);opacity:0;transition:opacity .3s}
+.pds-autosave.show{opacity:1}
+/* ===== RIGHT BAR (View cards) ===== */
+.pds-rightbar{width:110px;display:flex;flex-direction:column;align-items:center;padding:16px 10px;background:var(--bg);border-left:none;flex-shrink:0;gap:10px;overflow-y:auto}
+.pds-views{display:flex;flex-direction:column;gap:12px;width:100%}
+.pds-view-card{width:100%;background:var(--surface);border:2px solid transparent;border-radius:12px;cursor:pointer;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.08);transition:.2s;padding-bottom:0}
+.pds-view-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.pds-view-card.active{border-color:var(--blue);box-shadow:0 4px 20px rgba(0,123,255,.2)}
+.pds-view-card__img{padding:10px 10px 6px;display:flex;align-items:center;justify-content:center;background:#fff}
+.pds-view-card__img svg{width:100%;height:auto;max-height:72px}
+.pds-view-card__accent{height:4px;background:transparent;margin:0 10px;border-radius:2px}
+.pds-view-card.active .pds-view-card__accent{background:var(--blue)}
+.pds-view-card__label{text-align:center;font-size:13px;font-weight:600;color:var(--text);padding:8px 6px 10px}
+.pds-rutil{width:100%;padding:10px 6px;border:1px solid var(--border);border-radius:10px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.04em;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:.15s;line-height:1.3}
+.pds-rutil svg{width:20px;height:20px}
+.pds-rutil:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
+.pds-rutil--disabled{opacity:.35;cursor:not-allowed}
+.pds-share-btn{width:100%;padding:16px 10px;border:1px solid var(--border);border-radius:12px;background:var(--surface);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;box-shadow:0 4px 16px rgba(0,0,0,.08);transition:.15s;margin-top:auto}
+.pds-share-btn svg{width:22px;height:22px}
+.pds-share-btn:hover{border-color:var(--blue);color:var(--blue)}
+.pds-zoom-lbl{font-size:10px;text-align:center;color:var(--muted);font-weight:600;width:100%}
+/* ===== FOOTER ===== */
+.pds-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;gap:12px;flex-wrap:wrap;z-index:20}
+.pds-footer__left{display:flex;gap:8px;flex-wrap:wrap}
+.pds-fbtn{padding:9px 16px;border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;white-space:nowrap}
+.pds-fbtn--outline{background:var(--surface);border:1px solid var(--border);color:var(--text)}
+.pds-fbtn--outline:hover{border-color:var(--blue);color:var(--blue)}
+.pds-fbtn--primary{background:linear-gradient(135deg,var(--blue),#3b82f6);color:#fff;border:none;padding:10px 28px;box-shadow:0 4px 16px rgba(37,99,235,.35)}
+.pds-fbtn--primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.4)}
+/* ===== TOAST & MODAL ===== */
+.pds-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:#fff;padding:10px 24px;border-radius:var(--r-sm);font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:.3s;z-index:9999;white-space:nowrap}
+.pds-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.pds-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:9998;padding:20px}
+.pds-modal.open{display:flex}
+.pds-modal__box{background:var(--surface);border-radius:var(--r);padding:24px;max-width:600px;width:100%;max-height:80vh;overflow:auto;position:relative;box-shadow:var(--shadow-lg);animation:pdsSlide .3s ease}
+.pds-modal__close{position:absolute;top:12px;right:16px;border:none;background:none;font-size:24px;cursor:pointer;color:var(--muted)}
+.pds-mobile-bar{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);padding:6px;gap:4px;z-index:30;justify-content:space-around}
+.pds-mobile-bar button{flex:1;padding:8px 4px;border:none;background:none;font-size:10px;font-weight:600;color:var(--muted);cursor:pointer;border-radius:var(--r-sm)}
+.pds-mobile-bar button:hover{color:var(--blue);background:var(--blue-l)}
+/* ===== RESPONSIVE ===== */
+@media(max-width:1100px){.pds-panel{width:240px}.pds-rightbar{width:68px}}
+@media(max-width:900px){
+  #pds-app .pds-panel{position:absolute!important;left:72px!important;top:0!important;bottom:56px!important;z-index:15!important;box-shadow:var(--shadow-lg)!important;transform:translateX(-110%)!important;opacity:0!important;flex:0 0 280px!important}
+  #pds-app .pds-panel.open{transform:none!important;opacity:1!important}
+  .pds-rightbar{position:absolute;right:0;top:0;bottom:56px;z-index:10}
+  .pds-mockup{max-width:300px}
+}
+@media(max-width:640px){
+  #pds-app .pds-iconnav{width:56px!important;min-width:56px!important;flex:0 0 56px!important;overflow-y:auto!important;padding:6px 0!important}
+  #pds-app .pds-panel{left:56px!important;width:calc(100% - 56px)!important;min-width:0!important;flex:1 1 auto!important}
+  .pds-rightbar{width:56px;padding:8px 4px}
+  .pds-float-tools{padding:4px}
+  .pds-ftool{max-height:32px}
+  .pds-footer{padding:8px 12px 60px}
+  .pds-footer__left{justify-content:center;width:100%}
+  .pds-fbtn{font-size:11px;padding:7px 10px}
+  .pds-mobile-bar{display:flex}
+  .pds-steps{display:none}
+  .pds-quick-actions{display:none}
+}
+</style>
+
+<script>
+(function(){
+'use strict';
+if(window.__PDS_BOOTED__)return;
+window.__PDS_BOOTED__=true;
+
+var PDS_SCRIPTS=[
+  'https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+  'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+];
+
+function pdsFatal(msg){
+  var app=document.getElementById('pds-app');
+  if(!app)return;
+  app.innerHTML='<div style="padding:32px 24px;text-align:center;font-family:Inter,system-ui,sans-serif;color:#0f172a"><h3 style="margin:0 0 8px;color:#dc2626;font-size:18px">Designer failed to load</h3><p style="margin:0;font-size:14px;color:#64748b">'+msg+'</p></div>';
+}
+
+function pdsLoadScript(url,cb){
+  if(url.indexOf('fabric')!==-1&&typeof fabric!=='undefined'){cb();return}
+  if(url.indexOf('jspdf')!==-1&&typeof jspdf!=='undefined'){cb();return}
+  if(url.indexOf('qrcode')!==-1&&typeof QRCode!=='undefined'){cb();return}
+  var existing=document.querySelector('script[data-pds-src="'+url+'"]');
+  if(existing){
+    if(existing.getAttribute('data-pds-ready')==='1'){cb();return}
+    existing.addEventListener('load',cb);existing.addEventListener('error',function(){pdsFatal('Could not load required library.')});
+    return;
+  }
+  var s=document.createElement('script');
+  s.src=url;s.async=false;s.setAttribute('data-pds-src',url);
+  s.onload=function(){s.setAttribute('data-pds-ready','1');cb()};
+  s.onerror=function(){pdsFatal('Could not load required library from CDN. Check script permissions on your site.')};
+  (document.head||document.body||document.documentElement).appendChild(s);
+}
+
+function pdsLoadAll(i,cb){
+  if(i>=PDS_SCRIPTS.length)return cb();
+  pdsLoadScript(PDS_SCRIPTS[i],function(){pdsLoadAll(i+1,cb)});
+}
+
+function pdsStart(){
+if(typeof fabric==='undefined'){pdsFatal('Fabric.js did not load. Allow CDN scripts or disable script blocking.');return}
+
+(function(){
+'use strict';
+
+/* ============================================================
+   SECTION 1: PRODUCT CATALOG & VIEW CONFIG
+   ============================================================ */
+var PRODUCTS = {
+  tshirt: { name:'Classic Tee', type:'apparel', colors:['#ffffff','#1e293b','#dc2626','#16a34a','#2563eb','#f59e0b','#6b7280','#000000'],
+    views:{ front:{top:'.22',left:'.28',w:'.44',h:'.38',label:'Front'},
+      back:{top:'.22',left:'.28',w:'.44',h:'.38',label:'Back'},
+      leftSleeve:{top:'.38',left:'.06',w:'.14',h:'.22',label:'Left Sleeve'},
+      rightSleeve:{top:'.38',left:'.80',w:'.14',h:'.22',label:'Right Sleeve'},
+      pocket:{top:'.30',left:'.58',w:'.14',h:'.12',label:'Pocket'}}},
+  polo: { name:'Classic Polo', type:'apparel', colors:['#ffffff','#1e3a5f','#dc2626','#166534'],
+    views:{ front:{top:'.24',left:'.30',w:'.40',h:'.34',label:'Front'}, back:{top:'.24',left:'.30',w:'.40',h:'.34',label:'Back'},
+      leftSleeve:{top:'.36',left:'.08',w:'.12',h:'.18',label:'Left Sleeve'}, rightSleeve:{top:'.36',left:'.80',w:'.12',h:'.18',label:'Right Sleeve'}}},
+  hoodie: { name:'Pullover Hoodie', type:'apparel', colors:['#ffffff','#1e293b','#7c3aed','#dc2626','#374151'],
+    views:{ front:{top:'.30',left:'.26',w:'.48',h:'.32',label:'Front'}, back:{top:'.28',left:'.26',w:'.48',h:'.36',label:'Back'},
+      leftSleeve:{top:'.40',left:'.04',w:'.16',h:'.20',label:'Left Sleeve'}, rightSleeve:{top:'.40',left:'.80',w:'.16',h:'.20',label:'Right Sleeve'}}},
+  sweatshirt: { name:'Crewneck Sweatshirt', type:'apparel', colors:['#f5f5f4','#1c1917','#44403c','#b91c1c'],
+    views:{ front:{top:'.24',left:'.28',w:'.44',h:'.36',label:'Front'}, back:{top:'.24',left:'.28',w:'.44',h:'.36',label:'Back'}}},
+  cap: { name:'Structured Cap', type:'cap', colors:['#ffffff','#1e293b','#dc2626','#15803d'],
+    views:{ front:{top:'.35',left:'.25',w:'.50',h:'.28',label:'Front'}, back:{top:'.55',left:'.35',w:'.30',h:'.15',label:'Back'}}},
+  mug: { name:'Ceramic Mug', type:'mug', colors:['#ffffff','#1e293b','#dc2626'],
+    views:{ front:{top:'.25',left:'.20',w:'.55',h:'.45',label:'Wrap'}}},
+  bottle: { name:'Water Bottle', type:'bottle', colors:['#ffffff','#1e293b','#0ea5e9'],
+    views:{ front:{top:'.20',left:'.30',w:'.40',h:'.55',label:'Front'}}},
+  mousepad: { name:'Mouse Pad', type:'flat', colors:['#1e293b','#000000'],
+    views:{ front:{top:'.10',left:'.10',w:'.80',h:'.80',label:'Surface'}}},
+  tote: { name:'Tote Bag', type:'bag', colors:['#fef3c7','#ffffff','#1e293b'],
+    views:{ front:{top:'.20',left:'.20',w:'.60',h:'.55',label:'Front'}}}
+};
+
+var CLIPART = {
+  Business:[{n:'Briefcase',s:'<svg viewBox="0 0 80 80"><rect x="10" y="25" width="60" height="40" rx="4" fill="#3b82f6"/><rect x="25" y="15" width="30" height="15" rx="3" fill="none" stroke="#3b82f6" stroke-width="3"/></svg>'},
+    {n:'Chart',s:'<svg viewBox="0 0 80 80"><rect x="15" y="50" width="12" height="20" fill="#22c55e"/><rect x="34" y="35" width="12" height="35" fill="#3b82f6"/><rect x="53" y="20" width="12" height="50" fill="#8b5cf6"/></svg>'}],
+  Sports:[{n:'Ball',s:'<svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="30" fill="#f97316"/><path d="M20 40 Q40 20 60 40 Q40 60 20 40" fill="none" stroke="#fff" stroke-width="2"/></svg>'},
+    {n:'Trophy',s:'<svg viewBox="0 0 80 80"><path d="M25 15h30v30c0 12-8 20-15 22-7-2-15-10-15-22V15z" fill="#fbbf24"/><rect x="30" y="60" width="20" height="8" fill="#d97706"/></svg>'}],
+  Animals:[{n:'Paw',s:'<svg viewBox="0 0 80 80"><ellipse cx="40" cy="50" rx="18" ry="14" fill="#78716c"/><circle cx="22" cy="30" r="8" fill="#78716c"/><circle cx="40" cy="22" r="8" fill="#78716c"/><circle cx="58" cy="30" r="8" fill="#78716c"/></svg>'},
+    {n:'Bird',s:'<svg viewBox="0 0 80 80"><path d="M10 45 Q40 10 70 35 L55 50 Q40 65 10 45" fill="#06b6d4"/></svg>'}],
+  Islamic:[{n:'Crescent',s:'<svg viewBox="0 0 80 80"><path d="M45 15 A25 25 0 1 0 45 65 A20 20 0 1 1 45 15" fill="#16a34a"/></svg>'},
+    {n:'Star',s:'<svg viewBox="0 0 80 80"><polygon points="40,8 48,30 72,30 53,44 61,66 40,52 19,66 27,44 8,30 32,30" fill="#fbbf24"/></svg>'}],
+  Technology:[{n:'Chip',s:'<svg viewBox="0 0 80 80"><rect x="20" y="20" width="40" height="40" rx="4" fill="#6366f1"/><line x1="30" y1="10" x2="30" y2="20" stroke="#6366f1" stroke-width="3"/><line x1="50" y1="10" x2="50" y2="20" stroke="#6366f1" stroke-width="3"/></svg>'},
+    {n:'Wifi',s:'<svg viewBox="0 0 80 80"><path d="M10 50 Q40 20 70 50" fill="none" stroke="#3b82f6" stroke-width="4"/><circle cx="40" cy="58" r="5" fill="#3b82f6"/></svg>'}],
+  Gaming:[{n:'Controller',s:'<svg viewBox="0 0 80 80"><rect x="10" y="30" width="60" height="30" rx="15" fill="#7c3aed"/><circle cx="28" cy="45" r="6" fill="#fff"/><circle cx="52" cy="42" r="4" fill="#ef4444"/><circle cx="58" cy="48" r="4" fill="#22c55e"/></svg>'}],
+  Kids:[{n:'Rocket',s:'<svg viewBox="0 0 80 80"><path d="M40 10 L50 50 L40 70 L30 50 Z" fill="#ef4444"/><circle cx="40" cy="35" r="6" fill="#fff"/></svg>'}],
+  Food:[{n:'Pizza',s:'<svg viewBox="0 0 80 80"><path d="M10 60 L40 10 L70 60 Z" fill="#fbbf24"/><circle cx="35" cy="45" r="4" fill="#ef4444"/><circle cx="50" cy="50" r="4" fill="#ef4444"/></svg>'}],
+  Education:[{n:'Book',s:'<svg viewBox="0 0 80 80"><rect x="15" y="15" width="50" height="50" rx="3" fill="#2563eb"/><line x1="40" y1="15" x2="40" y2="65" stroke="#fff" stroke-width="2"/></svg>'}]
+};
+
+var SHAPES = [
+  {t:'rect',l:'Rectangle',s:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="1"/></svg>'},
+  {t:'circle',l:'Circle',s:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>'},
+  {t:'triangle',l:'Triangle',s:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3L22 21H2Z"/></svg>'},
+  {t:'star',l:'Star',s:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'},
+  {t:'line',l:'Line',s:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="19" x2="19" y2="5"/></svg>'},
+  {t:'arrow',l:'Arrow',s:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'},
+  {t:'heart',l:'Heart',s:'<svg viewBox="0 0 24 24" fill="#ef4444" stroke="none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>'},
+  {t:'hexagon',l:'Hexagon',s:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 20 7 20 17 12 22 4 17 4 7"/></svg>'}
+];
+
+var TEMPLATES = [
+  {n:'Bold Brand',fn:function(c){addText('YOUR BRAND',{fontSize:48,fontWeight:'bold',fontFamily:'Bebas Neue',top:c.h*.3});addText('est. 2024',{fontSize:14,fill:'#64748b',top:c.h*.55});}},
+  {n:'Sports Jersey',fn:function(c){addText('TEAM NAME',{fontSize:28,fontWeight:'bold',fontFamily:'Impact',top:c.h*.25});addText('00',{fontSize:64,fontWeight:'bold',fontFamily:'Bebas Neue',fill:'#dc2626',top:c.h*.5});}},
+  {n:'Minimal Logo',fn:function(c){addText('LOGO',{fontSize:36,fontWeight:'bold',fontFamily:'Inter',top:c.h*.4,fill:'#1e293b'});}}
+];
+
+/* ============================================================
+   SECTION 2: STATE & DOM
+   ============================================================ */
+var S = {
+  productId:'tshirt', color:'#ffffff', view:'front', method:'printing',
+  canvas:null, zoom:1, panning:false, lastPan:{x:0,y:0},
+  viewData:{}, history:{}, histIdx:{}, restoring:false,
+  uploads:[], autosaveTimer:null, productPickerOpen:false, nnEditing:null, booted:false, textDraftId:null
+};
+var $=function(s,r){return(r||document).querySelector(s)};
+var $$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
+
+function toast(m){var t=$('#pds-toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show')},2800)}
+function uid(){return'obj_'+Date.now()+'_'+Math.random().toString(36).substr(2,5)}
+function getProduct(){return PRODUCTS[S.productId]}
+function getViewCfg(){return getProduct().views[S.view]||getProduct().views.front}
+function canvasSize(){var p=$('#pds-printzone'),r=p.getBoundingClientRect();return{w:Math.round(r.width),h:Math.round(r.height)}}
+
+/* ============================================================
+   SECTION 3: MULTI-VIEW CANVAS MANAGER
+   ============================================================ */
+function viewKey(){return S.productId+'_'+S.view}
+
+function saveCurrentView(){
+  if(!S.canvas||S.restoring)return;
+  var k=viewKey();
+  S.viewData[k]=JSON.stringify(S.canvas.toJSON(JSON_PROPS));
+}
+
+function loadView(cb){
+  saveCurrentView();
+  var k=viewKey(),size=canvasSize();
+  if(!S.canvas){
+    S.canvas=new fabric.Canvas('pds-canvas',{width:size.w,height:size.h,selection:true,preserveObjectStacking:true,backgroundColor:'transparent'});
+    bindCanvasEvents();
+  }
+  S.canvas.setWidth(size.w);S.canvas.setHeight(size.h);
+  S.canvas.clipPath=new fabric.Rect({width:size.w,height:size.h,absolutePositioned:true});
+  S.restoring=true;
+  function done(){S.restoring=false;updateLayers();syncTextUI();updateHistBtns();rebindNameNumberObjects();if(cb)cb()}
+  if(S.viewData[k]){
+    S.canvas.loadFromJSON(S.viewData[k],function(){S.canvas.renderAll();done()});
+  } else {
+    S.canvas.clear();S.canvas.backgroundColor='transparent';S.canvas.renderAll();
+    initHistory();done();
+  }
+  applyPrintZone();updateViewInfo();
+}
+
+function applyPrintZone(){
+  var v=getViewCfg(),pz=$('#pds-printzone');
+  pz.style.top=(parseFloat(v.top)*100)+'%';
+  pz.style.left=(parseFloat(v.left)*100)+'%';
+  pz.style.width=(parseFloat(v.w)*100)+'%';
+  pz.style.height=(parseFloat(v.h)*100)+'%';
+  setTimeout(function(){
+    var size=canvasSize();
+    if(S.canvas){S.canvas.setWidth(size.w);S.canvas.setHeight(size.h);
+      S.canvas.clipPath=new fabric.Rect({width:size.w,height:size.h,absolutePositioned:true});
+      S.canvas.renderAll();}
+  },50);
+}
+
+function initHistory(){
+  var k=viewKey();S.history[k]=[JSON.stringify(S.canvas.toJSON(JSON_PROPS))];
+  S.histIdx[k]=0;updateHistBtns();
+}
+
+function pushHistory(){
+  if(S.restoring||!S.canvas)return;
+  var k=viewKey(),j=JSON.stringify(S.canvas.toJSON(JSON_PROPS));
+  if(!S.history[k])S.history[k]=[];
+  S.history[k]=S.history[k].slice(0,(S.histIdx[k]||0)+1);
+  S.history[k].push(j);
+  if(S.history[k].length>50)S.history[k].shift();
+  S.histIdx[k]=S.history[k].length-1;
+  updateHistBtns();triggerAutosave();
+}
+
+function undo(){
+  var k=viewKey(),i=S.histIdx[k]||0;
+  if(i<=0)return;
+  S.restoring=true;
+  S.canvas.loadFromJSON(S.history[k][i-1],function(){
+    S.canvas.renderAll();S.restoring=false;S.histIdx[k]=i-1;updateHistBtns();updateLayers();syncTextUI();rebindNameNumberObjects();
+  });
+}
+
+function redo(){
+  var k=viewKey(),i=S.histIdx[k]||0,h=S.history[k]||[];
+  if(i>=h.length-1)return;
+  S.restoring=true;
+  S.canvas.loadFromJSON(h[i+1],function(){
+    S.canvas.renderAll();S.restoring=false;S.histIdx[k]=i+1;updateHistBtns();updateLayers();syncTextUI();rebindNameNumberObjects();
+  });
+}
+
+function updateHistBtns(){
+  var k=viewKey(),i=S.histIdx[k]||0,h=S.history[k]||[],u=i>0,r=i<h.length-1;
+  ['#pds-ws-undo','#pds-ft-undo'].forEach(function(s){var b=$(s);if(b)b.disabled=!u});
+  ['#pds-ws-redo','#pds-ft-redo'].forEach(function(s){var b=$(s);if(b)b.disabled=!r});
+}
+
+/* ============================================================
+   SECTION 4: OBJECT CREATION
+   ============================================================ */
+function getActive(){return S.canvas?S.canvas.getActiveObject():null}
+function getActives(){var o=getActive();if(!o)return[];return o.type==='activeSelection'?o.getObjects():[o]}
+
+var JSON_PROPS=['pdsId','pdsName','pdsLocked','pdsNameNumber','pdsDraft'];
+
+function hexToRgb(hex){
+  hex=(hex||'#ffffff').replace('#','');
+  if(hex.length===3)hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+  var n=parseInt(hex,16)||0xffffff;
+  return{r:(n>>16)&255,g:(n>>8)&255,b:n&255};
+}
+function getAutoTextColor(bg){
+  var c=hexToRgb(bg||S.color);
+  var lum=(0.299*c.r+0.587*c.g+0.114*c.b)/255;
+  return lum>0.55?'#000000':'#ffffff';
+}
+function canvasFontSize(uiSize){
+  var h=canvasSize().h||120;
+  var scaled=Math.round((uiSize||36)*(h/120));
+  return Math.max(10,Math.min(scaled,Math.round(h*0.82)));
+}
+function syncTextColorUI(col){
+  $('#pds-text-color').value=col;
+  $('#pds-te-swatch').style.background=col;
+  $('#pds-te-color-val').textContent=col==='#ffffff'?'White':col==='#000000'?'Black':col;
+}
+function getLiveTextObj(){
+  var o=getActive();
+  if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber)return o;
+  if(S.textDraftId&&S.canvas){
+    var found=null;
+    S.canvas.getObjects().forEach(function(x){if(x.pdsId===S.textDraftId)found=x});
+    if(found)return found;
+    S.textDraftId=null;
+  }
+  return null;
+}
+function ensureLiveText(){
+  var o=getLiveTextObj();
+  if(o){S.canvas.setActiveObject(o);return o}
+  var c=canvasSize();
+  var fill=getAutoTextColor();
+  syncTextColorUI(fill);
+  var fs=canvasFontSize(parseInt($('#pds-font-size').value)||36);
+  var txt=$('#pds-te-input').value||' ';
+  o=new fabric.IText(txt,{
+    left:c.w/2,top:c.h/2,originX:'center',originY:'center',
+    fontFamily:$('#pds-font').value,fontSize:fs,fill:fill,
+    pdsId:uid(),pdsName:'Text',pdsNameNumber:false,pdsDraft:true
+  });
+  S.textDraftId=o.pdsId;
+  S.canvas.add(o);S.canvas.setActiveObject(o);S.canvas.renderAll();
+  updateLayers();syncTextUI();
+  return o;
+}
+function prepareTextEditor(){
+  var fill=getAutoTextColor();
+  if(!getLiveTextObj())syncTextColorUI(fill);
+}
+
+function quickAddText(opts){
+  if(!S.canvas){toast('Canvas loading…');return}
+  opts=opts||{};
+  var c=canvasSize();
+  var fill=getAutoTextColor();
+  syncTextColorUI(fill);
+  if(opts.font){$('#pds-font').value=opts.font;$('#pds-te-font-val').textContent=opts.font}
+  if(opts.size){$('#pds-font-size').value=opts.size;$('#pds-fs-val').textContent=opts.size}
+  var txt=opts.t||'Your Text';
+  var o=new fabric.IText(txt,{
+    left:c.w/2,top:c.h/2,originX:'center',originY:'center',
+    fontFamily:opts.font||$('#pds-font').value,
+    fontSize:canvasFontSize(opts.size||parseInt($('#pds-font-size').value)||36),
+    fill:fill,pdsId:uid(),pdsName:'Text',pdsNameNumber:false,pdsDraft:false
+  });
+  S.textDraftId=null;
+  S.canvas.add(o);S.canvas.setActiveObject(o);
+  $('#pds-te-input').value=txt;
+  $('#pds-panel').classList.add('open');
+  setTimeout(function(){
+    try{o.enterEditing();o.selectAll()}catch(e){}
+    S.canvas.renderAll();
+  },120);
+  pushHistory();updateLayers();syncTextUI();
+  toast('Type directly on the product');
+}
+
+function renderTextPresets(){
+  var el=$('#pds-text-presets');if(!el)return;
+  var presets=[
+    {l:'Add Text',t:'Your Text'},
+    {l:'Heading',t:'HEADING',font:'Bebas Neue',size:56},
+    {l:'Script',t:'Script',font:'Pacifico',size:42},
+    {l:'Number',t:'00',font:'Impact',size:64}
+  ];
+  el.innerHTML='';
+  presets.forEach(function(p){
+    var b=document.createElement('button');
+    b.type='button';b.className='pds-text-preset';b.textContent=p.l;
+    b.onclick=function(){quickAddText(p)};
+    el.appendChild(b);
+  });
+}
+
+function renderTextFonts(){
+  var el=$('#pds-text-fonts');if(!el)return;
+  var fonts=['Inter','Bebas Neue','Pacifico','Impact','Arial','Georgia'];
+  el.innerHTML='';
+  fonts.forEach(function(f){
+    var b=document.createElement('button');
+    b.type='button';b.className='pds-font-chip';
+    b.style.fontFamily=f;b.textContent=f;
+    b.onclick=function(){
+      $('#pds-font').value=f;$('#pds-te-font-val').textContent=f;
+      var o=getLiveTextObj();
+      if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber){
+        o.set('fontFamily',f);S.canvas.renderAll();pushHistory();
+      }else{quickAddText({t:'Your Text',font:f})}
+    };
+    el.appendChild(b);
+  });
+}
+
+function addText(txt,opts){
+  opts=opts||{};var c=canvasSize();
+  var fill=opts.fill||$('#pds-text-color').value||getAutoTextColor();
+  var fs=opts.fontSize?canvasFontSize(opts.fontSize):canvasFontSize(parseInt($('#pds-font-size').value)||36);
+  var o=new fabric.IText(txt||'Your Text',{
+    left:opts.left||c.w/2,top:opts.top||c.h/2,originX:'center',originY:'center',
+    fontFamily:opts.fontFamily||$('#pds-font').value,fontSize:fs,
+    fill:fill,fontWeight:opts.fontWeight||'normal',
+    fontStyle:opts.fontStyle||'normal',underline:opts.underline||false,
+    stroke:opts.stroke||'',strokeWidth:opts.strokeWidth||0,
+    shadow:opts.shadow||null,pdsId:uid(),pdsName:'Text',pdsNameNumber:false,pdsDraft:false
+  });
+  S.textDraftId=null;
+  S.canvas.add(o);S.canvas.setActiveObject(o);S.canvas.renderAll();
+  pushHistory();updateLayers();toast('Text added');return o;
+}
+
+/* Lock name/number — finalized, no drag */
+function lockNameNumber(obj){
+  if(!obj||!obj.pdsNameNumber||obj.pdsLocked)return;
+  if(obj.isEditing)try{obj.exitEditing()}catch(e){}
+  obj.pdsLocked=true;
+  S.nnEditing=null;
+  obj.set({
+    lockMovementX:true,lockMovementY:true,
+    lockScalingX:true,lockScalingY:true,lockRotation:true,
+    hasControls:false,hasBorders:false,
+    selectable:false,evented:false,editable:false
+  });
+  S.canvas.discardActiveObject();
+  S.canvas.renderAll();
+}
+
+function bindNameNumberEvents(obj){
+  if(!obj||!obj.pdsNameNumber)return;
+  obj.off('editing:exited');
+  obj.on('editing:exited',function(){
+    lockNameNumber(obj);
+    pushHistory();
+    toast((obj.pdsName||'Text')+' placed');
+    processNameNumberQueue();
+  });
+}
+
+function addNameNumberText(txt,opts){
+  opts=opts||{};var c=canvasSize();
+  var o=new fabric.IText(txt,{
+    left:opts.left||c.w/2,top:opts.top||c.h/2,originX:'center',originY:'center',
+    fontFamily:opts.fontFamily||'Impact',fontSize:opts.fontSize||28,
+    fill:opts.fill||getAutoTextColor(),fontWeight:'bold',
+    pdsId:uid(),pdsName:opts.label||'Name',pdsNameNumber:true,pdsLocked:false,
+    editable:true,hasControls:false,hasBorders:true,
+    lockMovementX:true,lockMovementY:true,lockScalingX:true,lockScalingY:true,lockRotation:true
+  });
+  S.canvas.add(o);
+  S.canvas.setActiveObject(o);
+  S.nnEditing=o;
+  bindNameNumberEvents(o);
+  setTimeout(function(){o.enterEditing();o.selectAll()},150);
+  S.canvas.renderAll();
+  updateLayers();
+  return o;
+}
+
+var NN_QUEUE=[];
+function processNameNumberQueue(){
+  if(!NN_QUEUE.length)return;
+  var next=NN_QUEUE.shift();
+  setTimeout(function(){addNameNumberText(next.txt,next.opts)},300);
+}
+
+function placeNameNumbers(){
+  var addNames=$('#pds-nn-names').checked;
+  var addNums=$('#pds-nn-nums').checked;
+  if(!addNames&&!addNums){toast('Select at least one option');return}
+  var sizes=getNNSize(),font=$('#pds-nn-font').value,color=$('#pds-nn-color').value||getAutoTextColor();
+  $('#pds-nn-color').value=color;
+  $('#pds-nn-swatch').style.background=color;
+  var c=canvasSize();
+  NN_QUEUE=[];
+  if(addNames&&addNums){
+    NN_QUEUE.push({txt:'00',opts:{label:'Number',fontFamily:font,fontSize:sizes.numSize,fill:color,top:c.h*.58,left:c.w/2}});
+    addNameNumberText('NAME',{label:'Name',fontFamily:font,fontSize:sizes.nameSize,fill:color,top:c.h*.32,left:c.w/2});
+    toast('Type name, then click outside canvas');
+  } else if(addNames){
+    addNameNumberText('NAME',{label:'Name',fontFamily:font,fontSize:sizes.nameSize,fill:color,top:c.h*.4,left:c.w/2});
+    toast('Type name, then click outside canvas');
+  } else {
+    addNameNumberText('00',{label:'Number',fontFamily:font,fontSize:sizes.numSize,fill:color,top:c.h*.45,left:c.w/2});
+    toast('Type number, then click outside canvas');
+  }
+}
+
+function addJersey(){
+  var side=$('#pds-nn-side').value;
+  if(side!==S.view){
+    saveCurrentView();S.view=side;renderViews();
+    loadView(function(){placeNameNumbers()});
+  } else {
+    placeNameNumbers();
+  }
+}
+
+function addImage(src,name){
+  fabric.Image.fromURL(src,function(img){
+    var c=canvasSize(),sc=Math.min(c.w*.65/img.width,c.h*.65/img.height,1);
+    img.set({left:c.w/2,top:c.h/2,originX:'center',originY:'center',scaleX:sc,scaleY:sc,pdsId:uid(),pdsName:name||'Image'});
+    S.canvas.add(img);S.canvas.setActiveObject(img);S.canvas.renderAll();
+    pushHistory();updateLayers();toast('Image added');
+  },{crossOrigin:'anonymous'});
+}
+
+function addShape(type){
+  var c=canvasSize(),col=$('#pds-shape-color').value,sh;
+  switch(type){
+    case 'rect':sh=new fabric.Rect({width:80,height:55,fill:col,rx:6,ry:6});break;
+    case 'circle':sh=new fabric.Circle({radius:38,fill:col});break;
+    case 'triangle':sh=new fabric.Triangle({width:75,height:65,fill:col});break;
+    case 'star':
+      var pts=[];for(var i=0;i<10;i++){var rad=i%2===0?38:15,ang=Math.PI/5*i-Math.PI/2;pts.push({x:rad*Math.cos(ang),y:rad*Math.sin(ang)})}
+      sh=new fabric.Polygon(pts,{fill:col});break;
+    case 'line':sh=new fabric.Line([-50,0,50,0],{stroke:col,strokeWidth:4});break;
+    case 'arrow':sh=new fabric.Line([-40,0,40,0],{stroke:col,strokeWidth:4});break;
+    case 'heart':
+      sh=new fabric.Path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z',{fill:'#ef4444',scaleX:2.5,scaleY:2.5});break;
+    case 'hexagon':
+      var hp=[];for(var j=0;j<6;j++){var ha=Math.PI/3*j-Math.PI/6;hp.push({x:40*Math.cos(ha),y:40*Math.sin(ha)})}
+      sh=new fabric.Polygon(hp,{fill:col});break;
+    default:return;
+  }
+  sh.set({left:c.w/2,top:c.h/2,originX:'center',originY:'center',pdsId:uid(),pdsName:type});
+  S.canvas.add(sh);S.canvas.setActiveObject(sh);S.canvas.renderAll();
+  pushHistory();updateLayers();toast('Shape added');
+}
+
+function addClipart(item){
+  fabric.loadSVGFromString(item.s,function(res,opt){
+    var o=fabric.util.groupSVGElements(res,opt),c=canvasSize();
+    var sc=Math.min(c.w*.45/o.width,c.h*.45/o.height,1);
+    o.set({left:c.w/2,top:c.h/2,originX:'center',originY:'center',scaleX:sc,scaleY:sc,pdsId:uid(),pdsName:item.n});
+    S.canvas.add(o);S.canvas.setActiveObject(o);S.canvas.renderAll();
+    pushHistory();updateLayers();toast(item.n+' added');
+  });
+}
+
+function addQR(){
+  var txt=$('#pds-qr-text').value.trim();if(!txt){toast('Enter URL or text');return}
+  var tmp=document.createElement('div');new QRCode(tmp,{text:txt,width:128,height:128});
+  setTimeout(function(){
+    var img=tmp.querySelector('img');if(!img){toast('QR generation failed');return}
+    addImage(img.src,'QR Code');
+  },200);
+}
+
+function generateAI(){
+  var prompt=$('#pds-ai-prompt').value.trim()||'abstract art';
+  var c=canvasSize(),cv=document.createElement('canvas');
+  cv.width=300;cv.height=300;var ctx=cv.getContext('2d');
+  var grd=ctx.createLinearGradient(0,0,300,300);
+  var hues=[Math.random()*360,Math.random()*360,Math.random()*360];
+  grd.addColorStop(0,'hsl('+hues[0]+',70%,55%)');
+  grd.addColorStop(.5,'hsl('+hues[1]+',60%,45%)');
+  grd.addColorStop(1,'hsl('+hues[2]+',80%,50%)');
+  ctx.fillStyle=grd;ctx.fillRect(0,0,300,300);
+  for(var i=0;i<8;i++){ctx.beginPath();ctx.arc(Math.random()*300,Math.random()*300,20+Math.random()*60,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,'+(Math.random()*.3)+')';ctx.fill()}
+  ctx.font='bold 14px Inter,sans-serif';ctx.fillStyle='rgba(255,255,255,.7)';ctx.textAlign='center';
+  ctx.fillText(prompt.substring(0,30),150,280);
+  addImage(cv.toDataURL(),'AI Art');toast('AI artwork generated');
+}
+
+
+/* ============================================================
+   SECTION 5: OBJECT MANIPULATION
+   ============================================================ */
+function delSel(){
+  var os=getActives();if(!os.length)return;
+  os.forEach(function(o){S.canvas.remove(o)});
+  S.canvas.discardActiveObject();S.canvas.renderAll();
+  pushHistory();updateLayers();toast('Deleted');
+}
+function dupSel(){
+  var o=getActive();if(!o)return;
+  o.clone(function(cl){
+    cl.set({left:(cl.left||0)+15,top:(cl.top||0)+15,pdsId:uid()});
+    if(cl.type==='activeSelection'){cl.canvas=S.canvas;cl.forEachObject(function(x){S.canvas.add(x)});cl.setCoords()}
+    else S.canvas.add(cl);
+    S.canvas.setActiveObject(cl);S.canvas.renderAll();pushHistory();updateLayers();toast('Duplicated');
+  });
+}
+function lockSel(){
+  var o=getActive();if(!o)return;var lk=!o.pdsLocked;
+  function setL(x){x.pdsLocked=lk;x.set({lockMovementX:lk,lockMovementY:lk,lockScalingX:lk,lockScalingY:lk,lockRotation:lk,selectable:!lk,evented:!lk})}
+  if(o.type==='activeSelection')o.forEachObject(setL);else setL(o);
+  S.canvas.renderAll();pushHistory();toast(lk?'Locked':'Unlocked');
+}
+function rotSel(){var o=getActive();if(!o)return;o.rotate((o.angle||0)+15);S.canvas.renderAll();pushHistory()}
+function flipH(){var o=getActive();if(!o)return;o.set('flipX',!o.flipX);S.canvas.renderAll();pushHistory()}
+function flipV(){var o=getActive();if(!o)return;o.set('flipY',!o.flipY);S.canvas.renderAll();pushHistory()}
+function centerSel(){
+  var o=getActive();if(!o)return;var c=canvasSize();
+  o.set({left:c.w/2,top:c.h/2,originX:'center',originY:'center'});o.setCoords();
+  S.canvas.renderAll();pushHistory();toast('Centered');
+}
+function bringUp(){var o=getActive();if(!o)return;S.canvas.bringForward(o);S.canvas.renderAll();pushHistory();updateLayers()}
+function sendDn(){var o=getActive();if(!o)return;S.canvas.sendBackwards(o);S.canvas.renderAll();pushHistory();updateLayers()}
+function setZoom(d){
+  S.zoom=Math.max(.25,Math.min(3,S.zoom+d));
+  S.canvas.setZoom(S.zoom);S.canvas.renderAll();
+  $('#pds-zoom-lbl').textContent=Math.round(S.zoom*100)+'%';
+}
+function setOpacity(v){
+  var o=getActive();if(!o)return;
+  if(o.type==='activeSelection')o.forEachObject(function(x){x.set('opacity',v)});
+  else o.set('opacity',v);
+  S.canvas.renderAll();pushHistory();
+}
+
+/* ============================================================
+   SECTION 6: SMART GUIDES & SNAP
+   ============================================================ */
+function setupGuides(){
+  S.canvas.on('object:moving',function(e){
+    var o=e.target;
+    if(o.pdsNameNumber&&(o.pdsLocked||o.isEditing))return;
+    var c=canvasSize(),snap=8;
+    if(Math.abs(o.left-c.w/2)<snap)o.left=c.w/2;
+    if(Math.abs(o.top-c.h/2)<snap)o.top=c.h/2;
+    if(Math.abs(o.left)<snap)o.left=0;
+    if(Math.abs(o.top)<snap)o.top=0;
+    if(Math.abs(o.left-c.w)<snap)o.left=c.w;
+    if(Math.abs(o.top-c.h)<snap)o.top=c.h;
+  });
+}
+
+/* ============================================================
+   SECTION 7: TEXT UI SYNC
+   ============================================================ */
+function syncTextUI(){
+  var o=getActive();
+  var teInput=$('#pds-te-input'),teTitle=$('#pds-te-title'),addBtn=$('#pds-add-text-btn');
+  if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber){
+    teTitle.textContent='Edit Your Text';
+    addBtn.textContent='Update Text';
+    teInput.value=o.text||'';
+    $('#pds-font').value=o.fontFamily||'Inter';
+    $('#pds-te-font-val').textContent=o.fontFamily||'Inter';
+    $('#pds-font-size').value=o.fontSize||36;$('#pds-fs-val').textContent=o.fontSize||36;
+    var col=(o.fill&&o.fill.indexOf('#')===0)?o.fill:'#000000';
+    $('#pds-text-color').value=col;
+    $('#pds-te-swatch').style.background=col;
+    $('#pds-te-color-val').textContent=col==='#000000'?'Black':col;
+    $('#pds-te-lock').classList.toggle('active',!!o.pdsLocked);
+    var ow=o.strokeWidth||0;
+    $('#pds-outline').value=ow;
+    $('#pds-te-outline-val').textContent=ow>0?ow+'px':'None';
+  } else {
+    teTitle.textContent='Add New Text';
+    addBtn.textContent='Place on Product';
+  }
+  if(addBtn)addBtn.style.display='flex';
+}
+function applyTextFromEditor(){
+  var txt=$('#pds-te-input').value.trim();
+  if(!txt){toast('Type some text first');return}
+  var o=getLiveTextObj()||ensureLiveText();
+  o.set({
+    text:txt,pdsDraft:false,
+    fontSize:canvasFontSize(parseInt($('#pds-font-size').value)||36),
+    fill:$('#pds-text-color').value,fontFamily:$('#pds-font').value
+  });
+  S.textDraftId=null;
+  S.canvas.renderAll();pushHistory();updateLayers();syncTextUI();toast('Text placed');
+}
+function setupCustomControls(){
+  fabric.Object.prototype.set({
+    borderColor:'#007bff',cornerColor:'#fff',cornerStrokeColor:'#94a3b8',
+    cornerSize:12,transparentCorners:false,padding:6,
+    borderDashArray:[6,4]
+  });
+  fabric.Object.prototype.controls.deleteControl=new fabric.Control({
+    x:-.5,y:-.5,offsetX:-14,offsetY:-14,cursorStyle:'pointer',mouseUpHandler:deleteObject,mouseDownHandler:function(){},render:renderDelIcon,cornerSize:24
+  });
+  function deleteObject(e,transform){var t=transform.target;S.canvas.remove(t);S.canvas.requestRenderAll();pushHistory();updateLayers();return true}
+  function renderDelIcon(ctx,left,top){
+    ctx.save();ctx.fillStyle='#fff';ctx.strokeStyle='#94a3b8';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(left,top,10,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.strokeStyle='#64748b';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(left-4,top-2);ctx.lineTo(left+4,top-2);ctx.moveTo(left-3,top-2);ctx.lineTo(left-3,top+4);ctx.lineTo(left+3,top+4);ctx.lineTo(left+3,top-2);ctx.stroke();
+    ctx.restore();
+  }
+}
+function getNNSize(){
+  var s=$('#pds-nn-size').value;
+  if(s==='large')return{nameSize:28,numSize:64};
+  if(s==='medium')return{nameSize:22,numSize:48};
+  return{nameSize:16,numSize:36};
+}
+
+function finalizeEditingNameNumber(){
+  if(!S.canvas)return;
+  if(S.nnEditing&&S.nnEditing.isEditing){
+    S.nnEditing.exitEditing();
+    return;
+  }
+  S.canvas.getObjects().forEach(function(o){
+    if(o.type==='i-text'&&o.pdsNameNumber&&o.isEditing)o.exitEditing();
+  });
+}
+
+function rebindNameNumberObjects(){
+  if(!S.canvas)return;
+  S.canvas.getObjects().forEach(function(o){
+    if(o.pdsNameNumber){
+      if(o.pdsLocked)lockNameNumber(o);
+      else bindNameNumberEvents(o);
+    }
+  });
+}
+
+function openTextPanelIfText(){
+  var o=getActive();
+  if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber){
+    var btn=$('[data-panel="text"]');
+    if(btn&&!btn.classList.contains('active'))btn.click();
+  }
+}
+function applyText(prop,val){
+  var o=getLiveTextObj()||getActive();if(!o)return;
+  if(prop==='fontSize')val=canvasFontSize(val);
+  if(o.type==='activeSelection')o.forEachObject(function(x){if(x.type==='i-text'||x.type==='text')x.set(prop,val)});
+  else if(o.type==='i-text'||o.type==='text')o.set(prop,val);
+  S.canvas.renderAll();
+  if(!o.pdsDraft)pushHistory();
+}
+
+/* ============================================================
+   SECTION 8: LAYERS
+   ============================================================ */
+function updateLayers(){
+  if(!S.canvas)return;
+  var ul=$('#pds-layers'),objs=S.canvas.getObjects().slice().reverse(),act=getActive();
+  ul.innerHTML='';
+  if(!objs.length){ul.innerHTML='<li class="pds-layer-empty">No layers yet</li>';return}
+  objs.forEach(function(o){
+    var li=document.createElement('li');li.className='pds-layer'+(o===act?' active':'');
+    li.innerHTML='<span>'+(o.pdsName||o.type)+'</span>';
+    li.onclick=function(){S.canvas.setActiveObject(o);S.canvas.renderAll();updateLayers();syncTextUI()};
+    ul.appendChild(li);
+  });
+}
+
+/* ============================================================
+   SECTION 9: SAVE / LOAD / EXPORT
+   ============================================================ */
+function getFullDesign(){
+  saveCurrentView();
+  return{version:2,product:S.productId,color:S.color,method:S.method,viewData:S.viewData,
+    uploads:S.uploads,savedAt:new Date().toISOString()};
+}
+function saveDesign(){
+  var d=getFullDesign(),blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='design-'+Date.now()+'.json';a.click();URL.revokeObjectURL(a.href);
+  toast('Design saved');flashAutosave();
+}
+function loadDesign(file){
+  var rd=new FileReader();
+  rd.onload=function(e){
+    try{
+      var d=JSON.parse(e.target.result);
+      if(d.product&&PRODUCTS[d.product]){S.productId=d.product;renderProduct()}
+      if(d.color){S.color=d.color;$('#pds-shirt-path').setAttribute('fill',d.color);renderSwatches()}
+      if(d.method)S.method=d.method;
+      if(d.viewData)S.viewData=d.viewData;
+      if(d.uploads)S.uploads=d.uploads;
+      S.view='front';renderViews();loadView();renderMyUploads();
+      toast('Design loaded');
+    }catch(err){toast('Invalid design file')}
+  };
+  rd.readAsText(file);
+}
+function triggerAutosave(){
+  clearTimeout(S.autosaveTimer);
+  S.autosaveTimer=setTimeout(function(){
+    try{localStorage.setItem('pds_autosave',JSON.stringify(getFullDesign()));flashAutosave()}catch(e){}
+  },30000);
+}
+function flashAutosave(){var el=$('#pds-autosave');el.classList.add('show');setTimeout(function(){el.classList.remove('show')},2000)}
+function tryAutosaveRestore(){
+  try{var d=localStorage.getItem('pds_autosave');if(d&&!confirm('Restore autosaved design?'))return;
+    if(d){var p=JSON.parse(d);if(p.viewData&&Object.keys(p.viewData).length){S.viewData=p.viewData;loadView();toast('Autosave restored')}}}
+  catch(e){}
+}
+function exportPNG(){
+  saveCurrentView();
+  var a=document.createElement('a');
+  a.download='design-'+S.view+'-'+Date.now()+'.png';
+  a.href=S.canvas.toDataURL({format:'png',multiplier:3});a.click();toast('PNG exported');
+}
+function exportSVG(){
+  var svg=S.canvas.toSVG();var blob=new Blob([svg],{type:'image/svg+xml'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='design-'+Date.now()+'.svg';a.click();URL.revokeObjectURL(a.href);toast('SVG exported');
+}
+function exportPDF(){
+  if(typeof jspdf==='undefined'){toast('PDF library loading...');return}
+  var img=S.canvas.toDataURL({format:'png',multiplier:2});
+  var pdf=new jspdf.jsPDF({orientation:'portrait',unit:'px',format:[canvasSize().w*2,canvasSize().h*2]});
+  pdf.addImage(img,'PNG',0,0,canvasSize().w*2,canvasSize().h*2);
+  pdf.save('design-'+Date.now()+'.pdf');toast('PDF exported');
+}
+function resetAll(){
+  if(!confirm('Reset all designs on all views?'))return;
+  S.viewData={};S.history={};S.histIdx={};loadView();toast('Canvas reset');
+}
+function showPreview(){
+  var img=S.canvas.toDataURL({format:'png',multiplier:2});
+  $('#pds-modal-body').innerHTML='<h3 style="margin-bottom:12px">Design Preview — '+getViewCfg().label+'</h3><img src="'+img+'" style="width:100%;border-radius:12px">';
+  $('#pds-modal').classList.add('open');
+}
+function getPrice(){
+  var objCount=0;Object.keys(S.viewData).forEach(function(k){try{var d=JSON.parse(S.viewData[k]);objCount+=(d.objects||[]).length}catch(e){}});
+  var base=12.99,colors=1,areas=Object.keys(getProduct().views).length;
+  var printCost=objCount*1.5,total=(base+printCost+colors*2)*.92;
+  $('#pds-modal-body').innerHTML='<h3 style="margin-bottom:12px">Price Estimate</h3><p style="font-size:14px;color:#64748b;margin-bottom:8px">'+getProduct().name+' — '+S.method+'</p><p style="font-size:28px;font-weight:700;color:#2563eb">$'+total.toFixed(2)+' <span style="font-size:14px;font-weight:400;color:#64748b">/ unit</span></p><p style="font-size:12px;color:#64748b;margin-top:8px">Based on '+objCount+' design elements across '+areas+' print areas</p>';
+  $('#pds-modal').classList.add('open');
+}
+
+/* ============================================================
+   SECTION 10: FILE UPLOAD
+   ============================================================ */
+function handleUpload(file){
+  if(!file)return;
+  var ok=['image/png','image/jpeg','image/jpg','image/svg+xml','image/webp'];
+  if(ok.indexOf(file.type)===-1){toast('Unsupported format');return}
+  if(file.size>15728640){toast('Max 15 MB');return}
+  var rd=new FileReader();
+  rd.onload=function(e){
+    var entry={src:e.target.result,name:file.name,type:file.type,ts:Date.now()};
+    S.uploads.unshift(entry);if(S.uploads.length>20)S.uploads.pop();
+    renderMyUploads();renderUploadPreview();
+    if(file.type==='image/svg+xml'){
+      fabric.loadSVGFromURL(e.target.result,function(res,opt){
+        var o=fabric.util.groupSVGElements(res,opt),c=canvasSize();
+        var sc=Math.min(c.w*.65/o.width,c.h*.65/o.height,1);
+        o.set({left:c.w/2,top:c.h/2,originX:'center',originY:'center',scaleX:sc,scaleY:sc,pdsId:uid(),pdsName:'SVG'});
+        S.canvas.add(o);S.canvas.setActiveObject(o);S.canvas.renderAll();pushHistory();updateLayers();
+      });
+    } else addImage(e.target.result,file.name);
+  };
+  rd.readAsDataURL(file);
+}
+
+function renderUploadPreview(){
+  var el=$('#pds-upload-preview');el.innerHTML='';
+  S.uploads.slice(0,6).forEach(function(u,i){
+    var img=document.createElement('img');img.src=u.src;img.title=u.name;
+    img.onclick=function(){addImage(u.src,u.name)};
+    el.appendChild(img);
+  });
+  var has=S.uploads.length>0;
+  $('#pds-replace-img').disabled=!has;$('#pds-del-img').disabled=!has;
+}
+
+function renderMyUploads(){
+  var el=$('#pds-myuploads');el.innerHTML='';
+  if(!S.uploads.length){el.innerHTML='<p class="pds-hint" style="grid-column:1/-1;text-align:center">No uploads yet</p>';return}
+  S.uploads.forEach(function(u){
+    var d=document.createElement('div');d.className='pds-grid-item';
+    d.innerHTML='<img src="'+u.src+'" style="width:100%;height:100%;object-fit:cover;border-radius:6px">';
+    d.onclick=function(){addImage(u.src,u.name)};el.appendChild(d);
+  });
+}
+
+/* ============================================================
+   SECTION 11: UI RENDERING
+   ============================================================ */
+function renderProduct(){
+  var p=getProduct();
+  $('#pds-product-name').textContent=p.name;
+  $('#pds-product-thumb').innerHTML='<svg viewBox="0 0 80 80"><path d="M28 12 C28 12 26 6 20 4 L12 7 L4 18 L11 22 L14 17 L14 70 C14 74 18 76 40 76 C62 76 66 74 66 70 L66 17 L69 22 L76 18 L68 7 L60 4 C54 6 52 12 52 12 L48 15 C44 13 36 13 32 15 Z" fill="'+S.color+'" stroke="#e2e8f0" stroke-width="1"/></svg>';
+  renderSwatches();renderViews();applyPrintZone();updateViewInfo();
+}
+
+function renderSwatches(){
+  var p=getProduct(),el=$('#pds-swatches');el.innerHTML='';
+  p.colors.forEach(function(c){
+    var b=document.createElement('button');b.className='pds-swatch'+(c===S.color?' active':'');
+    b.style.background=c;b.title=c;
+    b.onclick=function(){
+      S.color=c;$$('.pds-swatch',el).forEach(function(s){s.classList.remove('active')});
+      b.classList.add('active');$('#pds-shirt-path').setAttribute('fill',c);
+      $('#pds-color-label').textContent=c==='#ffffff'?'White':c;
+      var live=getLiveTextObj();
+      if(live&&live.pdsDraft){
+        var nc=getAutoTextColor(c);
+        syncTextColorUI(nc);
+        live.set('fill',nc);
+        if(S.canvas)S.canvas.renderAll();
+      }
+      renderProduct();
+    };
+    el.appendChild(b);
+  });
+}
+
+function renderViews(){
+  var p=getProduct(),el=$('#pds-views');el.innerHTML='';
+  var mainViews=['front','back'];
+  var extraViews=Object.keys(p.views).filter(function(v){return mainViews.indexOf(v)===-1});
+  function shirtSvg(color,flip){
+    var path='M21 9 C21 9 19.5 4.5 15 3 L9 5.25 L3 13.5 L8.25 16.5 L10.5 12.75 L10.5 63 C10.5 66 13.5 67.5 30 67.5 C46.5 67.5 49.5 66 49.5 63 L49.5 12.75 L51.75 16.5 L57 13.5 L51 5.25 L45 3 C40.5 4.5 39 9 39 9 L36 11.25 C33 9.75 27 9.75 24 11.25 Z';
+    if(flip) return '<svg viewBox="0 0 60 72" style="transform:scaleX(-1)"><path d="'+path+'" fill="'+color+'" stroke="#cbd5e1" stroke-width=".8"/></svg>';
+    return '<svg viewBox="0 0 60 72"><path d="'+path+'" fill="'+color+'" stroke="#cbd5e1" stroke-width=".8"/></svg>';
+  }
+  mainViews.forEach(function(vk){
+    if(!p.views[vk])return;
+    var v=p.views[vk],card=document.createElement('button');
+    card.className='pds-view-card'+(vk===S.view?' active':'');
+    card.innerHTML='<div class="pds-view-card__img">'+shirtSvg(S.color,vk==='back')+'</div><div class="pds-view-card__accent"></div><div class="pds-view-card__label">'+v.label+'</div>';
+    card.onclick=function(){
+      saveCurrentView();S.view=vk;$$('.pds-view-card',el).forEach(function(b){b.classList.remove('active')});
+      card.classList.add('active');loadView();
+    };
+    el.appendChild(card);
+  });
+  S.extraViews=extraViews;
+}
+
+function updateViewInfo(){
+  var p=getProduct(),areas=Object.keys(p.views).length;
+  $('#pds-view-info').textContent=p.name+' — '+areas+' print area'+(areas>1?'s':'')+' — Viewing: '+getViewCfg().label;
+}
+
+function renderProductPicker(){
+  var el=$('#pds-product-picker');el.innerHTML='';
+  Object.keys(PRODUCTS).forEach(function(id){
+    var d=document.createElement('div');d.className='pds-prod-opt'+(id===S.productId?' active':'');
+    d.textContent=PRODUCTS[id].name;
+    d.onclick=function(){
+      saveCurrentView();S.productId=id;S.view='front';
+      $$('.pds-prod-opt',el).forEach(function(x){x.classList.remove('active')});
+      d.classList.add('active');renderProduct();loadView();
+      el.classList.remove('open');toast('Product changed');
+    };
+    el.appendChild(d);
+  });
+}
+
+function renderClipart(cat){
+  var el=$('#pds-clip-grid');el.innerHTML='';
+  var items=CLIPART[cat]||[];var q=$('#pds-clip-search').value.toLowerCase();
+  items.forEach(function(item){
+    if(q&&item.n.toLowerCase().indexOf(q)===-1)return;
+    var d=document.createElement('div');d.className='pds-grid-item';d.innerHTML=item.s;d.title=item.n;
+    d.onclick=function(){addClipart(item)};el.appendChild(d);
+  });
+}
+
+function renderClipTabs(){
+  var el=$('#pds-clip-tabs');el.innerHTML='';
+  Object.keys(CLIPART).forEach(function(cat,i){
+    var t=document.createElement('button');t.className='pds-tab'+(i===0?' active':'');
+    t.textContent=cat;
+    t.onclick=function(){$$('.pds-tab',el).forEach(function(x){x.classList.remove('active')});
+      t.classList.add('active');renderClipart(cat)};
+    el.appendChild(t);
+  });
+  renderClipart(Object.keys(CLIPART)[0]);
+}
+
+function renderShapes(){
+  var el=$('#pds-shape-grid');el.innerHTML='';
+  SHAPES.forEach(function(sh){
+    var b=document.createElement('button');b.className='pds-shape-btn';b.innerHTML=sh.s;b.title=sh.l;
+    b.onclick=function(){addShape(sh.t)};el.appendChild(b);
+  });
+}
+
+function renderTemplates(){
+  var el=$('#pds-template-grid');el.innerHTML='';
+  TEMPLATES.forEach(function(tpl){
+    var d=document.createElement('div');d.className='pds-grid-item';
+    d.innerHTML='<span style="font-size:11px;font-weight:700;color:#64748b">'+tpl.n+'</span>';
+    d.onclick=function(){tpl.fn(canvasSize());pushHistory();updateLayers();toast('Template applied')};
+    el.appendChild(d);
+  });
+}
+
+/* ============================================================
+   SECTION 12: CANVAS EVENTS
+   ============================================================ */
+function bindCanvasEvents(){
+  var c=S.canvas;
+  c.on('object:modified',function(){pushHistory();updateLayers()});
+  c.on('object:added',function(){if(!S.restoring)updateLayers()});
+  c.on('object:removed',function(){if(!S.restoring)updateLayers()});
+  c.on('selection:created',function(){updateLayers();syncTextUI();openTextPanelIfText()});
+  c.on('selection:updated',function(){updateLayers();syncTextUI();openTextPanelIfText()});
+  c.on('selection:cleared',function(){updateLayers()});
+  c.on('mouse:down',function(opt){
+    if(S.nnEditing&&S.nnEditing.isEditing){
+      var t=opt.target;
+      if(!t||t!==S.nnEditing)finalizeEditingNameNumber();
+    }
+  });
+  c.on('mouse:dblclick',function(opt){
+    var t=opt.target;
+    if(t&&(t.type==='i-text'||t.type==='text')&&!t.pdsNameNumber&&!t.pdsLocked){
+      S.canvas.setActiveObject(t);
+      $('#pds-te-input').value=t.text||'';
+      var btn=$('[data-panel="text"]');
+      if(btn&&!btn.classList.contains('active'))btn.click();
+      setTimeout(function(){t.enterEditing();t.selectAll();S.canvas.renderAll()},50);
+      syncTextUI();
+    }
+  });
+  c.on('mouse:wheel',function(opt){setZoom(opt.e.deltaY>0?-.05:.05);opt.e.preventDefault();opt.e.stopPropagation()});
+  setupGuides();
+  if(!S._nnDocBound){
+    S._nnDocBound=true;
+    document.addEventListener('mousedown',function(e){
+      if(!S.nnEditing||!S.nnEditing.isEditing)return;
+      var zone=document.getElementById('pds-printzone');
+      if(zone&&zone.contains(e.target))return;
+      finalizeEditingNameNumber();
+    });
+  }
+  document.addEventListener('keydown',function(e){
+    if(e.code==='Space'&&!S.panning&&e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'&&e.target.tagName!=='SELECT'){
+      S.panning=true;S.canvas.defaultCursor='grab';S.canvas.selection=false;e.preventDefault();
+    }
+  });
+  document.addEventListener('keyup',function(e){
+    if(e.code==='Space'){S.panning=false;S.canvas.defaultCursor='default';S.canvas.selection=true}
+  });
+}
+
+/* ============================================================
+   SECTION 13: UI EVENT BINDINGS
+   ============================================================ */
+function bindUI(){
+  /* Nav panels */
+  $$('.pds-iconnav__btn[data-panel]').forEach(function(btn){
+    btn.onclick=function(){
+      var p=btn.getAttribute('data-panel');
+      $$('.pds-iconnav__btn').forEach(function(b){b.classList.remove('active')});
+      $$('.pds-panel__section').forEach(function(s){s.classList.remove('active')});
+      btn.classList.add('active');
+      var sec=$('.pds-panel__section[data-panel="'+p+'"]');
+      if(sec)sec.classList.add('active');
+      $('#pds-panel').classList.add('open');
+      if(p==='text')prepareTextEditor();
+    };
+  });
+  $$('#pds-mobile-bar button').forEach(function(btn){
+    btn.onclick=function(){
+      var p=btn.getAttribute('data-panel');
+      $$('.pds-panel__section').forEach(function(s){s.classList.remove('active')});
+      var sec=$('.pds-panel__section[data-panel="'+p+'"]');
+      if(sec)sec.classList.add('active');
+      $('#pds-panel').classList.add('open');
+    };
+  });
+  $('#pds-collapse-nav').onclick=function(){$('#pds-iconnav').classList.toggle('collapsed')};
+
+  /* Products */
+  $('#pds-change-product').onclick=function(){
+    var el=$('#pds-product-picker');el.classList.toggle('open');S.productPickerOpen=el.classList.contains('open');
+  };
+  $$('.pds-toggle').forEach(function(t){
+    t.onclick=function(){$$('.pds-toggle').forEach(function(x){x.classList.remove('active')});
+      t.classList.add('active');S.method=t.getAttribute('data-method')};
+  });
+
+  /* Text editor — live preview + Lumise-style quick add */
+  $('#pds-quick-add-text').onclick=function(){quickAddText({t:'Your Text'})};
+  $('#pds-add-text-btn').onclick=applyTextFromEditor;
+  $('#pds-te-input').onfocus=function(){prepareTextEditor()};
+  $('#pds-te-input').oninput=function(){
+    var v=this.value;
+    if(!v)return;
+    var o=ensureLiveText();
+    o.set({text:v,fontSize:canvasFontSize(parseInt($('#pds-font-size').value)||36)});
+    S.canvas.renderAll();
+  };
+  $('#pds-te-close').onclick=function(){$('[data-panel="products"]').click()};
+  $$('.pds-lang-tab').forEach(function(t){
+    t.onclick=function(){$$('.pds-lang-tab').forEach(function(x){x.classList.remove('active')});t.classList.add('active')};
+  });
+  ['font','color','outline'].forEach(function(k){
+    var row=$('#pds-te-'+k+'-row'),drop=$('#pds-te-'+k+'-drop');
+    if(row&&drop)row.onclick=function(){drop.classList.toggle('open')};
+  });
+  $('#pds-te-center').onclick=centerSel;
+  $('#pds-te-layer').onclick=function(){bringUp()};
+  $('#pds-te-flip').onclick=flipH;
+  $('#pds-te-lock').onclick=function(){lockSel();syncTextUI()};
+  $('#pds-te-dup').onclick=dupSel;
+  $('#pds-font').onchange=function(){applyText('fontFamily',this.value);$('#pds-te-font-val').textContent=this.value};
+  $('#pds-font-size').oninput=function(){$('#pds-fs-val').textContent=this.value;applyText('fontSize',parseInt(this.value))};
+  $('#pds-text-color').oninput=function(){applyText('fill',this.value);$('#pds-te-swatch').style.background=this.value;$('#pds-te-color-val').textContent=this.value==='#000000'?'Black':this.value};
+  $('#pds-outline').oninput=function(){var w=parseInt(this.value);applyText('stroke',w>0?'#000':'');applyText('strokeWidth',w);$('#pds-te-outline-val').textContent=w>0?w+'px':'None'};
+  $('#pds-curve').oninput=function(){$('#pds-arc-val').textContent=this.value};
+
+  /* Right sidebar utils */
+  $('#pds-sleeves-btn').onclick=function(){
+    if(S.extraViews&&S.extraViews.length){saveCurrentView();S.view=S.extraViews[0];loadView();renderViews();toast('Switched to '+getViewCfg().label)}
+    else toast('No extra views for this product');
+  };
+  $('#pds-zoom-btn').onclick=function(){setZoom(0.15);setTimeout(function(){setZoom(-0.15)},0)};
+  var zoomIn=function(){setZoom(0.1)},zoomOut=function(){setZoom(-0.1)};
+  $('#pds-ft-zoomin').onclick=zoomIn;$('#pds-ft-zoomout').onclick=zoomOut;
+  $('#pds-zoom-btn').ondblclick=function(){S.zoom=1;S.canvas.setZoom(1);S.canvas.renderAll();$('#pds-zoom-lbl').textContent='100%'};
+  $('#pds-share-btn').onclick=function(){
+    saveDesign();toast('Design saved — share the JSON file');
+  };
+
+  /* Products - remove old text handlers */
+  $('#pds-file').onchange=function(){handleUpload(this.files[0]);this.value=''};
+  var dz=$('#pds-dropzone');
+  dz.ondragover=function(e){e.preventDefault();dz.classList.add('over')};
+  dz.ondragleave=function(){dz.classList.remove('over')};
+  dz.ondrop=function(e){e.preventDefault();dz.classList.remove('over');handleUpload(e.dataTransfer.files[0])};
+  $('#pds-replace-img').onclick=function(){if(S.uploads[0])addImage(S.uploads[0].src,S.uploads[0].name)};
+  $('#pds-del-img').onclick=function(){var o=getActive();if(o&&o.type==='image'){S.canvas.remove(o);S.canvas.renderAll();pushHistory();updateLayers();toast('Image removed')}};
+
+  /* AI, QR, Names */
+  $('#pds-ai-generate').onclick=generateAI;
+  $('#pds-add-qr').onclick=addQR;
+  $('#pds-add-jersey').onclick=addJersey;
+  $('#pds-nn-close').onclick=function(){$('[data-panel="products"]').click()};
+  $('#pds-nn-color-row').onclick=function(){$('#pds-nn-color-drop').classList.toggle('open')};
+  $('#pds-nn-color').oninput=function(){
+    $('#pds-nn-swatch').style.background=this.value;
+    $('#pds-nn-color-val').textContent=this.value==='#000000'?'Black':this.value;
+  };
+  $('#pds-clip-search').oninput=function(){var act=$('.pds-tab.active');renderClipart(act?act.textContent:Object.keys(CLIPART)[0])};
+
+  /* Quick actions */
+  $$('.pds-qact').forEach(function(btn){
+    btn.onclick=function(){
+      var a=btn.getAttribute('data-action');
+      if(a==='text'){$('[data-panel="text"]').click();prepareTextEditor();$('#pds-te-input').focus()}
+      if(a==='upload')$('[data-panel="upload"]').click();
+      if(a==='ai')$('[data-panel="ai"]').click();
+    };
+  });
+
+  /* Floating tools */
+  var tools={undo:undo,redo:redo,zoomin:function(){setZoom(.1)},zoomout:function(){setZoom(-.1)},
+    rotate:rotSel,fliph:flipH,flipv:flipV,center:centerSel,up:bringUp,down:sendDn,dup:dupSel,del:delSel,lock:lockSel};
+  Object.keys(tools).forEach(function(k){
+    var btn=$('#pds-ft-'+k);if(btn)btn.onclick=tools[k];
+  });
+  $('#pds-opacity').oninput=function(){setOpacity(parseInt(this.value)/100)};
+
+  /* Workspace tools */
+  $('#pds-ws-undo').onclick=undo;$('#pds-ws-redo').onclick=redo;
+  $('#pds-ws-reset').onclick=resetAll;
+
+  /* Footer */
+  $('#pds-price').onclick=getPrice;
+  $('#pds-save').onclick=saveDesign;
+  $('#pds-load').onclick=function(){$('#pds-load-file').click()};
+  $('#pds-load-file').onchange=function(){if(this.files[0])loadDesign(this.files[0]);this.value=''};
+  $('#pds-dl-png').onclick=exportPNG;
+  $('#pds-dl-svg').onclick=exportSVG;
+  $('#pds-dl-pdf').onclick=exportPDF;
+  $('#pds-reset').onclick=resetAll;
+  $('#pds-preview').onclick=showPreview;
+  $('#pds-next').onclick=function(){toast('Proceeding to Quantity & Sizes...')};
+  $('#pds-modal-close').onclick=function(){$('#pds-modal').classList.remove('open')};
+  $('#pds-modal').onclick=function(e){if(e.target===this)this.classList.remove('open')};
+
+  /* Keyboard shortcuts */
+  document.addEventListener('keydown',function(e){
+    if(!S.canvas)return;
+    var tag=(e.target.tagName||'').toLowerCase();
+    if(tag==='input'||tag==='textarea'||tag==='select')return;
+    if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();delSel()}
+    if(e.ctrlKey||e.metaKey){
+      if(e.key==='z'){e.preventDefault();undo()}
+      if(e.key==='y'){e.preventDefault();redo()}
+      if(e.key==='d'){e.preventDefault();dupSel()}
+      if(e.key==='s'){e.preventDefault();saveDesign()}
+      if(e.key==='a'){e.preventDefault();S.canvas.discardActiveObject();
+        var sel=new fabric.ActiveSelection(S.canvas.getObjects(),{canvas:S.canvas});
+        S.canvas.setActiveObject(sel);S.canvas.renderAll()}
+    }
+  });
+
+  /* Resize */
+  var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){
+    var size=canvasSize();
+    if(S.canvas){S.canvas.setWidth(size.w);S.canvas.setHeight(size.h);
+      S.canvas.clipPath=new fabric.Rect({width:size.w,height:size.h,absolutePositioned:true});
+      S.canvas.renderAll()}
+  },250)});
+}
+
+/* ============================================================
+   SECTION 14: INITIALIZATION
+   ============================================================ */
+function init(){
+  if(S.booted)return;
+  S.booted=true;
+  setupCustomControls();
+  renderProductPicker();renderProduct();renderClipTabs();renderShapes();renderTemplates();
+  renderTextPresets();renderTextFonts();
+  bindUI();
+  var panel=$('#pds-panel');if(panel)panel.classList.add('open');
+  startCanvas(0);
+  setInterval(triggerAutosave,30000);
+}
+
+function startCanvas(attempt){
+  var size=canvasSize();
+  if((size.w<20||size.h<20)&&attempt<40){
+    return setTimeout(function(){startCanvas(attempt+1)},100);
+  }
+  loadView();
+}
+
+function boot(){
+  var app=document.getElementById('pds-app');
+  if(!app)return;
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',init);
+  }else{
+    init();
+  }
+}
+boot();
+})();
+}
+
+function pdsBoot(){
+  var app=document.getElementById('pds-app');
+  if(!app){setTimeout(pdsBoot,50);return}
+  pdsLoadAll(0,pdsStart);
+}
+
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',pdsBoot);
+else pdsBoot();
+})();
+</script>
