@@ -786,7 +786,7 @@
   "use strict";
 
   var API = "/wp-json/wc/store/v1";
-  var DESIGNER_URL = "/design-editor/";
+  var DESIGNER_URL = "/customize/";
   var LUMISE_PRODUCT_BASE = "2";
   var CUSTOM_CAT_SLUGS = ["customize", "customizable", "custom", "customize-your-own", "design-your-own"];
   var CUSTOM_TAG_SLUGS = ["customizable", "customize", "custom", "design-your-own"];
@@ -1405,8 +1405,8 @@
     if (!PRODUCT) return;
     if (IS_CUSTOM) {
       var params = new URLSearchParams({
-        product_base: LUMISE_PRODUCT_BASE,
         product_cms: String(PRODUCT.id),
+        product_id: String(PRODUCT.id),
         color: selectedColor || getRequiredColorValue(),
         size: selectedSize
       });

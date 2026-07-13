@@ -1,0 +1,1522 @@
+<!-- ============================================================
+     VIBECANO — PRODUCT CUSTOMIZATION PAGE
+     Paste into an Elementor HTML widget (100% width) on a page
+     at /customize/ (or update CUSTOMIZE_URL in single product page).
+
+     Query params: product_cms / product_id / color / size
+     Falls back to rich sample product data when API is unavailable.
+
+     Layout: 60% live preview | 40% sticky customization panel
+     Mobile: preview top, accordion panel below
+     ============================================================ -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  .vc-cz, .vc-cz * { box-sizing: border-box; }
+  .vc-cz {
+    --navy: #0B3D4A;
+    --navy-deep: #072F39;
+    --accent: #1D6FE8;
+    --teal: #0E7490;
+    --orange: #F97316;
+    --text: #0f172a;
+    --muted: #64748b;
+    --line: rgba(148, 163, 184, 0.28);
+    --soft: #f8fafc;
+    --ok: #16a34a;
+    --danger: #dc2626;
+    position: relative;
+    min-height: 100vh;
+    color: var(--text);
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    background:
+      radial-gradient(ellipse at 12% 0%, rgba(29, 111, 232, 0.12), transparent 42%),
+      radial-gradient(ellipse at 92% 4%, rgba(14, 116, 144, 0.14), transparent 40%),
+      linear-gradient(180deg, #eef2f7 0%, #ffffff 42%, #f8fafc 100%);
+  }
+  .vc-cz h1, .vc-cz h2, .vc-cz h3, .vc-cz .vc-cz-brand {
+    font-family: Manrope, "Plus Jakarta Sans", sans-serif;
+  }
+
+  .vc-cz-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(16px);
+  }
+  .vc-cz-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 12px 18px;
+  }
+  .vc-cz-header-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .vc-cz-back {
+    flex-shrink: 0;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--muted);
+    border-radius: 12px;
+    padding: 9px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: .18s ease;
+  }
+  .vc-cz-back:hover { border-color: var(--navy); color: var(--navy); }
+  .vc-cz-title { margin: 0; font-size: clamp(16px, 2.2vw, 20px); font-weight: 800; letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vc-cz-sub { margin: 2px 0 0; font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vc-cz-header-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .vc-cz-chip {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .vc-cz-chip-swatch { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(0,0,0,.12); }
+  .vc-cz-total-label { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #94a3b8; text-align: right; }
+  .vc-cz-total-val { font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; color: var(--navy); text-align: right; }
+
+  .vc-cz-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: clamp(18px, 2.5vw, 32px);
+    align-items: start;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 20px 18px 100px;
+  }
+
+  /* Preview */
+  .vc-cz-preview-wrap { position: sticky; top: 84px; }
+  .vc-cz-preview {
+    border: 1px solid var(--line);
+    border-radius: 32px;
+    background: linear-gradient(145deg, #fff, #f0fdfa);
+    box-shadow: 0 40px 100px -60px rgba(11,61,74,.7);
+    padding: clamp(14px, 2vw, 24px);
+  }
+  .vc-cz-sides { display: flex; justify-content: center; gap: 8px; margin-bottom: 14px; }
+  .vc-cz-side-btn {
+    border: 0; border-radius: 999px; padding: 9px 16px;
+    font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    background: #fff; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line);
+    cursor: pointer; transition: .18s ease;
+  }
+  .vc-cz-side-btn.is-active { background: var(--navy); color: #fff; box-shadow: 0 10px 24px -12px rgba(11,61,74,.8); }
+  .vc-cz-stage {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    max-width: 520px;
+    margin: 0 auto;
+    border-radius: 28px;
+    overflow: hidden;
+    transition: background .45s ease;
+  }
+  .vc-cz-stage-fabric {
+    position: absolute; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+    opacity: .14; mix-blend-mode: multiply; pointer-events: none;
+  }
+  .vc-cz-stage-img {
+    position: relative; z-index: 1; width: 100%; height: 100%;
+    object-fit: cover; mix-blend-mode: multiply; opacity: .9;
+    transition: opacity .35s ease, transform .45s ease;
+  }
+  .vc-cz-stage.is-360 .vc-cz-stage-img { animation: vcCzSpin 8s linear infinite; }
+  @keyframes vcCzSpin {
+    0%, 100% { transform: scaleX(1); }
+    50% { transform: scaleX(.92); }
+  }
+  .vc-cz-stage-shadow {
+    position: absolute; left: 18%; right: 18%; bottom: 6%; height: 22px;
+    background: rgba(0,0,0,.25); filter: blur(18px); border-radius: 999px; z-index: 2; pointer-events: none;
+  }
+  .vc-cz-overlay {
+    position: absolute; z-index: 3; display: flex; align-items: center; justify-content: center;
+    transition: transform .25s ease, opacity .25s ease;
+  }
+  .vc-cz-overlay.is-front { left: 28%; right: 28%; top: 28%; height: 28%; }
+  .vc-cz-overlay.is-back { left: 28%; right: 28%; top: 26%; height: 30%; }
+  .vc-cz-overlay.is-left_chest { left: 30%; top: 30%; width: 18%; height: 12%; }
+  .vc-cz-overlay.is-right_chest { right: 30%; top: 30%; width: 18%; height: 12%; }
+  .vc-cz-overlay.is-left_sleeve { left: 8%; top: 38%; width: 14%; height: 10%; }
+  .vc-cz-overlay.is-right_sleeve { right: 8%; top: 38%; width: 14%; height: 10%; }
+  .vc-cz-overlay img { max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,.25)); }
+  .vc-cz-overlay-text { text-align: center; line-height: 1.15; font-weight: 800; font-size: clamp(10px, 2.2vw, 18px); text-shadow: 0 1px 2px rgba(0,0,0,.2); }
+  .vc-cz-overlay-text.is-block { font-weight: 900; letter-spacing: -.02em; text-transform: uppercase; }
+  .vc-cz-overlay-text.is-script { font-family: Georgia, "Times New Roman", serif; font-style: italic; font-weight: 600; text-transform: none; letter-spacing: 0; }
+  .vc-cz-overlay-text.is-modern { font-weight: 600; letter-spacing: .06em; text-transform: none; }
+  .vc-cz-overlay-ph {
+    border: 1px dashed rgba(255,255,255,.7); background: rgba(0,0,0,.22);
+    color: #fff; border-radius: 10px; padding: 4px 8px;
+    font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    backdrop-filter: blur(6px);
+  }
+  .vc-cz-size-L { transform: scale(1.12); }
+  .vc-cz-size-M { transform: scale(1); }
+  .vc-cz-size-S { transform: scale(.76); }
+  .vc-cz-preview-hint { margin: 14px 0 0; text-align: center; font-size: 12px; color: var(--muted); }
+
+  /* Panel */
+  .vc-cz-panel {
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    background: rgba(255,255,255,.94);
+    box-shadow: 0 30px 80px -48px rgba(11,61,74,.55);
+    padding: clamp(16px, 2vw, 24px);
+    position: sticky;
+    top: 84px;
+    max-height: calc(100vh - 100px);
+    overflow: auto;
+  }
+  .vc-cz-section { padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .vc-cz-section:last-child { border-bottom: 0; }
+  .vc-cz-section-title {
+    margin: 0 0 12px; font-size: 13px; font-weight: 800; letter-spacing: -.01em;
+  }
+  .vc-cz-section-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px;
+  }
+  .vc-cz-section-head .vc-cz-section-title { margin: 0; }
+  .vc-cz-hint { margin: -4px 0 12px; font-size: 13px; color: var(--muted); line-height: 1.45; }
+  .vc-cz-group-label {
+    margin: 0 0 8px; font-size: 11px; font-weight: 800; letter-spacing: .14em;
+    text-transform: uppercase; color: #94a3b8;
+  }
+
+  .vc-cz-swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+  .vc-cz-swatch {
+    position: relative; width: 40px; height: 40px; border-radius: 50%;
+    border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(15,23,42,.12);
+    cursor: pointer; padding: 0; transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .vc-cz-swatch:hover { transform: scale(1.06); }
+  .vc-cz-swatch.is-selected {
+    box-shadow: 0 0 0 2px var(--navy), 0 0 0 6px rgba(11,61,74,.14);
+    transform: scale(1.06);
+  }
+  .vc-cz-swatch.is-selected::after {
+    content: "✓"; position: absolute; inset: 0; display: grid; place-items: center;
+    color: #fff; font-size: 14px; font-weight: 900;
+    text-shadow: 0 1px 2px rgba(0,0,0,.55);
+  }
+
+  .vc-cz-sizes { display: flex; flex-wrap: wrap; gap: 8px; }
+  .vc-cz-size {
+    min-width: 48px; border: 0; border-radius: 12px; padding: 10px 12px;
+    background: #fff; color: #334155; font-size: 13px; font-weight: 700;
+    box-shadow: inset 0 0 0 1px var(--line); cursor: pointer; transition: .15s ease;
+  }
+  .vc-cz-size:hover { box-shadow: inset 0 0 0 1px rgba(11,61,74,.35); }
+  .vc-cz-size.is-selected { background: var(--navy); color: #fff; box-shadow: none; }
+  .vc-cz-size:disabled { opacity: .35; text-decoration: line-through; cursor: not-allowed; }
+  .vc-cz-linkbtn {
+    border: 0; background: transparent; color: var(--accent); font-size: 12px; font-weight: 800; cursor: pointer;
+  }
+  .vc-cz-mini-toggle {
+    border: 0; border-radius: 999px; padding: 7px 12px; font-size: 11px; font-weight: 800;
+    background: #f1f5f9; color: #475569; cursor: pointer;
+  }
+  .vc-cz-mini-toggle.is-on { background: var(--navy); color: #fff; }
+  .vc-cz-bulk-row {
+    display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid var(--line); background: #f8fafc; border-radius: 16px;
+    padding: 10px 12px; margin-bottom: 8px;
+  }
+  .vc-cz-bulk-row strong { font-size: 13px; }
+  .vc-cz-bulk-row small { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
+  .vc-cz-stepper { display: flex; align-items: center; gap: 8px; }
+  .vc-cz-stepper button {
+    width: 32px; height: 32px; border: 0; border-radius: 10px; background: #fff;
+    box-shadow: inset 0 0 0 1px var(--line); font-weight: 800; cursor: pointer;
+  }
+  .vc-cz-stepper span { width: 28px; text-align: center; font-size: 13px; font-weight: 800; }
+
+  .vc-cz-pills { display: flex; gap: 6px; background: #f1f5f9; border-radius: 16px; padding: 4px; }
+  .vc-cz-pill {
+    flex: 1; border: 0; border-radius: 12px; padding: 11px 10px;
+    background: transparent; color: #475569; font-size: 13px; font-weight: 800; cursor: pointer;
+  }
+  .vc-cz-pill.is-active { background: var(--navy); color: #fff; box-shadow: 0 8px 18px -10px rgba(11,61,74,.8); }
+
+  .vc-cz-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .vc-cz-chip-loc {
+    border: 0; border-radius: 999px; padding: 9px 14px; font-size: 12px; font-weight: 800;
+    background: #fff; color: #475569; box-shadow: inset 0 0 0 1px var(--line); cursor: pointer;
+    transition: .18s ease;
+  }
+  .vc-cz-chip-loc.is-active { background: var(--navy); color: #fff; box-shadow: 0 10px 20px -12px rgba(11,61,74,.75); }
+
+  .vc-cz-loc-card {
+    margin-top: 12px; border: 1px solid var(--line); border-radius: 18px;
+    background: linear-gradient(180deg, #fff, #f8fafc); padding: 14px;
+    animation: vcCzIn .28s ease;
+  }
+  @keyframes vcCzIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+  .vc-cz-loc-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .vc-cz-loc-card-head h4 { margin: 0; font-size: 13px; font-weight: 800; }
+  .vc-cz-drop {
+    border: 2px dashed #cbd5e1; border-radius: 16px; padding: 28px 14px; text-align: center;
+    background: #fff; cursor: pointer; transition: .18s ease;
+  }
+  .vc-cz-drop:hover, .vc-cz-drop.is-drag { border-color: var(--accent); background: #eff6ff; }
+  .vc-cz-drop strong { display: block; font-size: 13px; margin-bottom: 4px; }
+  .vc-cz-drop span { font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .vc-cz-file {
+    display: flex; align-items: center; gap: 12px; border: 1px solid var(--line);
+    background: #fff; border-radius: 16px; padding: 10px;
+  }
+  .vc-cz-file img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; box-shadow: inset 0 0 0 1px var(--line); }
+  .vc-cz-file-meta { flex: 1; min-width: 0; }
+  .vc-cz-file-meta strong { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vc-cz-file-meta span { font-size: 11px; color: var(--muted); }
+  .vc-cz-file-actions { display: flex; gap: 8px; }
+  .vc-cz-file-actions button, .vc-cz-file-actions label {
+    border: 0; background: transparent; font-size: 12px; font-weight: 800; cursor: pointer; color: var(--accent);
+  }
+  .vc-cz-file-actions .is-danger { color: var(--danger); }
+  .vc-cz-digitize {
+    margin-top: 10px; border: 1px solid #99f6e4; background: #f0fdfa; color: #115e59;
+    border-radius: 14px; padding: 12px; font-size: 12px; line-height: 1.5;
+  }
+  .vc-cz-size-opts { display: flex; gap: 8px; margin-top: 12px; }
+  .vc-cz-size-opt {
+    flex: 1; border: 0; border-radius: 12px; padding: 10px 6px; font-size: 12px; font-weight: 800;
+    background: #fff; color: #475569; box-shadow: inset 0 0 0 1px var(--line); cursor: pointer;
+  }
+  .vc-cz-size-opt.is-active { background: var(--navy); color: #fff; box-shadow: none; }
+  .vc-cz-check {
+    display: flex; align-items: center; gap: 8px; margin-top: 14px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .vc-cz-field { margin-top: 10px; }
+  .vc-cz-field label { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+  .vc-cz-field input, .vc-cz-field select {
+    width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px;
+    font: inherit; font-size: 13px; outline: none; background: #fff;
+  }
+  .vc-cz-field input:focus, .vc-cz-field select:focus { border-color: var(--navy); }
+  .vc-cz-font-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .vc-cz-font-btn {
+    border: 0; border-radius: 12px; padding: 14px 8px; background: #fff;
+    box-shadow: inset 0 0 0 1px var(--line); cursor: pointer; font-size: 16px;
+  }
+  .vc-cz-font-btn.is-active { background: var(--navy); color: #fff; box-shadow: none; }
+  .vc-cz-font-btn.is-block { font-weight: 900; text-transform: uppercase; }
+  .vc-cz-font-btn.is-script { font-family: Georgia, serif; font-style: italic; }
+  .vc-cz-font-btn.is-modern { letter-spacing: .08em; font-weight: 600; }
+
+  .vc-cz-pos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .vc-cz-pos {
+    border: 0; border-radius: 16px; padding: 14px 12px; text-align: left;
+    background: #fff; color: #334155; box-shadow: inset 0 0 0 1px var(--line);
+    font-size: 13px; font-weight: 800; cursor: pointer;
+  }
+  .vc-cz-pos small { display: block; margin-top: 4px; font-size: 11px; font-weight: 700; color: #94a3b8; }
+  .vc-cz-pos.is-active { background: var(--navy); color: #fff; box-shadow: none; }
+  .vc-cz-pos.is-active small { color: #99f6e4; }
+
+  .vc-cz-delivery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .vc-cz-del {
+    border: 0; border-radius: 16px; padding: 14px 8px; text-align: center;
+    background: #fff; color: #475569; box-shadow: inset 0 0 0 1px var(--line);
+    cursor: pointer; transition: .18s ease;
+  }
+  .vc-cz-del strong { display: block; font-size: 13px; font-weight: 800; }
+  .vc-cz-del span { display: block; margin-top: 3px; font-size: 10px; font-weight: 700; color: #94a3b8; }
+  .vc-cz-del.is-active {
+    background: var(--navy); color: #fff; transform: scale(1.02);
+    box-shadow: 0 14px 28px -16px rgba(11,61,74,.85);
+  }
+  .vc-cz-del.is-active span { color: #99f6e4; }
+
+  .vc-cz-price {
+    border: 1px solid var(--line); border-radius: 16px; background: #f8fafc; padding: 14px;
+  }
+  .vc-cz-price-toggle {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    border: 0; background: transparent; cursor: pointer; padding: 0; font: inherit;
+  }
+  .vc-cz-price-toggle span { font-size: 13px; font-weight: 800; }
+  .vc-cz-price-toggle strong { font-family: Manrope, sans-serif; font-size: 18px; color: var(--navy); }
+  .vc-cz-price-lines { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .vc-cz-price-lines.is-open { display: block; }
+  .vc-cz-price-line { display: flex; justify-content: space-between; font-size: 13px; color: #475569; margin-bottom: 6px; }
+  .vc-cz-price-line.is-total { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); color: var(--text); font-weight: 800; }
+
+  .vc-cz-qty-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #f1f5f9; border-radius: 16px; padding: 8px;
+    margin-bottom: 12px;
+  }
+  .vc-cz-qty-bar > span { padding: 0 10px; font-size: 13px; font-weight: 800; color: #475569; }
+  .vc-cz-error {
+    display: none; margin-bottom: 10px; border-radius: 12px; background: #fef2f2;
+    color: var(--danger); font-size: 13px; font-weight: 700; padding: 10px 12px;
+  }
+  .vc-cz-error.is-show { display: block; }
+  .vc-cz-btn-primary {
+    width: 100%; border: 0; border-radius: 16px; padding: 16px;
+    background: var(--navy); color: #fff; font-size: 15px; font-weight: 800;
+    cursor: pointer; box-shadow: 0 18px 40px -18px rgba(11,61,74,.9);
+    transition: .15s ease;
+  }
+  .vc-cz-btn-primary:hover { background: var(--navy-deep); }
+  .vc-cz-btn-primary:disabled { opacity: .55; cursor: not-allowed; }
+  .vc-cz-btn-secondary {
+    width: 100%; margin-top: 8px; border: 1px solid var(--line); border-radius: 16px;
+    padding: 13px; background: #fff; color: #334155; font-size: 13px; font-weight: 800; cursor: pointer;
+  }
+  .vc-cz-help {
+    position: fixed; right: 18px; bottom: 18px; z-index: 50;
+    width: 56px; height: 56px; border: 0; border-radius: 50%;
+    background: var(--accent); color: #fff; font-size: 20px; font-weight: 800;
+    box-shadow: 0 16px 40px -12px rgba(29,111,232,.8); cursor: pointer;
+  }
+  .vc-cz-help-pop {
+    display: none; position: fixed; right: 18px; bottom: 84px; z-index: 50;
+    width: 300px; border: 1px solid var(--line); border-radius: 18px;
+    background: #fff; padding: 16px; box-shadow: 0 24px 60px -24px rgba(15,23,42,.45);
+  }
+  .vc-cz-help-pop.is-open { display: block; animation: vcCzIn .22s ease; }
+  .vc-cz-help-pop p { margin: 8px 0 12px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .vc-cz-wa {
+    display: inline-flex; border-radius: 12px; padding: 10px 12px;
+    background: #25D366; color: #fff; font-size: 13px; font-weight: 800; text-decoration: none;
+  }
+
+  .vc-cz-modal {
+    display: none; position: fixed; inset: 0; z-index: 60;
+    background: rgba(15,23,42,.45); align-items: center; justify-content: center; padding: 18px;
+  }
+  .vc-cz-modal.is-open { display: flex; }
+  .vc-cz-modal-box {
+    width: 100%; max-width: 680px; max-height: 85vh; overflow: auto;
+    background: #fff; border-radius: 28px; padding: 22px; position: relative;
+    box-shadow: 0 30px 80px -20px rgba(15,23,42,.4);
+  }
+  .vc-cz-modal-close {
+    position: absolute; top: 14px; right: 16px; border: 0; background: transparent;
+    font-size: 28px; color: #94a3b8; cursor: pointer; line-height: 1;
+  }
+  .vc-cz-modal h3 { margin: 0 28px 16px 0; font-size: 20px; font-weight: 800; }
+  .vc-cz-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 480px; }
+  .vc-cz-table th { background: var(--navy); color: #fff; padding: 12px 10px; text-align: center; }
+  .vc-cz-table th:first-child { text-align: left; border-radius: 12px 0 0 0; }
+  .vc-cz-table th:last-child { border-radius: 0 12px 0 0; }
+  .vc-cz-table td { padding: 10px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+  .vc-cz-table td:first-child { text-align: left; font-weight: 800; }
+  .vc-cz-table tr:nth-child(even) td { background: #f8fafc; }
+
+  .vc-cz-loading {
+    display: flex; min-height: 60vh; align-items: center; justify-content: center; flex-direction: column; gap: 14px;
+  }
+  .vc-cz-spinner {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 4px solid rgba(11,61,74,.15); border-top-color: var(--navy);
+    animation: vcCzSpinLoad .8s linear infinite;
+  }
+  @keyframes vcCzSpinLoad { to { transform: rotate(360deg); } }
+  .vc-cz-toast {
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(20px);
+    background: var(--navy); color: #fff; border-radius: 999px; padding: 12px 18px;
+    font-size: 13px; font-weight: 700; opacity: 0; pointer-events: none; transition: .25s ease; z-index: 70;
+  }
+  .vc-cz-toast.is-show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (min-width: 900px) {
+    .vc-cz-chip { display: inline-flex; }
+  }
+  @media (max-width: 980px) {
+    .vc-cz-layout { grid-template-columns: 1fr; padding-bottom: 120px; }
+    .vc-cz-preview-wrap, .vc-cz-panel { position: static; max-height: none; }
+    .vc-cz-panel { border-radius: 24px 24px 0 0; }
+  }
+  @media (max-width: 560px) {
+    .vc-cz-header-inner { padding: 10px 12px; }
+    .vc-cz-title { font-size: 15px; }
+    .vc-cz-back { padding: 8px 10px; font-size: 12px; }
+    .vc-cz-delivery { grid-template-columns: 1fr; }
+    .vc-cz-pos-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="vc-cz" id="vcCzRoot" aria-busy="true">
+  <div class="vc-cz-loading" id="vcCzLoading">
+    <div class="vc-cz-spinner" aria-hidden="true"></div>
+    <div style="font-weight:800;color:#0B3D4A">Loading product…</div>
+  </div>
+
+  <div id="vcCzApp" style="display:none">
+    <header class="vc-cz-header">
+      <div class="vc-cz-header-inner">
+        <div class="vc-cz-header-left">
+          <a class="vc-cz-back" id="vcCzBack" href="/shop/">← Back to Product</a>
+          <div style="min-width:0">
+            <h1 class="vc-cz-title" id="vcCzName">Classic Cotton Tee</h1>
+            <p class="vc-cz-sub" id="vcCzMeta">100% Cotton · Base Rs 1,499</p>
+          </div>
+        </div>
+        <div class="vc-cz-header-right">
+          <div class="vc-cz-chip" id="vcCzColorChip">
+            <span class="vc-cz-chip-swatch" id="vcCzColorDot"></span>
+            <span id="vcCzColorName">White</span>
+          </div>
+          <div>
+            <div class="vc-cz-total-label">Total</div>
+            <div class="vc-cz-total-val" id="vcCzTotal">Rs 1,499</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="vc-cz-layout">
+      <section class="vc-cz-preview-wrap" aria-label="Live product preview">
+        <div class="vc-cz-preview">
+          <div class="vc-cz-sides" role="tablist">
+            <button type="button" class="vc-cz-side-btn is-active" data-side="front">Front</button>
+            <button type="button" class="vc-cz-side-btn" data-side="back">Back</button>
+            <button type="button" class="vc-cz-side-btn" data-side="360">360°</button>
+          </div>
+          <div class="vc-cz-stage" id="vcCzStage">
+            <div class="vc-cz-stage-fabric"></div>
+            <img class="vc-cz-stage-img" id="vcCzStageImg" src="" alt="Product preview">
+            <div class="vc-cz-stage-shadow"></div>
+            <div id="vcCzOverlays"></div>
+          </div>
+          <p class="vc-cz-preview-hint">Live mockup · updates as you customize</p>
+        </div>
+      </section>
+
+      <aside class="vc-cz-panel" aria-label="Customization options">
+        <div class="vc-cz-section" id="vcCzColorSection"></div>
+        <div class="vc-cz-section" id="vcCzSizeSection"></div>
+        <div class="vc-cz-section" id="vcCzDecorSection"></div>
+        <div class="vc-cz-section" id="vcCzPrintSection"></div>
+        <div class="vc-cz-section" id="vcCzDeliverySection"></div>
+        <div class="vc-cz-section" id="vcCzPriceSection"></div>
+        <div class="vc-cz-section" id="vcCzActionsSection"></div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="vc-cz-help" id="vcCzHelpBtn" aria-label="Need Help?" title="Need Help?">?</button>
+<div class="vc-cz-help-pop" id="vcCzHelpPop" role="dialog" aria-label="Need help">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <strong style="font-size:14px">Need Help?</strong>
+    <button type="button" id="vcCzHelpClose" style="border:0;background:transparent;font-size:22px;color:#94a3b8;cursor:pointer">×</button>
+  </div>
+  <p>WhatsApp us for artwork advice, bulk quotes, or placement tips. We usually reply within minutes.</p>
+  <a class="vc-cz-wa" href="https://wa.me/923001234567" target="_blank" rel="noopener">Chat on WhatsApp</a>
+</div>
+
+<div class="vc-cz-modal" id="vcCzChartModal" role="dialog" aria-modal="true" aria-labelledby="vcCzChartTitle">
+  <div class="vc-cz-modal-box">
+    <button type="button" class="vc-cz-modal-close" id="vcCzChartClose" aria-label="Close">×</button>
+    <h3 id="vcCzChartTitle">Regular Fit Size Chart</h3>
+    <div style="overflow:auto"><table class="vc-cz-table" id="vcCzChartTable"></table></div>
+  </div>
+</div>
+
+<div class="vc-cz-toast" id="vcCzToast" role="status"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var API = "/wp-json/wc/store/v1";
+  var WHATSAPP = "https://wa.me/923001234567";
+  var MAX_FILE_MB = 15;
+
+  var ARTWORK_SIZES = {
+    front: { L: '12"', M: '8"', S: '4"' },
+    back: { L: '12"', M: '8"', S: '4"' },
+    left_chest: { L: '4.5"', M: '3.75"', S: '3"' },
+    right_chest: { L: '4.5"', M: '3.75"', S: '3"' },
+    left_sleeve: { L: '3.5"', M: '3"', S: '2.5"' },
+    right_sleeve: { L: '3.5"', M: '3"', S: '2.5"' }
+  };
+
+  var LOCATIONS = [
+    { id: "front", label: "Front" },
+    { id: "back", label: "Back" },
+    { id: "left_chest", label: "Left Chest" },
+    { id: "right_chest", label: "Right Chest" },
+    { id: "left_sleeve", label: "Left Sleeve" },
+    { id: "right_sleeve", label: "Right Sleeve" }
+  ];
+
+  var PRINT_POSITIONS = [
+    { id: "full_front_back", label: "Full Front/Back", surcharge: 0 },
+    { id: "full_front", label: "Full Front Only", surcharge: 0 },
+    { id: "left_chest", label: "Left Chest Only", surcharge: 0 },
+    { id: "back_only", label: "Back Only", surcharge: 0 },
+    { id: "left_chest_back", label: "Left Chest/Back", surcharge: 0 },
+    { id: "double_side", label: "Double Side", surcharge: 300 }
+  ];
+
+  var TEXT_COLORS = [
+    { name: "White", hex: "#FFFFFF" },
+    { name: "Black", hex: "#111827" },
+    { name: "Navy", hex: "#0B3D4A" },
+    { name: "Red", hex: "#DC2626" },
+    { name: "Gold", hex: "#D97706" },
+    { name: "Sky", hex: "#0284C7" }
+  ];
+
+  var SAMPLE = {
+    id: 1001,
+    name: "Classic Cotton Tee",
+    slug: "classic-cotton-tee",
+    basePrice: 1499,
+    currencySymbol: "Rs ",
+    material: "100% Combed Cotton · 180 GSM",
+    permalink: "/product/classic-cotton-tee/",
+    images: {
+      front: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900&h=1100&fit=crop",
+      back: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900&h=1100&fit=crop"
+    },
+    colors: [
+      { id: "white", name: "White", hex: "#F5F5F4", group: "core" },
+      { id: "black", name: "Black", hex: "#111827", group: "core" },
+      { id: "navy", name: "Deep Navy", hex: "#0B3D4A", group: "core" },
+      { id: "heather-grey", name: "Heather Grey", hex: "#9CA3AF", group: "core" },
+      { id: "forest", name: "Forest", hex: "#166534", group: "core" },
+      { id: "maroon", name: "Maroon", hex: "#7F1D1D", group: "core" },
+      { id: "ocean", name: "Ocean Teal", hex: "#0E7490", group: "limited", surcharge: 100 },
+      { id: "sunset", name: "Sunset Coral", hex: "#EA580C", group: "limited", surcharge: 100 },
+      { id: "royal", name: "Royal Blue", hex: "#1D4ED8", group: "limited", surcharge: 150 },
+      { id: "sand", name: "Desert Sand", hex: "#D6B88D", group: "limited", surcharge: 100 }
+    ],
+    sizes: [
+      { id: "xxs", label: "XXS", stock: 8 }, { id: "xs", label: "XS", stock: 14 },
+      { id: "s", label: "S", stock: 42 }, { id: "m", label: "M", stock: 56 },
+      { id: "l", label: "L", stock: 48 }, { id: "xl", label: "XL", stock: 31 },
+      { id: "2xl", label: "2XL", stock: 18 }, { id: "3xl", label: "3XL", stock: 9 },
+      { id: "4xl", label: "4XL", stock: 4 }, { id: "5xl", label: "5XL", stock: 2 },
+      { id: "6xl", label: "6XL", stock: 1 },
+      { id: "kids-s", label: "Kids S", stock: 12, kids: true },
+      { id: "kids-m", label: "Kids M", stock: 15, kids: true },
+      { id: "kids-l", label: "Kids L", stock: 10, kids: true }
+    ],
+    sizeChart: {
+      title: "Regular Fit Size Chart (inches)",
+      columns: ["S", "M", "L", "XL", "2XL", "3XL"],
+      rows: [
+        { label: "Length", values: { S: 27, M: 28, L: 29, XL: 30, "2XL": 31, "3XL": 32 } },
+        { label: "Shoulder", values: { S: 18, M: 19, L: 20, XL: 21, "2XL": 22, "3XL": 23 } },
+        { label: "Chest", values: { S: 19.5, M: 20.5, L: 21.5, XL: 22.5, "2XL": 23.5, "3XL": 24.5 } },
+        { label: "Sleeves", values: { S: 8, M: 8.5, L: 9, XL: 9.5, "2XL": 10, "3XL": 10.5 } }
+      ]
+    },
+    pricing: {
+      extraLocationFee: 200,
+      doubleSideFee: 300,
+      embroideryFee: 250,
+      digitizationFee: 500,
+      rushDeliveryFee: 400
+    },
+    textOnlyMode: false
+  };
+
+  var COLOR_HEX = {
+    white: "#F5F5F4", black: "#111827", navy: "#0B3D4A", blue: "#1D4ED8",
+    red: "#DC2626", green: "#166534", grey: "#9CA3AF", gray: "#9CA3AF",
+    maroon: "#7F1D1D", orange: "#EA580C", teal: "#0E7490", sand: "#D6B88D"
+  };
+
+  var state = {
+    product: null,
+    colorId: "",
+    sizeId: "",
+    multiSize: false,
+    sizeQty: {},
+    decoration: "screenprint",
+    locations: [],
+    configs: {},
+    printMode: null,
+    delivery: "standard_5",
+    qty: 1,
+    side: "front",
+    priceOpen: false
+  };
+
+  function money(n) {
+    var sym = (state.product && state.product.currencySymbol) || "Rs ";
+    return sym + Math.round(n || 0).toLocaleString("en-PK");
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+    });
+  }
+
+  function shade(hex, pct) {
+    var raw = String(hex || "#e2e8f0").replace("#", "");
+    if (raw.length === 3) raw = raw.split("").map(function (c) { return c + c; }).join("");
+    var num = parseInt(raw, 16);
+    if (!Number.isFinite(num)) return hex;
+    var r = Math.min(255, Math.max(0, (num >> 16) + pct));
+    var g = Math.min(255, Math.max(0, ((num >> 8) & 0xff) + pct));
+    var b = Math.min(255, Math.max(0, (num & 0xff) + pct));
+    return "#" + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+
+  function colorToHex(name) {
+    var n = String(name || "").toLowerCase().trim();
+    if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(n)) return n;
+    if (COLOR_HEX[n]) return COLOR_HEX[n];
+    var parts = n.split(/[\s\-_/]+/);
+    for (var i = 0; i < parts.length; i++) if (COLOR_HEX[parts[i]]) return COLOR_HEX[parts[i]];
+    for (var k in COLOR_HEX) if (n.indexOf(k) >= 0) return COLOR_HEX[k];
+    return "#94a3b8";
+  }
+
+  function defaultConfig(id) {
+    return {
+      artwork: null,
+      textEnabled: false,
+      line1: "",
+      line2: "",
+      textColor: "#111827",
+      font: "block",
+      artSize: "M"
+    };
+  }
+
+  function getColor() {
+    var p = state.product;
+    if (!p) return null;
+    return p.colors.filter(function (c) { return c.id === state.colorId; })[0] || p.colors[0];
+  }
+
+  function totalQty() {
+    if (!state.multiSize) return Math.max(1, state.qty);
+    var t = 0;
+    Object.keys(state.sizeQty).forEach(function (k) { t += state.sizeQty[k] || 0; });
+    return t;
+  }
+
+  function hasPrint() {
+    var p = state.product;
+    if (!p) return false;
+    if (p.textOnlyMode) return !!state.printMode;
+    return state.locations.some(function (id) {
+      var cfg = state.configs[id];
+      if (!cfg) return false;
+      if (cfg.artwork && cfg.artwork.url) return true;
+      if (cfg.textEnabled && String(cfg.line1 || "").trim()) return true;
+      return false;
+    });
+  }
+
+  function calcPrice() {
+    var p = state.product;
+    var lines = [];
+    if (!p) return { unit: 0, qty: 1, total: 0, lines: lines };
+    var unit = p.basePrice;
+    lines.push({ label: "Base price", amount: p.basePrice });
+
+    var color = getColor();
+    var surcharge = (color && color.surcharge) || 0;
+    if (surcharge) {
+      unit += surcharge;
+      lines.push({ label: (color.name || "Color") + " surcharge", amount: surcharge });
+    }
+
+    if (!p.textOnlyMode) {
+      var extra = Math.max(0, state.locations.length - 1);
+      if (extra) {
+        var locFee = extra * p.pricing.extraLocationFee;
+        unit += locFee;
+        lines.push({ label: "Extra print location" + (extra > 1 ? "s" : "") + " (×" + extra + ")", amount: locFee });
+      }
+    } else if (state.printMode === "double_side") {
+      unit += p.pricing.doubleSideFee;
+      lines.push({ label: "Double side", amount: p.pricing.doubleSideFee });
+    }
+
+    if (state.decoration === "embroidery") {
+      unit += p.pricing.embroideryFee;
+      lines.push({ label: "Embroidery", amount: p.pricing.embroideryFee });
+      var needsDig = state.locations.some(function (id) {
+        var a = state.configs[id] && state.configs[id].artwork;
+        return a && a.url && !a.digitized;
+      });
+      if (needsDig) {
+        unit += p.pricing.digitizationFee;
+        lines.push({ label: "Logo digitization (one-time)", amount: p.pricing.digitizationFee });
+      }
+    }
+
+    if (state.delivery === "express_3") {
+      unit += p.pricing.rushDeliveryFee;
+      lines.push({ label: "Express delivery (3 days)", amount: p.pricing.rushDeliveryFee });
+    }
+
+    var qty = Math.max(1, totalQty());
+    return { unit: unit, qty: qty, total: unit * qty, lines: lines };
+  }
+
+  function toast(msg) {
+    var el = document.getElementById("vcCzToast");
+    el.textContent = msg;
+    el.classList.add("is-show");
+    setTimeout(function () { el.classList.remove("is-show"); }, 2400);
+  }
+
+  function updateHeader() {
+    var p = state.product;
+    var color = getColor();
+    var price = calcPrice();
+    document.getElementById("vcCzName").textContent = p.name;
+    document.getElementById("vcCzMeta").textContent = p.material + " · Base " + money(p.basePrice);
+    document.getElementById("vcCzTotal").textContent = money(price.total);
+    if (color) {
+      document.getElementById("vcCzColorName").textContent = color.name;
+      document.getElementById("vcCzColorDot").style.background = color.hex;
+    }
+    var back = document.getElementById("vcCzBack");
+    back.href = p.permalink || "/shop/";
+  }
+
+  function updatePreview() {
+    var p = state.product;
+    var color = getColor();
+    var stage = document.getElementById("vcCzStage");
+    var img = document.getElementById("vcCzStageImg");
+    var side = state.side === "back" ? "back" : "front";
+    stage.classList.toggle("is-360", state.side === "360");
+    img.src = side === "back" ? p.images.back : p.images.front;
+    img.alt = p.name + " " + side;
+    var hex = (color && color.hex) || "#e2e8f0";
+    stage.style.background =
+      "radial-gradient(circle at 30% 20%, rgba(255,255,255,.55), transparent 40%)," +
+      "radial-gradient(circle at 70% 80%, rgba(0,0,0,.18), transparent 45%)," +
+      "linear-gradient(145deg, " + hex + " 0%, " + shade(hex, -18) + " 100%)";
+
+    var wrap = document.getElementById("vcCzOverlays");
+    wrap.innerHTML = "";
+    state.locations.forEach(function (id) {
+      if (side === "back" && id !== "back") return;
+      if (side === "front" && id === "back") return;
+      if (state.side === "360" && id === "back") return;
+      var cfg = state.configs[id];
+      if (!cfg) return;
+      var div = document.createElement("div");
+      div.className = "vc-cz-overlay is-" + id + " vc-cz-size-" + (cfg.artSize || "M");
+      if (cfg.artwork && cfg.artwork.url && !cfg.textEnabled) {
+        div.innerHTML = '<img src="' + esc(cfg.artwork.url) + '" alt="">';
+      } else if (cfg.textEnabled && String(cfg.line1 || "").trim()) {
+        div.innerHTML =
+          '<div class="vc-cz-overlay-text is-' + esc(cfg.font) + '" style="color:' + esc(cfg.textColor) + '">' +
+          '<div>' + esc(cfg.line1) + '</div>' +
+          (cfg.line2 ? '<div>' + esc(cfg.line2) + '</div>' : '') +
+          '</div>';
+      } else {
+        var label = LOCATIONS.filter(function (l) { return l.id === id; })[0];
+        div.innerHTML = '<div class="vc-cz-overlay-ph">' + esc(label ? label.label : id) + '</div>';
+      }
+      wrap.appendChild(div);
+    });
+  }
+
+  function renderColors() {
+    var p = state.product;
+    var core = p.colors.filter(function (c) { return c.group === "core"; });
+    var limited = p.colors.filter(function (c) { return c.group === "limited"; });
+    function group(title, list) {
+      if (!list.length) return "";
+      return '<div class="vc-cz-group-label">' + esc(title) + '</div><div class="vc-cz-swatches">' +
+        list.map(function (c) {
+          return '<button type="button" class="vc-cz-swatch' + (state.colorId === c.id ? ' is-selected' : '') +
+            '" data-color="' + esc(c.id) + '" title="' + esc(c.name + (c.surcharge ? ' (+Rs ' + c.surcharge + ')' : '')) +
+            '" aria-label="' + esc(c.name) + '" aria-pressed="' + (state.colorId === c.id) +
+            '" style="background:' + esc(c.hex) + '"></button>';
+        }).join("") + '</div>';
+    }
+    document.getElementById("vcCzColorSection").innerHTML =
+      '<h2 class="vc-cz-section-title">Color</h2>' + group("Core Colors", core) +
+      (limited.length ? '<div style="margin-top:14px">' + group("Limited Edition", limited) + '</div>' : "");
+  }
+
+  function renderSizes() {
+    var p = state.product;
+    var adult = p.sizes.filter(function (s) { return !s.kids; });
+    var kids = p.sizes.filter(function (s) { return s.kids; });
+    var html = '<div class="vc-cz-section-head"><h2 class="vc-cz-section-title">Size</h2><div style="display:flex;gap:8px;align-items:center">' +
+      '<button type="button" class="vc-cz-linkbtn" id="vcCzOpenChart">Size Chart</button>' +
+      '<button type="button" class="vc-cz-mini-toggle' + (state.multiSize ? ' is-on' : '') + '" id="vcCzMultiSize">Select Multiple Sizes</button></div></div>';
+
+    if (!state.multiSize) {
+      html += sizeButtons(adult);
+      if (kids.length) html += '<div class="vc-cz-group-label" style="margin-top:14px">Kids</div>' + sizeButtons(kids);
+    } else {
+      html += p.sizes.map(function (s) {
+        var q = state.sizeQty[s.id] || 0;
+        return '<div class="vc-cz-bulk-row"><div><strong>' + esc(s.label) + '</strong>' +
+          (typeof s.stock === "number" ? '<small>' + s.stock + ' left</small>' : '') +
+          '</div><div class="vc-cz-stepper">' +
+          '<button type="button" data-bulk="' + esc(s.id) + '" data-delta="-1">−</button>' +
+          '<span>' + q + '</span>' +
+          '<button type="button" data-bulk="' + esc(s.id) + '" data-delta="1">+</button></div></div>';
+      }).join("");
+    }
+    document.getElementById("vcCzSizeSection").innerHTML = html;
+  }
+
+  function sizeButtons(list) {
+    return '<div class="vc-cz-sizes">' + list.map(function (s) {
+      var out = typeof s.stock === "number" && s.stock <= 0;
+      return '<button type="button" class="vc-cz-size' + (state.sizeId === s.id ? ' is-selected' : '') +
+        '" data-size="' + esc(s.id) + '"' + (out ? ' disabled' : '') +
+        ' title="' + esc(typeof s.stock === "number" ? s.stock + ' in stock' : s.label) + '">' + esc(s.label) + '</button>';
+    }).join("") + '</div>';
+  }
+
+  function renderDecor() {
+    document.getElementById("vcCzDecorSection").innerHTML =
+      '<h2 class="vc-cz-section-title">Decoration Style</h2>' +
+      '<div class="vc-cz-pills" role="tablist">' +
+      '<button type="button" class="vc-cz-pill' + (state.decoration === "screenprint" ? ' is-active' : '') + '" data-decor="screenprint">Screenprint</button>' +
+      '<button type="button" class="vc-cz-pill' + (state.decoration === "embroidery" ? ' is-active' : '') + '" data-decor="embroidery">Embroidery</button>' +
+      '</div>';
+  }
+
+  function renderPrint() {
+    var p = state.product;
+    if (p.textOnlyMode) {
+      document.getElementById("vcCzPrintSection").innerHTML =
+        '<h2 class="vc-cz-section-title">Print Positions</h2>' +
+        '<div class="vc-cz-pos-grid">' + PRINT_POSITIONS.map(function (opt) {
+          return '<button type="button" class="vc-cz-pos' + (state.printMode === opt.id ? ' is-active' : '') +
+            '" data-pos="' + esc(opt.id) + '">' + esc(opt.label) +
+            (opt.surcharge ? '<small>+ Rs ' + opt.surcharge + '</small>' : '') + '</button>';
+        }).join("") + '</div>';
+      return;
+    }
+
+    var cards = state.locations.map(function (id) { return renderLocationCard(id); }).join("");
+    document.getElementById("vcCzPrintSection").innerHTML =
+      '<h2 class="vc-cz-section-title">Print Locations</h2>' +
+      '<p class="vc-cz-hint">Select one or more locations. Each opens its own artwork &amp; text options.</p>' +
+      '<div class="vc-cz-chips">' + LOCATIONS.map(function (loc) {
+        return '<button type="button" class="vc-cz-chip-loc' + (state.locations.indexOf(loc.id) >= 0 ? ' is-active' : '') +
+          '" data-loc="' + esc(loc.id) + '">' + esc(loc.label) + '</button>';
+      }).join("") + '</div>' + cards;
+  }
+
+  function renderLocationCard(id) {
+    var cfg = state.configs[id] || defaultConfig(id);
+    var meta = LOCATIONS.filter(function (l) { return l.id === id; })[0];
+    var sizes = ARTWORK_SIZES[id];
+    var html = '<div class="vc-cz-loc-card" data-card="' + esc(id) + '">' +
+      '<div class="vc-cz-loc-card-head"><h4>' + esc(meta.label) + '</h4>' +
+      '<button type="button" class="vc-cz-linkbtn is-danger" data-remove-loc="' + esc(id) + '" style="color:#dc2626">Remove</button></div>';
+
+    if (!cfg.textEnabled) {
+      if (!cfg.artwork || !cfg.artwork.url) {
+        html += '<div class="vc-cz-drop" data-drop="' + esc(id) + '">' +
+          '<strong>Drag &amp; drop artwork</strong>' +
+          '<span>.jpg .png .pdf .ai .eps .svg · max ' + MAX_FILE_MB + ' MB · 300 DPI recommended</span>' +
+          '<input type="file" hidden accept=".jpg,.jpeg,.png,.pdf,.ai,.eps,.svg" data-file="' + esc(id) + '">' +
+          '</div>';
+      } else {
+        html += '<div class="vc-cz-file"><img src="' + esc(cfg.artwork.url) + '" alt="">' +
+          '<div class="vc-cz-file-meta"><strong>' + esc(cfg.artwork.name) + '</strong><span>Ready for ' + esc(meta.label) + '</span></div>' +
+          '<div class="vc-cz-file-actions">' +
+          '<label>Change<input type="file" hidden accept=".jpg,.jpeg,.png,.pdf,.ai,.eps,.svg" data-file="' + esc(id) + '"></label>' +
+          '<button type="button" class="is-danger" data-clear-art="' + esc(id) + '">Remove</button></div></div>';
+      }
+      if (cfg.artwork && cfg.artwork.url && state.decoration === "embroidery") {
+        html += '<div class="vc-cz-digitize">Great news! This is a one-time digitization setup fee for new logos. Once it’s in our system, it’s for life.</div>';
+      }
+      html += '<div class="vc-cz-group-label" style="margin-top:14px">Artwork Size</div><div class="vc-cz-size-opts">' +
+        ["L", "M", "S"].map(function (k) {
+          return '<button type="button" class="vc-cz-size-opt' + ((cfg.artSize || "M") === k ? ' is-active' : '') +
+            '" data-artsize="' + esc(id) + '" data-sizekey="' + k + '">' + k + " " + sizes[k] + '</button>';
+        }).join("") + '</div>';
+    }
+
+    html += '<label class="vc-cz-check"><input type="checkbox" data-usetext="' + esc(id) + '"' +
+      (cfg.textEnabled ? ' checked' : '') + '> Use Text instead of Artwork</label>';
+
+    if (cfg.textEnabled) {
+      html += '<div class="vc-cz-field"><label><span>First Line</span><span>' + (cfg.line1 || "").length + '/26</span></label>' +
+        '<input maxlength="26" data-line1="' + esc(id) + '" value="' + esc(cfg.line1) + '" placeholder="Your text"></div>' +
+        '<div class="vc-cz-field"><label><span>Second Line (optional)</span></label>' +
+        '<input maxlength="26" data-line2="' + esc(id) + '" value="' + esc(cfg.line2) + '" placeholder="Optional"></div>' +
+        '<div class="vc-cz-group-label" style="margin-top:12px">Text Color</div><div class="vc-cz-swatches">' +
+        TEXT_COLORS.map(function (c) {
+          return '<button type="button" class="vc-cz-swatch' + (cfg.textColor === c.hex ? ' is-selected' : '') +
+            '" data-textcolor="' + esc(id) + '" data-hex="' + esc(c.hex) + '" title="' + esc(c.name) +
+            '" style="background:' + esc(c.hex) + ';width:32px;height:32px"></button>';
+        }).join("") + '</div>' +
+        '<div class="vc-cz-group-label" style="margin-top:12px">Font Type</div><div class="vc-cz-font-grid">' +
+        ["block", "script", "modern"].map(function (f) {
+          return '<button type="button" class="vc-cz-font-btn is-' + f + (cfg.font === f ? ' is-active' : '') +
+            '" data-font="' + esc(id) + '" data-fontkey="' + f + '">Aa</button>';
+        }).join("") + '</div>';
+    }
+
+    return html + '</div>';
+  }
+
+  function renderDelivery() {
+    var opts = [
+      { id: "express_3", label: "3 Days", sub: "Express" },
+      { id: "standard_5", label: "5 Days", sub: "Popular" },
+      { id: "economy_10", label: "10 Days", sub: "Standard" }
+    ];
+    document.getElementById("vcCzDeliverySection").innerHTML =
+      '<h2 class="vc-cz-section-title">Delivery Speed</h2><div class="vc-cz-delivery">' +
+      opts.map(function (o) {
+        return '<button type="button" class="vc-cz-del' + (state.delivery === o.id ? ' is-active' : '') +
+          '" data-del="' + esc(o.id) + '"><strong>' + esc(o.label) + '</strong><span>' + esc(o.sub) + '</span></button>';
+      }).join("") + '</div>';
+  }
+
+  function renderPrice() {
+    var price = calcPrice();
+    document.getElementById("vcCzPriceSection").innerHTML =
+      '<div class="vc-cz-price"><button type="button" class="vc-cz-price-toggle" id="vcCzPriceToggle">' +
+      '<span>Price breakdown</span><strong>' + money(price.total) + '</strong></button>' +
+      '<div class="vc-cz-price-lines' + (state.priceOpen ? ' is-open' : '') + '" id="vcCzPriceLines">' +
+      price.lines.map(function (l) {
+        return '<div class="vc-cz-price-line"><span>' + esc(l.label) + '</span><span>' + money(l.amount) + '</span></div>';
+      }).join("") +
+      '<div class="vc-cz-price-line is-total"><span>Total × ' + price.qty + '</span><span>' + money(price.total) + '</span></div>' +
+      '</div></div>';
+  }
+
+  function renderActions() {
+    var html = '';
+    if (!state.multiSize) {
+      html += '<div class="vc-cz-qty-bar"><span>Quantity</span><div class="vc-cz-stepper">' +
+        '<button type="button" id="vcCzQtyMinus">−</button><span id="vcCzQtyVal">' + state.qty + '</span>' +
+        '<button type="button" id="vcCzQtyPlus">+</button></div></div>';
+    }
+    html += '<div class="vc-cz-error" id="vcCzError"></div>' +
+      '<button type="button" class="vc-cz-btn-primary" id="vcCzAddCart">Add to Cart</button>' +
+      '<button type="button" class="vc-cz-btn-secondary" id="vcCzSave">Save Design for Later</button>';
+    document.getElementById("vcCzActionsSection").innerHTML = html;
+  }
+
+  function renderAll() {
+    updateHeader();
+    updatePreview();
+    renderColors();
+    renderSizes();
+    renderDecor();
+    renderPrint();
+    renderDelivery();
+    renderPrice();
+    renderActions();
+  }
+
+  function renderChart() {
+    var chart = state.product.sizeChart;
+    document.getElementById("vcCzChartTitle").textContent = chart.title;
+    var thead = '<thead><tr><th>Measure</th>' + chart.columns.map(function (c) {
+      return '<th>' + esc(c) + '</th>';
+    }).join("") + '</tr></thead>';
+    var tbody = '<tbody>' + chart.rows.map(function (row) {
+      return '<tr><td>' + esc(row.label) + '</td>' + chart.columns.map(function (c) {
+        return '<td>' + esc(row.values[c]) + '</td>';
+      }).join("") + '</tr>';
+    }).join("") + '</tbody>';
+    document.getElementById("vcCzChartTable").innerHTML = thead + tbody;
+  }
+
+  function handleFile(id, file) {
+    if (!file) return;
+    var ok = /\.(jpe?g|png|pdf|ai|eps|svg)$/i.test(file.name);
+    if (!ok) { toast("Unsupported file type"); return; }
+    if (file.size > MAX_FILE_MB * 1024 * 1024) { toast("File exceeds " + MAX_FILE_MB + " MB"); return; }
+    var cfg = state.configs[id] || defaultConfig(id);
+    var url = URL.createObjectURL(file);
+    cfg.artwork = { name: file.name, url: url, digitized: false };
+    state.configs[id] = cfg;
+    if (id === "back") state.side = "back";
+    else if (state.side !== "360") state.side = "front";
+    renderAll();
+  }
+
+  function bindPanel() {
+    var panel = document.querySelector(".vc-cz-panel");
+    panel.addEventListener("click", function (e) {
+      var t = e.target.closest("[data-color],[data-size],[data-decor],[data-loc],[data-remove-loc],[data-clear-art],[data-artsize],[data-textcolor],[data-font],[data-pos],[data-del],[data-bulk],#vcCzOpenChart,#vcCzMultiSize,#vcCzPriceToggle,#vcCzQtyMinus,#vcCzQtyPlus,#vcCzAddCart,#vcCzSave,[data-drop]");
+      if (!t) return;
+
+      if (t.id === "vcCzOpenChart") {
+        document.getElementById("vcCzChartModal").classList.add("is-open");
+        return;
+      }
+      if (t.id === "vcCzMultiSize") {
+        state.multiSize = !state.multiSize;
+        if (state.multiSize) {
+          state.sizeQty = {};
+          state.sizeQty[state.sizeId] = state.qty;
+        }
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-color")) {
+        state.colorId = t.getAttribute("data-color");
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-size")) {
+        state.sizeId = t.getAttribute("data-size");
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-bulk")) {
+        var sid = t.getAttribute("data-bulk");
+        var delta = Number(t.getAttribute("data-delta"));
+        state.sizeQty[sid] = Math.max(0, (state.sizeQty[sid] || 0) + delta);
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-decor")) {
+        state.decoration = t.getAttribute("data-decor");
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-loc")) {
+        var loc = t.getAttribute("data-loc");
+        var idx = state.locations.indexOf(loc);
+        if (idx >= 0) {
+          state.locations.splice(idx, 1);
+          delete state.configs[loc];
+        } else {
+          state.locations.push(loc);
+          state.configs[loc] = defaultConfig(loc);
+          state.side = loc === "back" ? "back" : (state.side === "360" ? "360" : "front");
+        }
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-remove-loc")) {
+        var rid = t.getAttribute("data-remove-loc");
+        state.locations = state.locations.filter(function (x) { return x !== rid; });
+        delete state.configs[rid];
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-clear-art")) {
+        var cid = t.getAttribute("data-clear-art");
+        if (state.configs[cid]) state.configs[cid].artwork = null;
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-artsize")) {
+        var aid = t.getAttribute("data-artsize");
+        state.configs[aid].artSize = t.getAttribute("data-sizekey");
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-textcolor")) {
+        state.configs[t.getAttribute("data-textcolor")].textColor = t.getAttribute("data-hex");
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-font")) {
+        state.configs[t.getAttribute("data-font")].font = t.getAttribute("data-fontkey");
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-pos")) {
+        state.printMode = t.getAttribute("data-pos");
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-del")) {
+        state.delivery = t.getAttribute("data-del");
+        renderAll();
+        return;
+      }
+      if (t.id === "vcCzPriceToggle") {
+        state.priceOpen = !state.priceOpen;
+        renderPrice();
+        return;
+      }
+      if (t.id === "vcCzQtyMinus") { state.qty = Math.max(1, state.qty - 1); renderAll(); return; }
+      if (t.id === "vcCzQtyPlus") { state.qty += 1; renderAll(); return; }
+      if (t.id === "vcCzAddCart") { addToCart(); return; }
+      if (t.id === "vcCzSave") {
+        try {
+          localStorage.setItem("vcCzDesign:" + state.product.id, JSON.stringify({
+            savedAt: Date.now(),
+            state: {
+              colorId: state.colorId,
+              sizeId: state.sizeId,
+              multiSize: state.multiSize,
+              sizeQty: state.sizeQty,
+              decoration: state.decoration,
+              locations: state.locations,
+              configs: stripBlobUrls(state.configs),
+              printMode: state.printMode,
+              delivery: state.delivery,
+              qty: state.qty
+            }
+          }));
+          toast("Design saved for later");
+        } catch (err) {
+          toast("Could not save design");
+        }
+        return;
+      }
+      if (t.getAttribute("data-drop")) {
+        var input = t.querySelector('input[type="file"]');
+        if (input) input.click();
+      }
+    });
+
+    panel.addEventListener("change", function (e) {
+      var t = e.target;
+      if (t.getAttribute("data-usetext")) {
+        var id = t.getAttribute("data-usetext");
+        state.configs[id].textEnabled = !!t.checked;
+        renderAll();
+        return;
+      }
+      if (t.getAttribute("data-file") && t.files && t.files[0]) {
+        handleFile(t.getAttribute("data-file"), t.files[0]);
+      }
+    });
+
+    panel.addEventListener("input", function (e) {
+      var t = e.target;
+      if (t.getAttribute("data-line1")) {
+        state.configs[t.getAttribute("data-line1")].line1 = t.value.slice(0, 26);
+        updatePreview();
+        updateHeader();
+        renderPrice();
+        var label = t.previousElementSibling && t.previousElementSibling.querySelector("span:last-child");
+        if (label) label.textContent = t.value.length + "/26";
+        return;
+      }
+      if (t.getAttribute("data-line2")) {
+        state.configs[t.getAttribute("data-line2")].line2 = t.value.slice(0, 26);
+        updatePreview();
+      }
+    });
+
+    // Drag & drop
+    panel.addEventListener("dragover", function (e) {
+      var drop = e.target.closest("[data-drop]");
+      if (!drop) return;
+      e.preventDefault();
+      drop.classList.add("is-drag");
+    });
+    panel.addEventListener("dragleave", function (e) {
+      var drop = e.target.closest("[data-drop]");
+      if (drop) drop.classList.remove("is-drag");
+    });
+    panel.addEventListener("drop", function (e) {
+      var drop = e.target.closest("[data-drop]");
+      if (!drop) return;
+      e.preventDefault();
+      drop.classList.remove("is-drag");
+      var file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      handleFile(drop.getAttribute("data-drop"), file);
+    });
+  }
+
+  function stripBlobUrls(configs) {
+    var out = {};
+    Object.keys(configs).forEach(function (k) {
+      var c = configs[k];
+      out[k] = {
+        artwork: c.artwork ? { name: c.artwork.name, digitized: !!c.artwork.digitized } : null,
+        textEnabled: c.textEnabled,
+        line1: c.line1,
+        line2: c.line2,
+        textColor: c.textColor,
+        font: c.font,
+        artSize: c.artSize
+      };
+    });
+    return out;
+  }
+
+  function addToCart() {
+    var err = document.getElementById("vcCzError");
+    err.classList.remove("is-show");
+    err.textContent = "";
+
+    if (!state.product.textOnlyMode && !hasPrint()) {
+      err.textContent = "Select a print location and add artwork or text first.";
+      err.classList.add("is-show");
+      return;
+    }
+    if (state.product.textOnlyMode && !state.printMode) {
+      err.textContent = "Choose a print position.";
+      err.classList.add("is-show");
+      return;
+    }
+    if (!state.multiSize && !state.sizeId) {
+      err.textContent = "Please choose a size.";
+      err.classList.add("is-show");
+      return;
+    }
+    if (state.multiSize && totalQty() < 1) {
+      err.textContent = "Add quantity for at least one size.";
+      err.classList.add("is-show");
+      return;
+    }
+
+    var btn = document.getElementById("vcCzAddCart");
+    btn.disabled = true;
+    btn.textContent = "Adding…";
+
+    var price = calcPrice();
+    var payload = {
+      product_id: state.product.id,
+      name: state.product.name,
+      color: getColor() && getColor().name,
+      size: state.sizeId,
+      multiSize: state.multiSize,
+      sizeQty: state.sizeQty,
+      decoration: state.decoration,
+      locations: state.locations,
+      printMode: state.printMode,
+      delivery: state.delivery,
+      quantity: price.qty,
+      unitPrice: price.unit,
+      total: price.total,
+      lines: price.lines
+    };
+
+    try {
+      sessionStorage.setItem("vcCzLastOrder", JSON.stringify(payload));
+    } catch (e) {}
+
+    // Attempt Store API add-item; fall back to toast + cart redirect
+    var cartToken = sessionStorage.getItem("wcCartToken") || "";
+    fetch(API + "/cart", {
+      credentials: "include",
+      headers: cartToken ? { "Cart-Token": cartToken } : {}
+    })
+      .then(function (res) {
+        var nonce = res.headers.get("Nonce") || res.headers.get("X-WC-Store-API-Nonce") || "";
+        var token = res.headers.get("Cart-Token") || cartToken;
+        if (token) sessionStorage.setItem("wcCartToken", token);
+        return fetch(API + "/cart/add-item", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Nonce: nonce,
+            "Cart-Token": token || ""
+          },
+          body: JSON.stringify({
+            id: Number(state.product.id),
+            quantity: price.qty,
+            variation: []
+          })
+        });
+      })
+      .then(function (res) {
+        if (res && res.headers) {
+          var token = res.headers.get("Cart-Token");
+          if (token) sessionStorage.setItem("wcCartToken", token);
+        }
+        return res && res.ok ? res.json() : Promise.reject();
+      })
+      .then(function () {
+        toast("Added to cart");
+        var token = sessionStorage.getItem("wcCartToken");
+        window.location.href = token ? "/cart/?session=" + encodeURIComponent(token) : "/cart/";
+      })
+      .catch(function () {
+        toast("Design ready · opening cart");
+        setTimeout(function () { window.location.href = "/cart/"; }, 700);
+      })
+      .finally(function () {
+        btn.disabled = false;
+        btn.textContent = "Add to Cart";
+      });
+  }
+
+  function bindChrome() {
+    Array.prototype.forEach.call(document.querySelectorAll(".vc-cz-side-btn"), function (btn) {
+      btn.addEventListener("click", function () {
+        Array.prototype.forEach.call(document.querySelectorAll(".vc-cz-side-btn"), function (b) {
+          b.classList.remove("is-active");
+        });
+        btn.classList.add("is-active");
+        state.side = btn.getAttribute("data-side");
+        updatePreview();
+      });
+    });
+
+    document.getElementById("vcCzHelpBtn").addEventListener("click", function () {
+      document.getElementById("vcCzHelpPop").classList.toggle("is-open");
+    });
+    document.getElementById("vcCzHelpClose").addEventListener("click", function () {
+      document.getElementById("vcCzHelpPop").classList.remove("is-open");
+    });
+    document.getElementById("vcCzChartClose").addEventListener("click", function () {
+      document.getElementById("vcCzChartModal").classList.remove("is-open");
+    });
+    document.getElementById("vcCzChartModal").addEventListener("click", function (e) {
+      if (e.target.id === "vcCzChartModal") e.currentTarget.classList.remove("is-open");
+    });
+  }
+
+  function params() {
+    try { return new URLSearchParams(window.location.search); } catch (e) { return new URLSearchParams(); }
+  }
+
+  function mapWcProduct(data) {
+    var images = (data.images || []).map(function (img) { return img.src; });
+    var front = images[0] || SAMPLE.images.front;
+    var back = images[1] || images[0] || SAMPLE.images.back;
+    var prices = data.prices || {};
+    var decimals = Number(prices.currency_minor_unit);
+    if (!Number.isFinite(decimals)) decimals = 2;
+    var base = Number.parseInt(prices.price || prices.regular_price || "0", 10);
+    if (!Number.isFinite(base)) base = SAMPLE.basePrice;
+    else base = base / Math.pow(10, decimals);
+
+    var colors = [];
+    var sizes = [];
+    (data.attributes || []).forEach(function (attr) {
+      var name = String(attr.name || attr.taxonomy || "").toLowerCase();
+      var terms = attr.terms || attr.options || [];
+      if (/colou?r/.test(name)) {
+        terms.forEach(function (term, i) {
+          var label = typeof term === "string" ? term : (term.name || term.label || "");
+          if (!label) return;
+          colors.push({
+            id: String(label).toLowerCase().replace(/\s+/g, "-"),
+            name: label,
+            hex: colorToHex(label),
+            group: i < 6 ? "core" : "limited",
+            surcharge: i >= 6 ? 100 : 0
+          });
+        });
+      }
+      if (/size/.test(name)) {
+        terms.forEach(function (term) {
+          var label = typeof term === "string" ? term : (term.name || term.label || "");
+          if (!label) return;
+          sizes.push({
+            id: String(label).toLowerCase().replace(/\s+/g, "-"),
+            label: label,
+            kids: /kid/i.test(label)
+          });
+        });
+      }
+    });
+
+    if (!colors.length) colors = SAMPLE.colors.slice();
+    if (!sizes.length) sizes = SAMPLE.sizes.slice();
+
+    return {
+      id: data.id,
+      name: data.name || "Custom Product",
+      slug: data.slug || "",
+      basePrice: base || SAMPLE.basePrice,
+      currencySymbol: prices.currency_prefix || prices.currency_symbol || "Rs ",
+      material: (data.short_description || "").replace(/<[^>]+>/g, " ").trim().slice(0, 80) || SAMPLE.material,
+      permalink: data.permalink || ("/product/" + (data.slug || "") + "/"),
+      images: { front: front, back: back },
+      colors: colors,
+      sizes: sizes,
+      sizeChart: SAMPLE.sizeChart,
+      pricing: SAMPLE.pricing,
+      textOnlyMode: false
+    };
+  }
+
+  function bootWithProduct(product) {
+    state.product = product;
+    var q = params();
+    var colorParam = String(q.get("color") || "").toLowerCase();
+    var sizeParam = String(q.get("size") || "").toLowerCase();
+    var preferredColor = product.colors.filter(function (c) {
+      return c.id === colorParam || c.name.toLowerCase() === colorParam;
+    })[0] || product.colors.filter(function (c) { return c.group === "core"; })[0] || product.colors[0];
+    var preferredSize = product.sizes.filter(function (s) {
+      return s.id === sizeParam || s.label.toLowerCase() === sizeParam;
+    })[0] || product.sizes.filter(function (s) { return s.id === "m" || s.label === "M"; })[0] || product.sizes[0];
+
+    state.colorId = preferredColor ? preferredColor.id : "";
+    state.sizeId = preferredSize ? preferredSize.id : "";
+    state.decoration = "screenprint";
+    state.delivery = "standard_5";
+    state.locations = [];
+    state.configs = {};
+    state.printMode = product.textOnlyMode ? "full_front" : null;
+    state.qty = 1;
+    state.side = "front";
+
+    // Restore saved design if present
+    try {
+      var saved = JSON.parse(localStorage.getItem("vcCzDesign:" + product.id) || "null");
+      if (saved && saved.state) {
+        Object.keys(saved.state).forEach(function (k) {
+          if (k !== "configs") state[k] = saved.state[k];
+        });
+        // configs without blob previews
+        if (saved.state.configs) {
+          Object.keys(saved.state.configs).forEach(function (id) {
+            state.configs[id] = Object.assign(defaultConfig(id), saved.state.configs[id], { artwork: null });
+          });
+        }
+      }
+    } catch (e) {}
+
+    document.getElementById("vcCzLoading").style.display = "none";
+    document.getElementById("vcCzApp").style.display = "block";
+    document.getElementById("vcCzRoot").setAttribute("aria-busy", "false");
+    document.querySelector('a.vc-cz-wa').href = WHATSAPP;
+    renderChart();
+    bindChrome();
+    bindPanel();
+    renderAll();
+  }
+
+  function loadProduct() {
+    var q = params();
+    var id = q.get("product_cms") || q.get("product_id") || q.get("id");
+    if (!id) {
+      bootWithProduct(SAMPLE);
+      return;
+    }
+    fetch(API + "/products/" + encodeURIComponent(id), { credentials: "include" })
+      .then(function (res) {
+        if (!res.ok) throw new Error("Product not found");
+        return res.json();
+      })
+      .then(function (data) { bootWithProduct(mapWcProduct(data)); })
+      .catch(function () {
+        var fallback = Object.assign({}, SAMPLE, { id: id });
+        bootWithProduct(fallback);
+        toast("Using demo product data");
+      });
+  }
+
+  loadProduct();
+})();
+</script>
