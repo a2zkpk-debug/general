@@ -406,10 +406,11 @@
 .pds-wstool--text{justify-content:center}
 .pds-mockup-wrap{position:relative;display:flex;flex-direction:column;align-items:center}
 .pds-mockup{position:relative;max-width:380px;width:100%;transition:transform .3s}
-.pds-shirt{width:100%;display:block}
-.pds-printzone{position:absolute;border:2px dashed rgba(37,99,235,.3);border-radius:4px;overflow:hidden;transition:border-color .3s}
+.pds-shirt{width:100%;display:block;position:relative;z-index:1}
+.pds-printzone{position:absolute;z-index:5;pointer-events:auto;border:2px dashed rgba(37,99,235,.3);border-radius:4px;overflow:visible;transition:border-color .3s}
 .pds-printzone:hover{border-color:rgba(37,99,235,.55)}
 .pds-printzone canvas{display:block!important;width:100%!important;height:100%!important}
+.pds-printzone .canvas-container{position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;z-index:5!important}
 .pds-quick-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;justify-content:center}
 .pds-qact{padding:8px 16px;border:1px solid var(--border);border-radius:24px;background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;box-shadow:var(--shadow);transition:.2s}
 .pds-qact:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px)}
@@ -593,7 +594,7 @@ var S = {
   productId:'tshirt', color:'#ffffff', view:'front', method:'printing',
   canvas:null, zoom:1, panning:false, lastPan:{x:0,y:0},
   viewData:{}, history:{}, histIdx:{}, restoring:false,
-  uploads:[], autosaveTimer:null, productPickerOpen:false, nnEditing:null, booted:false
+  uploads:[], autosaveTimer:null, productPickerOpen:false, nnEditing:null, booted:false, textDraftId:null
 };
 var $=function(s,r){return(r||document).querySelector(s)};
 var $$=function(s,r){return[].slice.call((r||document).querySelectorAll(s))};
@@ -695,18 +696,76 @@ function updateHistBtns(){
 function getActive(){return S.canvas?S.canvas.getActiveObject():null}
 function getActives(){var o=getActive();if(!o)return[];return o.type==='activeSelection'?o.getObjects():[o]}
 
-var JSON_PROPS=['pdsId','pdsName','pdsLocked','pdsNameNumber'];
+var JSON_PROPS=['pdsId','pdsName','pdsLocked','pdsNameNumber','pdsDraft'];
+
+function hexToRgb(hex){
+  hex=(hex||'#ffffff').replace('#','');
+  if(hex.length===3)hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+  var n=parseInt(hex,16)||0xffffff;
+  return{r:(n>>16)&255,g:(n>>8)&255,b:n&255};
+}
+function getAutoTextColor(bg){
+  var c=hexToRgb(bg||S.color);
+  var lum=(0.299*c.r+0.587*c.g+0.114*c.b)/255;
+  return lum>0.55?'#000000':'#ffffff';
+}
+function canvasFontSize(uiSize){
+  var h=canvasSize().h||120;
+  var scaled=Math.round((uiSize||36)*(h/120));
+  return Math.max(10,Math.min(scaled,Math.round(h*0.82)));
+}
+function syncTextColorUI(col){
+  $('#pds-text-color').value=col;
+  $('#pds-te-swatch').style.background=col;
+  $('#pds-te-color-val').textContent=col==='#ffffff'?'White':col==='#000000'?'Black':col;
+}
+function getLiveTextObj(){
+  var o=getActive();
+  if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber)return o;
+  if(S.textDraftId&&S.canvas){
+    var found=null;
+    S.canvas.getObjects().forEach(function(x){if(x.pdsId===S.textDraftId)found=x});
+    if(found)return found;
+    S.textDraftId=null;
+  }
+  return null;
+}
+function ensureLiveText(){
+  var o=getLiveTextObj();
+  if(o){S.canvas.setActiveObject(o);return o}
+  var c=canvasSize();
+  var fill=getAutoTextColor();
+  syncTextColorUI(fill);
+  var fs=canvasFontSize(parseInt($('#pds-font-size').value)||36);
+  var txt=$('#pds-te-input').value||' ';
+  o=new fabric.IText(txt,{
+    left:c.w/2,top:c.h/2,originX:'center',originY:'center',
+    fontFamily:$('#pds-font').value,fontSize:fs,fill:fill,
+    pdsId:uid(),pdsName:'Text',pdsNameNumber:false,pdsDraft:true
+  });
+  S.textDraftId=o.pdsId;
+  S.canvas.add(o);S.canvas.setActiveObject(o);S.canvas.renderAll();
+  updateLayers();syncTextUI();
+  return o;
+}
+function prepareTextEditor(){
+  var fill=getAutoTextColor();
+  if(!getLiveTextObj())syncTextColorUI(fill);
+}
 
 function addText(txt,opts){
   opts=opts||{};var c=canvasSize();
+  var fill=opts.fill||$('#pds-text-color').value||getAutoTextColor();
+  var fs=opts.fontSize?canvasFontSize(opts.fontSize):canvasFontSize(parseInt($('#pds-font-size').value)||36);
   var o=new fabric.IText(txt||'Your Text',{
     left:opts.left||c.w/2,top:opts.top||c.h/2,originX:'center',originY:'center',
-    fontFamily:opts.fontFamily||$('#pds-font').value,fontSize:opts.fontSize||36,
-    fill:opts.fill||$('#pds-text-color').value,fontWeight:opts.fontWeight||'normal',
+    fontFamily:opts.fontFamily||$('#pds-font').value,fontSize:fs,
+    fill:fill,fontWeight:opts.fontWeight||'normal',
     fontStyle:opts.fontStyle||'normal',underline:opts.underline||false,
     stroke:opts.stroke||'',strokeWidth:opts.strokeWidth||0,
-    shadow:opts.shadow||null,pdsId:uid(),pdsName:'Text',pdsNameNumber:false
+    shadow:opts.shadow||null,pdsId:uid(),pdsName:'Text',pdsNameNumber:false,pdsDraft:false
   });
+  S.textDraftId=null;
   S.canvas.add(o);S.canvas.setActiveObject(o);S.canvas.renderAll();
   pushHistory();updateLayers();toast('Text added');return o;
 }
@@ -743,7 +802,7 @@ function addNameNumberText(txt,opts){
   var o=new fabric.IText(txt,{
     left:opts.left||c.w/2,top:opts.top||c.h/2,originX:'center',originY:'center',
     fontFamily:opts.fontFamily||'Impact',fontSize:opts.fontSize||28,
-    fill:opts.fill||'#000000',fontWeight:'bold',
+    fill:opts.fill||getAutoTextColor(),fontWeight:'bold',
     pdsId:uid(),pdsName:opts.label||'Name',pdsNameNumber:true,pdsLocked:false,
     editable:true,hasControls:false,hasBorders:true,
     lockMovementX:true,lockMovementY:true,lockScalingX:true,lockScalingY:true,lockRotation:true
@@ -769,7 +828,9 @@ function placeNameNumbers(){
   var addNames=$('#pds-nn-names').checked;
   var addNums=$('#pds-nn-nums').checked;
   if(!addNames&&!addNums){toast('Select at least one option');return}
-  var sizes=getNNSize(),font=$('#pds-nn-font').value,color=$('#pds-nn-color').value;
+  var sizes=getNNSize(),font=$('#pds-nn-font').value,color=$('#pds-nn-color').value||getAutoTextColor();
+  $('#pds-nn-color').value=color;
+  $('#pds-nn-swatch').style.background=color;
   var c=canvasSize();
   NN_QUEUE=[];
   if(addNames&&addNums){
@@ -953,13 +1014,16 @@ function syncTextUI(){
   }
 }
 function applyTextFromEditor(){
-  var txt=$('#pds-te-input').value.trim()||'Your Text';
-  var o=getActive();
-  if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber){
-    o.set('text',txt);S.canvas.renderAll();pushHistory();toast('Text updated');
-  } else {
-    addText(txt,{fontSize:parseInt($('#pds-font-size').value),fill:$('#pds-text-color').value,fontFamily:$('#pds-font').value});
-  }
+  var txt=$('#pds-te-input').value.trim();
+  if(!txt){toast('Type some text first');return}
+  var o=getLiveTextObj()||ensureLiveText();
+  o.set({
+    text:txt,pdsDraft:false,
+    fontSize:canvasFontSize(parseInt($('#pds-font-size').value)||36),
+    fill:$('#pds-text-color').value,fontFamily:$('#pds-font').value
+  });
+  S.textDraftId=null;
+  S.canvas.renderAll();pushHistory();updateLayers();syncTextUI();toast('Text placed');
 }
 function setupCustomControls(){
   fabric.Object.prototype.set({
@@ -1015,10 +1079,12 @@ function openTextPanelIfText(){
   }
 }
 function applyText(prop,val){
-  var o=getActive();if(!o)return;
+  var o=getLiveTextObj()||getActive();if(!o)return;
+  if(prop==='fontSize')val=canvasFontSize(val);
   if(o.type==='activeSelection')o.forEachObject(function(x){if(x.type==='i-text'||x.type==='text')x.set(prop,val)});
   else if(o.type==='i-text'||o.type==='text')o.set(prop,val);
-  S.canvas.renderAll();pushHistory();
+  S.canvas.renderAll();
+  if(!o.pdsDraft)pushHistory();
 }
 
 /* ============================================================
@@ -1179,6 +1245,13 @@ function renderSwatches(){
       S.color=c;$$('.pds-swatch',el).forEach(function(s){s.classList.remove('active')});
       b.classList.add('active');$('#pds-shirt-path').setAttribute('fill',c);
       $('#pds-color-label').textContent=c==='#ffffff'?'White':c;
+      var live=getLiveTextObj();
+      if(live&&live.pdsDraft){
+        var nc=getAutoTextColor(c);
+        syncTextColorUI(nc);
+        live.set('fill',nc);
+        if(S.canvas)S.canvas.renderAll();
+      }
       renderProduct();
     };
     el.appendChild(b);
@@ -1285,6 +1358,17 @@ function bindCanvasEvents(){
       if(!t||t!==S.nnEditing)finalizeEditingNameNumber();
     }
   });
+  c.on('mouse:dblclick',function(opt){
+    var t=opt.target;
+    if(t&&(t.type==='i-text'||t.type==='text')&&!t.pdsNameNumber&&!t.pdsLocked){
+      S.canvas.setActiveObject(t);
+      $('#pds-te-input').value=t.text||'';
+      var btn=$('[data-panel="text"]');
+      if(btn&&!btn.classList.contains('active'))btn.click();
+      setTimeout(function(){t.enterEditing();t.selectAll();S.canvas.renderAll()},50);
+      syncTextUI();
+    }
+  });
   c.on('mouse:wheel',function(opt){setZoom(opt.e.deltaY>0?-.05:.05);opt.e.preventDefault();opt.e.stopPropagation()});
   setupGuides();
   if(!S._nnDocBound){
@@ -1320,6 +1404,7 @@ function bindUI(){
       var sec=$('.pds-panel__section[data-panel="'+p+'"]');
       if(sec)sec.classList.add('active');
       $('#pds-panel').classList.add('open');
+      if(p==='text')prepareTextEditor();
     };
   });
   $$('#pds-mobile-bar button').forEach(function(btn){
@@ -1342,11 +1427,15 @@ function bindUI(){
       t.classList.add('active');S.method=t.getAttribute('data-method')};
   });
 
-  /* Text editor */
+  /* Text editor — live preview on canvas while typing */
   $('#pds-add-text-btn').onclick=applyTextFromEditor;
+  $('#pds-te-input').onfocus=function(){prepareTextEditor()};
   $('#pds-te-input').oninput=function(){
-    var o=getActive();
-    if(o&&(o.type==='i-text'||o.type==='text')&&!o.pdsNameNumber){o.set('text',this.value);S.canvas.renderAll()}
+    var v=this.value;
+    if(!v)return;
+    var o=ensureLiveText();
+    o.set({text:v,fontSize:canvasFontSize(parseInt($('#pds-font-size').value)||36)});
+    S.canvas.renderAll();
   };
   $('#pds-te-close').onclick=function(){$('[data-panel="products"]').click()};
   $$('.pds-lang-tab').forEach(function(t){
@@ -1405,7 +1494,7 @@ function bindUI(){
   $$('.pds-qact').forEach(function(btn){
     btn.onclick=function(){
       var a=btn.getAttribute('data-action');
-      if(a==='text'){$('[data-panel="text"]').click();$('#pds-te-input').focus()}
+      if(a==='text'){$('[data-panel="text"]').click();prepareTextEditor();$('#pds-te-input').focus()}
       if(a==='upload')$('[data-panel="upload"]').click();
       if(a==='ai')$('[data-panel="ai"]').click();
     };
