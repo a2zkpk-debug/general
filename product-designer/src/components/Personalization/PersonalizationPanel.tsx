@@ -31,8 +31,8 @@ const ACTIONS = [
   {
     id: "clipart" as const,
     title: "Add Clipart",
-    desc: "Coming soon",
-    ready: false,
+    desc: "Icons & shapes library",
+    ready: true,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
         <circle cx="12" cy="12" r="9" />
@@ -44,8 +44,8 @@ const ACTIONS = [
   {
     id: "logo" as const,
     title: "Add Logo",
-    desc: "Coming soon",
-    ready: false,
+    desc: "Upload brand mark / logo file",
+    ready: true,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
         <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" />
@@ -74,7 +74,8 @@ export function PersonalizationPanel() {
                 addTextLayer("Enter your text here...");
                 setActivePanel("text");
               }
-              if (action.id === "image") openUploadModal(true);
+              if (action.id === "image" || action.id === "logo") openUploadModal(true);
+              if (action.id === "clipart") setActivePanel("personalize");
             }}
           >
             <span className="pd-action__icon">{action.icon}</span>
@@ -82,7 +83,6 @@ export function PersonalizationPanel() {
               <strong>{action.title}</strong>
               <small>{action.desc}</small>
             </span>
-            {!action.ready ? <span className="pd-pill">Soon</span> : null}
           </button>
         ))}
       </div>

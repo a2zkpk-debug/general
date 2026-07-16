@@ -50,8 +50,16 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 
 ### Architecture
 
-Production delivery is the Elementor HTML widget (`VibeDesigner.*` namespaces).  
-The `product-designer/` folder is a component-based React + Zustand reference so new tools, print locations, and product types can be added without rewriting the core shell.
+Production delivery is the complete Elementor HTML widget (`VibeDesigner.*` namespaces) with WooCommerce Store API hydrate + add-to-cart.
+
+The `product-designer/` folder is a component-based React + Zustand reference (plus full `designer.css`) so new tools, print locations, and product types can be added without rewriting the core shell.
+
+### Cart integration
+
+- Uses the same `vcWcCartToken` session key as the single product / cart pages
+- Posts to `/wp-json/wc/store/v1/cart/add-item` with color/size variation attributes
+- Saves design summary to `sessionStorage.vcDesignerLastOrder`
+- On success redirects to `/checkout/?session=CART_TOKEN` (classic fallback if Store API fails)
 
 ### Design system
 

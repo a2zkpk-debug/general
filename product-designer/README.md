@@ -29,7 +29,14 @@ src/
 
 Paste `../vibecano-product-designer.html` into an Elementor HTML widget at **100%** width on `/design-editor/` (or `/customize/`).
 
-The HTML widget mirrors this module map using namespaced JS (`VibeDesigner.*`) so future tools can be added without rewriting the shell.
+The HTML widget is the **complete production implementation** and includes:
+
+- WooCommerce Store API product hydrate + variation-aware add-to-cart
+- Print positions, colors, sizes (single + multi qty), size chart
+- Text editor, image/logo upload, clipart library, drag-to-reposition layers
+- Design payload saved to `sessionStorage` (`vcDesignerLastOrder`)
+
+This React folder mirrors the same module map (`VibeDesigner.*` / Zustand store) for typed extension work.
 
 ## Extending
 

@@ -4,11 +4,13 @@ import { TextEditorPanel } from "./components/TextEditor/TextEditorPanel";
 import { ImageUploadModal } from "./components/ImageUpload/ImageUploadModal";
 import { CanvasPreview } from "./components/Canvas/CanvasPreview";
 import { LayersPanel } from "./components/Layers/LayersPanel";
+import { MobileControls } from "./components/Mobile/MobileControls";
 import { useDesignerStore } from "./store/designerStore";
+import "./styles/designer.css";
 
 /**
- * Vibecano Product Designer — modular shell.
- * Compose panels freely; each feature module is independently replaceable.
+ * Vibecano Product Designer — complete modular shell.
+ * Production twin: ../vibecano-product-designer.html
  */
 export function DesignerApp() {
   const product = useDesignerStore((s) => s.product);
@@ -16,15 +18,36 @@ export function DesignerApp() {
   const setActivePanel = useDesignerStore((s) => s.setActivePanel);
   const colorId = useDesignerStore((s) => s.colorId);
   const totalQuantity = useDesignerStore((s) => s.totalQuantity);
+  const layers = useDesignerStore((s) => s.layers);
   const color = product.colors.find((c) => c.id === colorId);
+  const qty = Math.max(1, totalQuantity());
+  const total = product.basePrice * qty;
 
-  const total = product.basePrice * Math.max(1, totalQuantity());
+  const handleAddToCart = () => {
+    if (!layers.length) {
+      setActivePanel("personalize");
+      return;
+    }
+    const payload = {
+      product_id: product.id,
+      color: color?.name,
+      quantity: qty,
+      total,
+      layers: layers.map((l) => ({ id: l.id, type: l.type, name: l.name, positionId: l.positionId })),
+    };
+    try {
+      sessionStorage.setItem("vcDesignerLastOrder", JSON.stringify(payload));
+    } catch {
+      /* ignore */
+    }
+    window.location.href = "/checkout/";
+  };
 
   return (
     <div className="pd-shell">
       <header className="pd-topbar">
         <div className="pd-topbar__left">
-          <a className="pd-back" href="javascript:history.back()">
+          <a className="pd-back" href={typeof document !== "undefined" && document.referrer ? document.referrer : "/"}>
             ← Back
           </a>
           <div>
@@ -40,7 +63,7 @@ export function DesignerApp() {
               {total.toLocaleString()}
             </strong>
           </div>
-          <button type="button" className="pd-btn pd-btn--primary">
+          <button type="button" className="pd-btn pd-btn--primary" onClick={handleAddToCart}>
             Add to Cart
           </button>
         </div>
@@ -56,7 +79,7 @@ export function DesignerApp() {
             {(
               [
                 ["options", "Options"],
-                ["personalize", "Personalize"],
+                ["personalize", "Design"],
                 ["text", "Text"],
               ] as const
             ).map(([id, label]) => (
@@ -85,13 +108,17 @@ export function DesignerApp() {
             <div>
               <strong>{color?.name}</strong>
               <small>
-                Qty {Math.max(1, totalQuantity())} · Live preview
+                Qty {qty} · {layers.length} layer{layers.length === 1 ? "" : "s"}
               </small>
             </div>
           </div>
         </aside>
       </div>
 
+      <MobileControls
+        onOpenOptions={() => setActivePanel("options")}
+        onOpenPersonalize={() => setActivePanel("personalize")}
+      />
       <ImageUploadModal />
     </div>
   );
