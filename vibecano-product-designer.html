@@ -207,6 +207,17 @@
 .vd-upload-msgs .is-warn{margin:0;color:var(--warn);font-size:13px;font-weight:600}
 .vd-toast{position:fixed;right:16px;bottom:16px;z-index:90;max-width:320px;padding:12px 14px;border-radius:12px;background:var(--navy-deep);color:#fff;font-size:13px;font-weight:700;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);pointer-events:none;transition:var(--ease)}
 .vd-toast.is-show{opacity:1;transform:translateY(0)}
+
+.vd-dual-box{border:1px solid var(--line);border-radius:12px;padding:12px;background:linear-gradient(180deg,#fff,#f8fafc);margin-top:10px}
+.vd-dual-box:first-child{margin-top:0}
+.vd-dual-head{margin:0 0 8px;font-size:13px;font-weight:800;color:var(--navy);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.vd-dual-head span{display:inline-flex;align-items:center;gap:6px}
+.vd-dual-badge{border-radius:999px;padding:3px 8px;background:rgba(14,116,144,.12);color:var(--teal);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.vd-side-picker{margin:0 0 14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
+.vd-side-picker .vd-label{margin-bottom:10px}
+.vd-side-picker.is-disabled{opacity:.45;pointer-events:none}
+.vd-side-hint{margin:8px 0 0;font-size:12px;color:var(--muted);line-height:1.4}
+.vd-upload-next{margin-top:12px;display:grid;gap:8px}
 .vd-loading{display:grid;place-items:center;min-height:60vh}
 .vd-spinner{width:44px;height:44px;border-radius:50%;border:4px solid rgba(11,61,74,.15);border-top-color:var(--navy);animation:vdSpin .8s linear infinite}
 @keyframes vdSpin{to{transform:rotate(360deg)}}
@@ -350,6 +361,11 @@
       <h3 id="vdUploadTitle">Upload Image</h3>
       <button type="button" class="vd-modal__close" data-close="upload">×</button>
     </div>
+    <div class="vd-side-picker" id="vdUploadSidePicker" hidden>
+      <span class="vd-label">Where are you uploading?</span>
+      <div class="vd-chips" id="vdUploadSides"></div>
+      <p class="vd-side-hint" id="vdUploadSideHint">Choose Front or Back for this artwork.</p>
+    </div>
     <div class="vd-upload-tabs" id="vdUploadTabs"></div>
     <div class="vd-dropzone" id="vdDropzone">
       <div class="vd-dropzone__icon">↑</div>
@@ -383,6 +399,32 @@
     { id: "front_back", label: "Front + Back", side: "front", zone: "front" },
     { id: "pocket_back", label: "Pocket + Back", side: "front", zone: "pocket" }
   ];
+
+  function getDualSides(posId) {
+    if (posId === "front_back") {
+      return [
+        { id: "front", label: "Front", heading: "For Front", zone: "front", preview: "front" },
+        { id: "back", label: "Back", heading: "For Back", zone: "back", preview: "back" }
+      ];
+    }
+    if (posId === "pocket_back") {
+      return [
+        { id: "pocket", label: "Pocket", heading: "For Pocket", zone: "pocket", preview: "front" },
+        { id: "back", label: "Back", heading: "For Back", zone: "back", preview: "back" }
+      ];
+    }
+    return null;
+  }
+  function isDualPosition(posId) { return !!getDualSides(posId); }
+  function zoneForSide(sideId) {
+    if (sideId === "back") return "back";
+    if (sideId === "pocket") return "pocket";
+    if (sideId === "sleeve") return "sleeve";
+    if (sideId === "left_chest") return "left_chest";
+    if (sideId === "right_chest") return "right_chest";
+    return "front";
+  }
+
 
   var FONTS = [
     { id: "manrope", family: "Manrope", label: "Manrope", preview: "Aa Bb Cc" },
@@ -515,6 +557,10 @@
     clipQuery: "",
     textEditorOpen: false,
     clipartOpen: false,
+    previewSide: "front",
+    uploadTargetSide: null,
+    textPairId: null,
+    pendingSecondUpload: null,
     listeners: [],
     subscribe: function(fn){ this.listeners.push(fn); },
     emit: function(){ var s=this; this.listeners.forEach(function(fn){ fn(s); }); },
@@ -671,19 +717,30 @@
     drag: null,
     render: function(){
       var store=VibeDesigner.Store, color=store.getColor(), pos=store.getPosition();
+      var dual=getDualSides(store.printPositionId);
+      var preview=store.previewSide || (pos.side || "front");
+      if(!dual) preview = pos.side || "front";
+      store.previewSide = preview;
       var stage=document.getElementById("vdStage");
       var img=document.getElementById("vdStageImg");
       var zone=document.getElementById("vdZone");
       stage.style.background=color.hex;
-      img.src=pos.side==="back"?store.product.images.back:store.product.images.front;
-      img.alt=store.product.name+" "+pos.side;
-      zone.className="vd-zone is-"+pos.zone;
+      img.src=preview==="back"?store.product.images.back:store.product.images.front;
+      img.alt=store.product.name+" "+preview;
+      var zoneName = pos.zone;
+      if(dual){
+        var sideMeta = dual.find(function(s){ return s.preview === preview; }) || (preview==="back" ? dual[1] : dual[0]);
+        zoneName = sideMeta.zone;
+      }
+      zone.className="vd-zone is-"+zoneName;
 
       var layers=store.layers.filter(function(layer){
         if(!layer.visible) return false;
-        if(store.printPositionId==="front_back") return ["front","back","front_back"].indexOf(layer.positionId)>-1;
-        if(store.printPositionId==="pocket_back") return ["pocket","back","pocket_back"].indexOf(layer.positionId)>-1;
-        return layer.positionId===store.printPositionId;
+        if(dual){
+          var activeSide = dual.find(function(s){ return s.preview === preview; }) || dual[0];
+          return layer.positionId === activeSide.id;
+        }
+        return layer.positionId===store.printPositionId || layer.positionId===pos.zone;
       });
 
       zone.innerHTML=layers.map(function(layer){
@@ -720,9 +777,10 @@
         return "";
       }).join("");
 
-      document.getElementById("vdPreviewHint").innerHTML='Editing <strong>'+esc(pos.label)+'</strong> · '+esc(color.name)+' · Drag layers to reposition';
+      var dualLabel = dual ? (preview==="back" ? "Back" : dual[0].label) : pos.label;
+      document.getElementById("vdPreviewHint").innerHTML='Editing <strong>'+esc(pos.label)+'</strong> · showing <strong>'+esc(dualLabel)+'</strong> · '+esc(color.name);
       document.getElementById("vdSideTabs").innerHTML=["front","back"].map(function(side){
-        return '<button type="button" class="vd-side-tab'+(pos.side===side?" is-active":"")+'" data-side="'+side+'">'+(side==="front"?"Front":"Back")+'</button>';
+        return '<button type="button" class="vd-side-tab'+(preview===side?" is-active":"")+'" data-side="'+side+'">'+(side==="front"?"Front":"Back")+'</button>';
       }).join("");
       document.getElementById("vdProductName").textContent=store.product.name;
       document.getElementById("vdProductMeta").textContent=store.product.material||"";
@@ -803,23 +861,53 @@
 
   /* ---------- Text ---------- */
   VibeDesigner.Text = {
+    getPairLayers: function(){
+      var store=VibeDesigner.Store;
+      if(!store.textPairId) return [];
+      return store.layers.filter(function(l){ return l.type==="text" && l.pairId===store.textPairId; });
+    },
     render: function(){
-      var store=VibeDesigner.Store, layer=store.getSelectedLayer(), root=document.getElementById("vdTextEditor");
+      var store=VibeDesigner.Store, root=document.getElementById("vdTextEditor");
       var textCard=document.getElementById("vdTextCard");
-      var hasText=layer&&layer.type==="text"&&layer.text;
+      var dual=getDualSides(store.printPositionId);
+      var pair=this.getPairLayers();
+      var layer=store.getSelectedLayer();
+      var hasText = dual ? pair.length>0 : (layer&&layer.type==="text"&&layer.text);
       if(textCard) textCard.hidden=!(store.textEditorOpen && hasText);
       if(!hasText){
         root.innerHTML='<p class="vd-empty">No text layer selected. Use <strong>Add Text</strong> to create one.</p>';
         return;
       }
       if(!store.textEditorOpen) return;
+
+      // Active style source: selected text layer or first of pair
+      if(dual){
+        if(!layer || layer.type!=="text" || layer.pairId!==store.textPairId){
+          layer = pair[0];
+          store.selectedLayerId = layer.id;
+        }
+      }
       var t=layer.text;
       var currentFont=FONTS.find(function(f){return f.id===t.fontId;})||FONTS[0];
       function slider(label,key,min,max,step,suffix,val){
         return '<label class="vd-slider"><span class="vd-slider__head"><span>'+label+'</span><strong>'+val+(suffix||"")+'</strong></span><input type="range" min="'+min+'" max="'+max+'" step="'+(step||1)+'" value="'+val+'" data-text-key="'+key+'"></label>';
       }
+
+      var contentHtml = "";
+      if(dual){
+        contentHtml = '<div class="vd-field"><span class="vd-label">Text by side</span>' + dual.map(function(side){
+          var sideLayer = pair.find(function(l){ return l.positionId===side.id; });
+          var val = sideLayer && sideLayer.text ? sideLayer.text.content : "";
+          var lid = sideLayer ? sideLayer.id : "";
+          return '<div class="vd-dual-box"><div class="vd-dual-head"><span>'+esc(side.heading)+' <em class="vd-dual-badge">'+esc(side.label)+'</em></span></div>'+
+            '<textarea class="vd-textarea" rows="3" data-side-text="'+side.id+'" data-layer-id="'+lid+'" placeholder="Enter text for '+esc(side.label)+'...">'+esc(val)+'</textarea></div>';
+        }).join("") + '</div>';
+      } else {
+        contentHtml = '<label class="vd-field"><span class="vd-label">Text</span><textarea class="vd-textarea" id="vdTextContent" placeholder="Enter your text here..." rows="4">'+esc(t.content)+'</textarea></label>';
+      }
+
       root.innerHTML=
-        '<label class="vd-field"><span class="vd-label">Text</span><textarea class="vd-textarea" id="vdTextContent" placeholder="Enter your text here..." rows="4">'+esc(t.content)+'</textarea></label>'+
+        contentHtml+
         '<div class="vd-field"><span class="vd-label">Font</span>'+
         '<select class="vd-select" id="vdFontSelect" aria-label="Font" style="font-family:'+currentFont.family+'">'+
         FONTS.map(function(f){
@@ -835,19 +923,39 @@
         '<div class="vd-toggle-row"><label class="vd-check"><input type="checkbox" id="vdGradient"'+(t.gradientEnabled?" checked":"")+'> Gradient Fill</label><label class="vd-check"><input type="checkbox" id="vdPattern"'+(t.patternFill?" checked":"")+'> Pattern Fill</label></div></div>'+
         '<div class="vd-field"><span class="vd-label">Layer Controls</span><div class="vd-toolbar"><button type="button" class="vd-iconbtn" data-layer-act="up">↑</button><button type="button" class="vd-iconbtn" data-layer-act="down">↓</button><button type="button" class="vd-iconbtn" data-layer-act="dup">⧉</button><button type="button" class="vd-iconbtn" data-layer-act="del">⌫</button></div></div>';
     },
-    update: function(patch){
-      var store=VibeDesigner.Store, id=store.selectedLayerId;
+    update: function(patch, opts){
+      opts = opts || {};
+      var store=VibeDesigner.Store;
+      var dual=getDualSides(store.printPositionId);
+      var applyAll = !!opts.applyAllStyles && dual && store.textPairId;
       store.layers=store.layers.map(function(layer){
-        if(layer.id!==id||!layer.text) return layer;
+        if(!layer.text) return layer;
+        if(applyAll){
+          if(layer.pairId!==store.textPairId) return layer;
+          // keep per-side content; merge styles only
+          var stylePatch = Object.assign({}, patch);
+          delete stylePatch.content;
+          return Object.assign({}, layer, { text: Object.assign({}, layer.text, stylePatch) });
+        }
+        if(layer.id!==store.selectedLayerId) return layer;
         return Object.assign({}, layer, { text: Object.assign({}, layer.text, patch) });
       });
-      // Content-only edits: refresh preview without remounting the editor (keeps caret)
       if(Object.keys(patch).length===1 && Object.prototype.hasOwnProperty.call(patch,"content")){
         VibeDesigner.Canvas.render();
         VibeDesigner.Layers.render();
         return;
       }
       store.emit();
+    },
+    updateSideContent: function(layerId, content){
+      var store=VibeDesigner.Store;
+      store.layers=store.layers.map(function(layer){
+        if(layer.id!==layerId || !layer.text) return layer;
+        return Object.assign({}, layer, { text: Object.assign({}, layer.text, { content: content }) });
+      });
+      store.selectedLayerId = layerId;
+      VibeDesigner.Canvas.render();
+      VibeDesigner.Layers.render();
     }
   };
 
@@ -866,6 +974,30 @@
   /* ---------- Upload ---------- */
   VibeDesigner.Upload = {
     lastFile:null,
+    renderSidePicker:function(){
+      var store=VibeDesigner.Store;
+      var dual=getDualSides(store.printPositionId);
+      var picker=document.getElementById("vdUploadSidePicker");
+      var sidesEl=document.getElementById("vdUploadSides");
+      var hint=document.getElementById("vdUploadSideHint");
+      if(!dual){
+        picker.hidden=true;
+        picker.classList.add("is-disabled");
+        store.uploadTargetSide=store.printPositionId;
+        return;
+      }
+      picker.hidden=false;
+      picker.classList.remove("is-disabled");
+      if(!store.uploadTargetSide || !dual.some(function(s){return s.id===store.uploadTargetSide;})){
+        store.uploadTargetSide = dual[0].id;
+      }
+      sidesEl.innerHTML = dual.map(function(s){
+        return '<button type="button" class="vd-chip'+(store.uploadTargetSide===s.id?" is-active":"")+'" data-upload-side="'+s.id+'">'+esc(s.label)+"</button>";
+      }).join("");
+      var current = dual.find(function(s){return s.id===store.uploadTargetSide;}) || dual[0];
+      var other = dual.find(function(s){return s.id!==store.uploadTargetSide;});
+      hint.textContent = "This artwork will be placed on the "+current.label+"." + (other ? " After upload you can add one for "+other.label+" too." : "");
+    },
     renderTabs:function(){
       var store=VibeDesigner.Store;
       var tabs=[["computer","My Computer",true],["mobile","Mobile Device",true],["camera","Camera",true],["drive","Google Drive",false],["dropbox","Dropbox",false],["onedrive","OneDrive",false]];
@@ -873,10 +1005,25 @@
         return '<button type="button" class="vd-upload-tab'+(store.uploadTab===t[0]?" is-active":"")+(!t[2]?" is-soon":"")+'" data-upload-tab="'+t[0]+'" '+(t[2]?"":"disabled")+'>'+t[1]+(!t[2]?"<span>Soon</span>":"")+"</button>";
       }).join("");
       document.getElementById("vdMaxMb").textContent=String(store.product.maxUploadMb||15);
-      document.getElementById("vdUploadTitle").textContent=store.uploadMode==="logo"?"Upload Logo":"Upload Image";
+      var dual=getDualSides(store.printPositionId);
+      var title = store.uploadMode==="logo"?"Upload Logo":"Upload Image";
+      if(dual && store.uploadTargetSide){
+        var side = dual.find(function(s){return s.id===store.uploadTargetSide;});
+        if(side) title += " · "+side.label;
+      }
+      document.getElementById("vdUploadTitle").textContent=title;
+      this.renderSidePicker();
     },
-    open:function(mode){
-      VibeDesigner.Store.uploadMode=mode||"image";
+    open:function(mode, forceSide){
+      var store=VibeDesigner.Store;
+      store.uploadMode=mode||"image";
+      store.pendingSecondUpload=null;
+      var dual=getDualSides(store.printPositionId);
+      if(dual){
+        store.uploadTargetSide = forceSide || dual[0].id;
+      } else {
+        store.uploadTargetSide = store.printPositionId;
+      }
       document.getElementById("vdUploadModal").classList.add("is-open");
       document.getElementById("vdUploadStatus").innerHTML="";
       this.renderTabs();
@@ -884,6 +1031,7 @@
     close:function(){
       document.getElementById("vdUploadModal").classList.remove("is-open");
       if(VibeDesigner.Store.uploadAbort) VibeDesigner.Store.uploadAbort.abort();
+      VibeDesigner.Store.pendingSecondUpload=null;
     },
     validate:function(file){
       return new Promise(function(resolve){
@@ -922,6 +1070,12 @@
     },
     process:function(file){
       var self=this; this.lastFile=file;
+      var store=VibeDesigner.Store;
+      var dual=getDualSides(store.printPositionId);
+      if(dual && !store.uploadTargetSide){
+        document.getElementById("vdUploadStatus").innerHTML='<div class="vd-upload-msgs"><p class="is-error">Choose whether this upload is for '+dual[0].label+' or '+dual[1].label+'.</p></div>';
+        return;
+      }
       var status=document.getElementById("vdUploadStatus"); status.innerHTML="";
       this.validate(file).then(function(result){
         var html="";
@@ -930,21 +1084,50 @@
         if(!result.ok){ status.innerHTML='<div class="vd-upload-msgs">'+html+'<button type="button" class="vd-btn vd-btn--outline" id="vdRetryUpload">Retry upload</button></div>'; return; }
         var previewUrl=URL.createObjectURL(file);
         status.innerHTML='<div class="vd-upload-progress"><img class="vd-upload-thumb" src="'+previewUrl+'" alt=""><div><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700"><strong>'+esc(file.name)+'</strong><span id="vdPct">0%</span></div><div class="vd-progress-bar"><i id="vdBar"></i></div><div style="margin-top:8px"><button type="button" class="vd-link" id="vdCancelUpload">Cancel</button></div></div></div>'+(html?'<div class="vd-upload-msgs">'+html+"</div>":"");
-        var controller=new AbortController(); VibeDesigner.Store.uploadAbort=controller; var pct=0;
+        var controller=new AbortController(); store.uploadAbort=controller; var pct=0;
         function tick(){
           if(controller.signal.aborted){ status.innerHTML='<div class="vd-upload-msgs"><p class="is-error">Upload cancelled.</p><button type="button" class="vd-btn vd-btn--outline" id="vdRetryUpload">Retry upload</button></div>'; return; }
           pct=Math.min(100,pct+Math.max(5,16-Math.round(file.size/(1024*1024))));
           document.getElementById("vdPct").textContent=pct+"%"; document.getElementById("vdBar").style.width=pct+"%";
           if(pct>=100){
-            var store=VibeDesigner.Store;
             var isLogo=store.uploadMode==="logo";
+            var targetSide = store.uploadTargetSide || store.printPositionId;
+            var sideLabel = targetSide.replace(/_/g," ");
+            if(dual){
+              var sm = dual.find(function(s){return s.id===targetSide;});
+              if(sm) sideLabel = sm.label;
+            }
             store.layers=store.layers.concat([{
-              id:uid(isLogo?"logo":"img"), type:isLogo?"logo":"image", name:isLogo?("Logo · "+file.name):file.name,
-              positionId:store.printPositionId, visible:true, locked:false, x:50, y:45, scale:1, rotation:0, opacity:1,
+              id:uid(isLogo?"logo":"img"), type:isLogo?"logo":"image",
+              name:(isLogo?"Logo":"Image")+" · "+sideLabel,
+              positionId:targetSide, visible:true, locked:false, x:50, y:45, scale:1, rotation:0, opacity:1,
               image:{ src:previewUrl, fileName:file.name, width:result.meta.width||800, height:result.meta.height||800, hasTransparency:!!result.meta.hasTransparency }
             }]);
-            store.selectedLayerId=store.layers[store.layers.length-1].id; store.emit();
-            VibeDesigner.UI.toast((isLogo?"Logo":"Image")+" added to "+store.getPosition().label+".");
+            store.selectedLayerId=store.layers[store.layers.length-1].id;
+            // Switch preview to the side that was uploaded
+            if(dual){
+              var uploaded = dual.find(function(s){return s.id===targetSide;});
+              if(uploaded) store.previewSide = uploaded.preview;
+            }
+            store.emit();
+            VibeDesigner.UI.toast((isLogo?"Logo":"Image")+" added for "+sideLabel+".");
+
+            if(dual){
+              var other = dual.find(function(s){return s.id!==targetSide;});
+              var alreadyHasOther = other && store.layers.some(function(l){
+                return (l.type==="image"||l.type==="logo") && l.positionId===other.id;
+              });
+              if(other && !alreadyHasOther){
+                store.pendingSecondUpload = { mode: store.uploadMode, side: other.id, label: other.label };
+                status.innerHTML =
+                  '<div class="vd-upload-msgs"><p class="is-warn">Added for <strong>'+esc(sideLabel)+'</strong>.</p></div>'+
+                  '<div class="vd-upload-next">'+
+                  '<button type="button" class="vd-btn vd-btn--primary vd-btn--block" id="vdUploadOtherSide">Upload for '+esc(other.label)+'</button>'+
+                  '<button type="button" class="vd-btn vd-btn--outline vd-btn--block" id="vdUploadDoneSides">Done</button>'+
+                  '</div>';
+                return;
+              }
+            }
             setTimeout(function(){ self.close(); },300); return;
           }
           setTimeout(tick,90);
@@ -1068,9 +1251,31 @@
 
   function addTextLayer(){
     var store=VibeDesigner.Store;
+    var dual=getDualSides(store.printPositionId);
+    store.clipartOpen=false;
+    store.textEditorOpen=true;
+    if(dual){
+      var pairId=uid("pair");
+      store.textPairId=pairId;
+      var style=Object.assign(defaultText(),{content:""});
+      var layers=dual.map(function(side, idx){
+        return {
+          id:uid("txt"), type:"text", name:"Text · "+side.label, positionId:side.id, pairId:pairId,
+          visible:true, locked:false, x:50, y:42, scale:1, rotation:0, opacity:1,
+          text:Object.assign({}, style, { content: "" })
+        };
+      });
+      store.layers=store.layers.concat(layers);
+      store.selectedLayerId=layers[0].id;
+      store.previewSide=dual[0].preview;
+      store.emit();
+      showTextEditor(true);
+      VibeDesigner.UI.toast("Separate text boxes ready for "+dual[0].label+" and "+dual[1].label+".");
+      return;
+    }
+    store.textPairId=null;
     var layer={ id:uid("txt"), type:"text", name:"Text", positionId:store.printPositionId, visible:true, locked:false, x:50, y:42, scale:1, rotation:0, opacity:1, text:Object.assign(defaultText(),{content:"Enter your text here..."}) };
     store.layers=store.layers.concat([layer]); store.selectedLayerId=layer.id;
-    store.textEditorOpen=true; store.clipartOpen=false;
     store.emit();
     showTextEditor(true);
   }
@@ -1092,13 +1297,26 @@
 
     app.addEventListener("click", function(e){
       var t=e.target;
-      var pos=t.closest("[data-pos]"); if(pos){ store.printPositionId=pos.getAttribute("data-pos"); store.emit(); return; }
+      var pos=t.closest("[data-pos]"); if(pos){
+        store.printPositionId=pos.getAttribute("data-pos");
+        var dualPos=getDualSides(store.printPositionId);
+        var meta=PRINT_POSITIONS.find(function(p){return p.id===store.printPositionId;});
+        store.previewSide = dualPos ? dualPos[0].preview : (meta && meta.side) || "front";
+        store.uploadTargetSide = dualPos ? dualPos[0].id : store.printPositionId;
+        store.textPairId=null;
+        store.emit();
+        return;
+      }
       var color=t.closest("[data-color]"); if(color&&!color.disabled){ store.colorId=color.getAttribute("data-color"); store.emit(); return; }
       var size=t.closest("[data-size]"); if(size&&!size.disabled){ store.selectedSizeId=size.getAttribute("data-size"); if(!store.sizeQuantities[store.selectedSizeId]) store.sizeQuantities[store.selectedSizeId]=1; store.emit(); return; }
       var mode=t.closest("#vdSizeMode [data-mode]"); if(mode){ store.sizeMode=mode.getAttribute("data-mode"); store.emit(); return; }
       var sq=t.closest("[data-single-qty]"); if(sq){ var d=Number(sq.getAttribute("data-single-qty")); store.sizeQuantities[store.selectedSizeId]=Math.max(1,Math.min(99,(store.sizeQuantities[store.selectedSizeId]||1)+d)); store.emit(); return; }
       var deltaBtn=t.closest("[data-qty-size]"); if(deltaBtn){ var sid=deltaBtn.getAttribute("data-qty-size"); var delta=Number(deltaBtn.getAttribute("data-delta")); store.sizeQuantities=Object.assign({},store.sizeQuantities); store.sizeQuantities[sid]=Math.max(0,Math.min(99,(store.sizeQuantities[sid]||0)+delta)); store.emit(); return; }
-      var side=t.closest("[data-side]"); if(side){ var want=side.getAttribute("data-side"); var match=PRINT_POSITIONS.find(function(p){return p.side===want;}); if(match){ store.printPositionId=match.id; store.emit(); } return; }
+      var side=t.closest("[data-side]"); if(side){
+        store.previewSide=side.getAttribute("data-side");
+        store.emit();
+        return;
+      }
       var action=t.closest("[data-action]"); if(action){
         var id=action.getAttribute("data-action");
         if(id==="text") addTextLayer();
@@ -1108,8 +1326,8 @@
         return;
       }
       var clip=t.closest("[data-clip]"); if(clip){ VibeDesigner.Clipart.add(clip.getAttribute("data-clip")); return; }
-      var layerBtn=t.closest("[data-layer]"); if(layerBtn){ store.selectedLayerId=layerBtn.getAttribute("data-layer"); var layer=store.getSelectedLayer(); store.emit(); if(layer&&layer.type==="text") showTextEditor(true); return; }
-      var selectLayer=t.closest("[data-select-layer]"); if(selectLayer){ store.selectedLayerId=selectLayer.getAttribute("data-select-layer"); var selected=store.getSelectedLayer(); store.emit(); if(selected&&selected.type==="text") showTextEditor(true); else showTextEditor(false); return; }
+      var layerBtn=t.closest("[data-layer]"); if(layerBtn){ store.selectedLayerId=layerBtn.getAttribute("data-layer"); var layer=store.getSelectedLayer(); store.emit(); if(layer&&layer.type==="text"){ store.textPairId=layer.pairId||null; showTextEditor(true);} return; }
+      var selectLayer=t.closest("[data-select-layer]"); if(selectLayer){ store.selectedLayerId=selectLayer.getAttribute("data-select-layer"); var selected=store.getSelectedLayer(); store.emit(); if(selected&&selected.type==="text"){ store.textPairId=selected.pairId||null; showTextEditor(true);} else showTextEditor(false); return; }
       var vis=t.closest("[data-vis]"); if(vis){ var vid=vis.getAttribute("data-vis"); store.layers=store.layers.map(function(l){return l.id===vid?Object.assign({},l,{visible:!l.visible}):l;}); store.emit(); return; }
       var lock=t.closest("[data-lock]"); if(lock){ var lid=lock.getAttribute("data-lock"); store.layers=store.layers.map(function(l){return l.id===lid?Object.assign({},l,{locked:!l.locked}):l;}); store.emit(); return; }
       var del=t.closest("[data-del]"); if(del){ var did=del.getAttribute("data-del"); store.layers=store.layers.filter(function(l){return l.id!==did;}); if(store.selectedLayerId===did){ store.selectedLayerId=null; showTextEditor(false); } store.emit(); return; }
@@ -1158,11 +1376,11 @@
     document.querySelectorAll("[data-close='upload']").forEach(function(el){ el.addEventListener("click", function(){ VibeDesigner.Upload.close(); }); });
 
     document.getElementById("vdPanel").addEventListener("click", function(e){
-      var align=e.target.closest("[data-align]"); if(align){ VibeDesigner.Text.update({align:align.getAttribute("data-align")}); return; }
-      var fmt=e.target.closest("[data-fmt]"); if(fmt){ var key=fmt.getAttribute("data-fmt"); var layer=store.getSelectedLayer(); if(layer&&layer.text){ var patch={}; patch[key]=!layer.text[key]; VibeDesigner.Text.update(patch);} return; }
-      var cse=e.target.closest("[data-case]"); if(cse){ var val=cse.getAttribute("data-case"); var cur=store.getSelectedLayer(); VibeDesigner.Text.update({textCase:cur&&cur.text&&cur.text.textCase===val?"none":val}); return; }
-      var colorBtn=e.target.closest("[data-text-color]"); if(colorBtn){ var hex=colorBtn.getAttribute("data-text-color"); VibeDesigner.Text.update({color:hex}); store.recentColors=[hex].concat(store.recentColors.filter(function(c){return c!==hex;})).slice(0,8); return; }
-      var effect=e.target.closest("[data-effect]"); if(effect){ VibeDesigner.Text.update({effect:effect.getAttribute("data-effect")}); return; }
+      var align=e.target.closest("[data-align]"); if(align){ VibeDesigner.Text.update({align:align.getAttribute("data-align")},{applyAllStyles:true}); return; }
+      var fmt=e.target.closest("[data-fmt]"); if(fmt){ var key=fmt.getAttribute("data-fmt"); var layer=store.getSelectedLayer(); if(layer&&layer.text){ var patch={}; patch[key]=!layer.text[key]; VibeDesigner.Text.update(patch,{applyAllStyles:true});} return; }
+      var cse=e.target.closest("[data-case]"); if(cse){ var val=cse.getAttribute("data-case"); var cur=store.getSelectedLayer(); VibeDesigner.Text.update({textCase:cur&&cur.text&&cur.text.textCase===val?"none":val},{applyAllStyles:true}); return; }
+      var colorBtn=e.target.closest("[data-text-color]"); if(colorBtn){ var hex=colorBtn.getAttribute("data-text-color"); VibeDesigner.Text.update({color:hex},{applyAllStyles:true}); store.recentColors=[hex].concat(store.recentColors.filter(function(c){return c!==hex;})).slice(0,8); return; }
+      var effect=e.target.closest("[data-effect]"); if(effect){ VibeDesigner.Text.update({effect:effect.getAttribute("data-effect")},{applyAllStyles:true}); return; }
       var lact=e.target.closest("[data-layer-act]"); if(lact){
         var act=lact.getAttribute("data-layer-act"), sel=store.selectedLayerId;
         if(act==="del"){ store.layers=store.layers.filter(function(l){return l.id!==sel;}); store.selectedLayerId=null; showTextEditor(false); store.emit(); return; }
@@ -1176,19 +1394,32 @@
       if(e.target.id==="vdFontSelect"){
         var fid=e.target.value;
         var font=FONTS.find(function(f){return f.id===fid;});
-        VibeDesigner.Text.update({fontId:fid});
+        VibeDesigner.Text.update({fontId:fid},{applyAllStyles:true});
         if(font) e.target.style.fontFamily=font.family;
         return;
       }
-      if(e.target.id==="vdHex"){ var hex=normalizeHex(e.target.value); if(hex){ VibeDesigner.Text.update({color:hex}); store.recentColors=[hex].concat(store.recentColors.filter(function(c){return c!==hex;})).slice(0,8);} }
-      if(e.target.id==="vdRgb"){ var hx=rgbToHex(e.target.value); if(hx){ VibeDesigner.Text.update({color:hx}); store.recentColors=[hx].concat(store.recentColors.filter(function(c){return c!==hx;})).slice(0,8);} }
-      if(e.target.id==="vdGradient") VibeDesigner.Text.update({gradientEnabled:e.target.checked});
-      if(e.target.id==="vdPattern") VibeDesigner.Text.update({patternFill:e.target.checked});
+      if(e.target.id==="vdHex"){ var hex=normalizeHex(e.target.value); if(hex){ VibeDesigner.Text.update({color:hex},{applyAllStyles:true}); store.recentColors=[hex].concat(store.recentColors.filter(function(c){return c!==hex;})).slice(0,8);} }
+      if(e.target.id==="vdRgb"){ var hx=rgbToHex(e.target.value); if(hx){ VibeDesigner.Text.update({color:hx},{applyAllStyles:true}); store.recentColors=[hx].concat(store.recentColors.filter(function(c){return c!==hx;})).slice(0,8);} }
+      if(e.target.id==="vdGradient") VibeDesigner.Text.update({gradientEnabled:e.target.checked},{applyAllStyles:true});
+      if(e.target.id==="vdPattern") VibeDesigner.Text.update({patternFill:e.target.checked},{applyAllStyles:true});
     });
 
     document.getElementById("vdPanel").addEventListener("input", function(e){
       if(e.target.id==="vdTextContent"){ VibeDesigner.Text.update({content:e.target.value}); return; }
-      var range=e.target.closest("[data-text-key]"); if(range){ var key=range.getAttribute("data-text-key"); var val=Number(range.value); if(key==="opacityPct") VibeDesigner.Text.update({opacity:val/100}); else { var patch={}; patch[key]=val; VibeDesigner.Text.update(patch);} }
+      var sideText=e.target.closest("[data-side-text]");
+      if(sideText){
+        var lid=sideText.getAttribute("data-layer-id");
+        if(lid) VibeDesigner.Text.updateSideContent(lid, sideText.value);
+        // Switch preview to the side being typed
+        var dualNow=getDualSides(store.printPositionId);
+        var sideId=sideText.getAttribute("data-side-text");
+        if(dualNow){
+          var sm=dualNow.find(function(s){return s.id===sideId;});
+          if(sm && store.previewSide!==sm.preview){ store.previewSide=sm.preview; VibeDesigner.Canvas.render(); }
+        }
+        return;
+      }
+      var range=e.target.closest("[data-text-key]"); if(range){ var key=range.getAttribute("data-text-key"); var val=Number(range.value); if(key==="opacityPct") VibeDesigner.Text.update({opacity:val/100},{applyAllStyles:true}); else { var patch={}; patch[key]=val; VibeDesigner.Text.update(patch,{applyAllStyles:true});} }
     });
 
     var drop=document.getElementById("vdDropzone"), fileInput=document.getElementById("vdFileInput"), cameraInput=document.getElementById("vdCameraInput");
@@ -1200,8 +1431,25 @@
     drop.addEventListener("drop", function(e){ e.preventDefault(); drop.classList.remove("is-over"); if(e.dataTransfer.files&&e.dataTransfer.files[0]) VibeDesigner.Upload.process(e.dataTransfer.files[0]); });
     document.getElementById("vdUploadModal").addEventListener("click", function(e){
       var tab=e.target.closest("[data-upload-tab]"); if(tab&&!tab.disabled){ store.uploadTab=tab.getAttribute("data-upload-tab"); VibeDesigner.Upload.renderTabs(); }
+      var sideBtn=e.target.closest("[data-upload-side]"); if(sideBtn){
+        store.uploadTargetSide=sideBtn.getAttribute("data-upload-side");
+        VibeDesigner.Upload.renderTabs();
+        return;
+      }
       if(e.target.id==="vdCancelUpload"&&store.uploadAbort) store.uploadAbort.abort();
       if(e.target.id==="vdRetryUpload"&&VibeDesigner.Upload.lastFile) VibeDesigner.Upload.process(VibeDesigner.Upload.lastFile);
+      if(e.target.id==="vdUploadDoneSides"){ VibeDesigner.Upload.close(); return; }
+      if(e.target.id==="vdUploadOtherSide"){
+        var pending=store.pendingSecondUpload;
+        if(!pending) return;
+        store.uploadMode=pending.mode;
+        store.uploadTargetSide=pending.side;
+        store.pendingSecondUpload=null;
+        document.getElementById("vdUploadStatus").innerHTML="";
+        VibeDesigner.Upload.renderTabs();
+        VibeDesigner.UI.toast("Now upload artwork for "+pending.label+".");
+        return;
+      }
     });
 
     document.getElementById("vdAddCart").addEventListener("click", function(){ VibeDesigner.Cart.add(); });
