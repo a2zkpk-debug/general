@@ -71,12 +71,15 @@
 .vd-zone-grip--ne{top:0;right:0;cursor:nesw-resize}
 .vd-zone-grip--sw{bottom:0;left:0;cursor:nesw-resize}
 .vd-zone-grip--se{bottom:0;right:0;cursor:nwse-resize}
-.vd-zone.is-front{left:27%;right:27%;top:27%;height:30%}
-.vd-zone.is-back{left:27%;right:27%;top:25%;height:32%}
+.vd-zone.is-front,.vd-zone.is-full_front{left:18%;right:18%;top:24%;height:42%}
+.vd-zone.is-back,.vd-zone.is-full_back{left:18%;right:18%;top:22%;height:44%}
+.vd-zone.is-upper_back{left:30%;right:30%;top:18%;height:18%}
 .vd-zone.is-pocket{left:54%;top:34%;width:16%;height:14%}
-.vd-zone.is-sleeve{left:8%;top:38%;width:14%;height:12%}
-.vd-zone.is-left_chest{left:30%;top:30%;width:18%;height:12%}
-.vd-zone.is-right_chest{right:30%;top:30%;width:18%;height:12%}
+.vd-zone.is-sleeve,.vd-zone.is-short_sleeve{left:6%;top:36%;width:16%;height:14%}
+.vd-zone.is-long_sleeve{left:4%;top:30%;width:14%;height:36%}
+.vd-zone.is-left_chest,.vd-zone.is-chest_left{left:30%;top:30%;width:18%;height:14%}
+.vd-zone.is-right_chest,.vd-zone.is-chest_right{right:30%;top:30%;width:18%;height:14%}
+.vd-zone.is-inside_neck{left:38%;right:38%;top:14%;height:10%}
 .vd-layer{position:absolute;border:0;background:transparent;padding:0;max-width:92%;max-height:92%;cursor:grab;touch-action:none}
 .vd-layer:active{cursor:grabbing}
 .vd-layer-text{white-space:pre-wrap;word-break:break-word;line-height:1.15;color:inherit}
@@ -85,8 +88,14 @@
 .vd-layer-tools{position:absolute;z-index:6;transform:translate(-50%,calc(-100% - 10px));pointer-events:auto;display:flex;align-items:center;gap:6px}
 .vd-layer-tools__del{width:28px;height:28px;border:0;border-radius:999px;background:var(--danger);color:#fff;font-size:16px;line-height:1;font-weight:800;box-shadow:var(--shadow-sm);cursor:pointer}
 .vd-layer-resize{position:absolute;right:-7px;bottom:-7px;width:16px;height:16px;border:2px solid #fff;border-radius:4px;background:var(--orange);cursor:nwse-resize;z-index:7;touch-action:none;box-shadow:0 2px 6px rgba(0,0,0,.25)}
-.vd-preview-hint{margin:12px 0 0;text-align:center;font-size:12px;color:var(--muted);line-height:1.45;padding:0 8px}
-.vd-preview-hint strong{color:var(--navy)}
+.vd-size-guide{margin-top:10px;padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:linear-gradient(180deg,#f8fafc,#fff)}
+.vd-size-guide__head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.vd-size-guide__head strong{font-size:13px;font-weight:800;color:var(--navy)}
+.vd-size-guide__price{font-size:12px;font-weight:800;color:var(--teal);white-space:nowrap}
+.vd-size-guide p{margin:0;font-size:12px;line-height:1.45;color:var(--muted)}
+.vd-price-break{display:grid;gap:4px;margin-bottom:8px;font-size:12px;color:var(--muted)}
+.vd-price-break div{display:flex;justify-content:space-between;gap:10px}
+.vd-price-break strong{color:var(--navy);font-weight:800}
 
 .vd-panel{position:sticky;top:78px;max-height:calc(100vh - 96px);overflow:auto;display:grid;gap:12px;padding-right:2px}
 .vd-panel-card{padding:16px}
@@ -330,6 +339,13 @@
         <div class="vd-field">
           <span class="vd-label">Print Position</span>
           <div class="vd-segment" id="vdPositions" role="tablist"></div>
+          <div class="vd-size-guide" id="vdPrintGuide" hidden>
+            <div class="vd-size-guide__head">
+              <strong id="vdPrintGuideTitle">Print size</strong>
+              <span class="vd-size-guide__price" id="vdPrintGuidePrice"></span>
+            </div>
+            <p id="vdPrintGuideText"></p>
+          </div>
         </div>
         <div class="vd-field">
           <span class="vd-label">Color</span>
@@ -391,6 +407,7 @@
 
       <p class="vd-error" id="vdError" role="alert"></p>
       <div class="vd-cta-bar">
+        <div class="vd-price-break" id="vdPriceBreak"></div>
         <div class="vd-total" style="text-align:left;margin-bottom:4px"><span>Total</span><strong id="vdTotal">Rs 1,499</strong></div>
         <button type="button" class="vd-btn vd-btn--primary vd-btn--block" id="vdAddCartMobile">Add to Cart</button>
       </div>
@@ -447,48 +464,113 @@
   var PRODUCT_CONTEXT_KEY = "vcDesignerProductContext";
 
   var PRINT_POSITIONS = [
-    { id: "front", label: "Front", side: "front", zone: "front" },
-    { id: "back", label: "Back", side: "back", zone: "back" },
-    { id: "pocket", label: "Pocket", side: "front", zone: "pocket" },
-    { id: "sleeve", label: "Sleeve", side: "front", zone: "sleeve" },
-    { id: "left_chest", label: "Left Chest", side: "front", zone: "left_chest" },
-    { id: "right_chest", label: "Right Chest", side: "front", zone: "right_chest" },
-    { id: "front_back", label: "Front + Back", side: "front", zone: "front" },
-    { id: "pocket_back", label: "Pocket + Back", side: "front", zone: "pocket" }
+    {
+      id: "chest_left",
+      label: "Chest (Left)",
+      side: "front",
+      zone: "chest_left",
+      price: 200,
+      sizeGuide: "Left chest: 6–8cm wide (10–12cm for oversize). Keep design simple and clear."
+    },
+    {
+      id: "chest_right",
+      label: "Chest (Right)",
+      side: "front",
+      zone: "chest_right",
+      price: 200,
+      sizeGuide: "Right chest: 6–8cm wide (10–12cm for oversize). Keep design simple and clear."
+    },
+    {
+      id: "chest_center",
+      label: "Chest (Center)",
+      side: "front",
+      zone: "full_front",
+      price: 200,
+      sizeGuide: "Centered chest: 10–15cm wide. Ideal for logos and short text."
+    },
+    {
+      id: "full_front",
+      label: "Full front",
+      side: "front",
+      zone: "full_front",
+      price: 500,
+      sizeGuide: "30cm wide (33cm+ for oversize). Use about 25cm wide for smaller prints."
+    },
+    {
+      id: "upper_back",
+      label: "Upper back",
+      side: "back",
+      zone: "upper_back",
+      price: 200,
+      sizeGuide: "Centered 6–8cm for circle logos, or 10–12cm for rectangle / text."
+    },
+    {
+      id: "full_back",
+      label: "Full back",
+      side: "back",
+      zone: "full_back",
+      price: 500,
+      sizeGuide: "Scale across size range for maximum impact — same reference sizes as full front."
+    },
+    {
+      id: "short_sleeve",
+      label: "Short sleeve",
+      side: "front",
+      zone: "short_sleeve",
+      price: 200,
+      sizeGuide: "Very limited area — simple marks only. Max width 10cm."
+    },
+    {
+      id: "long_sleeve",
+      label: "Long sleeve",
+      side: "front",
+      zone: "long_sleeve",
+      price: 300,
+      sizeGuide: "Maximum width 10cm · maximum height 40cm."
+    },
+    {
+      id: "inside_neck",
+      label: "Inside neck",
+      side: "back",
+      zone: "inside_neck",
+      price: 200,
+      sizeGuide: "6–8cm wide. Keep the design simple."
+    }
   ];
 
   function getDualSides(posId) {
-    if (posId === "front_back") {
-      return [
-        { id: "front", label: "Front", heading: "For Front", zone: "front", preview: "front" },
-        { id: "back", label: "Back", heading: "For Back", zone: "back", preview: "back" }
-      ];
-    }
-    if (posId === "pocket_back") {
-      return [
-        { id: "pocket", label: "Pocket", heading: "For Pocket", zone: "pocket", preview: "front" },
-        { id: "back", label: "Back", heading: "For Back", zone: "back", preview: "back" }
-      ];
-    }
     return null;
   }
   function isDualPosition(posId) { return !!getDualSides(posId); }
   function zoneForSide(sideId) {
-    if (sideId === "back") return "back";
+    var pos=PRINT_POSITIONS.find(function(p){ return p.id===sideId; });
+    if(pos) return pos.zone;
+    if (sideId === "back" || sideId === "full_back") return "full_back";
+    if (sideId === "upper_back") return "upper_back";
     if (sideId === "pocket") return "pocket";
-    if (sideId === "sleeve") return "sleeve";
-    if (sideId === "left_chest") return "left_chest";
-    if (sideId === "right_chest") return "right_chest";
-    return "front";
+    if (sideId === "sleeve" || sideId === "short_sleeve") return "short_sleeve";
+    if (sideId === "long_sleeve") return "long_sleeve";
+    if (sideId === "left_chest" || sideId === "chest_left") return "chest_left";
+    if (sideId === "right_chest" || sideId === "chest_right") return "chest_right";
+    if (sideId === "inside_neck") return "inside_neck";
+    return "full_front";
   }
 
   var ZONE_DEFAULTS = {
-    front: { left: 27, top: 27, width: 46, height: 30 },
-    back: { left: 27, top: 25, width: 46, height: 32 },
+    full_front: { left: 18, top: 24, width: 64, height: 42 },
+    front: { left: 18, top: 24, width: 64, height: 42 },
+    full_back: { left: 18, top: 22, width: 64, height: 44 },
+    back: { left: 18, top: 22, width: 64, height: 44 },
+    upper_back: { left: 30, top: 18, width: 40, height: 18 },
     pocket: { left: 54, top: 34, width: 16, height: 14 },
-    sleeve: { left: 8, top: 38, width: 14, height: 12 },
-    left_chest: { left: 30, top: 30, width: 18, height: 12 },
-    right_chest: { left: 52, top: 30, width: 18, height: 12 }
+    short_sleeve: { left: 6, top: 36, width: 16, height: 14 },
+    sleeve: { left: 6, top: 36, width: 16, height: 14 },
+    long_sleeve: { left: 4, top: 30, width: 14, height: 36 },
+    chest_left: { left: 30, top: 30, width: 18, height: 14 },
+    left_chest: { left: 30, top: 30, width: 18, height: 14 },
+    chest_right: { left: 52, top: 30, width: 18, height: 14 },
+    right_chest: { left: 52, top: 30, width: 18, height: 14 },
+    inside_neck: { left: 38, top: 14, width: 24, height: 10 }
   };
 
   function getZoneLayout(store, zoneKey){
@@ -618,7 +700,7 @@
 
   VibeDesigner.Store = {
     product: JSON.parse(JSON.stringify(SAMPLE)),
-    printPositionId: "front",
+    printPositionId: "full_front",
     colorId: "white",
     sizeMode: "single",
     selectedSizeId: "m",
@@ -652,7 +734,14 @@
       if(this.sizeMode==="single") return Math.max(1, this.sizeQuantities[this.selectedSizeId]||1);
       return Object.keys(this.sizeQuantities).reduce(function(sum,k){ return sum+(self.sizeQuantities[k]||0); },0);
     },
-    total: function(){ return this.product.basePrice * Math.max(1, this.qty()); }
+    printFee: function(){
+      var pos=this.getPosition();
+      return Number(pos && pos.price) || 0;
+    },
+    unitPrice: function(){
+      return (Number(this.product.basePrice)||0) + this.printFee();
+    },
+    total: function(){ return this.unitPrice() * Math.max(1, this.qty()); }
   };
 
   VibeDesigner.UI = {
@@ -1026,6 +1115,17 @@
       document.getElementById("vdProductName").textContent=store.product.name;
       document.getElementById("vdProductMeta").textContent=store.product.material||"";
       document.getElementById("vdTotal").textContent=money(store.total(), store.product.currencySymbol);
+      var breakEl=document.getElementById("vdPriceBreak");
+      if(breakEl){
+        var sym=store.product.currencySymbol||"Rs ";
+        var qty=Math.max(1, store.qty());
+        var printFee=store.printFee();
+        var base=Number(store.product.basePrice)||0;
+        breakEl.innerHTML=
+          '<div><span>Product</span><strong>'+esc(money(base,sym))+'</strong></div>'+
+          '<div><span>Print · '+esc(store.getPosition().label)+'</span><strong>'+esc(money(printFee,sym))+'</strong></div>'+
+          (qty>1?'<div><span>Qty</span><strong>× '+qty+'</strong></div>':'');
+      }
     }
   };
 
@@ -1034,8 +1134,16 @@
     render: function(){
       var store=VibeDesigner.Store;
       document.getElementById("vdPositions").innerHTML=PRINT_POSITIONS.map(function(pos){
-        return '<button type="button" class="vd-segment__btn'+(store.printPositionId===pos.id?" is-active":"")+'" data-pos="'+pos.id+'">'+pos.label+"</button>";
+        return '<button type="button" class="vd-segment__btn'+(store.printPositionId===pos.id?" is-active":"")+'" data-pos="'+pos.id+'">'+esc(pos.label)+' <small style="opacity:.8">· '+esc(money(pos.price, store.product.currencySymbol||"Rs "))+'</small></button>';
       }).join("");
+      var guide=document.getElementById("vdPrintGuide");
+      var pos=store.getPosition();
+      if(guide && pos){
+        guide.hidden=false;
+        document.getElementById("vdPrintGuideTitle").textContent=pos.label+" size guide";
+        document.getElementById("vdPrintGuidePrice").textContent=money(pos.price, store.product.currencySymbol||"Rs ");
+        document.getElementById("vdPrintGuideText").textContent=pos.sizeGuide||"";
+      }
       document.getElementById("vdColors").innerHTML=store.product.colors.map(function(c){
         var tip=c.inStock?c.name:c.name+" · Out of stock";
         return '<span class="vd-tip" data-tip="'+esc(tip)+'"><button type="button" class="vd-swatch'+(store.colorId===c.id?" is-active":"")+(!c.inStock?" is-disabled":"")+'" style="background:'+c.hex+'" data-color="'+c.id+'" '+(c.inStock?"":"disabled")+' aria-label="'+esc(c.name)+'"></button></span>';
@@ -1389,8 +1497,12 @@
         sizeMode: store.sizeMode,
         sizeQuantities: store.sizeQuantities,
         printPosition: store.printPositionId,
+        printLabel: store.getPosition().label,
+        printSizeGuide: store.getPosition().sizeGuide,
+        printFee: store.printFee(),
         quantity: store.qty(),
-        unitPrice: store.product.basePrice,
+        productPrice: store.product.basePrice,
+        unitPrice: store.unitPrice(),
         total: store.total(),
         layers: store.layers.map(function(l){
           return {
@@ -1693,10 +1805,10 @@
           next.left=o.left+dx;
           next.top=o.top+dy;
         } else {
-          if(m.indexOf("e")>-1){ next.width=o.width+dx; }
-          if(m.indexOf("s")>-1){ next.height=o.height+dy; }
-          if(m.indexOf("w")>-1){ next.left=o.left+dx; next.width=o.width-dx; }
-          if(m.indexOf("n")>-1){ next.top=o.top+dy; next.height=o.height-dy; }
+          if(m==="e"||m==="ne"||m==="se"){ next.width=o.width+dx; }
+          if(m==="s"||m==="se"||m==="sw"){ next.height=o.height+dy; }
+          if(m==="w"||m==="nw"||m==="sw"){ next.left=o.left+dx; next.width=o.width-dx; }
+          if(m==="n"||m==="nw"||m==="ne"){ next.top=o.top+dy; next.height=o.height-dy; }
         }
         next=clampZone(next);
         applyZoneLayout(next);
