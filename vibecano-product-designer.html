@@ -1915,6 +1915,46 @@
     VibeDesigner.Canvas.render();
   }
 
+  function hidePageHeading(){
+    var selectors=[
+      ".elementor-widget-theme-page-title",
+      ".elementor-page-title",
+      "h1.entry-title",
+      ".page-header .entry-title",
+      ".page-title",
+      ".woocommerce-products-header__title",
+      "header.entry-header",
+      ".elementor-location-single .elementor-widget-heading .elementor-heading-title"
+    ];
+    selectors.forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){
+        var text=(el.textContent||"").trim().toLowerCase();
+        if(!text || text.indexOf("customize")>-1 || text.indexOf("design")>-1 || el.closest(".elementor-widget-theme-page-title") || el.classList.contains("entry-title") || el.classList.contains("page-title") || el.classList.contains("elementor-page-title")){
+          el.style.setProperty("display","none","important");
+          el.classList.add("vd-hide-page-title");
+          var wrap=el.closest(".elementor-element, .elementor-widget, header.entry-header, .page-header");
+          if(wrap && wrap!==document.body) wrap.style.setProperty("display","none","important");
+        }
+      });
+    });
+    // Hide any Elementor heading immediately above the designer that looks like a page title
+    var app=document.getElementById("vdApp");
+    if(app){
+      var prev=app.previousElementSibling;
+      for(var i=0;i<4 && prev;i++){
+        var heading=prev.querySelector && prev.querySelector("h1,h2,.elementor-heading-title");
+        if(heading){
+          var t=(heading.textContent||"").trim().toLowerCase();
+          if(t.indexOf("customize")>-1 || t==="design editor" || t.indexOf("product")>-1 && t.length<40){
+            prev.style.setProperty("display","none","important");
+            break;
+          }
+        }
+        prev=prev.previousElementSibling;
+      }
+    }
+  }
+
   function hideLoading(){
     var ld=document.getElementById("vdLoading");
     var main=document.getElementById("vdMain");
@@ -1933,6 +1973,7 @@
 
   function bootDesigner(product){
     hideLoading();
+    hidePageHeading();
     var store=VibeDesigner.Store;
     var expectedId=VibeDesigner.API.getProductIdFromUrl() || (VibeDesigner.API.getSavedProductContext() && VibeDesigner.API.getSavedProductContext().id);
 
