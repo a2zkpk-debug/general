@@ -625,7 +625,11 @@
     getSavedProductContext: function(){
       try{
         var raw=sessionStorage.getItem(PRODUCT_CONTEXT_KEY);
-        return raw ? JSON.parse(raw) : null;
+        if(raw) return JSON.parse(raw);
+        try {
+          var lr = localStorage.getItem(PRODUCT_CONTEXT_KEY);
+          return lr ? JSON.parse(lr) : null;
+        } catch(e){ return null; }
       }catch(e){ return null; }
     },
     saveProductContext: function(ctx){
@@ -1653,8 +1657,17 @@
 
   VibeDesigner.API.loadProduct()
     .then(function(product){ bootDesigner(product); })
-    .catch(function(){
-      bootDesigner(null);
-    });
+    .catch(function(){ bootDesigner(null); });
+
+  // Hard safety: ensure spinner clears even if something stalls
+  setTimeout(function(){
+    var ld=document.getElementById("vdLoading");
+    var main=document.getElementById("vdMain");
+    if(ld && !ld.hidden){
+      ld.hidden=true;
+      if(main) main.hidden=false;
+      VibeDesigner.UI.toast("Network slow or blocked. Reload or check Store API.");
+    }
+  }, 7000);
 })();
 </script>
