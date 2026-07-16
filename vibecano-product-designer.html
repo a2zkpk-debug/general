@@ -256,10 +256,11 @@
 .vd-side-picker.is-disabled{opacity:.45;pointer-events:none}
 .vd-side-hint{margin:8px 0 0;font-size:12px;color:var(--muted);line-height:1.4}
 .vd-upload-next{margin-top:12px;display:grid;gap:8px}
-.vd-loading{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:rgba(255,255,255,.94);backdrop-filter:blur(4px)}
-.vd-loading.is-done,.vd-loading[hidden]{display:none!important;visibility:hidden!important;pointer-events:none!important}
+.vd-loading{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:rgba(255,255,255,.94);backdrop-filter:blur(4px);animation:vdAutoHideLoader 0.01s linear 1.8s forwards}
+.vd-loading.is-done,.vd-loading[hidden]{display:none!important;visibility:hidden!important;pointer-events:none!important;opacity:0!important;height:0!important;overflow:hidden!important}
 .vd-spinner{width:44px;height:44px;border-radius:50%;border:4px solid rgba(11,61,74,.15);border-top-color:var(--navy);animation:vdSpin .8s linear infinite}
 @keyframes vdSpin{to{transform:rotate(360deg)}}
+@keyframes vdAutoHideLoader{to{opacity:0;visibility:hidden;pointer-events:none;display:none}}
 
 @media (max-width:960px){
   .vd-layout{grid-template-columns:1fr;gap:14px;padding:12px 12px 120px}
@@ -310,7 +311,27 @@
 
 <div class="vd" id="vdApp">
   <div class="vd-loading" id="vdLoading"><div class="vd-spinner" aria-label="Loading"></div></div>
-  <div id="vdMain" hidden>
+  <div id="vdMain">
+  <script>
+  (function(){
+    function vdClearSpinner(){
+      var ld=document.getElementById("vdLoading");
+      var main=document.getElementById("vdMain");
+      if(ld){
+        ld.className="vd-loading is-done";
+        ld.setAttribute("hidden","");
+        ld.style.setProperty("display","none","important");
+        ld.style.setProperty("visibility","hidden","important");
+        if(ld.parentNode) try{ ld.parentNode.removeChild(ld); }catch(e){}
+      }
+      if(main){ main.hidden=false; main.removeAttribute("hidden"); }
+    }
+    vdClearSpinner();
+    setTimeout(vdClearSpinner, 500);
+    setTimeout(vdClearSpinner, 1500);
+    window.vdClearSpinner=vdClearSpinner;
+  })();
+  </script>
   <header class="vd-topbar">
     <div class="vd-topbar__inner">
       <div class="vd-topbar__left">
@@ -594,6 +615,7 @@
     if(/white|ivory|cream|off[\s-]?white/.test(name)) return true;
     return hex==="#FFFFFF"||hex==="#F5F5F4"||hex==="#FAFAFA"||hex==="#F8F8F8"||hex==="#FFFDD0"||hex==="#FFF8E7";
   }
+  function clampText(value){
     return String(value==null?"":value).slice(0,200);
   }
   function autosizeTextarea(el){
@@ -2288,58 +2310,81 @@
   }
 
   function hideLoading(){
+    if(typeof window.vdClearSpinner==="function"){
+      window.vdClearSpinner();
+      return;
+    }
     var ld=document.getElementById("vdLoading");
     var main=document.getElementById("vdMain");
     if(ld){
       ld.hidden=true;
       ld.setAttribute("hidden","");
-      ld.style.display="none";
       ld.classList.add("is-done");
+      ld.style.setProperty("display","none","important");
+      ld.style.setProperty("visibility","hidden","important");
+      ld.style.setProperty("opacity","0","important");
       ld.setAttribute("aria-hidden","true");
+      try{ if(ld.parentNode) ld.parentNode.removeChild(ld); }catch(e){}
     }
     if(main){
       main.hidden=false;
       main.removeAttribute("hidden");
+      main.style.display="";
     }
   }
 
   function bootDesigner(product){
     hideLoading();
-    hidePageHeading();
-    var store=VibeDesigner.Store;
-    var expectedId=VibeDesigner.API.getProductIdFromUrl() || (VibeDesigner.API.getSavedProductContext() && VibeDesigner.API.getSavedProductContext().id);
+    try{
+      hidePageHeading();
+      var store=VibeDesigner.Store;
+      var expectedId=VibeDesigner.API.getProductIdFromUrl() || (VibeDesigner.API.getSavedProductContext() && VibeDesigner.API.getSavedProductContext().id);
 
-    if(product) store.product=product;
-    else if(expectedId) VibeDesigner.UI.toast("Could not load product — check product ID and try again.");
+      if(product) store.product=product;
+      else if(expectedId) VibeDesigner.UI.toast("Could not load product — check product ID and try again.");
 
-    applyUrlDefaults();
+      applyUrlDefaults();
 
-    var back=document.getElementById("vdBack");
-    if(back){
-      if(document.referrer && /\/product\//.test(document.referrer)) back.href=document.referrer;
-      else if(store.product.permalink) back.href=store.product.permalink;
+      var back=document.getElementById("vdBack");
+      if(back){
+        if(document.referrer && /\/product\//.test(document.referrer)) back.href=document.referrer;
+        else if(store.product.permalink) back.href=store.product.permalink;
+      }
+
+      bind();
+      renderAll();
+      showTextEditor(false);
+      showClipart(false);
+    }catch(err){
+      hideLoading();
+      try{ console.error("VibeDesigner boot error", err); }catch(e){}
+      try{ VibeDesigner.UI.toast("Designer loaded with limited features. Reload if needed."); }catch(e){}
     }
-
-    bind();
-    renderAll();
-    showTextEditor(false);
-    showClipart(false);
   }
 
-  VibeDesigner.Store.subscribe(function(){ renderAll(); });
+  try{
+    VibeDesigner.Store.subscribe(function(){
+      try{ renderAll(); }catch(err){ try{ console.error(err); }catch(e){} }
+    });
+  }catch(e){}
 
-  VibeDesigner.API.loadProduct()
-    .then(function(product){ bootDesigner(product); })
-    .catch(function(){ bootDesigner(null); });
+  hideLoading();
 
-  // Hard safety: ensure spinner clears even if something stalls
+  try{
+    VibeDesigner.API.loadProduct()
+      .then(function(product){ bootDesigner(product); })
+      .catch(function(){ bootDesigner(null); });
+  }catch(e){
+    bootDesigner(null);
+  }
+
+  // Hard safety: clear spinner even if API/boot stalls
   setTimeout(function(){
-    var ld=document.getElementById("vdLoading");
-    if(ld && !ld.classList.contains("is-done")){
-      hideLoading();
-      if(!bind._bound) bootDesigner(null);
-      else VibeDesigner.UI.toast("Network slow or blocked. Reload or check Store API.");
+    hideLoading();
+    if(!bind._bound){
+      try{ bootDesigner(null); }catch(e){ hideLoading(); }
     }
-  }, 3000);
+  }, 1600);
+  setTimeout(hideLoading, 4000);
 })();
 </script>
