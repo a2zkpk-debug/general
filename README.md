@@ -26,6 +26,8 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 
 1. Customer opens a customizable product.
 2. Clicks **Customize Now** on the single product page.
+3. Chooses **Simple Method** (`/customize-product/`) or **Customized Studio** (`/design-editor/`).
+4. Both paths receive `product_cms`, `product_base`, `color`, and `size` query parameters.
 3. Lands on `/design-editor/?product_cms={id}&color=…&size=…`.
 4. Configures print position, color, size; adds text/artwork; reviews live preview.
 5. **Add to Cart** validates that at least one design layer exists.
