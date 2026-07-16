@@ -1258,7 +1258,7 @@
       return;
     }
 
-    main.innerHTML = '<span class="vc-sp-badge">' + escapeHtml(IS_CUSTOM ? "Customizable" : "Ready-made") + '</span><img id="vcSpMainImg" src="' + escapeAttr(images[0].src) + '" alt="' + escapeAttr(images[0].alt || product.name || "Product") + '">';
+    main.innerHTML = '<img id="vcSpMainImg" src="' + escapeAttr(images[0].src) + '" alt="' + escapeAttr(images[0].alt || product.name || "Product") + '">';
     thumbs.innerHTML = images.map(function (image, index) {
       return '<button class="vc-sp-thumb ' + (index === 0 ? "is-active" : "") + '" type="button" data-index="' + index + '"><img src="' + escapeAttr(image.thumbnail || image.src) + '" alt=""></button>';
     }).join("");
