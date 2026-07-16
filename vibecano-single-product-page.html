@@ -930,6 +930,7 @@
   var selectedColor = "";
   var selectedSize = "";
   var CART_TOKEN_KEY = "vcWcCartToken";
+  var PRODUCT_CONTEXT_KEY = "vcDesignerProductContext";
 
   var COLOR_HEX_MAP = {
     black: "#0f172a",
@@ -1563,6 +1564,15 @@
 
   window.vcSpChooseStudioCustomize = function () {
     if (!PRODUCT) return;
+    try {
+      sessionStorage.setItem(PRODUCT_CONTEXT_KEY, JSON.stringify({
+        id: PRODUCT.id,
+        name: PRODUCT.name,
+        color: selectedColor || getRequiredColorValue(),
+        size: selectedSize,
+        permalink: window.location.pathname
+      }));
+    } catch (error) {}
     window.location.href = buildCustomizeUrl(DESIGNER_URL);
   };
 

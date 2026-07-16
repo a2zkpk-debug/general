@@ -388,6 +388,7 @@
   var VibeDesigner = window.VibeDesigner = {};
   var API = "/wp-json/wc/store/v1";
   var CART_TOKEN_KEY = "vcWcCartToken";
+  var PRODUCT_CONTEXT_KEY = "vcDesignerProductContext";
 
   var PRINT_POSITIONS = [
     { id: "front", label: "Front", side: "front", zone: "front" },
@@ -612,13 +613,67 @@
       try{ var u=new URL("/checkout/", window.location.origin); u.searchParams.set("session", token); return u.pathname+u.search; }
       catch(e){ return "/checkout/?session="+encodeURIComponent(token); }
     },
+    getProductIdFromUrl: function(){
+      try{
+        var params=new URLSearchParams(window.location.search);
+        var id=params.get("product_cms")||params.get("product_id")||params.get("pid");
+        return id && /^\d+$/.test(String(id)) ? String(id) : "";
+      }catch(e){ return ""; }
+    },
+    getSavedProductContext: function(){
+      try{
+        var raw=sessionStorage.getItem(PRODUCT_CONTEXT_KEY);
+        return raw ? JSON.parse(raw) : null;
+      }catch(e){ return null; }
+    },
+    saveProductContext: function(ctx){
+      try{ if(ctx) sessionStorage.setItem(PRODUCT_CONTEXT_KEY, JSON.stringify(ctx)); }catch(e){}
+    },
     attrKey: function(attr){
       if(!attr) return "";
       if(attr.taxonomy) return "attribute_"+String(attr.taxonomy).toLowerCase();
       return "attribute_"+String(attr.name||"").toLowerCase().replace(/\s+/g,"_");
     },
-    mapProduct: function(data){
-      var images=(data.images||[]).map(function(img){ return img.src; });
+    getAttributeTerms: function(attr, variationDetails, pattern){
+      var terms=[], seen={};
+      function push(label){
+        label=String(label||"").trim();
+        if(!label) return;
+        var key=label.toLowerCase();
+        if(seen[key]) return;
+        seen[key]=true;
+        terms.push(label);
+      }
+      if(attr && Array.isArray(attr.terms) && attr.terms.length){
+        attr.terms.forEach(function(term){ push(typeof term==="string"?term:(term&&term.name)||(term&&term.label)||(term&&term.slug)); });
+      }else if(attr && Array.isArray(attr.options) && attr.options.length){
+        attr.options.forEach(function(opt){ push(opt); });
+      }
+      if(!terms.length && variationDetails && variationDetails.length){
+        variationDetails.forEach(function(variation){
+          var attrs=variation.attributes||[];
+          attrs.forEach(function(a){
+            var name=String(a.name||a.taxonomy||a.attribute||"").toLowerCase();
+            if(pattern.test(name)) push(a.value!=null?a.value:(a.option||""));
+          });
+        });
+      }
+      return terms;
+    },
+    loadVariations: function(product){
+      var variations=Array.isArray(product.variations)?product.variations:[];
+      if(!variations.length) return Promise.resolve([]);
+      return Promise.all(variations.map(function(variation){
+        var vid=variation && (variation.id||variation.variation_id||variation);
+        if(!vid) return Promise.resolve(null);
+        return fetch(API+"/products/"+encodeURIComponent(vid), { credentials:"same-origin" })
+          .then(function(r){ return r.ok?r.json():null; })
+          .catch(function(){ return null; });
+      })).then(function(list){ return list.filter(Boolean); });
+    },
+    mapProduct: function(data, variationDetails){
+      variationDetails=variationDetails||[];
+      var gallery=(data.images||[]).map(function(img){ return img && img.src; }).filter(Boolean);
       var prices=data.prices||{};
       var decimals=Number(prices.currency_minor_unit); if(!Number.isFinite(decimals)) decimals=2;
       var base=Number.parseInt(prices.price||prices.regular_price||"0",10);
@@ -627,20 +682,15 @@
       var colors=[], sizes=[], colorAttr=null, sizeAttr=null;
       (data.attributes||[]).forEach(function(attr){
         var name=String(attr.name||attr.taxonomy||"").toLowerCase();
-        var terms=attr.terms||attr.options||[];
         if(/colou?r/.test(name)){
           colorAttr=attr;
-          terms.forEach(function(term){
-            var label=typeof term==="string"?term:(term.name||term.label||"");
-            if(!label) return;
+          VibeDesigner.API.getAttributeTerms(attr, variationDetails, /colou?r/i).forEach(function(label){
             colors.push({ id:slugify(label), name:label, hex:colorToHex(label), inStock:true, raw:label });
           });
         }
         if(/size/.test(name)){
           sizeAttr=attr;
-          terms.forEach(function(term){
-            var label=typeof term==="string"?term:(term.name||term.label||"");
-            if(!label) return;
+          VibeDesigner.API.getAttributeTerms(attr, variationDetails, /size/i).forEach(function(label){
             sizes.push({ id:slugify(label), label:label, inStock:true, raw:label });
           });
         }
@@ -648,65 +698,113 @@
       if(!colors.length) colors=SAMPLE.colors.slice();
       if(!sizes.length) sizes=SAMPLE.sizes.slice();
 
+      var front=gallery[0]||"";
+      var back=gallery[1]||gallery[0]||"";
+
       return {
         id:data.id,
         name:data.name||"Custom Product",
         slug:data.slug||"",
         basePrice:base||SAMPLE.basePrice,
         currencySymbol:prices.currency_prefix||prices.currency_symbol||"Rs ",
-        material:(data.short_description||"").replace(/<[^>]+>/g," ").trim().slice(0,90)||SAMPLE.material,
+        material:(data.short_description||"").replace(/<[^>]+>/g," ").trim().slice(0,90)||"",
         permalink:data.permalink||("/product/"+(data.slug||"")+"/"),
         maxUploadMb:15,
-        images:{ front:images[0]||SAMPLE.images.front, back:images[1]||images[0]||SAMPLE.images.back },
+        images:{ front:front, back:back },
+        gallery:gallery,
         colors:colors,
         sizes:sizes,
-        variations: Array.isArray(data.variations)?data.variations:[],
+        variations:variationDetails.length?variationDetails:(Array.isArray(data.variations)?data.variations:[]),
+        variationDetails:variationDetails,
         colorAttr:colorAttr,
         sizeAttr:sizeAttr,
-        sizeChart:SAMPLE.sizeChart
+        sizeChart:SAMPLE.sizeChart,
+        priceDecimals:decimals
       };
     },
     loadProduct: function(){
-      var params=new URLSearchParams(window.location.search);
-      var id=params.get("product_cms")||params.get("product_id");
+      var self=this;
+      var id=this.getProductIdFromUrl();
+      if(!id){
+        var saved=this.getSavedProductContext();
+        if(saved && saved.id) id=String(saved.id);
+      }
       if(!id) return Promise.resolve(null);
-      return fetch(API+"/products/"+encodeURIComponent(id), { credentials:"include" })
-        .then(function(r){ return r.ok?r.json():null; })
-        .then(function(data){ return data?VibeDesigner.API.mapProduct(data):null; })
-        .catch(function(){ return null; });
+      return fetch(API+"/products/"+encodeURIComponent(id), { credentials:"same-origin" })
+        .then(function(r){
+          if(!r.ok) throw new Error("Product request failed: "+r.status);
+          return r.json();
+        })
+        .then(function(data){
+          return self.loadVariations(data).then(function(variationDetails){
+            return self.mapProduct(data, variationDetails);
+          });
+        });
+    },
+    normalizeOption: function(value){
+      return String(value||"").toLowerCase().replace(/\s+/g,"-");
+    },
+    variationMatches: function(variation, colorName, sizeLabel){
+      var attrs=variation && variation.attributes;
+      if(!Array.isArray(attrs)) return true;
+      var okColor=!colorName, okSize=!sizeLabel;
+      attrs.forEach(function(a){
+        var name=String(a.name||a.taxonomy||a.attribute||"").toLowerCase();
+        var val=String(a.value!=null?a.value:(a.option||"")).trim();
+        if(/colou?r/.test(name) && colorName){
+          okColor = selfMatch(val, colorName);
+        }
+        if(/size/.test(name) && sizeLabel){
+          okSize = selfMatch(val, sizeLabel);
+        }
+      });
+      function selfMatch(actual, expected){
+        actual=String(actual||"").toLowerCase();
+        expected=String(expected||"").toLowerCase();
+        return actual===expected || VibeDesigner.API.normalizeOption(actual)===VibeDesigner.API.normalizeOption(expected);
+      }
+      return okColor && okSize;
+    },
+    findMatchingVariationDetail: function(product, color, size){
+      var list=product && (product.variationDetails||product.variations)||[];
+      if(!list.length) return null;
+      var colorName=color && (color.raw||color.name);
+      var sizeLabel=size && (size.raw||size.label);
+      for(var i=0;i<list.length;i++){
+        if(VibeDesigner.API.variationMatches(list[i], colorName, sizeLabel)) return list[i];
+      }
+      return null;
+    },
+    getPreviewImage: function(product, preview, color, size){
+      var images=product && product.images ? product.images : { front:"", back:"" };
+      var src=preview==="back" ? (images.back||images.front) : (images.front||images.back);
+      var variation=VibeDesigner.API.findMatchingVariationDetail(product, color, size);
+      if(variation && Array.isArray(variation.images) && variation.images.length && variation.images[0].src){
+        src=variation.images[0].src;
+      }
+      return src||"";
+    },
+    syncSelectedVariation: function(store){
+      var product=store.product, color=store.getColor(), size=store.getSize();
+      var variation=VibeDesigner.API.findMatchingVariationDetail(product, color, size);
+      store.selectedVariationId=variation && variation.id ? variation.id : null;
+      if(variation && variation.prices){
+        var decimals=Number.isFinite(Number(product.priceDecimals))?Number(product.priceDecimals):2;
+        var amount=Number.parseInt(variation.prices.price||variation.prices.regular_price||"0",10);
+        if(Number.isFinite(amount)) product.basePrice=amount/Math.pow(10,decimals);
+      }
     },
     findVariationId: function(product, colorName, sizeLabel){
-      var vars=product.variations||[];
-      if(!vars.length) return null;
-      for(var i=0;i<vars.length;i++){
-        var v=vars[i], attrs=v.attributes||{};
-        var okColor=true, okSize=true;
-        Object.keys(attrs).forEach(function(k){
-          var val=String(attrs[k]||"").toLowerCase();
-          if(/colou?r/.test(k) && colorName) okColor = val===String(colorName).toLowerCase() || val===slugify(colorName);
-          if(/size/.test(k) && sizeLabel) okSize = val===String(sizeLabel).toLowerCase() || val===slugify(sizeLabel);
-        });
-        // Store API variation shape may use array of {name,value}
-        if(Array.isArray(v.attributes)){
-          okColor=true; okSize=true;
-          v.attributes.forEach(function(a){
-            var n=String(a.name||a.attribute||"").toLowerCase();
-            var val=String(a.value||a.option||"").toLowerCase();
-            if(/colou?r/.test(n) && colorName) okColor = val===String(colorName).toLowerCase();
-            if(/size/.test(n) && sizeLabel) okSize = val===String(sizeLabel).toLowerCase();
-          });
-        }
-        if(okColor && okSize) return v.id||v.variation_id||null;
-      }
-      return vars[0] && (vars[0].id||vars[0].variation_id) || null;
+      var match=VibeDesigner.API.findMatchingVariationDetail(product, { name:colorName, raw:colorName }, { label:sizeLabel, raw:sizeLabel });
+      return match && match.id ? match.id : null;
     },
     buildVariation: function(product, color, size){
       var variation=[];
       if(product.colorAttr && color){
-        variation.push({ attribute: VibeDesigner.API.attrKey(product.colorAttr), value: color.raw||color.name });
+        variation.push({ attribute: product.colorAttr.name||"Color", value: color.raw||color.name });
       }
       if(product.sizeAttr && size){
-        variation.push({ attribute: VibeDesigner.API.attrKey(product.sizeAttr), value: size.raw||size.label });
+        variation.push({ attribute: product.sizeAttr.name||"Size", value: size.raw||size.label });
       }
       return variation;
     }
@@ -725,8 +823,10 @@
       var img=document.getElementById("vdStageImg");
       var zone=document.getElementById("vdZone");
       stage.style.background=color.hex;
-      img.src=preview==="back"?store.product.images.back:store.product.images.front;
+      var previewSrc=VibeDesigner.API.getPreviewImage(store.product, preview, color, store.getSize());
+      img.src=previewSrc;
       img.alt=store.product.name+" "+preview;
+      img.style.visibility=previewSrc?"visible":"hidden";
       var zoneName = pos.zone;
       if(dual){
         var sideMeta = dual.find(function(s){ return s.preview === preview; }) || (preview==="back" ? dual[1] : dual[0]);
@@ -851,11 +951,19 @@
       var item=CLIPART.find(function(c){return c.id===id;});
       if(!item) return;
       var store=VibeDesigner.Store;
-      var layer={ id:uid("clip"), type:"clipart", name:item.name, positionId:store.printPositionId, visible:true, locked:false, x:50, y:45, scale:1, rotation:0, opacity:1, clipart:{ id:item.id, svg:item.svg } };
+      var dual=getDualSides(store.printPositionId);
+      var target=store.printPositionId;
+      var label=store.getPosition().label;
+      if(dual){
+        var active=dual.find(function(s){return s.preview===(store.previewSide||"front");}) || dual[0];
+        target=active.id;
+        label=active.label;
+      }
+      var layer={ id:uid("clip"), type:"clipart", name:item.name+" · "+label, positionId:target, visible:true, locked:false, x:50, y:45, scale:1, rotation:0, opacity:1, clipart:{ id:item.id, svg:item.svg } };
       store.layers=store.layers.concat([layer]);
       store.selectedLayerId=layer.id;
       store.emit();
-      VibeDesigner.UI.toast(item.name+" added to "+store.getPosition().label);
+      VibeDesigner.UI.toast(item.name+" added for "+label);
     }
   };
 
@@ -1280,15 +1388,6 @@
     showTextEditor(true);
   }
 
-  function renderAll(){
-    VibeDesigner.Options.render();
-    VibeDesigner.Personalize.render();
-    VibeDesigner.Text.render();
-    if(VibeDesigner.Store.clipartOpen) VibeDesigner.Clipart.render();
-    VibeDesigner.Layers.render();
-    VibeDesigner.Canvas.render();
-  }
-
   function bind(){
     var store=VibeDesigner.Store, app=document.getElementById("vdApp");
 
@@ -1454,45 +1553,91 @@
 
     document.getElementById("vdAddCart").addEventListener("click", function(){ VibeDesigner.Cart.add(); });
     document.getElementById("vdAddCartMobile").addEventListener("click", function(){ VibeDesigner.Cart.add(); });
+  }
 
-    var params=new URLSearchParams(window.location.search);
-    var back=document.getElementById("vdBack");
-    if(document.referrer && /\/product\//.test(document.referrer)) back.href=document.referrer;
-    else if(store.product.permalink) back.href=store.product.permalink;
+  function matchColorOption(colors, raw){
+    var value=String(raw||"").trim();
+    if(!value) return null;
+    var lower=value.toLowerCase();
+    return colors.find(function(c){
+      return c.id===lower || c.id===slugify(value) || c.name.toLowerCase()===lower || slugify(c.name)===slugify(value) || c.hex.toLowerCase()===lower;
+    }) || null;
+  }
+
+  function matchSizeOption(sizes, raw){
+    var value=String(raw||"").trim();
+    if(!value) return null;
+    var lower=value.toLowerCase();
+    return sizes.find(function(s){
+      return s.id===lower || s.id===slugify(value) || s.label.toLowerCase()===lower || slugify(s.label)===slugify(value);
+    }) || null;
   }
 
   function applyUrlDefaults(){
     var store=VibeDesigner.Store;
     var params=new URLSearchParams(window.location.search);
-    var colorParam=(params.get("color")||"").toLowerCase();
-    if(colorParam){
-      var matchColor=store.product.colors.find(function(c){ return c.id===colorParam||c.name.toLowerCase()===colorParam||slugify(c.name)===colorParam||c.hex.toLowerCase()===colorParam; });
-      if(matchColor&&matchColor.inStock) store.colorId=matchColor.id;
-    } else {
+    var saved=VibeDesigner.API.getSavedProductContext();
+    var colorParam=params.get("color")|| (saved && saved.color) || "";
+    var sizeParam=params.get("size")|| (saved && saved.size) || "";
+
+    var matchColor=matchColorOption(store.product.colors, colorParam);
+    if(matchColor && matchColor.inStock) store.colorId=matchColor.id;
+    else {
       var first=store.product.colors.find(function(c){return c.inStock;});
       if(first) store.colorId=first.id;
     }
-    var sizeParam=(params.get("size")||"").toLowerCase();
-    if(sizeParam){
-      var matchSize=store.product.sizes.find(function(s){ return s.id===sizeParam||s.label.toLowerCase()===sizeParam||slugify(s.label)===sizeParam; });
-      if(matchSize&&matchSize.inStock){ store.selectedSizeId=matchSize.id; store.sizeQuantities[matchSize.id]=1; }
+
+    var matchSize=matchSizeOption(store.product.sizes, sizeParam);
+    if(matchSize && matchSize.inStock){
+      store.selectedSizeId=matchSize.id;
+      store.sizeQuantities[matchSize.id]=1;
     } else {
-      var m=store.product.sizes.find(function(s){return s.inStock&&(s.id==="m"||s.label.toLowerCase()==="m");})||store.product.sizes.find(function(s){return s.inStock;});
+      var m=store.product.sizes.find(function(s){return s.inStock&&(s.id==="m"||s.label.toLowerCase()==="m"||s.label.toLowerCase()==="medium");})||store.product.sizes.find(function(s){return s.inStock;});
       if(m){ store.selectedSizeId=m.id; store.sizeQuantities[m.id]=store.sizeQuantities[m.id]||1; }
     }
+
+    VibeDesigner.API.syncSelectedVariation(store);
   }
 
-  VibeDesigner.Store.subscribe(function(){ renderAll(); });
+  function renderAll(){
+    VibeDesigner.API.syncSelectedVariation(VibeDesigner.Store);
+    VibeDesigner.Options.render();
+    VibeDesigner.Personalize.render();
+    VibeDesigner.Text.render();
+    if(VibeDesigner.Store.clipartOpen) VibeDesigner.Clipart.render();
+    VibeDesigner.Layers.render();
+    VibeDesigner.Canvas.render();
+  }
 
-  VibeDesigner.API.loadProduct().then(function(product){
-    if(product) VibeDesigner.Store.product=product;
+  function bootDesigner(product){
+    var store=VibeDesigner.Store;
+    var expectedId=VibeDesigner.API.getProductIdFromUrl() || (VibeDesigner.API.getSavedProductContext() && VibeDesigner.API.getSavedProductContext().id);
+
+    if(product) store.product=product;
+    else if(expectedId) VibeDesigner.UI.toast("Could not load product — check product ID and try again.");
+
     applyUrlDefaults();
+
+    var back=document.getElementById("vdBack");
+    if(back){
+      if(document.referrer && /\/product\//.test(document.referrer)) back.href=document.referrer;
+      else if(store.product.permalink) back.href=store.product.permalink;
+    }
+
     document.getElementById("vdLoading").hidden=true;
     document.getElementById("vdMain").hidden=false;
     bind();
     renderAll();
     showTextEditor(false);
     showClipart(false);
-  });
+  }
+
+  VibeDesigner.Store.subscribe(function(){ renderAll(); });
+
+  VibeDesigner.API.loadProduct()
+    .then(function(product){ bootDesigner(product); })
+    .catch(function(){
+      bootDesigner(null);
+    });
 })();
 </script>
