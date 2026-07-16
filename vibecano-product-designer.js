@@ -275,6 +275,92 @@
     if(parts.length!==3||parts.some(function(n){return isNaN(n)||n<0||n>255;})) return null;
     return "#"+parts.map(function(n){var s=n.toString(16);return s.length===1?"0"+s:s;}).join("").toUpperCase();
   }
+  function parseHexRgb(hex){
+    var h=normalizeHex(hex)||"#FFFFFF";
+    h=h.slice(1);
+    return { r:parseInt(h.slice(0,2),16), g:parseInt(h.slice(2,4),16), b:parseInt(h.slice(4,6),16) };
+  }
+
+  // Tint cache: product swatch color applied to garment pixels only (never the stage).
+  var productTintCache = Object.create(null);
+  var productTintToken = 0;
+
+  function variationHasDedicatedColorImage(product, color, size){
+    if(!product || !color) return false;
+    var match=VibeDesigner.API.findMatchingVariationDetail(product, color, size);
+    if(!match || !Array.isArray(match.images) || !match.images.length) return false;
+    var src=match.images[0] && (match.images[0].src||match.images[0].thumbnail);
+    if(!src) return false;
+    var colors=product.colors||[];
+    for(var i=0;i<colors.length;i++){
+      if(colors[i].id===color.id) continue;
+      var other=VibeDesigner.API.findMatchingVariationDetail(product, colors[i], size);
+      var otherSrc=other && Array.isArray(other.images) && other.images[0] && (other.images[0].src||other.images[0].thumbnail);
+      if(otherSrc && otherSrc!==src) return true;
+    }
+    return false;
+  }
+
+  function tintProductImage(src, hex, done){
+    var key=String(src)+"|"+String(hex||"").toUpperCase();
+    if(productTintCache[key]){ done(null, productTintCache[key]); return; }
+    var image=new Image();
+    image.crossOrigin="anonymous";
+    image.onload=function(){
+      try{
+        var maxSide=900;
+        var w=image.naturalWidth||image.width;
+        var h=image.naturalHeight||image.height;
+        if(!w||!h){ done(new Error("empty"), null); return; }
+        var scale=Math.min(1, maxSide/Math.max(w,h));
+        var cw=Math.max(1, Math.round(w*scale));
+        var ch=Math.max(1, Math.round(h*scale));
+        var canvas=document.createElement("canvas");
+        canvas.width=cw; canvas.height=ch;
+        var ctx=canvas.getContext("2d");
+        ctx.drawImage(image, 0, 0, cw, ch);
+        var imgData=ctx.getImageData(0, 0, cw, ch);
+        var px=imgData.data;
+        var dye=parseHexRgb(hex);
+        for(var i=0;i<px.length;i+=4){
+          var a=px[i+3];
+          if(a<10) continue;
+          var r=px[i], g=px[i+1], b=px[i+2];
+          var max=Math.max(r,g,b), min=Math.min(r,g,b);
+          var lum=(0.2126*r + 0.7152*g + 0.0722*b)/255;
+          var sat=max===0 ? 0 : (max-min)/max;
+          // Knock out near-white / studio backdrop so only the garment is tinted
+          if(lum>0.90 && sat<0.12){ px[i+3]=0; continue; }
+          px[i]=Math.round(dye.r*lum);
+          px[i+1]=Math.round(dye.g*lum);
+          px[i+2]=Math.round(dye.b*lum);
+        }
+        ctx.putImageData(imgData, 0, 0);
+        var out=canvas.toDataURL("image/png");
+        productTintCache[key]=out;
+        done(null, out);
+      }catch(err){
+        done(err, null);
+      }
+    };
+    image.onerror=function(){ done(new Error("load"), null); };
+    image.src=src;
+  }
+
+  function applyStageBackdrop(stage, color){
+    var whiteProduct=isWhiteColor(color);
+    if(!stage) return whiteProduct;
+    stage.classList.toggle("is-white-product", !!whiteProduct);
+    stage.style.setProperty("background", whiteProduct ? "#111827" : "#ffffff", "important");
+    return whiteProduct;
+  }
+
+  function clearColorLayer(colorLayer){
+    if(!colorLayer) return;
+    colorLayer.style.background="transparent";
+    colorLayer.style.removeProperty("-webkit-mask-image");
+    colorLayer.style.removeProperty("mask-image");
+  }
 
   VibeDesigner.Store = {
     product: JSON.parse(JSON.stringify(SAMPLE)),
@@ -704,41 +790,33 @@
       var colorLayer=document.getElementById("vdStageColor");
       var zone=document.getElementById("vdZone");
       var previewSrc=VibeDesigner.API.getPreviewImage(store.product, preview, color, store.getSize());
-      var variation=VibeDesigner.API.findMatchingVariationDetail(store.product, color, store.getSize());
-      var hasVariationImage=!!(variation && Array.isArray(variation.images) && variation.images.length && (variation.images[0].src||variation.images[0].thumbnail));
-      var whiteProduct=isWhiteColor(color);
+      var size=store.getSize();
+      var dedicatedPhoto=variationHasDedicatedColorImage(store.product, color, size);
+      var dyeHex=(color && color.hex) ? color.hex : "#ffffff";
 
-      // Stage backdrop only: black for white products, white for all other colors.
-      // Never paint product color onto the stage — dye stays masked to the garment.
-      stage.classList.toggle("is-white-product", !!whiteProduct);
-      stage.style.setProperty("background", whiteProduct ? "#111827" : "#ffffff", "important");
+      // Stage is ONLY white (or black for white products). Never product swatch color.
+      applyStageBackdrop(stage, color);
+      clearColorLayer(colorLayer);
 
-      img.src=previewSrc;
       img.alt=store.product.name+" "+preview;
+      img.classList.add("is-photo"); // no multiply bleed onto stage
       img.style.visibility=previewSrc?"visible":"hidden";
 
-      // Dye garment only: color layer masked to product image alpha + multiply blend.
-      // Skip dye when variation already has a real colored photo.
-      if(colorLayer){
-        if(hasVariationImage || !previewSrc){
-          colorLayer.style.background="transparent";
-          colorLayer.style.removeProperty("-webkit-mask-image");
-          colorLayer.style.removeProperty("mask-image");
-          img.classList.add("is-photo");
-        } else {
-          var dye=(color && color.hex) ? color.hex : "#ffffff";
-          var maskUrl="url(\""+String(previewSrc).replace(/\\/g,"\\\\").replace(/"/g,"\\\"")+"\")";
-          colorLayer.style.background=dye;
-          colorLayer.style.setProperty("-webkit-mask-image", maskUrl);
-          colorLayer.style.setProperty("mask-image", maskUrl);
-          colorLayer.style.setProperty("-webkit-mask-size", "contain");
-          colorLayer.style.setProperty("mask-size", "contain");
-          colorLayer.style.setProperty("-webkit-mask-repeat", "no-repeat");
-          colorLayer.style.setProperty("mask-repeat", "no-repeat");
-          colorLayer.style.setProperty("-webkit-mask-position", "center");
-          colorLayer.style.setProperty("mask-position", "center");
-          img.classList.remove("is-photo");
-        }
+      // Color the garment pixels (canvas tint). Use real variation photos only when
+      // each color has its own distinct image.
+      var token=++productTintToken;
+      if(!previewSrc){
+        img.removeAttribute("src");
+      } else if(dedicatedPhoto){
+        img.src=previewSrc;
+      } else {
+        // Show source briefly, then replace with garment-only tint (stage stays white/black)
+        img.src=previewSrc;
+        tintProductImage(previewSrc, dyeHex, function(err, tinted){
+          if(token!==productTintToken) return;
+          if(!err && tinted) img.src=tinted;
+          else img.src=previewSrc;
+        });
       }
       var zoneName = pos.zone;
       if(dual){
