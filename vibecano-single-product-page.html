@@ -1558,6 +1558,16 @@
 
   window.vcSpChooseSimpleCustomize = function () {
     if (!PRODUCT) return;
+    // Save product context so /customize-product/ can hydrate without query params
+    try {
+      sessionStorage.setItem(PRODUCT_CONTEXT_KEY, JSON.stringify({
+        id: PRODUCT.id,
+        name: PRODUCT.name,
+        color: selectedColor || getRequiredColorValue(),
+        size: selectedSize,
+        permalink: window.location.pathname
+      }));
+    } catch (error) {}
     // Per request: Simple Method should go to the base URL without params
     window.location.href = SIMPLE_CUSTOMIZE_URL;
   };
