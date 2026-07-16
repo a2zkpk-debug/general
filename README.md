@@ -8,8 +8,10 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 - `vibecano-hero-section.html` — Homepage hero content only (category circles + CTAs)
 - `vibecano-footer.html` — Site-wide footer (links, contact, copyright)
 - `vibecano-single-product-page.html` — Single product page with size/color swatches
+- `vibecano-product-designer.html` — Premium product customization studio (Customize Now)
 - `vibecano-cart-page.html` — Custom cart page with Store API integration
 - `vibecano-checkout-page.html` — Custom checkout page with WhatsApp order flow
+- `product-designer/` — Modular React + TypeScript reference of the designer architecture
 
 ## Header + hero + footer setup
 
@@ -17,6 +19,61 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 2. **All pages:** paste `vibecano-footer.html` into **Elementor → Theme Builder → Footer** (HTML widget, width **100%**).
 3. **Homepage only:** paste `vibecano-hero-section.html` into the homepage content area below the header.
 4. Remove the old combined hero/header widget if it is still on the homepage.
+
+## Premium product designer
+
+### Flow
+
+1. Customer opens a customizable product.
+2. Clicks **Customize Now** on the single product page.
+3. Chooses **Simple Method** (`/customize-product/`) or **Customized Studio** (`/design-editor/`).
+4. Both paths receive `product_cms`, `product_base`, `color`, and `size` query parameters.
+3. Lands on `/design-editor/?product_cms={id}&color=…&size=…`.
+4. Configures print position, color, size; adds text/artwork; reviews live preview.
+5. **Add to Cart** validates that at least one design layer exists.
+
+### Setup
+
+1. Create a WordPress page with slug `design-editor` (URL `/design-editor/`). Use the same paste on `/customize-product/` if that page exists.
+2. Edit with Elementor → add an **HTML** widget at **100%** width.
+3. Paste the full contents of `vibecano-product-designer.html` (markup + CSS only; spinner overlay removed).
+4. The HTML loads `vibecano-product-designer.js` from jsDelivr. If Elementor strips `<script>` tags and the designer does not run:
+   - **Elementor Pro → Custom Code** → Location **Body End** → paste:
+     `<script src="https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/premium-product-designer-7bce/vibecano-product-designer.js" defer></script>`
+   - Or host `vibecano-product-designer.js` on your site and point the `src` there.
+5. Clear Elementor / site cache, then hard-refresh the page. Publish.
+6. The single product page opens a chooser modal for customizable products, then links to either the simple customize page or the studio editor.
+
+### UI modules
+
+| Module | Features |
+|--------|----------|
+| Product Options | Segmented print positions, circular color swatches, size chips, multi-size qty, size chart modal |
+| Personalization | Add Text, Upload Image, Clipart/Logo (future placeholders) |
+| Text Editor | Fonts with preview/search/recent, typography sliders, formatting, color picker (HEX/RGB/presets), effects, layer controls |
+| Image Upload | Computer / mobile / camera, drag-drop, validation, progress, cancel/retry |
+| Canvas | Instant print-zone switching, live color/preview updates |
+| Layers | Select, hide, lock, delete |
+
+### Architecture
+
+Production delivery is the complete Elementor HTML widget (`VibeDesigner.*` namespaces) with WooCommerce Store API hydrate + add-to-cart.
+
+The `product-designer/` folder is a component-based React + Zustand reference (plus full `designer.css`) so new tools, print locations, and product types can be added without rewriting the core shell.
+
+### Cart integration
+
+- Uses the same `vcWcCartToken` session key as the single product / cart pages
+- Posts to `/wp-json/wc/store/v1/cart/add-item` with color/size variation attributes
+- Saves design summary to `sessionStorage.vcDesignerLastOrder`
+- On success redirects to `/checkout/?session=CART_TOKEN` (classic fallback if Store API fails)
+
+### Design system
+
+- Navy `#0B3D4A` · Teal `#0E7490` · Accent orange `#F97316`
+- Fonts: Manrope (titles) + Plus Jakarta Sans (UI)
+- Radius 10–14px · 8px spacing grid · ~240ms transitions
+- Soft shadows, high-contrast type, SaaS-style panels
 
 ## Checkout full-width fix
 

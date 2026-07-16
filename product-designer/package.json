@@ -1,0 +1,20 @@
+{
+  "name": "vibecano-product-designer",
+  "private": true,
+  "version": "2.0.0",
+  "description": "Modular React + TypeScript product customization studio for Vibecano / WooCommerce",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "framer-motion": "^11.15.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.0"
+  }
+}
