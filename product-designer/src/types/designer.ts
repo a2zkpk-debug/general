@@ -29,6 +29,7 @@ export type ActivePanel =
   | "personalize"
   | "text"
   | "upload"
+  | "clipart"
   | null;
 
 export interface ProductColor {

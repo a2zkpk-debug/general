@@ -1,33 +1,34 @@
 import { ProductOptionsPanel } from "./components/ProductOptions/ProductOptionsPanel";
 import { PersonalizationPanel } from "./components/Personalization/PersonalizationPanel";
 import { TextEditorPanel } from "./components/TextEditor/TextEditorPanel";
+import { ClipartPanel } from "./components/Personalization/ClipartPanel";
 import { ImageUploadModal } from "./components/ImageUpload/ImageUploadModal";
 import { CanvasPreview } from "./components/Canvas/CanvasPreview";
 import { LayersPanel } from "./components/Layers/LayersPanel";
-import { MobileControls } from "./components/Mobile/MobileControls";
 import { useDesignerStore } from "./store/designerStore";
 import "./styles/designer.css";
 
 /**
- * Vibecano Product Designer — complete modular shell.
- * Production twin: ../vibecano-product-designer.html
+ * Vibecano Product Designer — stacked cards (no tabs).
+ * Always visible: Product Options → Personalization → Layers
+ * On demand: Text Editor (Add Text) · Clipart (Add Clipart)
  */
 export function DesignerApp() {
   const product = useDesignerStore((s) => s.product);
   const activePanel = useDesignerStore((s) => s.activePanel);
-  const setActivePanel = useDesignerStore((s) => s.setActivePanel);
   const colorId = useDesignerStore((s) => s.colorId);
   const totalQuantity = useDesignerStore((s) => s.totalQuantity);
   const layers = useDesignerStore((s) => s.layers);
+  const selectedLayerId = useDesignerStore((s) => s.selectedLayerId);
   const color = product.colors.find((c) => c.id === colorId);
   const qty = Math.max(1, totalQuantity());
   const total = product.basePrice * qty;
+  const selected = layers.find((l) => l.id === selectedLayerId);
+  const showText = activePanel === "text" && selected?.type === "text";
+  const showClipart = activePanel === "clipart";
 
   const handleAddToCart = () => {
-    if (!layers.length) {
-      setActivePanel("personalize");
-      return;
-    }
+    if (!layers.length) return;
     const payload = {
       product_id: product.id,
       color: color?.name,
@@ -75,28 +76,10 @@ export function DesignerApp() {
         </main>
 
         <aside className="pd-layout__panel">
-          <nav className="pd-panel-tabs" aria-label="Designer sections">
-            {(
-              [
-                ["options", "Options"],
-                ["personalize", "Design"],
-                ["text", "Text"],
-              ] as const
-            ).map(([id, label]) => (
-              <button
-                key={id}
-                type="button"
-                className={activePanel === id ? "is-active" : ""}
-                onClick={() => setActivePanel(id)}
-              >
-                {label}
-              </button>
-            ))}
-          </nav>
-
-          {(activePanel === "options" || activePanel === null) && <ProductOptionsPanel />}
-          {activePanel === "personalize" && <PersonalizationPanel />}
-          {activePanel === "text" && <TextEditorPanel />}
+          <ProductOptionsPanel />
+          <PersonalizationPanel />
+          {showText ? <TextEditorPanel /> : null}
+          {showClipart ? <ClipartPanel /> : null}
           <LayersPanel />
 
           <div className="pd-summary">
@@ -115,10 +98,6 @@ export function DesignerApp() {
         </aside>
       </div>
 
-      <MobileControls
-        onOpenOptions={() => setActivePanel("options")}
-        onOpenPersonalize={() => setActivePanel("personalize")}
-      />
       <ImageUploadModal />
     </div>
   );

@@ -75,7 +75,7 @@ export function PersonalizationPanel() {
                 setActivePanel("text");
               }
               if (action.id === "image" || action.id === "logo") openUploadModal(true);
-              if (action.id === "clipart") setActivePanel("personalize");
+              if (action.id === "clipart") setActivePanel("clipart");
             }}
           >
             <span className="pd-action__icon">{action.icon}</span>

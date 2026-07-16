@@ -21,6 +21,7 @@ export function ClipartPanel() {
   const [query, setQuery] = useState("");
   const addImageLayer = useDesignerStore((s) => s.addImageLayer);
   const printPositionId = useDesignerStore((s) => s.printPositionId);
+  const setActivePanel = useDesignerStore((s) => s.setActivePanel);
 
   const items = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -30,7 +31,15 @@ export function ClipartPanel() {
   }, [query]);
 
   return (
-    <PanelCard title="Clipart Library" subtitle="Tap an icon to place it on the active print area.">
+    <PanelCard
+      title="Clipart Library"
+      subtitle="Tap an icon to place it on the active print area."
+      action={
+        <button type="button" className="pd-link" onClick={() => setActivePanel("personalize")}>
+          Done
+        </button>
+      }
+    >
       <input
         className="pd-input"
         type="search"

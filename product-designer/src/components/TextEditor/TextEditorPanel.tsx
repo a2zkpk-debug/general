@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { FONTS, PRESET_COLORS } from "../../data/catalog";
 import { useDesignerStore } from "../../store/designerStore";
 import { IconButton, PanelCard, SliderField } from "../ui/primitives";
@@ -7,31 +7,19 @@ import type { TextAlign, TextCase, TextEffect } from "../../types/designer";
 export function TextEditorPanel() {
   const layers = useDesignerStore((s) => s.layers);
   const selectedLayerId = useDesignerStore((s) => s.selectedLayerId);
-  const recentFonts = useDesignerStore((s) => s.recentFonts);
-  const recentColors = useDesignerStore((s) => s.recentColors);
   const updateTextStyle = useDesignerStore((s) => s.updateTextStyle);
-  const rememberFont = useDesignerStore((s) => s.rememberFont);
   const rememberColor = useDesignerStore((s) => s.rememberColor);
   const removeLayer = useDesignerStore((s) => s.removeLayer);
   const duplicateLayer = useDesignerStore((s) => s.duplicateLayer);
   const moveLayer = useDesignerStore((s) => s.moveLayer);
   const setActivePanel = useDesignerStore((s) => s.setActivePanel);
 
-  const [fontQuery, setFontQuery] = useState("");
   const [hexInput, setHexInput] = useState("");
   const [rgbInput, setRgbInput] = useState("");
 
   const layer = layers.find((l) => l.id === selectedLayerId && l.type === "text");
   const style = layer?.text;
-
-  const fonts = useMemo(() => {
-    const q = fontQuery.trim().toLowerCase();
-    const list = FONTS.filter((f) => !q || f.label.toLowerCase().includes(q) || f.family.toLowerCase().includes(q));
-    const recent = recentFonts
-      .map((id) => FONTS.find((f) => f.id === id))
-      .filter(Boolean) as typeof FONTS;
-    return { recent, list };
-  }, [fontQuery, recentFonts]);
+  const currentFont = FONTS.find((f) => f.id === style?.fontId) || FONTS[0];
 
   if (!layer || !style) {
     return (
@@ -53,7 +41,7 @@ export function TextEditorPanel() {
   return (
     <PanelCard
       title="Text Editor"
-      subtitle="Live preview updates as you type."
+      subtitle="Typography, formatting, and advanced effects."
       action={
         <button type="button" className="pd-link" onClick={() => setActivePanel("personalize")}>
           Done
@@ -73,52 +61,19 @@ export function TextEditorPanel() {
 
       <div className="pd-field">
         <span className="pd-label">Font</span>
-        <input
+        <select
           className="pd-input"
-          type="search"
-          placeholder="Search fonts..."
-          value={fontQuery}
-          onChange={(e) => setFontQuery(e.target.value)}
-        />
-        {fonts.recent.length > 0 && !fontQuery ? (
-          <div className="pd-font-recent">
-            <span className="pd-micro">Recently used</span>
-            <div className="pd-font-list">
-              {fonts.recent.map((font) => (
-                <button
-                  key={font.id}
-                  type="button"
-                  className={`pd-font-item${style.fontId === font.id ? " is-active" : ""}`}
-                  style={{ fontFamily: font.family }}
-                  onClick={() => {
-                    updateTextStyle(layer.id, { fontId: font.id });
-                    rememberFont(font.id);
-                  }}
-                >
-                  <strong>{font.label}</strong>
-                  <span>{font.preview}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        ) : null}
-        <div className="pd-font-list">
-          {fonts.list.map((font) => (
-            <button
-              key={font.id}
-              type="button"
-              className={`pd-font-item${style.fontId === font.id ? " is-active" : ""}`}
-              style={{ fontFamily: font.family }}
-              onClick={() => {
-                updateTextStyle(layer.id, { fontId: font.id });
-                rememberFont(font.id);
-              }}
-            >
-              <strong>{font.label}</strong>
-              <span>{font.preview}</span>
-            </button>
+          value={style.fontId}
+          style={{ fontFamily: currentFont.family, fontWeight: 700, cursor: "pointer" }}
+          onChange={(e) => updateTextStyle(layer.id, { fontId: e.target.value })}
+          aria-label="Font"
+        >
+          {FONTS.map((font) => (
+            <option key={font.id} value={font.id} style={{ fontFamily: font.family }}>
+              {font.label} — {font.preview}
+            </option>
           ))}
-        </div>
+        </select>
       </div>
 
       <div className="pd-slider-stack">
@@ -147,10 +102,26 @@ export function TextEditorPanel() {
           <IconButton title="Underline" active={style.underline} onClick={() => updateTextStyle(layer.id, { underline: !style.underline })}>
             U
           </IconButton>
-          <IconButton title="Uppercase" active={style.textCase === "uppercase"} onClick={() => updateTextStyle(layer.id, { textCase: (style.textCase === "uppercase" ? "none" : "uppercase") as TextCase })}>
+          <IconButton
+            title="Uppercase"
+            active={style.textCase === "uppercase"}
+            onClick={() =>
+              updateTextStyle(layer.id, {
+                textCase: (style.textCase === "uppercase" ? "none" : "uppercase") as TextCase,
+              })
+            }
+          >
             AA
           </IconButton>
-          <IconButton title="Lowercase" active={style.textCase === "lowercase"} onClick={() => updateTextStyle(layer.id, { textCase: (style.textCase === "lowercase" ? "none" : "lowercase") as TextCase })}>
+          <IconButton
+            title="Lowercase"
+            active={style.textCase === "lowercase"}
+            onClick={() =>
+              updateTextStyle(layer.id, {
+                textCase: (style.textCase === "lowercase" ? "none" : "lowercase") as TextCase,
+              })
+            }
+          >
             aa
           </IconButton>
         </div>
@@ -193,16 +164,6 @@ export function TextEditorPanel() {
             />
           </label>
         </div>
-        {recentColors.length ? (
-          <div className="pd-recent-colors">
-            <span className="pd-micro">Recently used</span>
-            <div className="pd-swatches">
-              {recentColors.map((hex) => (
-                <button key={hex} type="button" className="pd-swatch" style={{ background: hex }} onClick={() => applyColor(hex)} />
-              ))}
-            </div>
-          </div>
-        ) : null}
       </div>
 
       <div className="pd-field">
@@ -219,16 +180,37 @@ export function TextEditorPanel() {
             </button>
           ))}
         </div>
-        {(style.effect === "outline" || style.effect === "shadow" || style.effect === "curved" || style.effect === "arc") && (
+        {(style.effect === "outline" ||
+          style.effect === "shadow" ||
+          style.effect === "curved" ||
+          style.effect === "arc") && (
           <div className="pd-slider-stack">
             {style.effect === "outline" ? (
-              <SliderField label="Stroke Width" value={style.strokeWidth} min={0} max={12} onChange={(v) => updateTextStyle(layer.id, { strokeWidth: v })} />
+              <SliderField
+                label="Stroke Width"
+                value={style.strokeWidth}
+                min={0}
+                max={12}
+                onChange={(v) => updateTextStyle(layer.id, { strokeWidth: v })}
+              />
             ) : null}
             {style.effect === "shadow" ? (
-              <SliderField label="Shadow Blur" value={style.shadowBlur} min={0} max={24} onChange={(v) => updateTextStyle(layer.id, { shadowBlur: v })} />
+              <SliderField
+                label="Shadow Blur"
+                value={style.shadowBlur}
+                min={0}
+                max={24}
+                onChange={(v) => updateTextStyle(layer.id, { shadowBlur: v })}
+              />
             ) : null}
             {style.effect === "curved" || style.effect === "arc" ? (
-              <SliderField label="Curve / Arc" value={style.curveAmount} min={-180} max={180} onChange={(v) => updateTextStyle(layer.id, { curveAmount: v })} />
+              <SliderField
+                label="Curve / Arc"
+                value={style.curveAmount}
+                min={-180}
+                max={180}
+                onChange={(v) => updateTextStyle(layer.id, { curveAmount: v })}
+              />
             ) : null}
           </div>
         )}
@@ -255,10 +237,18 @@ export function TextEditorPanel() {
       <div className="pd-field">
         <span className="pd-label">Layer Controls</span>
         <div className="pd-toolbar">
-          <IconButton title="Bring forward" onClick={() => moveLayer(layer.id, "up")}>↑</IconButton>
-          <IconButton title="Send backward" onClick={() => moveLayer(layer.id, "down")}>↓</IconButton>
-          <IconButton title="Duplicate" onClick={() => duplicateLayer(layer.id)}>⧉</IconButton>
-          <IconButton title="Delete" onClick={() => removeLayer(layer.id)}>⌫</IconButton>
+          <IconButton title="Bring forward" onClick={() => moveLayer(layer.id, "up")}>
+            ↑
+          </IconButton>
+          <IconButton title="Send backward" onClick={() => moveLayer(layer.id, "down")}>
+            ↓
+          </IconButton>
+          <IconButton title="Duplicate" onClick={() => duplicateLayer(layer.id)}>
+            ⧉
+          </IconButton>
+          <IconButton title="Delete" onClick={() => removeLayer(layer.id)}>
+            ⌫
+          </IconButton>
         </div>
       </div>
     </PanelCard>
