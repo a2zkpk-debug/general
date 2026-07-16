@@ -1,0 +1,1332 @@
+<!-- ============================================================
+     VIBECANO — PREMIUM PRODUCT DESIGNER
+     Paste into an Elementor HTML widget at 100% width on
+     /design-editor/ (or /customize/).
+
+     Query params: product_cms / product_id / color / size
+     Modular architecture: VibeDesigner.{Store,Options,Text,Upload,Canvas,UI}
+     Compatible with WooCommerce Store API + Elementor Pro.
+     ============================================================ -->
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lora:ital,wght@0,500;0,700;1,500&family=Manrope:wght@600;700;800&family=Oswald:wght@500;600&family=Pacifico&family=Playfair+Display:ital,wght@0,600;1,600&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+.vd,.vd *{box-sizing:border-box}
+.vd{
+  --navy:#0B3D4A;--navy-deep:#072F39;--teal:#0E7490;--orange:#F97316;
+  --text:#0f172a;--muted:#64748b;--line:rgba(148,163,184,.28);--soft:#f1f5f9;
+  --ok:#16a34a;--danger:#dc2626;--warn:#d97706;--radius:12px;--radius-lg:14px;
+  --shadow:0 10px 36px -18px rgba(11,61,74,.45);--shadow-sm:0 6px 18px -12px rgba(15,23,42,.28);
+  --ease:240ms cubic-bezier(.22,1,.36,1);--gap:8px;
+  position:relative;min-height:100vh;color:var(--text);
+  font-family:"Plus Jakarta Sans",system-ui,sans-serif;
+  background:
+    radial-gradient(ellipse at 8% 0%,rgba(14,116,144,.14),transparent 42%),
+    radial-gradient(ellipse at 96% 2%,rgba(249,115,22,.1),transparent 38%),
+    linear-gradient(180deg,#eef3f7 0%,#fff 46%,#f8fafc 100%);
+}
+.vd h1,.vd h2,.vd h3,.vd .vd-brand{font-family:Manrope,"Plus Jakarta Sans",sans-serif}
+.vd button,.vd input,.vd textarea,.vd select{font:inherit}
+.vd button{cursor:pointer}
+.vd button:disabled{cursor:not-allowed;opacity:.45}
+
+/* Topbar */
+.vd-topbar{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--line);background:rgba(255,255,255,.88);backdrop-filter:blur(16px)}
+.vd-topbar__inner{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1480px;margin:0 auto;padding:12px 16px}
+.vd-topbar__left{display:flex;align-items:center;gap:12px;min-width:0}
+.vd-back{flex-shrink:0;border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:var(--radius);padding:9px 12px;font-size:13px;font-weight:700;text-decoration:none;transition:var(--ease)}
+.vd-back:hover{border-color:var(--navy);color:var(--navy)}
+.vd-topbar h1{margin:0;font-size:clamp(16px,2vw,20px);font-weight:800;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vd-topbar p{margin:2px 0 0;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vd-topbar__right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.vd-total span{display:block;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8;text-align:right}
+.vd-total strong{display:block;font-family:Manrope,sans-serif;font-size:20px;font-weight:800;color:var(--navy);text-align:right}
+
+/* Layout */
+.vd-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(340px,.9fr);gap:clamp(16px,2vw,28px);align-items:start;max-width:1480px;margin:0 auto;padding:16px 16px 110px}
+.vd-preview-card,.vd-panel-card{border:1px solid var(--line);border-radius:var(--radius-lg);background:rgba(255,255,255,.96);box-shadow:var(--shadow)}
+.vd-preview-wrap{position:sticky;top:78px}
+.vd-preview-card{padding:16px}
+.vd-side-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:12px}
+.vd-side-tab{border:0;border-radius:999px;padding:8px 14px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#fff;color:var(--muted);box-shadow:inset 0 0 0 1px var(--line);transition:var(--ease)}
+.vd-side-tab.is-active{background:var(--navy);color:#fff;box-shadow:0 10px 22px -12px rgba(11,61,74,.75)}
+
+.vd-stage{position:relative;aspect-ratio:4/5;max-width:560px;margin:0 auto;border-radius:18px;overflow:hidden;transition:background var(--ease)}
+.vd-stage__fabric{position:absolute;inset:0;opacity:.14;mix-blend-mode:multiply;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")}
+.vd-stage__img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;opacity:.92;transition:opacity var(--ease),transform .45s ease}
+.vd-zone{position:absolute;z-index:3;border:1.5px dashed rgba(255,255,255,.55);border-radius:10px;background:rgba(11,61,74,.08);backdrop-filter:blur(2px);transition:inset var(--ease),opacity var(--ease),transform var(--ease)}
+.vd-zone.is-front{left:27%;right:27%;top:27%;height:30%}
+.vd-zone.is-back{left:27%;right:27%;top:25%;height:32%}
+.vd-zone.is-pocket{left:54%;top:34%;width:16%;height:14%}
+.vd-zone.is-sleeve{left:8%;top:38%;width:14%;height:12%}
+.vd-zone.is-left_chest{left:30%;top:30%;width:18%;height:12%}
+.vd-zone.is-right_chest{right:30%;top:30%;width:18%;height:12%}
+.vd-layer-text,.vd-layer-image{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:0;background:transparent;padding:0;max-width:92%;max-height:92%;color:inherit}
+.vd-layer-text{white-space:pre-wrap;word-break:break-word;line-height:1.15;cursor:pointer;transition:box-shadow var(--ease)}
+.vd-layer-image img{display:block;max-width:140px;max-height:140px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25))}
+.vd-layer-text.is-selected,.vd-layer-image.is-selected{outline:2px solid var(--orange);outline-offset:4px;border-radius:6px}
+.vd-preview-hint{margin:12px 0 0;text-align:center;font-size:12px;color:var(--muted)}
+.vd-preview-hint strong{color:var(--navy)}
+
+/* Panel */
+.vd-panel{position:sticky;top:78px;max-height:calc(100vh - 96px);overflow:auto;display:grid;gap:12px;padding-right:2px}
+.vd-panel-card{padding:16px}
+.vd-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px}
+.vd-card-title{margin:0;font-size:15px;font-weight:800;letter-spacing:-.01em}
+.vd-card-sub{margin:4px 0 0;font-size:12px;color:var(--muted);line-height:1.4}
+.vd-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:6px;border:1px solid var(--line);border-radius:var(--radius);background:var(--soft)}
+.vd-tabs button{border:0;border-radius:10px;padding:10px 8px;background:transparent;color:var(--muted);font-size:12px;font-weight:800;transition:var(--ease)}
+.vd-tabs button.is-active{background:#fff;color:var(--navy);box-shadow:var(--shadow-sm)}
+
+.vd-field{margin-top:14px}
+.vd-field:first-child{margin-top:0}
+.vd-label{display:block;margin:0 0 8px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8}
+.vd-field-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.vd-field-row .vd-label{margin:0}
+
+/* Segmented print positions */
+.vd-segment{display:flex;flex-wrap:wrap;gap:8px}
+.vd-segment__btn{border:0;border-radius:11px;padding:10px 12px;background:#fff;color:var(--muted);font-size:12px;font-weight:700;box-shadow:inset 0 0 0 1px var(--line);transition:var(--ease)}
+.vd-segment__btn:hover{color:var(--navy);box-shadow:inset 0 0 0 1px rgba(11,61,74,.35)}
+.vd-segment__btn.is-active{background:var(--navy);color:#fff;box-shadow:0 10px 22px -14px rgba(11,61,74,.9);transform:translateY(-1px)}
+
+/* Color swatches */
+.vd-swatches{display:flex;flex-wrap:wrap;gap:10px}
+.vd-swatch{position:relative;width:34px;height:34px;border-radius:50%;border:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);transition:transform var(--ease),box-shadow var(--ease)}
+.vd-swatch:hover:not(:disabled){transform:scale(1.1)}
+.vd-swatch.is-active{box-shadow:0 0 0 3px #fff,0 0 0 5px var(--navy)}
+.vd-swatch.is-disabled,.vd-swatch:disabled{opacity:.38}
+.vd-swatch.is-disabled::after,.vd-swatch:disabled::after{content:"";position:absolute;inset:15% 46%;background:rgba(220,38,38,.9);transform:rotate(45deg);border-radius:2px}
+.vd-tip{position:relative}
+.vd-tip::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%) translateY(4px);white-space:nowrap;padding:6px 8px;border-radius:8px;background:var(--navy-deep);color:#fff;font-size:11px;font-weight:700;opacity:0;pointer-events:none;transition:var(--ease);z-index:5}
+.vd-tip:hover::after{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Size chips */
+.vd-chips{display:flex;flex-wrap:wrap;gap:8px}
+.vd-chip{min-width:46px;border:0;border-radius:11px;padding:10px 12px;background:#fff;color:var(--text);font-size:13px;font-weight:800;box-shadow:inset 0 0 0 1px var(--line);transition:var(--ease)}
+.vd-chip:hover:not(:disabled){box-shadow:inset 0 0 0 1px rgba(11,61,74,.4)}
+.vd-chip.is-active{background:var(--navy);color:#fff;box-shadow:0 10px 20px -14px rgba(11,61,74,.85)}
+.vd-chip.is-disabled,.vd-chip:disabled{text-decoration:line-through;opacity:.4}
+.vd-link{border:0;background:none;color:var(--teal);font-size:12px;font-weight:800;padding:0;text-decoration:underline;text-underline-offset:3px}
+.vd-link:hover{color:var(--navy)}
+.vd-inline{display:flex;align-items:center;gap:10px}
+.vd-mini{display:inline-flex;padding:3px;border-radius:999px;background:var(--soft);border:1px solid var(--line)}
+.vd-mini button{border:0;border-radius:999px;padding:6px 10px;background:transparent;color:var(--muted);font-size:11px;font-weight:800;transition:var(--ease)}
+.vd-mini button.is-active{background:#fff;color:var(--navy);box-shadow:var(--shadow-sm)}
+.vd-qty-grid{display:grid;gap:8px}
+.vd-qty-row{display:grid;grid-template-columns:48px 1fr;align-items:center;gap:10px}
+.vd-qty-row.is-disabled{opacity:.4}
+.vd-stepper{display:grid;grid-template-columns:36px 1fr 36px;gap:6px;align-items:center}
+.vd-stepper button{border:0;border-radius:10px;height:36px;background:var(--soft);color:var(--navy);font-weight:800;transition:var(--ease)}
+.vd-stepper button:hover:not(:disabled){background:#e2e8f0}
+.vd-stepper input{width:100%;height:36px;border:1px solid var(--line);border-radius:10px;text-align:center;font-weight:800}
+
+/* Personalization actions */
+.vd-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.vd-action{display:flex;align-items:flex-start;gap:10px;text-align:left;border:1px solid var(--line);border-radius:var(--radius);padding:14px 12px;background:#fff;transition:var(--ease);position:relative;overflow:hidden}
+.vd-action::before{content:"";position:absolute;inset:auto -20% -40% auto;width:80px;height:80px;border-radius:50%;background:rgba(14,116,144,.08);transition:var(--ease)}
+.vd-action:hover:not(:disabled){border-color:rgba(14,116,144,.45);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.vd-action:hover:not(:disabled)::before{transform:scale(1.4)}
+.vd-action.is-soon{opacity:.72}
+.vd-action__icon{flex-shrink:0;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(145deg,#0B3D4A,#0E7490);color:#fff;box-shadow:0 10px 20px -14px rgba(11,61,74,.8)}
+.vd-action__icon svg{width:20px;height:20px}
+.vd-action strong{display:block;font-size:13px;font-weight:800;color:var(--navy)}
+.vd-action small{display:block;margin-top:2px;font-size:11px;color:var(--muted);line-height:1.35}
+.vd-pill{position:absolute;top:8px;right:8px;border-radius:999px;padding:3px 7px;background:var(--soft);color:var(--muted);font-size:10px;font-weight:800}
+
+/* Forms */
+.vd-input,.vd-textarea,.vd-select{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 12px;background:#fff;color:var(--text);transition:var(--ease)}
+.vd-input:focus,.vd-textarea:focus,.vd-select:focus{outline:0;border-color:rgba(14,116,144,.55);box-shadow:0 0 0 3px rgba(14,116,144,.12)}
+.vd-textarea{resize:vertical;min-height:110px;line-height:1.45}
+.vd-toolbar{display:flex;flex-wrap:wrap;gap:6px}
+.vd-iconbtn{min-width:36px;height:36px;border:0;border-radius:10px;background:var(--soft);color:var(--navy);font-size:12px;font-weight:800;transition:var(--ease)}
+.vd-iconbtn:hover{background:#e2e8f0}
+.vd-iconbtn.is-active{background:var(--navy);color:#fff}
+.vd-slider{display:grid;gap:6px;margin-top:10px}
+.vd-slider__head{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--muted)}
+.vd-slider__head strong{color:var(--navy)}
+.vd-slider input[type=range]{width:100%;accent-color:var(--teal)}
+.vd-font-list{display:grid;gap:6px;max-height:180px;overflow:auto;margin-top:8px;padding-right:2px}
+.vd-font-item{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:10px 12px;background:#fff;text-align:left;transition:var(--ease)}
+.vd-font-item:hover,.vd-font-item.is-active{border-color:rgba(11,61,74,.4);box-shadow:var(--shadow-sm)}
+.vd-font-item strong{font-size:13px}
+.vd-font-item span{font-size:14px;color:var(--muted)}
+.vd-micro{display:block;margin:8px 0 4px;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8}
+.vd-color-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.vd-color-inputs label{display:grid;gap:4px;font-size:11px;font-weight:700;color:var(--muted)}
+.vd-check{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--text)}
+.vd-toggle-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px}
+.vd-empty{margin:0;padding:18px;border:1px dashed var(--line);border-radius:var(--radius);color:var(--muted);font-size:13px;text-align:center}
+
+/* Layers */
+.vd-layers{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.vd-layers li{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:8px;background:#fff;transition:var(--ease)}
+.vd-layers li.is-active{border-color:rgba(14,116,144,.5);box-shadow:var(--shadow-sm)}
+.vd-layers__main{display:flex;align-items:center;gap:10px;border:0;background:transparent;text-align:left;padding:0}
+.vd-layers__type{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--soft);font-size:11px;font-weight:800;color:var(--navy)}
+.vd-layers__main strong{display:block;font-size:13px}
+.vd-layers__main small{display:block;font-size:11px;color:var(--muted);text-transform:capitalize}
+.vd-layers__actions{display:flex;gap:4px}
+.vd-layers__actions button{border:0;border-radius:8px;padding:6px 8px;background:var(--soft);font-size:11px;font-weight:700;color:var(--muted)}
+
+/* Buttons */
+.vd-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:12px 16px;font-size:13px;font-weight:800;transition:var(--ease)}
+.vd-btn--primary{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;box-shadow:0 14px 28px -16px rgba(11,61,74,.85)}
+.vd-btn--primary:hover{transform:translateY(-1px);filter:brightness(1.05)}
+.vd-btn--outline{background:#fff;color:var(--navy);box-shadow:inset 0 0 0 1px var(--line)}
+.vd-btn--outline:hover{box-shadow:inset 0 0 0 1px rgba(11,61,74,.4)}
+.vd-btn--block{width:100%}
+.vd-cta-bar{position:sticky;bottom:0;display:grid;gap:8px;padding-top:8px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.95) 28%)}
+
+/* Modal */
+.vd-modal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:16px}
+.vd-modal.is-open{display:flex}
+.vd-modal__backdrop{position:absolute;inset:0;border:0;background:rgba(7,47,57,.52);backdrop-filter:blur(6px)}
+.vd-modal__box{position:relative;z-index:1;width:min(640px,100%);max-height:min(88vh,820px);overflow:auto;border-radius:16px;background:#fff;box-shadow:0 40px 100px -40px rgba(0,0,0,.55);padding:18px}
+.vd-modal__box.is-wide{width:min(760px,100%)}
+.vd-modal__head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.vd-modal__head h3{margin:0;font-size:18px;font-weight:800}
+.vd-modal__close{width:36px;height:36px;border:0;border-radius:10px;background:var(--soft);font-size:20px;line-height:1;color:var(--muted)}
+.vd-table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}
+.vd-table{width:100%;border-collapse:collapse;font-size:13px}
+.vd-table th,.vd-table td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:center}
+.vd-table th{background:var(--soft);font-weight:800;color:var(--navy)}
+.vd-table td:first-child,.vd-table th:first-child{text-align:left;font-weight:700}
+
+/* Upload */
+.vd-upload-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.vd-upload-tab{border:0;border-radius:999px;padding:8px 12px;background:var(--soft);color:var(--muted);font-size:12px;font-weight:800;transition:var(--ease)}
+.vd-upload-tab.is-active{background:var(--navy);color:#fff}
+.vd-upload-tab.is-soon{opacity:.55}
+.vd-upload-tab span{margin-left:6px;font-size:10px;opacity:.8}
+.vd-dropzone{display:grid;justify-items:center;gap:8px;padding:36px 18px;border:2px dashed rgba(14,116,144,.35);border-radius:14px;background:linear-gradient(180deg,#f8fafc,#f0fdfa);text-align:center;transition:var(--ease)}
+.vd-dropzone.is-over{border-color:var(--teal);background:#ecfeff;transform:scale(1.01)}
+.vd-dropzone__icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,var(--navy),var(--teal));color:#fff;font-size:22px;font-weight:800}
+.vd-dropzone strong{font-size:15px;color:var(--navy)}
+.vd-dropzone__meta{margin:4px 0 0;font-size:12px;color:var(--muted);line-height:1.5}
+.vd-upload-progress{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.vd-upload-thumb{width:56px;height:56px;object-fit:cover;border-radius:10px;background:var(--soft)}
+.vd-progress-bar{height:8px;border-radius:999px;background:var(--soft);overflow:hidden;margin-top:8px}
+.vd-progress-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--navy),var(--teal));border-radius:inherit;transition:width 120ms linear}
+.vd-upload-msgs{margin-top:12px;display:grid;gap:6px}
+.vd-upload-msgs .is-error{margin:0;color:var(--danger);font-size:13px;font-weight:700}
+.vd-upload-msgs .is-warn{margin:0;color:var(--warn);font-size:13px;font-weight:600}
+.vd-toast{position:fixed;right:16px;bottom:16px;z-index:90;max-width:320px;padding:12px 14px;border-radius:12px;background:var(--navy-deep);color:#fff;font-size:13px;font-weight:700;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);pointer-events:none;transition:var(--ease)}
+.vd-toast.is-show{opacity:1;transform:translateY(0)}
+
+@media (max-width:960px){
+  .vd-layout{grid-template-columns:1fr;padding-bottom:130px}
+  .vd-preview-wrap,.vd-panel{position:static;max-height:none}
+  .vd-actions{grid-template-columns:1fr}
+  .vd-topbar__inner{flex-wrap:wrap}
+}
+@media (max-width:640px){
+  .vd-segment__btn{flex:1 1 calc(50% - 8px);text-align:center}
+  .vd-color-inputs{grid-template-columns:1fr}
+}
+</style>
+
+<div class="vd" id="vdApp">
+  <header class="vd-topbar">
+    <div class="vd-topbar__inner">
+      <div class="vd-topbar__left">
+        <a class="vd-back" id="vdBack" href="#">← Back</a>
+        <div>
+          <h1 id="vdProductName">Classic Cotton Tee</h1>
+          <p id="vdProductMeta">100% Combed Cotton · 180 GSM</p>
+        </div>
+      </div>
+      <div class="vd-topbar__right">
+        <div class="vd-total"><span>Total</span><strong id="vdTotal">Rs 1,499</strong></div>
+        <button type="button" class="vd-btn vd-btn--primary" id="vdAddCart">Add to Cart</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="vd-layout">
+    <div class="vd-preview-wrap">
+      <div class="vd-preview-card">
+        <div class="vd-side-tabs" id="vdSideTabs"></div>
+        <div class="vd-stage" id="vdStage">
+          <div class="vd-stage__fabric" aria-hidden="true"></div>
+          <img class="vd-stage__img" id="vdStageImg" alt="Product preview" src="">
+          <div class="vd-zone is-front" id="vdZone"></div>
+        </div>
+        <p class="vd-preview-hint" id="vdPreviewHint">Editing <strong>Front</strong></p>
+      </div>
+    </div>
+
+    <aside class="vd-panel" id="vdPanel">
+      <nav class="vd-tabs" aria-label="Designer sections">
+        <button type="button" class="is-active" data-panel="options">Options</button>
+        <button type="button" data-panel="personalize">Personalize</button>
+        <button type="button" data-panel="text">Text</button>
+      </nav>
+
+      <section class="vd-panel-card" data-view="options">
+        <div class="vd-card-head">
+          <div>
+            <h3 class="vd-card-title">Product Options</h3>
+            <p class="vd-card-sub">Print position, color, and size update the preview instantly.</p>
+          </div>
+        </div>
+        <div class="vd-field">
+          <span class="vd-label">Print Position</span>
+          <div class="vd-segment" id="vdPositions" role="tablist" aria-label="Print position"></div>
+        </div>
+        <div class="vd-field">
+          <span class="vd-label">Color</span>
+          <div class="vd-swatches" id="vdColors"></div>
+        </div>
+        <div class="vd-field">
+          <div class="vd-field-row">
+            <span class="vd-label">Size</span>
+            <div class="vd-inline">
+              <button type="button" class="vd-link" id="vdOpenChart">Size Chart</button>
+              <div class="vd-mini" id="vdSizeMode">
+                <button type="button" data-mode="single" class="is-active">Single</button>
+                <button type="button" data-mode="multi">Multi</button>
+              </div>
+            </div>
+          </div>
+          <div id="vdSizes"></div>
+        </div>
+      </section>
+
+      <section class="vd-panel-card" data-view="personalize" hidden>
+        <div class="vd-card-head">
+          <div>
+            <h3 class="vd-card-title">Personalization</h3>
+            <p class="vd-card-sub">Add design elements with one click.</p>
+          </div>
+        </div>
+        <div class="vd-actions" id="vdActions"></div>
+      </section>
+
+      <section class="vd-panel-card" data-view="text" hidden>
+        <div class="vd-card-head">
+          <div>
+            <h3 class="vd-card-title">Text Editor</h3>
+            <p class="vd-card-sub">Typography, formatting, and advanced effects.</p>
+          </div>
+          <button type="button" class="vd-link" data-goto="personalize">Done</button>
+        </div>
+        <div id="vdTextEditor"></div>
+      </section>
+
+      <section class="vd-panel-card">
+        <div class="vd-card-head">
+          <div>
+            <h3 class="vd-card-title">Layers</h3>
+            <p class="vd-card-sub">Stack, hide, or remove design elements.</p>
+          </div>
+        </div>
+        <div id="vdLayers"></div>
+      </section>
+
+      <div class="vd-cta-bar">
+        <button type="button" class="vd-btn vd-btn--primary vd-btn--block" id="vdAddCartMobile">Add to Cart</button>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="vd-modal" id="vdChartModal" role="dialog" aria-modal="true" aria-labelledby="vdChartTitle">
+  <button type="button" class="vd-modal__backdrop" data-close="chart" aria-label="Close"></button>
+  <div class="vd-modal__box is-wide">
+    <div class="vd-modal__head">
+      <h3 id="vdChartTitle">Size Chart</h3>
+      <button type="button" class="vd-modal__close" data-close="chart" aria-label="Close">×</button>
+    </div>
+    <div class="vd-table-wrap" id="vdChartBody"></div>
+  </div>
+</div>
+
+<div class="vd-modal" id="vdUploadModal" role="dialog" aria-modal="true" aria-labelledby="vdUploadTitle">
+  <button type="button" class="vd-modal__backdrop" data-close="upload" aria-label="Close"></button>
+  <div class="vd-modal__box is-wide">
+    <div class="vd-modal__head">
+      <h3 id="vdUploadTitle">Upload Image</h3>
+      <button type="button" class="vd-modal__close" data-close="upload" aria-label="Close">×</button>
+    </div>
+    <div class="vd-upload-tabs" id="vdUploadTabs"></div>
+    <div class="vd-dropzone" id="vdDropzone">
+      <div class="vd-dropzone__icon">↑</div>
+      <strong>Drag images here</strong>
+      <span>or</span>
+      <button type="button" class="vd-btn vd-btn--primary" id="vdBrowseBtn">Browse Files</button>
+      <p class="vd-dropzone__meta">PNG · JPG · JPEG · SVG · PDF (optional) · AI/EPS (future)<br>Maximum upload size: <span id="vdMaxMb">15</span> MB</p>
+    </div>
+    <input type="file" id="vdFileInput" accept="image/png,image/jpeg,image/jpg,image/svg+xml,application/pdf,.png,.jpg,.jpeg,.svg,.pdf" hidden>
+    <input type="file" id="vdCameraInput" accept="image/*" capture="environment" hidden>
+    <div id="vdUploadStatus"></div>
+  </div>
+</div>
+
+<div class="vd-toast" id="vdToast" role="status"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var VibeDesigner = window.VibeDesigner = window.VibeDesigner || {};
+
+  var PRINT_POSITIONS = [
+    { id: "front", label: "Front", side: "front", zone: "front" },
+    { id: "back", label: "Back", side: "back", zone: "back" },
+    { id: "pocket", label: "Pocket", side: "front", zone: "pocket" },
+    { id: "sleeve", label: "Sleeve", side: "front", zone: "sleeve" },
+    { id: "left_chest", label: "Left Chest", side: "front", zone: "left_chest" },
+    { id: "right_chest", label: "Right Chest", side: "front", zone: "right_chest" },
+    { id: "front_back", label: "Front + Back", side: "front", zone: "front" },
+    { id: "pocket_back", label: "Pocket + Back", side: "front", zone: "pocket" }
+  ];
+
+  var FONTS = [
+    { id: "manrope", family: "Manrope", label: "Manrope", preview: "Aa Bb Cc" },
+    { id: "jakarta", family: "Plus Jakarta Sans", label: "Jakarta", preview: "Aa Bb Cc" },
+    { id: "bebas", family: "Bebas Neue", label: "Bebas Neue", preview: "AA BB CC" },
+    { id: "playfair", family: "Playfair Display", label: "Playfair", preview: "Aa Bb Cc" },
+    { id: "pacifico", family: "Pacifico", label: "Pacifico", preview: "Aa Bb Cc" },
+    { id: "oswald", family: "Oswald", label: "Oswald", preview: "Aa Bb Cc" },
+    { id: "lora", family: "Lora", label: "Lora", preview: "Aa Bb Cc" },
+    { id: "space", family: "Space Grotesk", label: "Space Grotesk", preview: "Aa Bb Cc" }
+  ];
+
+  var PRESET_COLORS = ["#FFFFFF","#111827","#0B3D4A","#0E7490","#F97316","#DC2626","#D97706","#16A34A","#1D4ED8","#7C3AED","#DB2777","#EAB308"];
+
+  var SAMPLE = {
+    id: 1001,
+    name: "Classic Cotton Tee",
+    basePrice: 1499,
+    currencySymbol: "Rs ",
+    material: "100% Combed Cotton · 180 GSM",
+    maxUploadMb: 15,
+    images: {
+      front: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900&h=1100&fit=crop",
+      back: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=900&h=1100&fit=crop"
+    },
+    colors: [
+      { id: "white", name: "White", hex: "#F5F5F4", inStock: true },
+      { id: "black", name: "Black", hex: "#111827", inStock: true },
+      { id: "navy", name: "Deep Navy", hex: "#0B3D4A", inStock: true },
+      { id: "heather", name: "Heather Grey", hex: "#9CA3AF", inStock: true },
+      { id: "forest", name: "Forest", hex: "#166534", inStock: true },
+      { id: "maroon", name: "Maroon", hex: "#7F1D1D", inStock: false },
+      { id: "ocean", name: "Ocean Teal", hex: "#0E7490", inStock: true },
+      { id: "coral", name: "Sunset Coral", hex: "#EA580C", inStock: true },
+      { id: "royal", name: "Royal Blue", hex: "#1D4ED8", inStock: true },
+      { id: "sand", name: "Desert Sand", hex: "#D6B88D", inStock: false }
+    ],
+    sizes: [
+      { id: "xs", label: "XS", inStock: true },
+      { id: "s", label: "S", inStock: true },
+      { id: "m", label: "M", inStock: true },
+      { id: "l", label: "L", inStock: true },
+      { id: "xl", label: "XL", inStock: true },
+      { id: "xxl", label: "XXL", inStock: false }
+    ],
+    sizeChart: {
+      title: "Regular Fit Size Chart (inches)",
+      columns: ["XS","S","M","L","XL","XXL"],
+      rows: [
+        { label: "Length", values: { XS: 26, S: 27, M: 28, L: 29, XL: 30, XXL: 31 } },
+        { label: "Chest", values: { XS: 18.5, S: 19.5, M: 20.5, L: 21.5, XL: 22.5, XXL: 23.5 } },
+        { label: "Shoulder", values: { XS: 17, S: 18, M: 19, L: 20, XL: 21, XXL: 22 } },
+        { label: "Sleeve", values: { XS: 7.5, S: 8, M: 8.5, L: 9, XL: 9.5, XXL: 10 } }
+      ]
+    }
+  };
+
+  function uid(prefix) {
+    return prefix + "_" + Math.random().toString(36).slice(2, 9);
+  }
+
+  function defaultText() {
+    return {
+      content: "",
+      fontId: "manrope",
+      fontSize: 36,
+      fontWeight: 700,
+      letterSpacing: 0,
+      lineHeight: 1.2,
+      rotation: 0,
+      opacity: 1,
+      align: "center",
+      bold: false,
+      italic: false,
+      underline: false,
+      textCase: "none",
+      color: "#111827",
+      effect: "none",
+      strokeWidth: 0,
+      strokeColor: "#FFFFFF",
+      shadowBlur: 8,
+      curveAmount: 0,
+      gradientEnabled: false,
+      gradientFrom: "#0B3D4A",
+      gradientTo: "#0E7490",
+      patternFill: false
+    };
+  }
+
+  /* ---------- Store ---------- */
+  VibeDesigner.Store = {
+    product: SAMPLE,
+    printPositionId: "front",
+    colorId: "white",
+    sizeMode: "single",
+    selectedSizeId: "m",
+    sizeQuantities: { m: 1 },
+    layers: [],
+    selectedLayerId: null,
+    activePanel: "options",
+    recentFonts: ["manrope", "bebas", "pacifico"],
+    recentColors: ["#111827", "#FFFFFF", "#0B3D4A", "#F97316"],
+    uploadTab: "computer",
+    uploadAbort: null,
+    listeners: [],
+    subscribe: function (fn) { this.listeners.push(fn); },
+    emit: function () {
+      var self = this;
+      this.listeners.forEach(function (fn) { fn(self); });
+    },
+    patch: function (obj) {
+      Object.assign(this, obj);
+      this.emit();
+    },
+    getColor: function () {
+      var id = this.colorId;
+      return this.product.colors.find(function (c) { return c.id === id; }) || this.product.colors[0];
+    },
+    getPosition: function () {
+      var id = this.printPositionId;
+      return PRINT_POSITIONS.find(function (p) { return p.id === id; }) || PRINT_POSITIONS[0];
+    },
+    getSelectedLayer: function () {
+      var id = this.selectedLayerId;
+      return this.layers.find(function (l) { return l.id === id; }) || null;
+    },
+    qty: function () {
+      var self = this;
+      if (this.sizeMode === "single") return Math.max(1, this.sizeQuantities[this.selectedSizeId] || 1);
+      return Object.keys(this.sizeQuantities).reduce(function (sum, key) {
+        return sum + (self.sizeQuantities[key] || 0);
+      }, 0);
+    },
+    total: function () {
+      return this.product.basePrice * Math.max(1, this.qty());
+    }
+  };
+
+  /* ---------- Utils ---------- */
+  VibeDesigner.UI = {
+    toastTimer: null,
+    toast: function (msg) {
+      var el = document.getElementById("vdToast");
+      el.textContent = msg;
+      el.classList.add("is-show");
+      clearTimeout(this.toastTimer);
+      this.toastTimer = setTimeout(function () { el.classList.remove("is-show"); }, 2600);
+    },
+    money: function (n, symbol) {
+      return symbol + Number(n).toLocaleString();
+    },
+    escape: function (str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+  };
+
+  /* ---------- Canvas ---------- */
+  VibeDesigner.Canvas = {
+    render: function () {
+      var store = VibeDesigner.Store;
+      var color = store.getColor();
+      var pos = store.getPosition();
+      var stage = document.getElementById("vdStage");
+      var img = document.getElementById("vdStageImg");
+      var zone = document.getElementById("vdZone");
+      var hint = document.getElementById("vdPreviewHint");
+      var side = pos.side;
+
+      stage.style.background = color.hex;
+      img.src = side === "back" ? store.product.images.back : store.product.images.front;
+      img.alt = store.product.name + " " + side;
+      zone.className = "vd-zone is-" + pos.zone;
+
+      var layers = store.layers.filter(function (layer) {
+        if (!layer.visible) return false;
+        if (store.printPositionId === "front_back") {
+          return layer.positionId === "front" || layer.positionId === "back" || layer.positionId === "front_back";
+        }
+        if (store.printPositionId === "pocket_back") {
+          return layer.positionId === "pocket" || layer.positionId === "back" || layer.positionId === "pocket_back";
+        }
+        return layer.positionId === store.printPositionId;
+      });
+
+      zone.innerHTML = layers.map(function (layer) {
+        if (layer.type === "text" && layer.text) {
+          var font = FONTS.find(function (f) { return f.id === layer.text.fontId; }) || FONTS[0];
+          var content = layer.text.content || "Enter your text here...";
+          if (layer.text.textCase === "uppercase") content = content.toUpperCase();
+          if (layer.text.textCase === "lowercase") content = content.toLowerCase();
+          var style = [
+            "font-family:" + font.family,
+            "font-size:" + (layer.text.fontSize * 0.34) + "px",
+            "font-weight:" + (layer.text.bold ? 800 : layer.text.fontWeight),
+            "font-style:" + (layer.text.italic ? "italic" : "normal"),
+            "text-decoration:" + (layer.text.underline ? "underline" : "none"),
+            "letter-spacing:" + layer.text.letterSpacing + "px",
+            "line-height:" + layer.text.lineHeight,
+            "opacity:" + layer.text.opacity,
+            "text-align:" + layer.text.align,
+            "transform:translate(-50%,-50%) rotate(" + layer.text.rotation + "deg) scale(" + layer.scale + ")",
+            layer.text.effect === "vertical" ? "writing-mode:vertical-rl" : "",
+            layer.text.effect === "shadow" ? "text-shadow:0 2px " + layer.text.shadowBlur + "px rgba(0,0,0,.35)" : "",
+            layer.text.effect === "outline" && layer.text.strokeWidth ? "-webkit-text-stroke:" + (layer.text.strokeWidth * 0.35) + "px " + layer.text.strokeColor : "",
+            layer.text.gradientEnabled
+              ? "background-image:linear-gradient(90deg," + layer.text.gradientFrom + "," + layer.text.gradientTo + ");-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:transparent"
+              : "color:" + layer.text.color
+          ].filter(Boolean).join(";");
+          return '<button type="button" class="vd-layer-text' + (store.selectedLayerId === layer.id ? " is-selected" : "") + '" data-layer="' + layer.id + '" style="' + style + '">' + VibeDesigner.UI.escape(content) + "</button>";
+        }
+        if (layer.type === "image" && layer.image) {
+          return '<button type="button" class="vd-layer-image' + (store.selectedLayerId === layer.id ? " is-selected" : "") + '" data-layer="' + layer.id + '" style="transform:translate(-50%,-50%) rotate(' + layer.rotation + 'deg) scale(' + layer.scale + ');opacity:' + layer.opacity + '"><img src="' + layer.image.src + '" alt="' + VibeDesigner.UI.escape(layer.image.fileName) + '"></button>';
+        }
+        return "";
+      }).join("");
+
+      hint.innerHTML = "Editing <strong>" + VibeDesigner.UI.escape(pos.label) + "</strong> · " + VibeDesigner.UI.escape(color.name);
+
+      document.getElementById("vdSideTabs").innerHTML = ["front", "back"].map(function (sideKey) {
+        var active = pos.side === sideKey ? " is-active" : "";
+        return '<button type="button" class="vd-side-tab' + active + '" data-side="' + sideKey + '">' + (sideKey === "front" ? "Front" : "Back") + "</button>";
+      }).join("");
+
+      document.getElementById("vdProductName").textContent = store.product.name;
+      document.getElementById("vdProductMeta").textContent = store.product.material || "";
+      var total = VibeDesigner.UI.money(store.total(), store.product.currencySymbol);
+      document.getElementById("vdTotal").textContent = total;
+    }
+  };
+
+  /* ---------- Options ---------- */
+  VibeDesigner.Options = {
+    render: function () {
+      var store = VibeDesigner.Store;
+      var positions = document.getElementById("vdPositions");
+      positions.innerHTML = PRINT_POSITIONS.map(function (pos) {
+        return '<button type="button" class="vd-segment__btn' + (store.printPositionId === pos.id ? " is-active" : "") + '" data-pos="' + pos.id + '">' + pos.label + "</button>";
+      }).join("");
+
+      document.getElementById("vdColors").innerHTML = store.product.colors.map(function (c) {
+        var tip = c.inStock ? c.name : c.name + " · Out of stock";
+        return '<span class="vd-tip" data-tip="' + VibeDesigner.UI.escape(tip) + '"><button type="button" class="vd-swatch' + (store.colorId === c.id ? " is-active" : "") + (!c.inStock ? " is-disabled" : "") + '" style="background:' + c.hex + '" data-color="' + c.id + '" ' + (!c.inStock ? "disabled" : "") + ' aria-label="' + VibeDesigner.UI.escape(c.name) + '"></button></span>';
+      }).join("");
+
+      var sizesEl = document.getElementById("vdSizes");
+      if (store.sizeMode === "single") {
+        sizesEl.innerHTML = '<div class="vd-chips">' + store.product.sizes.map(function (s) {
+          return '<button type="button" class="vd-chip' + (store.selectedSizeId === s.id ? " is-active" : "") + (!s.inStock ? " is-disabled" : "") + '" data-size="' + s.id + '" ' + (!s.inStock ? "disabled" : "") + ">" + s.label + "</button>";
+        }).join("") + "</div>";
+      } else {
+        sizesEl.innerHTML = '<div class="vd-qty-grid">' + store.product.sizes.map(function (s) {
+          var qty = store.sizeQuantities[s.id] || 0;
+          return '<div class="vd-qty-row' + (!s.inStock ? " is-disabled" : "") + '"><span>' + s.label + '</span><div class="vd-stepper"><button type="button" data-qty-size="' + s.id + '" data-delta="-1" ' + (!s.inStock ? "disabled" : "") + '>-</button><input type="number" min="0" max="99" value="' + qty + '" data-qty-input="' + s.id + '" ' + (!s.inStock ? "disabled" : "") + '><button type="button" data-qty-size="' + s.id + '" data-delta="1" ' + (!s.inStock ? "disabled" : "") + '>+</button></div></div>';
+        }).join("") + "</div>";
+      }
+
+      Array.prototype.forEach.call(document.querySelectorAll("#vdSizeMode button"), function (btn) {
+        btn.classList.toggle("is-active", btn.getAttribute("data-mode") === store.sizeMode);
+      });
+
+      var chart = store.product.sizeChart;
+      document.getElementById("vdChartTitle").textContent = chart.title;
+      document.getElementById("vdChartBody").innerHTML = '<table class="vd-table"><thead><tr><th>Measure</th>' + chart.columns.map(function (c) { return "<th>" + c + "</th>"; }).join("") + "</tr></thead><tbody>" + chart.rows.map(function (row) {
+        return "<tr><td>" + row.label + "</td>" + chart.columns.map(function (c) { return "<td>" + row.values[c] + "</td>"; }).join("") + "</tr>";
+      }).join("") + "</tbody></table>";
+    }
+  };
+
+  /* ---------- Personalization ---------- */
+  VibeDesigner.Personalize = {
+    render: function () {
+      var actions = [
+        { id: "text", title: "Add Text", desc: "Typography, effects, alignment", ready: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7V5h16v2"/><path d="M12 5v14"/><path d="M8 19h8"/></svg>' },
+        { id: "image", title: "Upload Image", desc: "Computer, mobile, or camera", ready: true, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5-8 8"/></svg>' },
+        { id: "clipart", title: "Add Clipart", desc: "Coming soon", ready: false, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 10h.01M15 10h.01"/></svg>' },
+        { id: "logo", title: "Add Logo", desc: "Coming soon", ready: false, icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>' }
+      ];
+      document.getElementById("vdActions").innerHTML = actions.map(function (a) {
+        return '<button type="button" class="vd-action' + (!a.ready ? " is-soon" : "") + '" data-action="' + a.id + '" ' + (!a.ready ? "disabled" : "") + '><span class="vd-action__icon">' + a.icon + '</span><span><strong>' + a.title + '</strong><small>' + a.desc + '</small></span>' + (!a.ready ? '<span class="vd-pill">Soon</span>' : "") + "</button>";
+      }).join("");
+    }
+  };
+
+  /* ---------- Text Editor ---------- */
+  VibeDesigner.Text = {
+    render: function () {
+      var store = VibeDesigner.Store;
+      var layer = store.getSelectedLayer();
+      var root = document.getElementById("vdTextEditor");
+      if (!layer || layer.type !== "text" || !layer.text) {
+        root.innerHTML = '<p class="vd-empty">No text layer selected. Use <strong>Add Text</strong> to create one.</p>';
+        return;
+      }
+      var t = layer.text;
+      var fontQuery = root.getAttribute("data-q") || "";
+      var fonts = FONTS.filter(function (f) {
+        if (!fontQuery) return true;
+        var q = fontQuery.toLowerCase();
+        return f.label.toLowerCase().indexOf(q) > -1 || f.family.toLowerCase().indexOf(q) > -1;
+      });
+      var recent = store.recentFonts.map(function (id) {
+        return FONTS.find(function (f) { return f.id === id; });
+      }).filter(Boolean);
+
+      function slider(label, key, min, max, step, suffix, val) {
+        return '<label class="vd-slider"><span class="vd-slider__head"><span>' + label + '</span><strong>' + val + (suffix || "") + '</strong></span><input type="range" min="' + min + '" max="' + max + '" step="' + (step || 1) + '" value="' + val + '" data-text-key="' + key + '"></label>';
+      }
+
+      root.innerHTML =
+        '<label class="vd-field"><span class="vd-label">Text</span><textarea class="vd-textarea" id="vdTextContent" placeholder="Enter your text here..." rows="4">' + VibeDesigner.UI.escape(t.content) + '</textarea></label>' +
+        '<div class="vd-field"><span class="vd-label">Font</span><input class="vd-input" id="vdFontSearch" type="search" placeholder="Search fonts..." value="' + VibeDesigner.UI.escape(fontQuery) + '">' +
+        (!fontQuery && recent.length ? '<span class="vd-micro">Recently used</span><div class="vd-font-list">' + recent.map(function (f) {
+          return '<button type="button" class="vd-font-item' + (t.fontId === f.id ? " is-active" : "") + '" data-font="' + f.id + '" style="font-family:' + f.family + '"><strong>' + f.label + '</strong><span>' + f.preview + '</span></button>';
+        }).join("") + "</div>" : "") +
+        '<div class="vd-font-list">' + fonts.map(function (f) {
+          return '<button type="button" class="vd-font-item' + (t.fontId === f.id ? " is-active" : "") + '" data-font="' + f.id + '" style="font-family:' + f.family + '"><strong>' + f.label + '</strong><span>' + f.preview + '</span></button>';
+        }).join("") + "</div></div>" +
+        '<div class="vd-field">' +
+          slider("Font Size", "fontSize", 10, 120, 1, "px", t.fontSize) +
+          slider("Font Weight", "fontWeight", 300, 900, 100, "", t.fontWeight) +
+          slider("Letter Spacing", "letterSpacing", -4, 20, 0.5, "px", t.letterSpacing) +
+          slider("Line Height", "lineHeight", 0.8, 2.4, 0.05, "", t.lineHeight) +
+          slider("Rotation", "rotation", -180, 180, 1, "°", t.rotation) +
+          slider("Opacity", "opacityPct", 10, 100, 1, "%", Math.round(t.opacity * 100)) +
+        "</div>" +
+        '<div class="vd-field"><span class="vd-label">Formatting</span><div class="vd-toolbar">' +
+          ["left","center","right","justify"].map(function (a) {
+            return '<button type="button" class="vd-iconbtn' + (t.align === a ? " is-active" : "") + '" data-align="' + a + '" title="' + a + '">' + a.charAt(0).toUpperCase() + "</button>";
+          }).join("") +
+          '<button type="button" class="vd-iconbtn' + (t.bold ? " is-active" : "") + '" data-fmt="bold" title="Bold">B</button>' +
+          '<button type="button" class="vd-iconbtn' + (t.italic ? " is-active" : "") + '" data-fmt="italic" title="Italic"><em>I</em></button>' +
+          '<button type="button" class="vd-iconbtn' + (t.underline ? " is-active" : "") + '" data-fmt="underline" title="Underline"><u>U</u></button>' +
+          '<button type="button" class="vd-iconbtn' + (t.textCase === "uppercase" ? " is-active" : "") + '" data-case="uppercase" title="Uppercase">AA</button>' +
+          '<button type="button" class="vd-iconbtn' + (t.textCase === "lowercase" ? " is-active" : "") + '" data-case="lowercase" title="Lowercase">aa</button>' +
+        "</div></div>" +
+        '<div class="vd-field"><span class="vd-label">Text Color</span><div class="vd-swatches">' + PRESET_COLORS.map(function (hex) {
+          return '<button type="button" class="vd-swatch' + (t.color.toLowerCase() === hex.toLowerCase() ? " is-active" : "") + '" style="background:' + hex + '" data-text-color="' + hex + '"></button>';
+        }).join("") + '</div><div class="vd-color-inputs"><label>HEX<input class="vd-input" id="vdHex" value="' + t.color + '"></label><label>RGB<input class="vd-input" id="vdRgb" value="' + hexToRgb(t.color) + '"></label></div>' +
+        (store.recentColors.length ? '<span class="vd-micro">Recently used</span><div class="vd-swatches">' + store.recentColors.map(function (hex) {
+          return '<button type="button" class="vd-swatch" style="background:' + hex + '" data-text-color="' + hex + '"></button>';
+        }).join("") + "</div>" : "") +
+        "</div>" +
+        '<div class="vd-field"><span class="vd-label">Advanced Effects</span><div class="vd-chips">' +
+          ["none","outline","shadow","curved","arc","vertical"].map(function (ef) {
+            return '<button type="button" class="vd-chip' + (t.effect === ef ? " is-active" : "") + '" data-effect="' + ef + '">' + (ef === "none" ? "None" : ef.charAt(0).toUpperCase() + ef.slice(1)) + "</button>";
+          }).join("") + "</div>" +
+          (t.effect === "outline" ? slider("Stroke Width", "strokeWidth", 0, 12, 1, "px", t.strokeWidth) : "") +
+          (t.effect === "shadow" ? slider("Shadow Blur", "shadowBlur", 0, 24, 1, "px", t.shadowBlur) : "") +
+          (t.effect === "curved" || t.effect === "arc" ? slider("Curve / Arc", "curveAmount", -180, 180, 1, "°", t.curveAmount) : "") +
+          '<div class="vd-toggle-row"><label class="vd-check"><input type="checkbox" id="vdGradient"' + (t.gradientEnabled ? " checked" : "") + '> Gradient Fill</label><label class="vd-check"><input type="checkbox" id="vdPattern"' + (t.patternFill ? " checked" : "") + '> Pattern Fill</label></div>' +
+        "</div>" +
+        '<div class="vd-field"><span class="vd-label">Layer Controls</span><div class="vd-toolbar">' +
+          '<button type="button" class="vd-iconbtn" data-layer-act="up" title="Bring forward">↑</button>' +
+          '<button type="button" class="vd-iconbtn" data-layer-act="down" title="Send backward">↓</button>' +
+          '<button type="button" class="vd-iconbtn" data-layer-act="dup" title="Duplicate">⧉</button>' +
+          '<button type="button" class="vd-iconbtn" data-layer-act="del" title="Delete">⌫</button>' +
+        "</div></div>";
+    },
+    update: function (patch) {
+      var store = VibeDesigner.Store;
+      var id = store.selectedLayerId;
+      store.layers = store.layers.map(function (layer) {
+        if (layer.id !== id || !layer.text) return layer;
+        return Object.assign({}, layer, { text: Object.assign({}, layer.text, patch) });
+      });
+      store.emit();
+    }
+  };
+
+  function hexToRgb(hex) {
+    var h = String(hex).replace("#", "");
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    if (isNaN(n)) return "0, 0, 0";
+    return ((n >> 16) & 255) + ", " + ((n >> 8) & 255) + ", " + (n & 255);
+  }
+
+  function normalizeHex(value) {
+    var v = String(value || "").trim();
+    if (/^#?[0-9a-fA-F]{6}$/.test(v)) return (v[0] === "#" ? v : "#" + v).toUpperCase();
+    if (/^#?[0-9a-fA-F]{3}$/.test(v)) {
+      var r = v.replace("#", "");
+      return ("#" + r[0] + r[0] + r[1] + r[1] + r[2] + r[2]).toUpperCase();
+    }
+    return null;
+  }
+
+  function rgbToHex(value) {
+    var parts = String(value).split(",").map(function (p) { return Number(p.trim()); });
+    if (parts.length !== 3 || parts.some(function (n) { return isNaN(n) || n < 0 || n > 255; })) return null;
+    return "#" + parts.map(function (n) {
+      var s = n.toString(16);
+      return s.length === 1 ? "0" + s : s;
+    }).join("").toUpperCase();
+  }
+
+  /* ---------- Layers ---------- */
+  VibeDesigner.Layers = {
+    render: function () {
+      var store = VibeDesigner.Store;
+      var root = document.getElementById("vdLayers");
+      if (!store.layers.length) {
+        root.innerHTML = '<p class="vd-empty">No layers yet. Add text or upload an image.</p>';
+        return;
+      }
+      var items = store.layers.slice().reverse();
+      root.innerHTML = '<ul class="vd-layers">' + items.map(function (layer) {
+        return '<li class="' + (store.selectedLayerId === layer.id ? "is-active" : "") + '">' +
+          '<button type="button" class="vd-layers__main" data-select-layer="' + layer.id + '"><span class="vd-layers__type">' + (layer.type === "text" ? "T" : "IMG") + '</span><span><strong>' + VibeDesigner.UI.escape(layer.name) + '</strong><small>' + layer.positionId.replace(/_/g, " ") + '</small></span></button>' +
+          '<div class="vd-layers__actions">' +
+          '<button type="button" data-vis="' + layer.id + '">' + (layer.visible ? "Hide" : "Show") + '</button>' +
+          '<button type="button" data-lock="' + layer.id + '">' + (layer.locked ? "Unlock" : "Lock") + '</button>' +
+          '<button type="button" data-del="' + layer.id + '">Del</button>' +
+          "</div></li>";
+      }).join("") + "</ul>";
+    }
+  };
+
+  /* ---------- Upload ---------- */
+  VibeDesigner.Upload = {
+    lastFile: null,
+    renderTabs: function () {
+      var store = VibeDesigner.Store;
+      var tabs = [
+        ["computer", "My Computer", true],
+        ["mobile", "Mobile Device", true],
+        ["camera", "Camera", true],
+        ["drive", "Google Drive", false],
+        ["dropbox", "Dropbox", false],
+        ["onedrive", "OneDrive", false]
+      ];
+      document.getElementById("vdUploadTabs").innerHTML = tabs.map(function (t) {
+        return '<button type="button" class="vd-upload-tab' + (store.uploadTab === t[0] ? " is-active" : "") + (!t[2] ? " is-soon" : "") + '" data-upload-tab="' + t[0] + '" ' + (!t[2] ? "disabled" : "") + ">" + t[1] + (!t[2] ? "<span>Soon</span>" : "") + "</button>";
+      }).join("");
+      document.getElementById("vdMaxMb").textContent = String(store.product.maxUploadMb || 15);
+    },
+    open: function () {
+      document.getElementById("vdUploadModal").classList.add("is-open");
+      document.getElementById("vdUploadStatus").innerHTML = "";
+      this.renderTabs();
+    },
+    close: function () {
+      document.getElementById("vdUploadModal").classList.remove("is-open");
+      if (VibeDesigner.Store.uploadAbort) VibeDesigner.Store.uploadAbort.abort();
+    },
+    validate: function (file) {
+      return new Promise(function (resolve) {
+        var maxMb = VibeDesigner.Store.product.maxUploadMb || 15;
+        var errors = [];
+        var warnings = [];
+        var mime = file.type || "";
+        var ext = (file.name.split(".").pop() || "").toLowerCase();
+        var map = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", svg: "image/svg+xml", pdf: "application/pdf" };
+        if (!mime) mime = map[ext] || "";
+        var okTypes = { "image/png": 1, "image/jpeg": 1, "image/jpg": 1, "image/svg+xml": 1, "application/pdf": 1 };
+        if (!okTypes[mime]) errors.push("Unsupported format. Use PNG, JPG, JPEG, SVG, or PDF.");
+        if (file.size > maxMb * 1024 * 1024) errors.push("File exceeds " + maxMb + " MB maximum.");
+        if (errors.length || mime === "application/pdf" || mime === "image/svg+xml") {
+          resolve({ ok: !errors.length, errors: errors, warnings: warnings, meta: { width: 0, height: 0, hasTransparency: mime === "image/png", mime: mime } });
+          return;
+        }
+        var url = URL.createObjectURL(file);
+        var img = new Image();
+        img.onload = function () {
+          if (img.naturalWidth < 300 || img.naturalHeight < 300) warnings.push("Resolution is below 300×300 — print quality may look soft.");
+          var ratio = img.naturalWidth / Math.max(1, img.naturalHeight);
+          if (ratio < 0.4 || ratio > 2.5) warnings.push("Unusual aspect ratio — check how it sits in the print zone.");
+          if (img.naturalWidth * img.naturalHeight < 400000) warnings.push("Image quality may be low for large print areas.");
+          var hasTransparency = mime === "image/png";
+          try {
+            if (mime === "image/png") {
+              var canvas = document.createElement("canvas");
+              canvas.width = 64; canvas.height = 64;
+              var ctx = canvas.getContext("2d");
+              ctx.drawImage(img, 0, 0, 64, 64);
+              var data = ctx.getImageData(0, 0, 64, 64).data;
+              hasTransparency = false;
+              for (var i = 3; i < data.length; i += 4) { if (data[i] < 250) { hasTransparency = true; break; } }
+            }
+          } catch (e) { hasTransparency = true; }
+          URL.revokeObjectURL(url);
+          resolve({ ok: true, errors: errors, warnings: warnings, meta: { width: img.naturalWidth, height: img.naturalHeight, hasTransparency: hasTransparency, mime: mime } });
+        };
+        img.onerror = function () {
+          URL.revokeObjectURL(url);
+          errors.push("Could not read image file.");
+          resolve({ ok: false, errors: errors, warnings: warnings, meta: null });
+        };
+        img.src = url;
+      });
+    },
+    process: function (file) {
+      var self = this;
+      this.lastFile = file;
+      var status = document.getElementById("vdUploadStatus");
+      status.innerHTML = "";
+      this.validate(file).then(function (result) {
+        var html = "";
+        if (result.errors.length) html += result.errors.map(function (m) { return '<p class="is-error">' + VibeDesigner.UI.escape(m) + "</p>"; }).join("");
+        if (result.warnings.length) html += result.warnings.map(function (m) { return '<p class="is-warn">' + VibeDesigner.UI.escape(m) + "</p>"; }).join("");
+        if (!result.ok) {
+          html += '<button type="button" class="vd-btn vd-btn--outline" id="vdRetryUpload">Retry upload</button>';
+          status.innerHTML = '<div class="vd-upload-msgs">' + html + "</div>";
+          return;
+        }
+        var previewUrl = URL.createObjectURL(file);
+        status.innerHTML =
+          '<div class="vd-upload-progress"><img class="vd-upload-thumb" src="' + previewUrl + '" alt=""><div><div style="display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:700"><strong>' + VibeDesigner.UI.escape(file.name) + '</strong><span id="vdPct">0%</span></div><div class="vd-progress-bar"><i id="vdBar"></i></div><div style="margin-top:8px"><button type="button" class="vd-link" id="vdCancelUpload">Cancel</button></div></div></div>' +
+          (html ? '<div class="vd-upload-msgs">' + html + "</div>" : "");
+
+        var controller = new AbortController();
+        VibeDesigner.Store.uploadAbort = controller;
+        var pct = 0;
+        function tick() {
+          if (controller.signal.aborted) {
+            status.innerHTML = '<div class="vd-upload-msgs"><p class="is-error">Upload cancelled.</p><button type="button" class="vd-btn vd-btn--outline" id="vdRetryUpload">Retry upload</button></div>';
+            return;
+          }
+          pct = Math.min(100, pct + Math.max(5, 16 - Math.round(file.size / (1024 * 1024))));
+          document.getElementById("vdPct").textContent = pct + "%";
+          document.getElementById("vdBar").style.width = pct + "%";
+          if (pct >= 100) {
+            var store = VibeDesigner.Store;
+            store.layers = store.layers.concat([{
+              id: uid("img"),
+              type: "image",
+              name: file.name,
+              positionId: store.printPositionId,
+              visible: true,
+              locked: false,
+              x: 50, y: 45, scale: 1, rotation: 0, opacity: 1,
+              image: {
+                src: previewUrl,
+                fileName: file.name,
+                width: result.meta.width || 800,
+                height: result.meta.height || 800,
+                hasTransparency: !!result.meta.hasTransparency
+              }
+            }]);
+            store.selectedLayerId = store.layers[store.layers.length - 1].id;
+            store.emit();
+            if (result.meta.hasTransparency) VibeDesigner.UI.toast("Transparent PNG detected — great for overlays.");
+            else VibeDesigner.UI.toast("Image added to " + store.getPosition().label + ".");
+            setTimeout(function () { self.close(); }, 350);
+            return;
+          }
+          setTimeout(tick, 90);
+        }
+        tick();
+      });
+    }
+  };
+
+  /* ---------- Panels ---------- */
+  function setPanel(name) {
+    VibeDesigner.Store.activePanel = name;
+    Array.prototype.forEach.call(document.querySelectorAll(".vd-tabs button"), function (btn) {
+      btn.classList.toggle("is-active", btn.getAttribute("data-panel") === name);
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-view]"), function (sec) {
+      sec.hidden = sec.getAttribute("data-view") !== name;
+    });
+    if (name === "text") VibeDesigner.Text.render();
+    if (name === "personalize") VibeDesigner.Personalize.render();
+  }
+
+  function addTextLayer() {
+    var store = VibeDesigner.Store;
+    var layer = {
+      id: uid("txt"),
+      type: "text",
+      name: "Text",
+      positionId: store.printPositionId,
+      visible: true,
+      locked: false,
+      x: 50, y: 42, scale: 1, rotation: 0, opacity: 1,
+      text: Object.assign(defaultText(), { content: "Enter your text here..." })
+    };
+    store.layers = store.layers.concat([layer]);
+    store.selectedLayerId = layer.id;
+    store.emit();
+    setPanel("text");
+  }
+
+  function renderAll() {
+    VibeDesigner.Options.render();
+    VibeDesigner.Personalize.render();
+    VibeDesigner.Text.render();
+    VibeDesigner.Layers.render();
+    VibeDesigner.Canvas.render();
+  }
+
+  /* ---------- Events ---------- */
+  function bind() {
+    var store = VibeDesigner.Store;
+    var app = document.getElementById("vdApp");
+
+    document.querySelector(".vd-tabs").addEventListener("click", function (e) {
+      var btn = e.target.closest("[data-panel]");
+      if (btn) setPanel(btn.getAttribute("data-panel"));
+    });
+
+    app.addEventListener("click", function (e) {
+      var t = e.target;
+      var pos = t.closest("[data-pos]");
+      if (pos) {
+        store.printPositionId = pos.getAttribute("data-pos");
+        store.emit();
+        return;
+      }
+      var color = t.closest("[data-color]");
+      if (color && !color.disabled) {
+        store.colorId = color.getAttribute("data-color");
+        store.emit();
+        return;
+      }
+      var size = t.closest("[data-size]");
+      if (size && !size.disabled) {
+        store.selectedSizeId = size.getAttribute("data-size");
+        if (!store.sizeQuantities[store.selectedSizeId]) store.sizeQuantities[store.selectedSizeId] = 1;
+        store.emit();
+        return;
+      }
+      var mode = t.closest("#vdSizeMode [data-mode]");
+      if (mode) {
+        store.sizeMode = mode.getAttribute("data-mode");
+        store.emit();
+        return;
+      }
+      var deltaBtn = t.closest("[data-qty-size]");
+      if (deltaBtn) {
+        var sid = deltaBtn.getAttribute("data-qty-size");
+        var delta = Number(deltaBtn.getAttribute("data-delta"));
+        var next = Math.max(0, Math.min(99, (store.sizeQuantities[sid] || 0) + delta));
+        store.sizeQuantities = Object.assign({}, store.sizeQuantities, {});
+        store.sizeQuantities[sid] = next;
+        store.emit();
+        return;
+      }
+      var side = t.closest("[data-side]");
+      if (side) {
+        var want = side.getAttribute("data-side");
+        var match = PRINT_POSITIONS.find(function (p) { return p.side === want; });
+        if (match) {
+          store.printPositionId = match.id;
+          store.emit();
+        }
+        return;
+      }
+      var action = t.closest("[data-action]");
+      if (action) {
+        var id = action.getAttribute("data-action");
+        if (id === "text") addTextLayer();
+        if (id === "image") VibeDesigner.Upload.open();
+        return;
+      }
+      var layerBtn = t.closest("[data-layer]");
+      if (layerBtn) {
+        store.selectedLayerId = layerBtn.getAttribute("data-layer");
+        var layer = store.getSelectedLayer();
+        store.emit();
+        if (layer && layer.type === "text") setPanel("text");
+        return;
+      }
+      var selectLayer = t.closest("[data-select-layer]");
+      if (selectLayer) {
+        store.selectedLayerId = selectLayer.getAttribute("data-select-layer");
+        var selected = store.getSelectedLayer();
+        store.emit();
+        if (selected && selected.type === "text") setPanel("text");
+        return;
+      }
+      var vis = t.closest("[data-vis]");
+      if (vis) {
+        var vid = vis.getAttribute("data-vis");
+        store.layers = store.layers.map(function (l) { return l.id === vid ? Object.assign({}, l, { visible: !l.visible }) : l; });
+        store.emit();
+        return;
+      }
+      var lock = t.closest("[data-lock]");
+      if (lock) {
+        var lid = lock.getAttribute("data-lock");
+        store.layers = store.layers.map(function (l) { return l.id === lid ? Object.assign({}, l, { locked: !l.locked }) : l; });
+        store.emit();
+        return;
+      }
+      var del = t.closest("[data-del]");
+      if (del) {
+        var did = del.getAttribute("data-del");
+        store.layers = store.layers.filter(function (l) { return l.id !== did; });
+        if (store.selectedLayerId === did) store.selectedLayerId = null;
+        store.emit();
+        return;
+      }
+      if (t.closest("[data-goto]")) {
+        setPanel(t.closest("[data-goto]").getAttribute("data-goto"));
+      }
+    });
+
+    app.addEventListener("input", function (e) {
+      var input = e.target.closest("[data-qty-input]");
+      if (input) {
+        var id = input.getAttribute("data-qty-input");
+        store.sizeQuantities[id] = Math.max(0, Math.min(99, Number(input.value) || 0));
+        store.emit();
+      }
+    });
+
+    document.getElementById("vdOpenChart").addEventListener("click", function () {
+      document.getElementById("vdChartModal").classList.add("is-open");
+    });
+    document.querySelectorAll("[data-close='chart']").forEach(function (el) {
+      el.addEventListener("click", function () { document.getElementById("vdChartModal").classList.remove("is-open"); });
+    });
+    document.querySelectorAll("[data-close='upload']").forEach(function (el) {
+      el.addEventListener("click", function () { VibeDesigner.Upload.close(); });
+    });
+
+    document.getElementById("vdPanel").addEventListener("click", function (e) {
+      var font = e.target.closest("[data-font]");
+      if (font) {
+        var fid = font.getAttribute("data-font");
+        VibeDesigner.Text.update({ fontId: fid });
+        store.recentFonts = [fid].concat(store.recentFonts.filter(function (x) { return x !== fid; })).slice(0, 6);
+        return;
+      }
+      var align = e.target.closest("[data-align]");
+      if (align) { VibeDesigner.Text.update({ align: align.getAttribute("data-align") }); return; }
+      var fmt = e.target.closest("[data-fmt]");
+      if (fmt) {
+        var key = fmt.getAttribute("data-fmt");
+        var layer = store.getSelectedLayer();
+        if (layer && layer.text) {
+          var patch = {};
+          patch[key] = !layer.text[key];
+          VibeDesigner.Text.update(patch);
+        }
+        return;
+      }
+      var cse = e.target.closest("[data-case]");
+      if (cse) {
+        var val = cse.getAttribute("data-case");
+        var cur = store.getSelectedLayer();
+        VibeDesigner.Text.update({ textCase: cur && cur.text && cur.text.textCase === val ? "none" : val });
+        return;
+      }
+      var colorBtn = e.target.closest("[data-text-color]");
+      if (colorBtn) {
+        var hex = colorBtn.getAttribute("data-text-color");
+        VibeDesigner.Text.update({ color: hex });
+        store.recentColors = [hex].concat(store.recentColors.filter(function (c) { return c !== hex; })).slice(0, 8);
+        return;
+      }
+      var effect = e.target.closest("[data-effect]");
+      if (effect) { VibeDesigner.Text.update({ effect: effect.getAttribute("data-effect") }); return; }
+      var lact = e.target.closest("[data-layer-act]");
+      if (lact) {
+        var act = lact.getAttribute("data-layer-act");
+        var sel = store.selectedLayerId;
+        if (act === "del") {
+          store.layers = store.layers.filter(function (l) { return l.id !== sel; });
+          store.selectedLayerId = null;
+          store.emit();
+          return;
+        }
+        if (act === "dup") {
+          var source = store.getSelectedLayer();
+          if (!source) return;
+          var copy = JSON.parse(JSON.stringify(source));
+          copy.id = uid(source.type === "text" ? "txt" : "img");
+          copy.name = source.name + " copy";
+          store.layers = store.layers.concat([copy]);
+          store.selectedLayerId = copy.id;
+          store.emit();
+          return;
+        }
+        var layers = store.layers.slice();
+        var idx = layers.findIndex(function (l) { return l.id === sel; });
+        var target = act === "up" ? idx + 1 : idx - 1;
+        if (idx < 0 || target < 0 || target >= layers.length) return;
+        var tmp = layers[idx]; layers[idx] = layers[target]; layers[target] = tmp;
+        store.layers = layers;
+        store.emit();
+      }
+    });
+
+    document.getElementById("vdPanel").addEventListener("input", function (e) {
+      if (e.target.id === "vdTextContent") {
+        VibeDesigner.Text.update({ content: e.target.value });
+        return;
+      }
+      if (e.target.id === "vdFontSearch") {
+        document.getElementById("vdTextEditor").setAttribute("data-q", e.target.value);
+        VibeDesigner.Text.render();
+        return;
+      }
+      var range = e.target.closest("[data-text-key]");
+      if (range) {
+        var key = range.getAttribute("data-text-key");
+        var val = Number(range.value);
+        if (key === "opacityPct") VibeDesigner.Text.update({ opacity: val / 100 });
+        else {
+          var patch = {};
+          patch[key] = val;
+          VibeDesigner.Text.update(patch);
+        }
+        return;
+      }
+      if (e.target.id === "vdGradient") {
+        VibeDesigner.Text.update({ gradientEnabled: e.target.checked });
+        return;
+      }
+      if (e.target.id === "vdPattern") {
+        VibeDesigner.Text.update({ patternFill: e.target.checked });
+      }
+    });
+
+    document.getElementById("vdPanel").addEventListener("change", function (e) {
+      if (e.target.id === "vdHex") {
+        var hex = normalizeHex(e.target.value);
+        if (hex) {
+          VibeDesigner.Text.update({ color: hex });
+          store.recentColors = [hex].concat(store.recentColors.filter(function (c) { return c !== hex; })).slice(0, 8);
+        }
+      }
+      if (e.target.id === "vdRgb") {
+        var hx = rgbToHex(e.target.value);
+        if (hx) {
+          VibeDesigner.Text.update({ color: hx });
+          store.recentColors = [hx].concat(store.recentColors.filter(function (c) { return c !== hx; })).slice(0, 8);
+        }
+      }
+      if (e.target.id === "vdGradient") VibeDesigner.Text.update({ gradientEnabled: e.target.checked });
+      if (e.target.id === "vdPattern") VibeDesigner.Text.update({ patternFill: e.target.checked });
+    });
+
+    var drop = document.getElementById("vdDropzone");
+    var fileInput = document.getElementById("vdFileInput");
+    var cameraInput = document.getElementById("vdCameraInput");
+    document.getElementById("vdBrowseBtn").addEventListener("click", function () {
+      if (store.uploadTab === "camera") cameraInput.click();
+      else fileInput.click();
+    });
+    fileInput.addEventListener("change", function () {
+      if (fileInput.files && fileInput.files[0]) VibeDesigner.Upload.process(fileInput.files[0]);
+      fileInput.value = "";
+    });
+    cameraInput.addEventListener("change", function () {
+      if (cameraInput.files && cameraInput.files[0]) VibeDesigner.Upload.process(cameraInput.files[0]);
+      cameraInput.value = "";
+    });
+    drop.addEventListener("dragover", function (e) { e.preventDefault(); drop.classList.add("is-over"); });
+    drop.addEventListener("dragleave", function () { drop.classList.remove("is-over"); });
+    drop.addEventListener("drop", function (e) {
+      e.preventDefault();
+      drop.classList.remove("is-over");
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) VibeDesigner.Upload.process(e.dataTransfer.files[0]);
+    });
+    document.getElementById("vdUploadModal").addEventListener("click", function (e) {
+      var tab = e.target.closest("[data-upload-tab]");
+      if (tab && !tab.disabled) {
+        store.uploadTab = tab.getAttribute("data-upload-tab");
+        VibeDesigner.Upload.renderTabs();
+      }
+      if (e.target.id === "vdCancelUpload" && store.uploadAbort) store.uploadAbort.abort();
+      if (e.target.id === "vdRetryUpload" && VibeDesigner.Upload.lastFile) VibeDesigner.Upload.process(VibeDesigner.Upload.lastFile);
+    });
+
+    function addToCart() {
+      if (!store.layers.length) {
+        VibeDesigner.UI.toast("Add text or an image before adding to cart.");
+        setPanel("personalize");
+        return;
+      }
+      if (store.sizeMode === "multi" && store.qty() < 1) {
+        VibeDesigner.UI.toast("Set quantity for at least one size.");
+        setPanel("options");
+        return;
+      }
+      VibeDesigner.UI.toast("Design ready — connect Store API add-to-cart on your site.");
+    }
+    document.getElementById("vdAddCart").addEventListener("click", addToCart);
+    document.getElementById("vdAddCartMobile").addEventListener("click", addToCart);
+
+    var params = new URLSearchParams(window.location.search);
+    var back = document.getElementById("vdBack");
+    var ref = document.referrer;
+    if (ref && /\/product\//.test(ref)) back.href = ref;
+    else if (params.get("product_cms") || params.get("product_id")) back.href = "/?p=" + (params.get("product_cms") || params.get("product_id"));
+    else back.href = "/";
+
+    var colorParam = (params.get("color") || "").toLowerCase();
+    if (colorParam) {
+      var matchColor = store.product.colors.find(function (c) {
+        return c.id === colorParam || c.name.toLowerCase() === colorParam || c.hex.toLowerCase() === colorParam;
+      });
+      if (matchColor && matchColor.inStock) store.colorId = matchColor.id;
+    }
+    var sizeParam = (params.get("size") || "").toLowerCase();
+    if (sizeParam) {
+      var matchSize = store.product.sizes.find(function (s) {
+        return s.id === sizeParam || s.label.toLowerCase() === sizeParam;
+      });
+      if (matchSize && matchSize.inStock) {
+        store.selectedSizeId = matchSize.id;
+        store.sizeQuantities[matchSize.id] = 1;
+      }
+    }
+  }
+
+  /* ---------- WooCommerce hydrate (optional) ---------- */
+  function hydrateFromStoreApi() {
+    var params = new URLSearchParams(window.location.search);
+    var id = params.get("product_cms") || params.get("product_id");
+    if (!id) return Promise.resolve();
+    return fetch("/wp-json/wc/store/v1/products/" + encodeURIComponent(id))
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (product) {
+        if (!product) return;
+        var store = VibeDesigner.Store;
+        store.product = Object.assign({}, store.product, {
+          id: product.id,
+          name: product.name || store.product.name,
+          basePrice: product.prices && product.prices.price ? Number(product.prices.price) / Math.pow(10, product.prices.currency_minor_unit || 2) : store.product.basePrice,
+          currencySymbol: (product.prices && product.prices.currency_symbol) || store.product.currencySymbol,
+          images: {
+            front: (product.images && product.images[0] && product.images[0].src) || store.product.images.front,
+            back: (product.images && product.images[1] && product.images[1].src) || store.product.images.back
+          }
+        });
+      })
+      .catch(function () { /* keep sample */ });
+  }
+
+  VibeDesigner.Store.subscribe(function () {
+    renderAll();
+    setPanel(VibeDesigner.Store.activePanel);
+  });
+
+  bind();
+  hydrateFromStoreApi().finally(function () {
+    renderAll();
+    setPanel("options");
+  });
+})();
+</script>
