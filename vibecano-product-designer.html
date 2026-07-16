@@ -756,6 +756,24 @@
       var el=document.getElementById("vdError");
       if(!msg){ el.textContent=""; el.classList.remove("is-show"); return; }
       el.textContent=msg; el.classList.add("is-show");
+    },
+    updateTotals: function(){
+      var store=VibeDesigner.Store;
+      var sym=store.product.currencySymbol||"Rs ";
+      var totalEl=document.getElementById("vdTotal");
+      if(totalEl) totalEl.textContent=money(store.total(), sym);
+      var breakEl=document.getElementById("vdPriceBreak");
+      if(breakEl){
+        var qty=Math.max(1, store.qty());
+        var printFee=store.printFee();
+        var base=Number(store.product.basePrice)||0;
+        var pos=store.getPosition();
+        breakEl.innerHTML=
+          '<div><span>Product</span><strong>'+esc(money(base,sym))+'</strong></div>'+
+          '<div><span>Print · '+esc(pos.label)+'</span><strong>'+esc(money(printFee,sym))+'</strong></div>'+
+          (qty>1?'<div><span>Qty</span><strong>× '+qty+'</strong></div>':'')+
+          '<div style="margin-top:2px;padding-top:6px;border-top:1px solid var(--line)"><span>Unit</span><strong>'+esc(money(store.unitPrice(),sym))+'</strong></div>';
+      }
     }
   };
 
@@ -1055,15 +1073,19 @@
 
       zone.innerHTML=layers.map(function(layer){
         var isSel=store.selectedLayerId===layer.id;
-        var common=' class="vd-layer'+(layer.type==="text"?" vd-layer-text": layer.type==="clipart"?" vd-layer-clipart":" vd-layer-image")+(isSel?" is-selected":"")+'" data-layer="'+layer.id+'" style="left:'+layer.x+'%;top:'+layer.y+'%;transform:translate(-50%,-50%) rotate('+(layer.type==="text"&&layer.text?layer.text.rotation:layer.rotation)+'deg) scale('+layer.scale+');opacity:'+(layer.type==="text"&&layer.text?layer.text.opacity:layer.opacity)+'"';
+        var rot=(layer.type==="text"&&layer.text?layer.text.rotation:layer.rotation)||0;
+        var op=(layer.type==="text"&&layer.text?layer.text.opacity:layer.opacity);
+        var baseStyle="left:"+layer.x+"%;top:"+layer.y+"%;transform:translate(-50%,-50%) rotate("+rot+"deg) scale("+layer.scale+");opacity:"+op+";";
+        var cls="vd-layer"+(layer.type==="text"?" vd-layer-text": layer.type==="clipart"?" vd-layer-clipart":" vd-layer-image")+(isSel?" is-selected":"");
         var resize=isSel?'<span class="vd-layer-resize" data-layer-resize="'+layer.id+'" aria-hidden="true"></span>':"";
         if(layer.type==="text"&&layer.text){
           var font=FONTS.find(function(f){return f.id===layer.text.fontId;})||FONTS[0];
           var content=layer.text.content||"Enter your text here...";
           if(layer.text.textCase==="uppercase") content=content.toUpperCase();
           if(layer.text.textCase==="lowercase") content=content.toLowerCase();
-          var style=[
-            "font-family:"+font.family,
+          var textStyle=[
+            baseStyle,
+            "font-family:'"+font.family+"',sans-serif",
             "font-size:"+(layer.text.fontSize*0.34)+"px",
             "font-weight:"+(layer.text.bold?800:layer.text.fontWeight),
             "font-style:"+(layer.text.italic?"italic":"normal"),
@@ -1078,13 +1100,13 @@
             layer.text.gradientEnabled?"background-image:linear-gradient(90deg,"+layer.text.gradientFrom+","+layer.text.gradientTo+");-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:transparent":"color:"+layer.text.color,
             layer.text.patternFill?"background-image:repeating-linear-gradient(45deg,"+layer.text.color+" 0 2px,transparent 2px 6px);-webkit-background-clip:text;-webkit-text-fill-color:transparent":""
           ].filter(Boolean).join(";");
-          return '<button type="button"'+common+' style="'+style+';left:'+layer.x+'%;top:'+layer.y+'%">'+esc(content)+resize+'</button>';
+          return '<button type="button" class="'+cls+'" data-layer="'+layer.id+'" style="'+textStyle+'">'+esc(content)+resize+'</button>';
         }
         if(layer.type==="clipart"&&layer.clipart){
-          return '<button type="button"'+common+'>'+layer.clipart.svg+resize+'</button>';
+          return '<button type="button" class="'+cls+'" data-layer="'+layer.id+'" style="'+baseStyle+'">'+layer.clipart.svg+resize+'</button>';
         }
         if(layer.image){
-          return '<button type="button"'+common+'><img src="'+layer.image.src+'" alt="'+esc(layer.image.fileName)+'">'+resize+'</button>';
+          return '<button type="button" class="'+cls+'" data-layer="'+layer.id+'" style="'+baseStyle+'"><img src="'+layer.image.src+'" alt="'+esc(layer.image.fileName)+'">'+resize+'</button>';
         }
         return "";
       }).join("");
@@ -1114,18 +1136,7 @@
       }).join("");
       document.getElementById("vdProductName").textContent=store.product.name;
       document.getElementById("vdProductMeta").textContent=store.product.material||"";
-      document.getElementById("vdTotal").textContent=money(store.total(), store.product.currencySymbol);
-      var breakEl=document.getElementById("vdPriceBreak");
-      if(breakEl){
-        var sym=store.product.currencySymbol||"Rs ";
-        var qty=Math.max(1, store.qty());
-        var printFee=store.printFee();
-        var base=Number(store.product.basePrice)||0;
-        breakEl.innerHTML=
-          '<div><span>Product</span><strong>'+esc(money(base,sym))+'</strong></div>'+
-          '<div><span>Print · '+esc(store.getPosition().label)+'</span><strong>'+esc(money(printFee,sym))+'</strong></div>'+
-          (qty>1?'<div><span>Qty</span><strong>× '+qty+'</strong></div>':'');
-      }
+      VibeDesigner.UI.updateTotals();
     }
   };
 
@@ -1169,6 +1180,7 @@
       document.getElementById("vdChartBody").innerHTML='<table class="vd-table"><thead><tr><th>Measure</th>'+chart.columns.map(function(c){return "<th>"+c+"</th>";}).join("")+'</tr></thead><tbody>'+chart.rows.map(function(row){
         return "<tr><td>"+row.label+"</td>"+chart.columns.map(function(c){return "<td>"+row.values[c]+"</td>";}).join("")+"</tr>";
       }).join("")+"</tbody></table>";
+      VibeDesigner.UI.updateTotals();
     }
   };
 
@@ -1268,8 +1280,9 @@
           return '<option value="'+f.id+'"'+(t.fontId===f.id?" selected":"")+' style="font-family:'+f.family+'">'+esc(f.label)+'</option>';
         }).join("")+
         '</select></div>'+
-        '<div class="vd-field"><span class="vd-label">Text Color</span><div class="vd-swatches">'+PRESET_COLORS.map(function(hex){return '<button type="button" class="vd-swatch'+(t.color.toLowerCase()===hex.toLowerCase()?" is-active":"")+'" style="background:'+hex+'" data-text-color="'+hex+'"></button>';}).join("")+'</div></div>'+
-        '<p class="vd-preview-hint" style="margin-top:10px;text-align:left">Drag text on the preview to move. Drag the orange corner to resize. Tap Done when finished.</p>';
+        '<div class="vd-field"><span class="vd-label">Text Color</span><div class="vd-swatches">'+PRESET_COLORS.map(function(hex){return '<button type="button" class="vd-swatch'+(t.color.toLowerCase()===hex.toLowerCase()?" is-active":"")+'" style="background:'+hex+'" data-text-color="'+hex+'" aria-label="'+hex+'"></button>';}).join("")+'</div>'+
+        '<div class="vd-color-inputs" style="margin-top:10px"><label>Pick color<input type="color" id="vdColorPicker" value="'+(normalizeHex(t.color)||"#111827")+'" style="width:100%;height:42px;padding:4px;border:1px solid var(--line);border-radius:11px;background:#fff;cursor:pointer"></label><label>HEX<input class="vd-input" id="vdHex" value="'+(normalizeHex(t.color)||t.color)+'" placeholder="#111827"></label></div></div>'+
+        '<p class="vd-preview-hint" style="margin-top:10px;text-align:left">Drag text on the preview to move. Drag the orange corner to resize. Tap <strong>Done</strong> to finish (hides border & delete).</p>';
     },
     update: function(patch, opts){
       opts = opts || {};
@@ -1577,6 +1590,10 @@
     var store=VibeDesigner.Store;
     store.textEditorOpen=!!show;
     if(show) store.clipartOpen=false;
+    if(!show){
+      store.selectedLayerId=null;
+      store.textPairId=null;
+    }
     var card=document.getElementById("vdTextCard");
     var clip=document.getElementById("vdClipartCard");
     if(clip) clip.hidden=!store.clipartOpen;
@@ -1587,6 +1604,8 @@
         card.scrollIntoView({behavior:"smooth",block:"nearest"});
       }
     }
+    VibeDesigner.Canvas.render();
+    VibeDesigner.Layers.render();
   }
 
   function showClipart(show){
@@ -1647,7 +1666,15 @@
     app.addEventListener("click", function(e){
       var t=e.target;
       var pos=t.closest("[data-pos]"); if(pos){
-        store.printPositionId=pos.getAttribute("data-pos");
+        var nextPos=pos.getAttribute("data-pos");
+        var prevPos=store.printPositionId;
+        if(nextPos!==prevPos){
+          store.layers=store.layers.map(function(l){
+            if(l.positionId===prevPos) return Object.assign({}, l, { positionId: nextPos });
+            return l;
+          });
+        }
+        store.printPositionId=nextPos;
         var dualPos=getDualSides(store.printPositionId);
         var meta=PRINT_POSITIONS.find(function(p){return p.id===store.printPositionId;});
         store.previewSide = dualPos ? dualPos[0].preview : (meta && meta.side) || "front";
@@ -1914,6 +1941,14 @@
         if(font) e.target.style.fontFamily=font.family;
         return;
       }
+      if(e.target.id==="vdColorPicker"){
+        var picked=normalizeHex(e.target.value);
+        if(picked){
+          VibeDesigner.Text.update({color:picked},{applyAllStyles:true});
+          store.recentColors=[picked].concat(store.recentColors.filter(function(c){return c!==picked;})).slice(0,8);
+        }
+        return;
+      }
       if(e.target.id==="vdHex"){ var hex=normalizeHex(e.target.value); if(hex){ VibeDesigner.Text.update({color:hex},{applyAllStyles:true}); store.recentColors=[hex].concat(store.recentColors.filter(function(c){return c!==hex;})).slice(0,8);} }
       if(e.target.id==="vdRgb"){ var hx=rgbToHex(e.target.value); if(hx){ VibeDesigner.Text.update({color:hx},{applyAllStyles:true}); store.recentColors=[hx].concat(store.recentColors.filter(function(c){return c!==hx;})).slice(0,8);} }
       if(e.target.id==="vdGradient") VibeDesigner.Text.update({gradientEnabled:e.target.checked},{applyAllStyles:true});
@@ -1921,6 +1956,11 @@
     });
 
     document.getElementById("vdPanel").addEventListener("input", function(e){
+      if(e.target.id==="vdColorPicker"){
+        var live=normalizeHex(e.target.value);
+        if(live) VibeDesigner.Text.update({color:live},{applyAllStyles:true});
+        return;
+      }
       if(e.target.id==="vdTextContent"){ VibeDesigner.Text.update({content:e.target.value}); return; }
       var sideText=e.target.closest("[data-side-text]");
       if(sideText){
