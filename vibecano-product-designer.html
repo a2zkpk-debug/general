@@ -1448,11 +1448,22 @@
     // Drag layers
     var zone=document.getElementById("vdZone");
     function onPointerDown(e){
-      var btn=e.target.closest("[data-layer]"); if(!btn) return;
-      var id=btn.getAttribute("data-layer");
+      var btn=e.target.closest("[data-layer]");
+      var id=null;
+      if(btn){
+        id=btn.getAttribute("data-layer");
+      } else {
+        // Drag anywhere: move currently selected layer if present
+        var selected=store.getSelectedLayer && store.getSelectedLayer();
+        if(selected && !selected.locked){
+          id=selected.id;
+        } else {
+          return;
+        }
+      }
       var layer=store.layers.find(function(l){return l.id===id;});
       if(!layer||layer.locked) return;
-      store.selectedLayerId=id; store.emit();
+      if(btn){ store.selectedLayerId=id; store.emit(); }
       var rect=zone.getBoundingClientRect();
       var point=e.touches?e.touches[0]:e;
       VibeDesigner.Canvas.drag={ id:id, rect:rect };
