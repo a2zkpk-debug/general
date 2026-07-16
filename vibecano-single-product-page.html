@@ -6,7 +6,7 @@
      Behavior:
      - Auto-loads current product by URL slug or product_cms/product_id query
      - Ready-made products show Add to Cart
-     - Customizable products show Customize Now
+     - Customizable products show Customize Now → choose Simple Method or Customized Studio
      ============================================================ -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
 
@@ -562,6 +562,114 @@
     text-align: center;
   }
 
+  .vc-sp-modal-box.is-customize {
+    width: min(720px, 100%);
+    padding: 28px 26px 24px;
+  }
+
+  .vc-sp-customize-lead {
+    margin: 0 42px 22px;
+    color: var(--vc-sp-muted);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .vc-sp-customize-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .vc-sp-customize-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    min-height: 188px;
+    padding: 20px 18px;
+    border: 1px solid var(--vc-sp-line);
+    border-radius: 22px;
+    background:
+      radial-gradient(circle at top right, rgba(249, 115, 22, 0.08), transparent 42%),
+      #fff;
+    color: var(--vc-sp-text);
+    cursor: pointer;
+    text-align: left;
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .vc-sp-customize-card.is-studio {
+    background:
+      radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 42%),
+      #fff;
+  }
+
+  .vc-sp-customize-card:hover,
+  .vc-sp-customize-card:focus-visible {
+    transform: translateY(-2px);
+    border-color: #94a3b8;
+    box-shadow: 0 22px 44px -34px rgba(15, 23, 42, 0.55);
+    outline: 0;
+  }
+
+  .vc-sp-customize-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: #fff7ed;
+    font-size: 22px;
+  }
+
+  .vc-sp-customize-card.is-studio .vc-sp-customize-icon {
+    background: #eff6ff;
+  }
+
+  .vc-sp-customize-card h4 {
+    margin: 0;
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .vc-sp-customize-card p {
+    margin: 0;
+    color: var(--vc-sp-muted);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.55;
+  }
+
+  .vc-sp-customize-tag {
+    margin-top: auto;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: #0f172a;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .vc-sp-customize-card.is-studio .vc-sp-customize-tag {
+    background: linear-gradient(135deg, var(--vc-sp-orange), #ec4899);
+  }
+
+  @media (max-width: 620px) {
+    .vc-sp-customize-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .vc-sp-customize-lead {
+      margin: 0 0 18px;
+    }
+  }
+
   .vc-sp-table {
     width: 100%;
     border-collapse: collapse;
@@ -779,6 +887,28 @@
   </div>
 </div>
 
+<div class="vc-sp-modal" id="vcSpCustomizeChoice">
+  <div class="vc-sp-modal-box is-customize">
+    <button class="vc-sp-modal-close" type="button" onclick="vcSpCloseCustomizeChoice()" aria-label="Close">×</button>
+    <h3>How would you like to customize?</h3>
+    <p class="vc-sp-customize-lead">Pick a quick guided flow or open the full Customized Studio editor.</p>
+    <div class="vc-sp-customize-grid">
+      <button class="vc-sp-customize-card" type="button" onclick="vcSpChooseSimpleCustomize()">
+        <span class="vc-sp-customize-icon" aria-hidden="true">⚡</span>
+        <h4>Simple Method</h4>
+        <p>Answer a few steps and customize your product the easy way.</p>
+        <span class="vc-sp-customize-tag">Quick start</span>
+      </button>
+      <button class="vc-sp-customize-card is-studio" type="button" onclick="vcSpChooseStudioCustomize()">
+        <span class="vc-sp-customize-icon" aria-hidden="true">🎨</span>
+        <h4>Customized Studio</h4>
+        <p>Use the full editor with text, images, clipart, layers, and live preview.</p>
+        <span class="vc-sp-customize-tag">Full editor</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="vc-sp-toast" id="vcSpToast"></div>
 
 <script>
@@ -787,6 +917,7 @@
 
   var API = "/wp-json/wc/store/v1";
   var DESIGNER_URL = "/design-editor/";
+  var SIMPLE_CUSTOMIZE_URL = "https://vibecano.com/customize-product/";
   var LUMISE_PRODUCT_BASE = "2";
   var CUSTOM_CAT_SLUGS = ["customize", "customizable", "custom", "customize-your-own", "design-your-own"];
   var CUSTOM_TAG_SLUGS = ["customizable", "customize", "custom", "design-your-own"];
@@ -1401,16 +1532,51 @@
     document.getElementById("vcSpAdded").classList.remove("is-open");
   };
 
+  function buildCustomizeParams() {
+    var params = new URLSearchParams({
+      product_base: LUMISE_PRODUCT_BASE,
+      product_cms: String(PRODUCT.id),
+      color: selectedColor || getRequiredColorValue(),
+      size: selectedSize
+    });
+    return params;
+  }
+
+  function buildCustomizeUrl(baseUrl) {
+    var separator = String(baseUrl || "").indexOf("?") >= 0 ? "&" : "?";
+    return String(baseUrl || "") + separator + buildCustomizeParams().toString();
+  }
+
+  window.vcSpOpenCustomizeChoice = function () {
+    document.getElementById("vcSpCustomizeChoice").classList.add("is-open");
+  };
+
+  window.vcSpCloseCustomizeChoice = function () {
+    document.getElementById("vcSpCustomizeChoice").classList.remove("is-open");
+  };
+
+  window.vcSpChooseSimpleCustomize = function () {
+    if (!PRODUCT) return;
+    window.location.href = buildCustomizeUrl(SIMPLE_CUSTOMIZE_URL);
+  };
+
+  window.vcSpChooseStudioCustomize = function () {
+    if (!PRODUCT) return;
+    window.location.href = buildCustomizeUrl(DESIGNER_URL);
+  };
+
   window.vcSpMainAction = function () {
     if (!PRODUCT) return;
     if (IS_CUSTOM) {
-      var params = new URLSearchParams({
-        product_base: LUMISE_PRODUCT_BASE,
-        product_cms: String(PRODUCT.id),
-        color: selectedColor || getRequiredColorValue(),
-        size: selectedSize
-      });
-      window.location.href = DESIGNER_URL + "?" + params.toString();
+      if (VARIATIONS.length && productHasColorAttribute() && !selectedColor) {
+        showToast("Please choose a color");
+        return;
+      }
+      if (VARIATIONS.length && !selectedSize) {
+        showToast("Please choose a size");
+        return;
+      }
+      vcSpOpenCustomizeChoice();
       return;
     }
 
@@ -1495,6 +1661,17 @@
 
   document.getElementById("vcSpAdded").addEventListener("click", function (event) {
     if (event.target.id === "vcSpAdded") window.vcSpCloseAdded();
+  });
+
+  document.getElementById("vcSpCustomizeChoice").addEventListener("click", function (event) {
+    if (event.target.id === "vcSpCustomizeChoice") window.vcSpCloseCustomizeChoice();
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key !== "Escape") return;
+    if (document.getElementById("vcSpCustomizeChoice").classList.contains("is-open")) {
+      window.vcSpCloseCustomizeChoice();
+    }
   });
 
   var checkoutLink = document.getElementById("vcSpCheckoutLink");
