@@ -36,7 +36,8 @@
 .vd-back:hover{border-color:var(--navy);color:var(--navy)}
 .vd-topbar h1{margin:0;font-size:clamp(16px,2vw,20px);font-weight:800;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vd-topbar p{margin:2px 0 0;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vd-topbar__right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.vd-topbar__right{display:none!important}
+.vd-hide-page-title,.elementor-widget-theme-page-title,.elementor-page-title,.entry-title.vd-page-title-hidden{display:none!important}
 .vd-total span{display:block;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8;text-align:right}
 .vd-total strong{display:block;font-family:Manrope,sans-serif;font-size:20px;font-weight:800;color:var(--navy);text-align:right}
 
@@ -58,6 +59,18 @@
 .vd-zone{position:absolute;z-index:3;border:1.5px dashed rgba(255,255,255,.7);border-radius:10px;background:rgba(11,61,74,.08);backdrop-filter:blur(2px);transition:opacity var(--ease);cursor:move;touch-action:none}
 .vd-zone.is-custom{right:auto}
 .vd-zone.is-dragging{opacity:.92;box-shadow:0 0 0 2px rgba(249,115,22,.45)}
+.vd-zone-grip{position:absolute;z-index:8;background:var(--orange);border:2px solid #fff;border-radius:3px;box-shadow:0 2px 6px rgba(0,0,0,.28);touch-action:none;padding:0}
+.vd-zone-grip--n,.vd-zone-grip--s{left:50%;width:28px;height:12px;transform:translateX(-50%);cursor:ns-resize}
+.vd-zone-grip--e,.vd-zone-grip--w{top:50%;width:12px;height:28px;transform:translateY(-50%);cursor:ew-resize}
+.vd-zone-grip--n{top:0}
+.vd-zone-grip--s{bottom:0}
+.vd-zone-grip--e{right:0}
+.vd-zone-grip--w{left:0}
+.vd-zone-grip--nw,.vd-zone-grip--ne,.vd-zone-grip--sw,.vd-zone-grip--se{width:16px;height:16px;border-radius:4px}
+.vd-zone-grip--nw{top:0;left:0;cursor:nwse-resize}
+.vd-zone-grip--ne{top:0;right:0;cursor:nesw-resize}
+.vd-zone-grip--sw{bottom:0;left:0;cursor:nesw-resize}
+.vd-zone-grip--se{bottom:0;right:0;cursor:nwse-resize}
 .vd-zone.is-front{left:27%;right:27%;top:27%;height:30%}
 .vd-zone.is-back{left:27%;right:27%;top:25%;height:32%}
 .vd-zone.is-pocket{left:54%;top:34%;width:16%;height:14%}
@@ -239,20 +252,20 @@
   .vd-stage{max-width:100%;width:100%;border-radius:14px}
   .vd-preview-card,.vd-panel-card{padding:12px;border-radius:12px}
   .vd-topbar__inner{padding:10px 12px;gap:10px}
-  .vd-topbar__right .vd-btn{display:none}
-  .vd-total strong{font-size:17px}
   .vd-cta-bar{position:sticky;bottom:0;z-index:40;padding:10px 0 4px;margin:0 -2px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.98) 22%)}
+  .vd-zone-grip--n,.vd-zone-grip--s{width:34px;height:14px}
+  .vd-zone-grip--e,.vd-zone-grip--w{width:14px;height:34px}
+  .vd-zone-grip--nw,.vd-zone-grip--ne,.vd-zone-grip--sw,.vd-zone-grip--se{width:18px;height:18px}
 }
 @media (max-width:640px){
   .vd{overflow-x:hidden;min-height:100dvh}
-  .vd-topbar__inner{flex-wrap:wrap}
+  .vd-topbar__inner{flex-wrap:nowrap}
   .vd-topbar__left{width:100%;min-width:0}
   .vd-topbar__left > div{min-width:0;flex:1}
   .vd-topbar h1{font-size:15px;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .vd-topbar p{font-size:11px;white-space:normal}
-  .vd-topbar__right{width:100%;justify-content:space-between}
+  .vd-topbar p{font-size:11px;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
   .vd-back{padding:8px 10px;font-size:12px}
-  .vd-layout{padding:10px 10px calc(88px + env(safe-area-inset-bottom,0px))}
+  .vd-layout{padding:10px 10px calc(100px + env(safe-area-inset-bottom,0px))}
   .vd-side-tabs{gap:6px;margin-bottom:10px}
   .vd-side-tab{padding:7px 12px;font-size:10px}
   .vd-segment{gap:6px}
@@ -276,6 +289,7 @@
   .vd-card-title{font-size:14px}
   .vd-layer-tools__del{width:32px;height:32px}
   .vd-layer-resize{width:18px;height:18px}
+  .vd-total strong{font-size:18px}
 }
 </style>
 
@@ -291,10 +305,6 @@
           <p id="vdProductMeta">100% Combed Cotton · 180 GSM</p>
         </div>
       </div>
-      <div class="vd-topbar__right">
-        <div class="vd-total"><span>Total</span><strong id="vdTotal">Rs 1,499</strong></div>
-        <button type="button" class="vd-btn vd-btn--primary" id="vdAddCart">Add to Cart</button>
-      </div>
     </div>
   </header>
 
@@ -307,7 +317,7 @@
           <img class="vd-stage__img" id="vdStageImg" alt="Product preview" src="">
           <div class="vd-zone is-front" id="vdZone"></div>
         </div>
-        <p class="vd-preview-hint" id="vdPreviewHint">Drag the <strong>dotted box</strong> to move print area · drag text to move · corner to resize · <strong>×</strong> to delete</p>
+        <p class="vd-preview-hint" id="vdPreviewHint">Drag dotted box to move · use corner/side handles to resize · drag text · <strong>×</strong> to delete</p>
       </div>
     </div>
 
@@ -381,6 +391,7 @@
 
       <p class="vd-error" id="vdError" role="alert"></p>
       <div class="vd-cta-bar">
+        <div class="vd-total" style="text-align:left;margin-bottom:4px"><span>Total</span><strong id="vdTotal">Rs 1,499</strong></div>
         <button type="button" class="vd-btn vd-btn--primary vd-btn--block" id="vdAddCartMobile">Add to Cart</button>
       </div>
     </aside>
@@ -997,10 +1008,18 @@
           tools='<div class="vd-layer-tools" data-layer-tools style="left:'+selected.x+'%;top:'+selected.y+'%"><button type="button" class="vd-layer-tools__del" data-canvas-del="'+selected.id+'" aria-label="Delete layer">×</button></div>';
         }
       }
-      zone.innerHTML=zone.innerHTML+tools;
+      zone.innerHTML=zone.innerHTML+tools+
+        '<button type="button" class="vd-zone-grip vd-zone-grip--n" data-zone-resize="n" aria-label="Resize top"></button>'+
+        '<button type="button" class="vd-zone-grip vd-zone-grip--s" data-zone-resize="s" aria-label="Resize bottom"></button>'+
+        '<button type="button" class="vd-zone-grip vd-zone-grip--e" data-zone-resize="e" aria-label="Resize right"></button>'+
+        '<button type="button" class="vd-zone-grip vd-zone-grip--w" data-zone-resize="w" aria-label="Resize left"></button>'+
+        '<button type="button" class="vd-zone-grip vd-zone-grip--nw" data-zone-resize="nw" aria-label="Resize top-left"></button>'+
+        '<button type="button" class="vd-zone-grip vd-zone-grip--ne" data-zone-resize="ne" aria-label="Resize top-right"></button>'+
+        '<button type="button" class="vd-zone-grip vd-zone-grip--sw" data-zone-resize="sw" aria-label="Resize bottom-left"></button>'+
+        '<button type="button" class="vd-zone-grip vd-zone-grip--se" data-zone-resize="se" aria-label="Resize bottom-right"></button>';
 
       var dualLabel = dual ? (preview==="back" ? "Back" : dual[0].label) : pos.label;
-      document.getElementById("vdPreviewHint").innerHTML='Editing <strong>'+esc(pos.label)+'</strong> · <strong>'+esc(dualLabel)+'</strong> · drag dotted box to move · drag text · resize corner · <strong>×</strong> deletes';
+      document.getElementById("vdPreviewHint").innerHTML='Editing <strong>'+esc(pos.label)+'</strong> · drag box to move · <strong>corners/sides</strong> to resize · <strong>×</strong> deletes';
       document.getElementById("vdSideTabs").innerHTML=["front","back"].map(function(side){
         return '<button type="button" class="vd-side-tab'+(preview===side?" is-active":"")+'" data-side="'+side+'">'+(side==="front"?"Front":"Back")+'</button>';
       }).join("");
@@ -1049,7 +1068,7 @@
   VibeDesigner.Personalize = {
     render: function(){
       var actions=[
-        { id:"text", title:"Add Text", desc:"Typography, effects, alignment", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7V5h16v2"/><path d="M12 5v14"/><path d="M8 19h8"/></svg>' },
+        { id:"text", title:"Add Text", desc:"Type, drag & resize on preview", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7V5h16v2"/><path d="M12 5v14"/><path d="M8 19h8"/></svg>' },
         { id:"image", title:"Upload Image", desc:"Computer, mobile, or camera", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 15l-5-5-8 8"/></svg>' },
         { id:"clipart", title:"Add Clipart", desc:"Icons & shapes library", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 10h.01M15 10h.01"/></svg>' },
         { id:"logo", title:"Add Logo", desc:"Upload brand mark / logo file", icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>' }
@@ -1392,7 +1411,9 @@
 
       var btn=document.getElementById("vdAddCart");
       var btn2=document.getElementById("vdAddCartMobile");
-      var old=btn.textContent; btn.disabled=true; btn2.disabled=true; btn.textContent="Adding…"; btn2.textContent="Adding…";
+      var old=btn2 ? btn2.textContent : "Add to Cart";
+      if(btn){ btn.disabled=true; btn.textContent="Adding…"; }
+      if(btn2){ btn2.disabled=true; btn2.textContent="Adding…"; }
 
       var payload=this.designPayload();
       try{ sessionStorage.setItem("vcDesignerLastOrder", JSON.stringify(payload)); }catch(e){}
@@ -1434,7 +1455,8 @@
           window.location.href=url+"&redirect_to="+encodeURIComponent("/checkout/");
         })
         .finally(function(){
-          btn.disabled=false; btn2.disabled=false; btn.textContent=old; btn2.textContent=old;
+          if(btn){ btn.disabled=false; btn.textContent=old; }
+          if(btn2){ btn2.disabled=false; btn2.textContent=old; }
         });
     }
   };
@@ -1567,13 +1589,30 @@
       }
       return null;
     }
-    function startZoneDrag(e){
+    function applyZoneLayout(layout){
+      zone.style.left=layout.left+"%";
+      zone.style.top=layout.top+"%";
+      zone.style.width=layout.width+"%";
+      zone.style.height=layout.height+"%";
+      zone.style.right="auto";
+    }
+    function clampZone(layout){
+      var minW=8, minH=8;
+      var next=Object.assign({}, layout);
+      next.width=Math.max(minW, Math.min(96, next.width));
+      next.height=Math.max(minH, Math.min(96, next.height));
+      next.left=Math.max(1, Math.min(99-next.width, next.left));
+      next.top=Math.max(1, Math.min(99-next.height, next.top));
+      return next;
+    }
+    function startZoneDrag(e, mode){
       var stageRect=stageEl.getBoundingClientRect();
       if(!stageRect.width || !stageRect.height) return;
       var zoneKey=VibeDesigner.Canvas.currentZoneKey || "front";
       var layout=getZoneLayout(store, zoneKey);
       VibeDesigner.Canvas.zoneDrag={
         zoneKey:zoneKey,
+        mode:mode||"move",
         startX:e.clientX,
         startY:e.clientY,
         stageRect:stageRect,
@@ -1585,6 +1624,14 @@
     function onDragPointerDown(e){
       if(e.button!==undefined && e.button!==0) return;
       if(e.target.closest("[data-canvas-del]") || e.target.closest("[data-layer-tools]")) return;
+
+      var zoneResize=e.target.closest("[data-zone-resize]");
+      if(zoneResize){
+        startZoneDrag(e, zoneResize.getAttribute("data-zone-resize"));
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
 
       var resizeBtn=e.target.closest("[data-layer-resize]");
       if(resizeBtn){
@@ -1623,13 +1670,13 @@
         return;
       }
 
-      // Empty dotted box (or empty stage over zone) → move print area
-      var overZone = e.target===zone || zone.contains(e.target) || (function(){
+      // Empty dotted box → move print area
+      var overZone = e.target===zone || (zone.contains(e.target) && !e.target.closest("[data-layer]")) || (function(){
         var zr=zone.getBoundingClientRect();
         return e.clientX>=zr.left && e.clientX<=zr.right && e.clientY>=zr.top && e.clientY<=zr.bottom;
       })();
       if(overZone){
-        startZoneDrag(e);
+        startZoneDrag(e, "move");
         e.preventDefault();
         e.stopPropagation();
       }
@@ -1639,10 +1686,20 @@
       if(zd){
         var dx=((e.clientX-zd.startX)/zd.stageRect.width)*100;
         var dy=((e.clientY-zd.startY)/zd.stageRect.height)*100;
-        var left=Math.max(2, Math.min(98-zd.orig.width, zd.orig.left+dx));
-        var top=Math.max(2, Math.min(98-zd.orig.height, zd.orig.top+dy));
-        zone.style.left=left+"%";
-        zone.style.top=top+"%";
+        var o=zd.orig;
+        var next={ left:o.left, top:o.top, width:o.width, height:o.height };
+        var m=zd.mode||"move";
+        if(m==="move"){
+          next.left=o.left+dx;
+          next.top=o.top+dy;
+        } else {
+          if(m.indexOf("e")>-1){ next.width=o.width+dx; }
+          if(m.indexOf("s")>-1){ next.height=o.height+dy; }
+          if(m.indexOf("w")>-1){ next.left=o.left+dx; next.width=o.width-dx; }
+          if(m.indexOf("n")>-1){ next.top=o.top+dy; next.height=o.height-dy; }
+        }
+        next=clampZone(next);
+        applyZoneLayout(next);
         e.preventDefault();
         return;
       }
@@ -1654,12 +1711,12 @@
         drag.moved=true;
         store.layers=store.layers.map(function(l){
           if(l.id!==drag.id) return l;
-          var next=Object.assign({}, l, { scale:scale });
+          var nxt=Object.assign({}, l, { scale:scale });
           if(l.text){
             var fs=Math.max(12, Math.min(120, Math.round(drag.startFont * scale / drag.startScale)));
-            next.text=Object.assign({}, l.text, { fontSize:fs });
+            nxt.text=Object.assign({}, l.text, { fontSize:fs });
           }
-          return next;
+          return nxt;
         });
         var el=zone.querySelector('[data-layer="'+drag.id+'"]');
         if(el){
@@ -1690,8 +1747,8 @@
         store.zoneLayouts[zd.zoneKey]={
           left:parseFloat(zone.style.left)||zd.orig.left,
           top:parseFloat(zone.style.top)||zd.orig.top,
-          width:zd.orig.width,
-          height:zd.orig.height
+          width:parseFloat(zone.style.width)||zd.orig.width,
+          height:parseFloat(zone.style.height)||zd.orig.height
         };
         VibeDesigner.Canvas.zoneDrag=null;
         zone.classList.remove("is-dragging");
@@ -1799,8 +1856,9 @@
       }
     });
 
-    document.getElementById("vdAddCart").addEventListener("click", function(){ VibeDesigner.Cart.add(); });
     document.getElementById("vdAddCartMobile").addEventListener("click", function(){ VibeDesigner.Cart.add(); });
+    var topCart=document.getElementById("vdAddCart");
+    if(topCart) topCart.addEventListener("click", function(){ VibeDesigner.Cart.add(); });
   }
 
   function matchColorOption(colors, raw){
