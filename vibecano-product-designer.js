@@ -708,22 +708,35 @@
       var hasVariationImage=!!(variation && Array.isArray(variation.images) && variation.images.length && (variation.images[0].src||variation.images[0].thumbnail));
       var whiteProduct=isWhiteColor(color);
 
-      // Stage backdrop: black only for white products, white for every other color
-      stage.classList.toggle("is-white-product", whiteProduct);
-      stage.style.background=whiteProduct?"#111827":"#ffffff";
+      // Stage backdrop only: black for white products, white for all other colors.
+      // Never paint product color onto the stage — dye stays masked to the garment.
+      stage.classList.toggle("is-white-product", !!whiteProduct);
+      stage.style.setProperty("background", whiteProduct ? "#111827" : "#ffffff", "important");
 
       img.src=previewSrc;
       img.alt=store.product.name+" "+preview;
       img.style.visibility=previewSrc?"visible":"hidden";
 
-      // Dye the product (not the stage): color layer under image + multiply blend
-      // Skip dye when variation already has a real colored photo
+      // Dye garment only: color layer masked to product image alpha + multiply blend.
+      // Skip dye when variation already has a real colored photo.
       if(colorLayer){
-        if(hasVariationImage){
+        if(hasVariationImage || !previewSrc){
           colorLayer.style.background="transparent";
+          colorLayer.style.removeProperty("-webkit-mask-image");
+          colorLayer.style.removeProperty("mask-image");
           img.classList.add("is-photo");
         } else {
-          colorLayer.style.background=(color && color.hex) ? color.hex : "#ffffff";
+          var dye=(color && color.hex) ? color.hex : "#ffffff";
+          var maskUrl="url(\""+String(previewSrc).replace(/\\/g,"\\\\").replace(/"/g,"\\\"")+"\")";
+          colorLayer.style.background=dye;
+          colorLayer.style.setProperty("-webkit-mask-image", maskUrl);
+          colorLayer.style.setProperty("mask-image", maskUrl);
+          colorLayer.style.setProperty("-webkit-mask-size", "contain");
+          colorLayer.style.setProperty("mask-size", "contain");
+          colorLayer.style.setProperty("-webkit-mask-repeat", "no-repeat");
+          colorLayer.style.setProperty("mask-repeat", "no-repeat");
+          colorLayer.style.setProperty("-webkit-mask-position", "center");
+          colorLayer.style.setProperty("mask-position", "center");
           img.classList.remove("is-photo");
         }
       }
