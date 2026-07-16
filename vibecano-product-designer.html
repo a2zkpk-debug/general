@@ -52,11 +52,14 @@
 .vd-total span{display:block;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8;text-align:right}
 .vd-total strong{display:block;font-family:Manrope,sans-serif;font-size:20px;font-weight:800;color:var(--navy);text-align:right}
 .vd{margin-top:0!important;padding-top:0!important}
-.vd-stage{position:relative;aspect-ratio:1/1;max-width:560px;margin:0 auto;border-radius:14px;overflow:hidden;transition:background var(--ease);user-select:none;touch-action:none;background:#f8fafc}
-.vd-stage__fabric{position:absolute;inset:0;z-index:0;opacity:.08;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")}
-.vd-stage__img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;mix-blend-mode:normal;opacity:1;pointer-events:none}
-.vd-stage__tint{position:absolute;inset:0;z-index:2;pointer-events:none;mix-blend-mode:multiply;opacity:0;transition:background var(--ease),opacity var(--ease)}
-.vd-stage__tint.is-on{opacity:.28}
+.vd-stage{position:relative;aspect-ratio:1/1;max-width:560px;margin:0 auto;border-radius:14px;overflow:hidden;transition:background var(--ease);user-select:none;touch-action:none;background:#ffffff}
+.vd-stage.is-white-product{background:#111827}
+.vd-stage__fabric{position:absolute;inset:0;z-index:0;opacity:.06;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")}
+.vd-stage__product{position:absolute;inset:0;z-index:1;isolation:isolate}
+.vd-stage__color{position:absolute;inset:0;z-index:0;background:#ffffff;transition:background var(--ease)}
+.vd-stage__img{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;opacity:1;pointer-events:none}
+.vd-stage__img.is-photo{mix-blend-mode:normal}
+.vd-stage__tint{display:none!important}
 .vd-zone{position:absolute;z-index:3;border:1.5px dashed rgba(255,255,255,.7);border-radius:10px;background:rgba(11,61,74,.08);backdrop-filter:blur(2px);transition:opacity var(--ease);cursor:move;touch-action:none}
 .vd-zone.is-custom{right:auto}
 .vd-zone.is-dragging{opacity:.92;box-shadow:0 0 0 2px rgba(249,115,22,.45)}
@@ -326,8 +329,10 @@
         <div class="vd-side-tabs" id="vdSideTabs"></div>
         <div class="vd-stage" id="vdStage">
           <div class="vd-stage__fabric" aria-hidden="true"></div>
-          <img class="vd-stage__img" id="vdStageImg" alt="Product preview" src="">
-          <div class="vd-stage__tint" id="vdStageTint" aria-hidden="true"></div>
+          <div class="vd-stage__product" id="vdStageProduct">
+            <div class="vd-stage__color" id="vdStageColor" aria-hidden="true"></div>
+            <img class="vd-stage__img" id="vdStageImg" alt="Product preview" src="">
+          </div>
           <div class="vd-zone is-front" id="vdZone"></div>
         </div>
         <p class="vd-preview-hint" id="vdPreviewHint">Drag dotted box to move · use corner/side handles to resize · drag text · <strong>×</strong> to delete</p>
@@ -582,7 +587,13 @@
     return Object.assign({}, ZONE_DEFAULTS[zoneKey] || ZONE_DEFAULTS.front);
   }
 
-  function clampText(value){
+  function isWhiteColor(color){
+    if(!color) return false;
+    var hex=normalizeHex(color.hex||"")||String(color.hex||"").toUpperCase();
+    var name=String(color.name||color.raw||"").toLowerCase();
+    if(/white|ivory|cream|off[\s-]?white/.test(name)) return true;
+    return hex==="#FFFFFF"||hex==="#F5F5F4"||hex==="#FAFAFA"||hex==="#F8F8F8"||hex==="#FFFDD0"||hex==="#FFF8E7";
+  }
     return String(value==null?"":value).slice(0,200);
   }
   function autosizeTextarea(el){
@@ -759,7 +770,11 @@
     subscribe: function(fn){ this.listeners.push(fn); },
     emit: function(){ var s=this; this.listeners.forEach(function(fn){ fn(s); }); },
     getColor: function(){ var id=this.colorId; return this.product.colors.find(function(c){return c.id===id;})||this.product.colors[0]; },
-    getPosition: function(){ var id=this.printPositionId; return PRINT_POSITIONS.find(function(p){return p.id===id;})||PRINT_POSITIONS[0]; },
+    getPosition: function(){
+      var id=this.printPositionId;
+      var list=VibeDesigner.API.getAvailablePositions(this.product);
+      return list.find(function(p){return p.id===id;})||list[0]||PRINT_POSITIONS[0];
+    },
     getSelectedLayer: function(){ var id=this.selectedLayerId; return this.layers.find(function(l){return l.id===id;})||null; },
     getSize: function(){ var id=this.selectedSizeId; return this.product.sizes.find(function(s){return s.id===id;})||this.product.sizes[0]; },
     qty: function(){
@@ -1152,23 +1167,30 @@
       store.previewSide = preview;
       var stage=document.getElementById("vdStage");
       var img=document.getElementById("vdStageImg");
-      var tint=document.getElementById("vdStageTint");
+      var colorLayer=document.getElementById("vdStageColor");
       var zone=document.getElementById("vdZone");
-      stage.style.background="#ffffff";
       var previewSrc=VibeDesigner.API.getPreviewImage(store.product, preview, color, store.getSize());
       var variation=VibeDesigner.API.findMatchingVariationDetail(store.product, color, store.getSize());
-      var hasVariationImage=variation && Array.isArray(variation.images) && variation.images.length && (variation.images[0].src||variation.images[0].thumbnail);
+      var hasVariationImage=!!(variation && Array.isArray(variation.images) && variation.images.length && (variation.images[0].src||variation.images[0].thumbnail));
+      var whiteProduct=isWhiteColor(color);
+
+      // Stage backdrop: black only for white products, white for every other color
+      stage.classList.toggle("is-white-product", whiteProduct);
+      stage.style.background=whiteProduct?"#111827":"#ffffff";
+
       img.src=previewSrc;
       img.alt=store.product.name+" "+preview;
       img.style.visibility=previewSrc?"visible":"hidden";
-      // If variation has no unique image, show selected color as a light tint overlay
-      if(tint){
-        if(color && color.hex && !hasVariationImage && color.hex.toLowerCase()!=="#ffffff" && color.hex.toLowerCase()!=="#f5f5f4"){
-          tint.style.background=color.hex;
-          tint.classList.add("is-on");
+
+      // Dye the product (not the stage): color layer under image + multiply blend
+      // Skip dye when variation already has a real colored photo
+      if(colorLayer){
+        if(hasVariationImage){
+          colorLayer.style.background="transparent";
+          img.classList.add("is-photo");
         } else {
-          tint.style.background="transparent";
-          tint.classList.remove("is-on");
+          colorLayer.style.background=(color && color.hex) ? color.hex : "#ffffff";
+          img.classList.remove("is-photo");
         }
       }
       var zoneName = pos.zone;
