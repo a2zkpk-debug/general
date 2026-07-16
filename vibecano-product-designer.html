@@ -55,13 +55,9 @@
 .vd-stage__fabric{position:absolute;inset:0;opacity:.14;mix-blend-mode:multiply;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E")}
 .vd-stage__img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;opacity:.92;pointer-events:none}
 .vd-stage__img{mix-blend-mode:normal;opacity:1}
-.vd-zone{position:absolute;z-index:3;border:1.5px dashed rgba(255,255,255,.55);border-radius:10px;background:rgba(11,61,74,.08);backdrop-filter:blur(2px);transition:opacity var(--ease)}
+.vd-zone{position:absolute;z-index:3;border:1.5px dashed rgba(255,255,255,.7);border-radius:10px;background:rgba(11,61,74,.08);backdrop-filter:blur(2px);transition:opacity var(--ease);cursor:move;touch-action:none}
 .vd-zone.is-custom{right:auto}
-.vd-zone__handle{position:absolute;top:-30px;left:50%;transform:translateX(-50%);border:0;border-radius:8px;padding:5px 12px;background:var(--navy);color:#fff;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;cursor:grab;z-index:5;box-shadow:var(--shadow-sm);white-space:nowrap;touch-action:none}
-.vd-zone__handle:active{cursor:grabbing}
-.vd-layer-tools{position:absolute;z-index:6;transform:translate(-50%,calc(-100% - 14px));pointer-events:auto;display:flex;gap:6px}
-.vd-layer-tools__del{width:30px;height:30px;border:0;border-radius:999px;background:var(--danger);color:#fff;font-size:18px;line-height:1;font-weight:800;box-shadow:var(--shadow-sm);cursor:pointer}
-.vd-layer-tools__del:hover{filter:brightness(1.08)}
+.vd-zone.is-dragging{opacity:.92;box-shadow:0 0 0 2px rgba(249,115,22,.45)}
 .vd-zone.is-front{left:27%;right:27%;top:27%;height:30%}
 .vd-zone.is-back{left:27%;right:27%;top:25%;height:32%}
 .vd-zone.is-pocket{left:54%;top:34%;width:16%;height:14%}
@@ -73,7 +69,10 @@
 .vd-layer-text{white-space:pre-wrap;word-break:break-word;line-height:1.15;color:inherit}
 .vd-layer-image img,.vd-layer-clipart svg{display:block;max-width:120px;max-height:120px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25));pointer-events:none}
 .vd-layer.is-selected{outline:2px solid var(--orange);outline-offset:4px;border-radius:6px}
-.vd-preview-hint{margin:12px 0 0;text-align:center;font-size:12px;color:var(--muted)}
+.vd-layer-tools{position:absolute;z-index:6;transform:translate(-50%,calc(-100% - 10px));pointer-events:auto;display:flex;align-items:center;gap:6px}
+.vd-layer-tools__del{width:28px;height:28px;border:0;border-radius:999px;background:var(--danger);color:#fff;font-size:16px;line-height:1;font-weight:800;box-shadow:var(--shadow-sm);cursor:pointer}
+.vd-layer-resize{position:absolute;right:-7px;bottom:-7px;width:16px;height:16px;border:2px solid #fff;border-radius:4px;background:var(--orange);cursor:nwse-resize;z-index:7;touch-action:none;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.vd-preview-hint{margin:12px 0 0;text-align:center;font-size:12px;color:var(--muted);line-height:1.45;padding:0 8px}
 .vd-preview-hint strong{color:var(--navy)}
 
 .vd-panel{position:sticky;top:78px;max-height:calc(100vh - 96px);overflow:auto;display:grid;gap:12px;padding-right:2px}
@@ -166,7 +165,7 @@
 .vd-clip-item svg{width:42px;height:42px}
 
 .vd-layers{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.vd-layers li{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:8px;background:#fff}
+.vd-layers li{display:grid;grid-template-columns:1fr;gap:8px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:8px;background:#fff}
 .vd-layers li.is-active{border-color:rgba(14,116,144,.5);box-shadow:var(--shadow-sm)}
 .vd-layers__main{display:flex;align-items:center;gap:10px;border:0;background:transparent;text-align:left;padding:0}
 .vd-layers__type{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--soft);font-size:10px;font-weight:800;color:var(--navy)}
@@ -234,14 +233,49 @@
 @keyframes vdSpin{to{transform:rotate(360deg)}}
 
 @media (max-width:960px){
-  .vd-layout{grid-template-columns:1fr;padding-bottom:130px}
-  .vd-preview-wrap,.vd-panel{position:static;max-height:none}
-  .vd-actions{grid-template-columns:1fr}
+  .vd-layout{grid-template-columns:1fr;gap:14px;padding:12px 12px 120px}
+  .vd-preview-wrap,.vd-panel{position:static;max-height:none;overflow:visible}
+  .vd-actions{grid-template-columns:1fr 1fr}
+  .vd-stage{max-width:100%;width:100%;border-radius:14px}
+  .vd-preview-card,.vd-panel-card{padding:12px;border-radius:12px}
+  .vd-topbar__inner{padding:10px 12px;gap:10px}
+  .vd-topbar__right .vd-btn{display:none}
+  .vd-total strong{font-size:17px}
+  .vd-cta-bar{position:sticky;bottom:0;z-index:40;padding:10px 0 4px;margin:0 -2px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.98) 22%)}
 }
 @media (max-width:640px){
-  .vd-segment__btn{flex:1 1 calc(50% - 8px);text-align:center}
+  .vd{overflow-x:hidden;min-height:100dvh}
+  .vd-topbar__inner{flex-wrap:wrap}
+  .vd-topbar__left{width:100%;min-width:0}
+  .vd-topbar__left > div{min-width:0;flex:1}
+  .vd-topbar h1{font-size:15px;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .vd-topbar p{font-size:11px;white-space:normal}
+  .vd-topbar__right{width:100%;justify-content:space-between}
+  .vd-back{padding:8px 10px;font-size:12px}
+  .vd-layout{padding:10px 10px calc(88px + env(safe-area-inset-bottom,0px))}
+  .vd-side-tabs{gap:6px;margin-bottom:10px}
+  .vd-side-tab{padding:7px 12px;font-size:10px}
+  .vd-segment{gap:6px}
+  .vd-segment__btn{flex:1 1 calc(50% - 6px);text-align:center;padding:9px 8px;font-size:11px}
+  .vd-actions{grid-template-columns:1fr 1fr;gap:8px}
+  .vd-action{padding:12px 10px}
+  .vd-action strong{font-size:12px}
+  .vd-action small{font-size:10px}
+  .vd-action__icon{width:34px;height:34px}
   .vd-color-inputs{grid-template-columns:1fr}
   .vd-clip-grid{grid-template-columns:repeat(2,1fr)}
+  .vd-swatches{gap:8px}
+  .vd-chips{gap:6px}
+  .vd-chip{min-width:40px;padding:8px 10px;font-size:12px}
+  .vd-layers li{grid-template-columns:1fr;gap:6px}
+  .vd-preview-hint{font-size:11px}
+  .vd-modal{padding:10px;align-items:flex-end}
+  .vd-modal__box,.vd-modal__box.is-wide{width:100%;max-height:min(86vh,720px);border-radius:16px 16px 10px 10px;padding:14px}
+  .vd-btn--block{min-height:48px;font-size:14px}
+  .vd-field{margin-top:12px}
+  .vd-card-title{font-size:14px}
+  .vd-layer-tools__del{width:32px;height:32px}
+  .vd-layer-resize{width:18px;height:18px}
 }
 </style>
 
@@ -273,7 +307,7 @@
           <img class="vd-stage__img" id="vdStageImg" alt="Product preview" src="">
           <div class="vd-zone is-front" id="vdZone"></div>
         </div>
-        <p class="vd-preview-hint" id="vdPreviewHint">Drag the <strong>print area</strong> handle to reposition · drag text/images inside · tap <strong>×</strong> to delete</p>
+        <p class="vd-preview-hint" id="vdPreviewHint">Drag the <strong>dotted box</strong> to move print area · drag text to move · corner to resize · <strong>×</strong> to delete</p>
       </div>
     </div>
 
@@ -318,7 +352,7 @@
         <div class="vd-card-head">
           <div>
             <h3 class="vd-card-title">Text Editor</h3>
-            <p class="vd-card-sub">Typography, formatting, and advanced effects.</p>
+          <p class="vd-card-sub">Typography for your design. Tap Done when finished.</p>
           </div>
           <button type="button" class="vd-link" id="vdTextDone">Done</button>
         </div>
@@ -340,7 +374,7 @@
       <section class="vd-panel-card" id="vdLayersCard">
         <div class="vd-card-head"><div>
           <h3 class="vd-card-title">Layers</h3>
-          <p class="vd-card-sub">Stack, hide, lock, or remove design elements.</p>
+          <p class="vd-card-sub">Tap a layer to select it. Delete with × on the canvas.</p>
         </div></div>
         <div id="vdLayers"></div>
       </section>
@@ -919,8 +953,10 @@
         return layer.positionId===store.printPositionId || layer.positionId===pos.zone;
       });
 
-      var layersHtml=layers.map(function(layer){
-        var common=' class="vd-layer'+(layer.type==="text"?" vd-layer-text": layer.type==="clipart"?" vd-layer-clipart":" vd-layer-image")+(store.selectedLayerId===layer.id?" is-selected":"")+'" data-layer="'+layer.id+'" style="left:'+layer.x+'%;top:'+layer.y+'%;transform:translate(-50%,-50%) rotate('+(layer.type==="text"&&layer.text?layer.text.rotation:layer.rotation)+'deg) scale('+layer.scale+');opacity:'+(layer.type==="text"&&layer.text?layer.text.opacity:layer.opacity)+'"';
+      zone.innerHTML=layers.map(function(layer){
+        var isSel=store.selectedLayerId===layer.id;
+        var common=' class="vd-layer'+(layer.type==="text"?" vd-layer-text": layer.type==="clipart"?" vd-layer-clipart":" vd-layer-image")+(isSel?" is-selected":"")+'" data-layer="'+layer.id+'" style="left:'+layer.x+'%;top:'+layer.y+'%;transform:translate(-50%,-50%) rotate('+(layer.type==="text"&&layer.text?layer.text.rotation:layer.rotation)+'deg) scale('+layer.scale+');opacity:'+(layer.type==="text"&&layer.text?layer.text.opacity:layer.opacity)+'"';
+        var resize=isSel?'<span class="vd-layer-resize" data-layer-resize="'+layer.id+'" aria-hidden="true"></span>':"";
         if(layer.type==="text"&&layer.text){
           var font=FONTS.find(function(f){return f.id===layer.text.fontId;})||FONTS[0];
           var content=layer.text.content||"Enter your text here...";
@@ -942,18 +978,17 @@
             layer.text.gradientEnabled?"background-image:linear-gradient(90deg,"+layer.text.gradientFrom+","+layer.text.gradientTo+");-webkit-background-clip:text;-webkit-text-fill-color:transparent;color:transparent":"color:"+layer.text.color,
             layer.text.patternFill?"background-image:repeating-linear-gradient(45deg,"+layer.text.color+" 0 2px,transparent 2px 6px);-webkit-background-clip:text;-webkit-text-fill-color:transparent":""
           ].filter(Boolean).join(";");
-          return '<button type="button"'+common+' style="'+style+';left:'+layer.x+'%;top:'+layer.y+'%">'+esc(content)+'</button>';
+          return '<button type="button"'+common+' style="'+style+';left:'+layer.x+'%;top:'+layer.y+'%">'+esc(content)+resize+'</button>';
         }
         if(layer.type==="clipart"&&layer.clipart){
-          return '<button type="button"'+common+'>'+layer.clipart.svg+'</button>';
+          return '<button type="button"'+common+'>'+layer.clipart.svg+resize+'</button>';
         }
         if(layer.image){
-          return '<button type="button"'+common+'><img src="'+layer.image.src+'" alt="'+esc(layer.image.fileName)+'"></button>';
+          return '<button type="button"'+common+'><img src="'+layer.image.src+'" alt="'+esc(layer.image.fileName)+'">'+resize+'</button>';
         }
         return "";
       }).join("");
 
-      var handle='<button type="button" class="vd-zone__handle" data-zone-handle aria-label="Move print area">Move print area</button>';
       var selected=store.getSelectedLayer();
       var tools="";
       if(selected && selected.visible && !selected.locked){
@@ -962,10 +997,10 @@
           tools='<div class="vd-layer-tools" data-layer-tools style="left:'+selected.x+'%;top:'+selected.y+'%"><button type="button" class="vd-layer-tools__del" data-canvas-del="'+selected.id+'" aria-label="Delete layer">×</button></div>';
         }
       }
-      zone.innerHTML=layersHtml+handle+tools;
+      zone.innerHTML=zone.innerHTML+tools;
 
       var dualLabel = dual ? (preview==="back" ? "Back" : dual[0].label) : pos.label;
-      document.getElementById("vdPreviewHint").innerHTML='Editing <strong>'+esc(pos.label)+'</strong> · <strong>'+esc(dualLabel)+'</strong> · drag handle to move print area · <strong>×</strong> deletes selected layer';
+      document.getElementById("vdPreviewHint").innerHTML='Editing <strong>'+esc(pos.label)+'</strong> · <strong>'+esc(dualLabel)+'</strong> · drag dotted box to move · drag text · resize corner · <strong>×</strong> deletes';
       document.getElementById("vdSideTabs").innerHTML=["front","back"].map(function(side){
         return '<button type="button" class="vd-side-tab'+(preview===side?" is-active":"")+'" data-side="'+side+'">'+(side==="front"?"Front":"Back")+'</button>';
       }).join("");
@@ -1084,9 +1119,6 @@
       }
       var t=layer.text;
       var currentFont=FONTS.find(function(f){return f.id===t.fontId;})||FONTS[0];
-      function slider(label,key,min,max,step,suffix,val){
-        return '<label class="vd-slider"><span class="vd-slider__head"><span>'+label+'</span><strong>'+val+(suffix||"")+'</strong></span><input type="range" min="'+min+'" max="'+max+'" step="'+(step||1)+'" value="'+val+'" data-text-key="'+key+'"></label>';
-      }
 
       var contentHtml = "";
       if(dual){
@@ -1098,7 +1130,7 @@
             '<textarea class="vd-textarea" rows="3" data-side-text="'+side.id+'" data-layer-id="'+lid+'" placeholder="Enter text for '+esc(side.label)+'...">'+esc(val)+'</textarea></div>';
         }).join("") + '</div>';
       } else {
-        contentHtml = '<label class="vd-field"><span class="vd-label">Text</span><textarea class="vd-textarea" id="vdTextContent" placeholder="Enter your text here..." rows="4">'+esc(t.content)+'</textarea></label>';
+        contentHtml = '<label class="vd-field"><span class="vd-label">Your text</span><textarea class="vd-textarea" id="vdTextContent" placeholder="Enter your text here..." rows="3">'+esc(t.content)+'</textarea></label>';
       }
 
       root.innerHTML=
@@ -1106,17 +1138,11 @@
         '<div class="vd-field"><span class="vd-label">Font</span>'+
         '<select class="vd-select" id="vdFontSelect" aria-label="Font" style="font-family:'+currentFont.family+'">'+
         FONTS.map(function(f){
-          return '<option value="'+f.id+'"'+(t.fontId===f.id?" selected":"")+' style="font-family:'+f.family+'">'+esc(f.label)+' — '+esc(f.preview)+'</option>';
+          return '<option value="'+f.id+'"'+(t.fontId===f.id?" selected":"")+' style="font-family:'+f.family+'">'+esc(f.label)+'</option>';
         }).join("")+
         '</select></div>'+
-        '<div class="vd-field">'+slider("Font Size","fontSize",10,120,1,"px",t.fontSize)+slider("Font Weight","fontWeight",300,900,100,"",t.fontWeight)+slider("Letter Spacing","letterSpacing",-4,20,.5,"px",t.letterSpacing)+slider("Line Height","lineHeight",.8,2.4,.05,"",t.lineHeight)+slider("Rotation","rotation",-180,180,1,"°",t.rotation)+slider("Opacity","opacityPct",10,100,1,"%",Math.round(t.opacity*100))+"</div>"+
-        '<div class="vd-field"><span class="vd-label">Formatting</span><div class="vd-toolbar">'+["left","center","right","justify"].map(function(a){return '<button type="button" class="vd-iconbtn'+(t.align===a?" is-active":"")+'" data-align="'+a+'">'+a.charAt(0).toUpperCase()+"</button>";}).join("")+
-        '<button type="button" class="vd-iconbtn'+(t.bold?" is-active":"")+'" data-fmt="bold">B</button><button type="button" class="vd-iconbtn'+(t.italic?" is-active":"")+'" data-fmt="italic"><em>I</em></button><button type="button" class="vd-iconbtn'+(t.underline?" is-active":"")+'" data-fmt="underline"><u>U</u></button><button type="button" class="vd-iconbtn'+(t.textCase==="uppercase"?" is-active":"")+'" data-case="uppercase">AA</button><button type="button" class="vd-iconbtn'+(t.textCase==="lowercase"?" is-active":"")+'" data-case="lowercase">aa</button></div></div>'+
-        '<div class="vd-field"><span class="vd-label">Text Color</span><div class="vd-swatches">'+PRESET_COLORS.map(function(hex){return '<button type="button" class="vd-swatch'+(t.color.toLowerCase()===hex.toLowerCase()?" is-active":"")+'" style="background:'+hex+'" data-text-color="'+hex+'"></button>';}).join("")+'</div><div class="vd-color-inputs"><label>HEX<input class="vd-input" id="vdHex" value="'+t.color+'"></label><label>RGB<input class="vd-input" id="vdRgb" value="'+hexToRgb(t.color)+'"></label></div></div>'+
-        '<div class="vd-field"><span class="vd-label">Advanced Effects</span><div class="vd-chips">'+["none","outline","shadow","curved","arc","vertical"].map(function(ef){return '<button type="button" class="vd-chip'+(t.effect===ef?" is-active":"")+'" data-effect="'+ef+'">'+(ef==="none"?"None":ef.charAt(0).toUpperCase()+ef.slice(1))+"</button>";}).join("")+"</div>"+
-        (t.effect==="outline"?slider("Stroke Width","strokeWidth",0,12,1,"px",t.strokeWidth):"")+(t.effect==="shadow"?slider("Shadow Blur","shadowBlur",0,24,1,"px",t.shadowBlur):"")+((t.effect==="curved"||t.effect==="arc")?slider("Curve / Arc","curveAmount",-180,180,1,"°",t.curveAmount):"")+
-        '<div class="vd-toggle-row"><label class="vd-check"><input type="checkbox" id="vdGradient"'+(t.gradientEnabled?" checked":"")+'> Gradient Fill</label><label class="vd-check"><input type="checkbox" id="vdPattern"'+(t.patternFill?" checked":"")+'> Pattern Fill</label></div></div>'+
-        '<div class="vd-field"><span class="vd-label">Layer Controls</span><div class="vd-toolbar"><button type="button" class="vd-iconbtn" data-layer-act="up">↑</button><button type="button" class="vd-iconbtn" data-layer-act="down">↓</button><button type="button" class="vd-iconbtn" data-layer-act="dup">⧉</button><button type="button" class="vd-iconbtn" data-layer-act="del">⌫</button></div></div>';
+        '<div class="vd-field"><span class="vd-label">Text Color</span><div class="vd-swatches">'+PRESET_COLORS.map(function(hex){return '<button type="button" class="vd-swatch'+(t.color.toLowerCase()===hex.toLowerCase()?" is-active":"")+'" style="background:'+hex+'" data-text-color="'+hex+'"></button>';}).join("")+'</div></div>'+
+        '<p class="vd-preview-hint" style="margin-top:10px;text-align:left">Drag text on the preview to move. Drag the orange corner to resize. Tap Done when finished.</p>';
     },
     update: function(patch, opts){
       opts = opts || {};
@@ -1161,7 +1187,7 @@
       if(!store.layers.length){ root.innerHTML='<p class="vd-empty">No layers yet. Add text, image, logo, or clipart.</p>'; return; }
       root.innerHTML='<ul class="vd-layers">'+store.layers.slice().reverse().map(function(layer){
         var type=layer.type==="text"?"T":layer.type==="clipart"?"CLIP":layer.type==="logo"?"LOGO":"IMG";
-        return '<li class="'+(store.selectedLayerId===layer.id?"is-active":"")+'"><button type="button" class="vd-layers__main" data-select-layer="'+layer.id+'"><span class="vd-layers__type">'+type+'</span><span><strong>'+esc(layer.name)+'</strong><small>'+layer.positionId.replace(/_/g," ")+'</small></span></button><div class="vd-layers__actions"><button type="button" data-vis="'+layer.id+'">'+(layer.visible?"Hide":"Show")+'</button><button type="button" data-lock="'+layer.id+'">'+(layer.locked?"Unlock":"Lock")+'</button><button type="button" data-del="'+layer.id+'">Del</button></div></li>';
+        return '<li class="'+(store.selectedLayerId===layer.id?"is-active":"")+'"><button type="button" class="vd-layers__main" data-select-layer="'+layer.id+'"><span class="vd-layers__type">'+type+'</span><span><strong>'+esc(layer.name)+'</strong><small>'+layer.positionId.replace(/_/g," ")+'</small></span></button></li>';
       }).join("")+"</ul>";
     }
   };
@@ -1515,13 +1541,9 @@
         return;
       }
       var clip=t.closest("[data-clip]"); if(clip){ VibeDesigner.Clipart.add(clip.getAttribute("data-clip")); return; }
-      var layerBtn=t.closest("[data-layer]"); if(layerBtn){ return; }
       var canvasDel=t.closest("[data-canvas-del]"); if(canvasDel){ deleteLayer(canvasDel.getAttribute("data-canvas-del")); return; }
-      var zoneHandle=t.closest("[data-zone-handle]"); if(zoneHandle){ return; }
+      var layerBtn=t.closest("[data-layer]"); if(layerBtn){ return; }
       var selectLayer=t.closest("[data-select-layer]"); if(selectLayer){ store.selectedLayerId=selectLayer.getAttribute("data-select-layer"); var selected=store.getSelectedLayer(); store.emit(); if(selected&&selected.type==="text"){ store.textPairId=selected.pairId||null; showTextEditor(true);} else showTextEditor(false); return; }
-      var vis=t.closest("[data-vis]"); if(vis){ var vid=vis.getAttribute("data-vis"); store.layers=store.layers.map(function(l){return l.id===vid?Object.assign({},l,{visible:!l.visible}):l;}); store.emit(); return; }
-      var lock=t.closest("[data-lock]"); if(lock){ var lid=lock.getAttribute("data-lock"); store.layers=store.layers.map(function(l){return l.id===lid?Object.assign({},l,{locked:!l.locked}):l;}); store.emit(); return; }
-      var del=t.closest("[data-del]"); if(del){ var did=del.getAttribute("data-del"); store.layers=store.layers.filter(function(l){return l.id!==did;}); if(store.selectedLayerId===did){ store.selectedLayerId=null; showTextEditor(false); } store.emit(); return; }
     });
 
     app.addEventListener("input", function(e){
@@ -1531,7 +1553,7 @@
       if(e.target.id==="vdClipSearch"){ store.clipQuery=e.target.value; VibeDesigner.Clipart.render(); }
     });
 
-    // Drag layers (pointer events on stage; coords relative to print zone)
+    // Drag layers / resize / move dotted print zone
     var zone=document.getElementById("vdZone");
     var stageEl=document.getElementById("vdStage");
     var dragSurface=stageEl||zone;
@@ -1543,60 +1565,9 @@
         var r=el.getBoundingClientRect();
         if(clientX>=r.left && clientX<=r.right && clientY>=r.top && clientY<=r.bottom) return active[i].id;
       }
-      return active.length ? active[active.length-1].id : null;
+      return null;
     }
-    function onDragPointerDown(e){
-      if(e.button!==undefined && e.button!==0) return;
-      if(e.target.closest("[data-zone-handle]") || e.target.closest("[data-canvas-del]") || e.target.closest("[data-layer-tools]")) return;
-      var btn=e.target.closest("[data-layer]");
-      var id=btn ? btn.getAttribute("data-layer") : layerFromPoint(e.clientX, e.clientY);
-      if(!id) return;
-      var layer=store.layers.find(function(l){ return l.id===id; });
-      if(!layer || layer.locked) return;
-      VibeDesigner.Canvas.setSelectedLayer(id);
-      var rect=zone.getBoundingClientRect();
-      if(!rect.width || !rect.height) return;
-      VibeDesigner.Canvas.drag={ id:id, rect:rect, moved:false, layerType:layer.type };
-      if(dragSurface.setPointerCapture) dragSurface.setPointerCapture(e.pointerId);
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    function onDragPointerMove(e){
-      var drag=VibeDesigner.Canvas.drag;
-      if(!drag) return;
-      var x=((e.clientX-drag.rect.left)/drag.rect.width)*100;
-      var y=((e.clientY-drag.rect.top)/drag.rect.height)*100;
-      x=Math.max(5, Math.min(95, x));
-      y=Math.max(5, Math.min(95, y));
-      drag.moved=true;
-      store.layers=store.layers.map(function(l){ return l.id===drag.id ? Object.assign({}, l, { x:x, y:y }) : l; });
-      VibeDesigner.Canvas.moveLayerDom(drag.id, x, y);
-      e.preventDefault();
-    }
-    function onDragPointerUp(e){
-      var drag=VibeDesigner.Canvas.drag;
-      if(!drag) return;
-      if(dragSurface.releasePointerCapture){
-        try{ dragSurface.releasePointerCapture(e.pointerId); }catch(err){}
-      }
-      VibeDesigner.Canvas.drag=null;
-      VibeDesigner.Canvas.render();
-      VibeDesigner.Layers.render();
-      if(!drag.moved && drag.layerType==="text"){
-        var picked=store.layers.find(function(l){ return l.id===drag.id; });
-        if(picked){ store.textPairId=picked.pairId||null; showTextEditor(true); }
-      }
-    }
-    if(dragSurface){
-      dragSurface.addEventListener("pointerdown", onDragPointerDown);
-      dragSurface.addEventListener("pointermove", onDragPointerMove);
-      dragSurface.addEventListener("pointerup", onDragPointerUp);
-      dragSurface.addEventListener("pointercancel", onDragPointerUp);
-    }
-
-    function onZoneHandleDown(e){
-      if(e.button!==undefined && e.button!==0) return;
-      if(!e.target.closest("[data-zone-handle]")) return;
+    function startZoneDrag(e){
       var stageRect=stageEl.getBoundingClientRect();
       if(!stageRect.width || !stageRect.height) return;
       var zoneKey=VibeDesigner.Canvas.currentZoneKey || "front";
@@ -1608,42 +1579,143 @@
         stageRect:stageRect,
         orig:Object.assign({}, layout)
       };
+      zone.classList.add("is-dragging");
       if(stageEl.setPointerCapture) stageEl.setPointerCapture(e.pointerId);
-      e.preventDefault();
-      e.stopPropagation();
     }
-    function onZoneHandleMove(e){
-      var zd=VibeDesigner.Canvas.zoneDrag;
-      if(!zd) return;
-      var dx=((e.clientX-zd.startX)/zd.stageRect.width)*100;
-      var dy=((e.clientY-zd.startY)/zd.stageRect.height)*100;
-      var left=Math.max(2, Math.min(98-zd.orig.width, zd.orig.left+dx));
-      var top=Math.max(2, Math.min(98-zd.orig.height, zd.orig.top+dy));
-      zone.style.left=left+"%";
-      zone.style.top=top+"%";
-      e.preventDefault();
-    }
-    function onZoneHandleUp(e){
-      var zd=VibeDesigner.Canvas.zoneDrag;
-      if(!zd) return;
-      if(stageEl.releasePointerCapture){
-        try{ stageEl.releasePointerCapture(e.pointerId); }catch(err){}
+    function onDragPointerDown(e){
+      if(e.button!==undefined && e.button!==0) return;
+      if(e.target.closest("[data-canvas-del]") || e.target.closest("[data-layer-tools]")) return;
+
+      var resizeBtn=e.target.closest("[data-layer-resize]");
+      if(resizeBtn){
+        var rid=resizeBtn.getAttribute("data-layer-resize");
+        var rLayer=store.layers.find(function(l){ return l.id===rid; });
+        if(!rLayer || rLayer.locked) return;
+        VibeDesigner.Canvas.setSelectedLayer(rid);
+        VibeDesigner.Canvas.drag={
+          id:rid,
+          mode:"resize",
+          startX:e.clientX,
+          startY:e.clientY,
+          startScale:rLayer.scale||1,
+          startFont:rLayer.text ? rLayer.text.fontSize : 36,
+          moved:false,
+          layerType:rLayer.type
+        };
+        if(dragSurface.setPointerCapture) dragSurface.setPointerCapture(e.pointerId);
+        e.preventDefault();
+        e.stopPropagation();
+        return;
       }
-      if(!store.zoneLayouts) store.zoneLayouts={};
-      store.zoneLayouts[zd.zoneKey]={
-        left:parseFloat(zone.style.left)||zd.orig.left,
-        top:parseFloat(zone.style.top)||zd.orig.top,
-        width:zd.orig.width,
-        height:zd.orig.height
-      };
-      VibeDesigner.Canvas.zoneDrag=null;
+
+      var btn=e.target.closest("[data-layer]");
+      var id=btn ? btn.getAttribute("data-layer") : layerFromPoint(e.clientX, e.clientY);
+      if(id){
+        var layer=store.layers.find(function(l){ return l.id===id; });
+        if(!layer || layer.locked) return;
+        VibeDesigner.Canvas.setSelectedLayer(id);
+        var rect=zone.getBoundingClientRect();
+        if(!rect.width || !rect.height) return;
+        VibeDesigner.Canvas.drag={ id:id, mode:"move", rect:rect, moved:false, layerType:layer.type };
+        if(dragSurface.setPointerCapture) dragSurface.setPointerCapture(e.pointerId);
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+
+      // Empty dotted box (or empty stage over zone) → move print area
+      var overZone = e.target===zone || zone.contains(e.target) || (function(){
+        var zr=zone.getBoundingClientRect();
+        return e.clientX>=zr.left && e.clientX<=zr.right && e.clientY>=zr.top && e.clientY<=zr.bottom;
+      })();
+      if(overZone){
+        startZoneDrag(e);
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }
+    function onDragPointerMove(e){
+      var zd=VibeDesigner.Canvas.zoneDrag;
+      if(zd){
+        var dx=((e.clientX-zd.startX)/zd.stageRect.width)*100;
+        var dy=((e.clientY-zd.startY)/zd.stageRect.height)*100;
+        var left=Math.max(2, Math.min(98-zd.orig.width, zd.orig.left+dx));
+        var top=Math.max(2, Math.min(98-zd.orig.height, zd.orig.top+dy));
+        zone.style.left=left+"%";
+        zone.style.top=top+"%";
+        e.preventDefault();
+        return;
+      }
+      var drag=VibeDesigner.Canvas.drag;
+      if(!drag) return;
+      if(drag.mode==="resize"){
+        var delta=(e.clientX-drag.startX + e.clientY-drag.startY)/80;
+        var scale=Math.max(0.4, Math.min(3, drag.startScale + delta));
+        drag.moved=true;
+        store.layers=store.layers.map(function(l){
+          if(l.id!==drag.id) return l;
+          var next=Object.assign({}, l, { scale:scale });
+          if(l.text){
+            var fs=Math.max(12, Math.min(120, Math.round(drag.startFont * scale / drag.startScale)));
+            next.text=Object.assign({}, l.text, { fontSize:fs });
+          }
+          return next;
+        });
+        var el=zone.querySelector('[data-layer="'+drag.id+'"]');
+        if(el){
+          var live=store.layers.find(function(l){ return l.id===drag.id; });
+          var rot=live && live.text ? live.text.rotation : (live && live.rotation)||0;
+          el.style.transform="translate(-50%,-50%) rotate("+rot+"deg) scale("+scale+")";
+          if(live && live.text) el.style.fontSize=(live.text.fontSize*0.34)+"px";
+        }
+        e.preventDefault();
+        return;
+      }
+      var x=((e.clientX-drag.rect.left)/drag.rect.width)*100;
+      var y=((e.clientY-drag.rect.top)/drag.rect.height)*100;
+      x=Math.max(5, Math.min(95, x));
+      y=Math.max(5, Math.min(95, y));
+      drag.moved=true;
+      store.layers=store.layers.map(function(l){ return l.id===drag.id ? Object.assign({}, l, { x:x, y:y }) : l; });
+      VibeDesigner.Canvas.moveLayerDom(drag.id, x, y);
       e.preventDefault();
     }
-    if(stageEl){
-      stageEl.addEventListener("pointerdown", onZoneHandleDown);
-      stageEl.addEventListener("pointermove", onZoneHandleMove);
-      stageEl.addEventListener("pointerup", onZoneHandleUp);
-      stageEl.addEventListener("pointercancel", onZoneHandleUp);
+    function onDragPointerUp(e){
+      var zd=VibeDesigner.Canvas.zoneDrag;
+      if(zd){
+        if(stageEl.releasePointerCapture){
+          try{ stageEl.releasePointerCapture(e.pointerId); }catch(err){}
+        }
+        if(!store.zoneLayouts) store.zoneLayouts={};
+        store.zoneLayouts[zd.zoneKey]={
+          left:parseFloat(zone.style.left)||zd.orig.left,
+          top:parseFloat(zone.style.top)||zd.orig.top,
+          width:zd.orig.width,
+          height:zd.orig.height
+        };
+        VibeDesigner.Canvas.zoneDrag=null;
+        zone.classList.remove("is-dragging");
+        e.preventDefault();
+        return;
+      }
+      var drag=VibeDesigner.Canvas.drag;
+      if(!drag) return;
+      if(dragSurface.releasePointerCapture){
+        try{ dragSurface.releasePointerCapture(e.pointerId); }catch(err){}
+      }
+      VibeDesigner.Canvas.drag=null;
+      VibeDesigner.Canvas.render();
+      VibeDesigner.Layers.render();
+      if(!drag.moved && drag.layerType==="text" && drag.mode!=="resize"){
+        var picked=store.layers.find(function(l){ return l.id===drag.id; });
+        if(picked){ store.textPairId=picked.pairId||null; showTextEditor(true); }
+      }
+    }
+    if(dragSurface){
+      dragSurface.addEventListener("pointerdown", onDragPointerDown);
+      dragSurface.addEventListener("pointermove", onDragPointerMove);
+      dragSurface.addEventListener("pointerup", onDragPointerUp);
+      dragSurface.addEventListener("pointercancel", onDragPointerUp);
     }
 
     document.getElementById("vdOpenChart").addEventListener("click", function(){ document.getElementById("vdChartModal").classList.add("is-open"); });
