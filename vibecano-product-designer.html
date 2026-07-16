@@ -222,7 +222,8 @@
 .vd-side-picker.is-disabled{opacity:.45;pointer-events:none}
 .vd-side-hint{margin:8px 0 0;font-size:12px;color:var(--muted);line-height:1.4}
 .vd-upload-next{margin-top:12px;display:grid;gap:8px}
-.vd-loading{display:grid;place-items:center;min-height:60vh}
+.vd-loading{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:rgba(255,255,255,.94);backdrop-filter:blur(4px)}
+.vd-loading.is-done,.vd-loading[hidden]{display:none!important;visibility:hidden!important;pointer-events:none!important}
 .vd-spinner{width:44px;height:44px;border-radius:50%;border:4px solid rgba(11,61,74,.15);border-top-color:var(--navy);animation:vdSpin .8s linear infinite}
 @keyframes vdSpin{to{transform:rotate(360deg)}}
 
@@ -826,6 +827,33 @@
   /* ---------- Canvas ---------- */
   VibeDesigner.Canvas = {
     drag: null,
+    getActiveLayers: function(){
+      var store=VibeDesigner.Store, pos=store.getPosition();
+      var dual=getDualSides(store.printPositionId);
+      var preview=store.previewSide || (pos.side || "front");
+      return store.layers.filter(function(layer){
+        if(!layer.visible) return false;
+        if(dual){
+          var activeSide=dual.find(function(s){ return s.preview===preview; }) || dual[0];
+          return layer.positionId===activeSide.id;
+        }
+        return layer.positionId===store.printPositionId || layer.positionId===pos.zone;
+      });
+    },
+    setSelectedLayer: function(id){
+      VibeDesigner.Store.selectedLayerId=id;
+      var zone=document.getElementById("vdZone");
+      if(!zone) return;
+      zone.querySelectorAll("[data-layer]").forEach(function(el){
+        el.classList.toggle("is-selected", el.getAttribute("data-layer")===id);
+      });
+    },
+    moveLayerDom: function(id, x, y){
+      var zone=document.getElementById("vdZone");
+      if(!zone) return;
+      var el=zone.querySelector('[data-layer="'+id+'"]');
+      if(el){ el.style.left=x+"%"; el.style.top=y+"%"; }
+    },
     render: function(){
       var store=VibeDesigner.Store, color=store.getColor(), pos=store.getPosition();
       var dual=getDualSides(store.printPositionId);
@@ -1458,48 +1486,67 @@
       if(e.target.id==="vdClipSearch"){ store.clipQuery=e.target.value; VibeDesigner.Clipart.render(); }
     });
 
-    // Drag layers (anywhere on stage)
+    // Drag layers (pointer events on stage; coords relative to print zone)
     var zone=document.getElementById("vdZone");
     var stageEl=document.getElementById("vdStage");
-    function onPointerDown(e){
-      var btn=e.target.closest("[data-layer]");
-      var id=null;
-      if(btn){
-        id=btn.getAttribute("data-layer");
-      } else {
-        // Drag anywhere: move currently selected layer if present
-        var selected=store.getSelectedLayer && store.getSelectedLayer();
-        if(selected && !selected.locked){
-          id=selected.id;
-        } else {
-          return;
-        }
+    var dragSurface=stageEl||zone;
+    function layerFromPoint(clientX, clientY){
+      var active=VibeDesigner.Canvas.getActiveLayers();
+      for(var i=active.length-1;i>=0;i--){
+        var el=zone.querySelector('[data-layer="'+active[i].id+'"]');
+        if(!el) continue;
+        var r=el.getBoundingClientRect();
+        if(clientX>=r.left && clientX<=r.right && clientY>=r.top && clientY<=r.bottom) return active[i].id;
       }
-      var layer=store.layers.find(function(l){return l.id===id;});
-      if(!layer||layer.locked) return;
-      if(btn){ store.selectedLayerId=id; store.emit(); }
-      var rect=(stageEl||zone).getBoundingClientRect();
-      var point=e.touches?e.touches[0]:e;
-      VibeDesigner.Canvas.drag={ id:id, rect:rect };
+      return active.length ? active[active.length-1].id : null;
+    }
+    function onDragPointerDown(e){
+      if(e.button!==undefined && e.button!==0) return;
+      var btn=e.target.closest("[data-layer]");
+      var id=btn ? btn.getAttribute("data-layer") : layerFromPoint(e.clientX, e.clientY);
+      if(!id) return;
+      var layer=store.layers.find(function(l){ return l.id===id; });
+      if(!layer || layer.locked) return;
+      VibeDesigner.Canvas.setSelectedLayer(id);
+      var rect=zone.getBoundingClientRect();
+      if(!rect.width || !rect.height) return;
+      VibeDesigner.Canvas.drag={ id:id, rect:rect, moved:false, layerType:layer.type };
+      if(dragSurface.setPointerCapture) dragSurface.setPointerCapture(e.pointerId);
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    function onDragPointerMove(e){
+      var drag=VibeDesigner.Canvas.drag;
+      if(!drag) return;
+      var x=((e.clientX-drag.rect.left)/drag.rect.width)*100;
+      var y=((e.clientY-drag.rect.top)/drag.rect.height)*100;
+      x=Math.max(5, Math.min(95, x));
+      y=Math.max(5, Math.min(95, y));
+      drag.moved=true;
+      store.layers=store.layers.map(function(l){ return l.id===drag.id ? Object.assign({}, l, { x:x, y:y }) : l; });
+      VibeDesigner.Canvas.moveLayerDom(drag.id, x, y);
       e.preventDefault();
     }
-    function onPointerMove(e){
-      var drag=VibeDesigner.Canvas.drag; if(!drag) return;
-      var point=e.touches?e.touches[0]:e;
-      var x=((point.clientX-drag.rect.left)/drag.rect.width)*100;
-      var y=((point.clientY-drag.rect.top)/drag.rect.height)*100;
-      x=Math.max(5,Math.min(95,x)); y=Math.max(5,Math.min(95,y));
-      store.layers=store.layers.map(function(l){ return l.id===drag.id?Object.assign({},l,{x:x,y:y}):l; });
+    function onDragPointerUp(e){
+      var drag=VibeDesigner.Canvas.drag;
+      if(!drag) return;
+      if(dragSurface.releasePointerCapture){
+        try{ dragSurface.releasePointerCapture(e.pointerId); }catch(err){}
+      }
+      VibeDesigner.Canvas.drag=null;
       VibeDesigner.Canvas.render();
-      e.preventDefault();
+      VibeDesigner.Layers.render();
+      if(!drag.moved && drag.layerType==="text"){
+        var picked=store.layers.find(function(l){ return l.id===drag.id; });
+        if(picked){ store.textPairId=picked.pairId||null; showTextEditor(true); }
+      }
     }
-    function onPointerUp(){ VibeDesigner.Canvas.drag=null; VibeDesigner.Layers.render(); }
-    (stageEl||zone).addEventListener("mousedown", onPointerDown);
-    (stageEl||zone).addEventListener("touchstart", onPointerDown, {passive:false});
-    window.addEventListener("mousemove", onPointerMove);
-    window.addEventListener("touchmove", onPointerMove, {passive:false});
-    window.addEventListener("mouseup", onPointerUp);
-    window.addEventListener("touchend", onPointerUp);
+    if(dragSurface){
+      dragSurface.addEventListener("pointerdown", onDragPointerDown);
+      dragSurface.addEventListener("pointermove", onDragPointerMove);
+      dragSurface.addEventListener("pointerup", onDragPointerUp);
+      dragSurface.addEventListener("pointercancel", onDragPointerUp);
+    }
 
     document.getElementById("vdOpenChart").addEventListener("click", function(){ document.getElementById("vdChartModal").classList.add("is-open"); });
     document.querySelectorAll("[data-close='chart']").forEach(function(el){ el.addEventListener("click", function(){ document.getElementById("vdChartModal").classList.remove("is-open"); }); });
@@ -1640,7 +1687,24 @@
     VibeDesigner.Canvas.render();
   }
 
+  function hideLoading(){
+    var ld=document.getElementById("vdLoading");
+    var main=document.getElementById("vdMain");
+    if(ld){
+      ld.hidden=true;
+      ld.setAttribute("hidden","");
+      ld.style.display="none";
+      ld.classList.add("is-done");
+      ld.setAttribute("aria-hidden","true");
+    }
+    if(main){
+      main.hidden=false;
+      main.removeAttribute("hidden");
+    }
+  }
+
   function bootDesigner(product){
+    hideLoading();
     var store=VibeDesigner.Store;
     var expectedId=VibeDesigner.API.getProductIdFromUrl() || (VibeDesigner.API.getSavedProductContext() && VibeDesigner.API.getSavedProductContext().id);
 
@@ -1658,8 +1722,6 @@
       else if(store.product.permalink) back.href=store.product.permalink;
     }
 
-    document.getElementById("vdLoading").hidden=true;
-    document.getElementById("vdMain").hidden=false;
     bind();
     renderAll();
     showTextEditor(false);
@@ -1675,11 +1737,10 @@
   // Hard safety: ensure spinner clears even if something stalls
   setTimeout(function(){
     var ld=document.getElementById("vdLoading");
-    var main=document.getElementById("vdMain");
-    if(ld && !ld.hidden){
-      ld.hidden=true;
-      if(main) main.hidden=false;
-      VibeDesigner.UI.toast("Network slow or blocked. Reload or check Store API.");
+    if(ld && !ld.classList.contains("is-done")){
+      hideLoading();
+      if(!bind._bound) bootDesigner(null);
+      else VibeDesigner.UI.toast("Network slow or blocked. Reload or check Store API.");
     }
   }, 3000);
 })();
