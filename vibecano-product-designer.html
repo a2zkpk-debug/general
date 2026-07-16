@@ -85,8 +85,7 @@
 .vd-layer-text{white-space:pre-wrap;word-break:break-word;line-height:1.15;color:inherit}
 .vd-layer-image img,.vd-layer-clipart svg{display:block;max-width:120px;max-height:120px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.25));pointer-events:none}
 .vd-layer.is-selected{outline:2px solid var(--orange);outline-offset:4px;border-radius:6px}
-.vd-layer-tools{position:absolute;z-index:6;transform:translate(-50%,calc(-100% - 10px));pointer-events:auto;display:flex;align-items:center;gap:6px}
-.vd-layer-tools__del{width:28px;height:28px;border:0;border-radius:999px;background:var(--danger);color:#fff;font-size:16px;line-height:1;font-weight:800;box-shadow:var(--shadow-sm);cursor:pointer}
+.vd-layer-tools,.vd-layer-tools__del{display:none!important}
 .vd-layer-resize{position:absolute;right:-7px;bottom:-7px;width:16px;height:16px;border:2px solid #fff;border-radius:4px;background:var(--orange);cursor:nwse-resize;z-index:7;touch-action:none;box-shadow:0 2px 6px rgba(0,0,0,.25)}
 .vd-size-guide{margin-top:10px;padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:linear-gradient(180deg,#f8fafc,#fff)}
 .vd-size-guide__head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
@@ -160,7 +159,12 @@
 
 .vd-input,.vd-textarea{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 12px;background:#fff;color:var(--text);transition:var(--ease)}
 .vd-input:focus,.vd-textarea:focus{outline:0;border-color:rgba(14,116,144,.55);box-shadow:0 0 0 3px rgba(14,116,144,.12)}
-.vd-textarea{resize:vertical;min-height:110px;line-height:1.45}
+.vd-textarea{resize:none;overflow:hidden;min-height:48px;max-height:220px;line-height:1.45}
+.vd-char-count{margin:6px 0 0;font-size:11px;font-weight:700;color:#94a3b8;text-align:right}
+.vd-char-count.is-limit{color:var(--danger)}
+.vd-layers{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.vd-layers li{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:8px;background:#fff}
+.vd-layers__del{border:0;border-radius:8px;padding:8px 10px;background:#fef2f2;color:var(--danger);font-size:12px;font-weight:800}
 .vd-toolbar{display:flex;flex-wrap:wrap;gap:6px}
 .vd-iconbtn{min-width:36px;height:36px;border:0;border-radius:10px;background:var(--soft);color:var(--navy);font-size:12px;font-weight:800;transition:var(--ease)}
 .vd-iconbtn:hover{background:#e2e8f0}
@@ -186,15 +190,14 @@
 .vd-clip-item:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:var(--shadow-sm)}
 .vd-clip-item svg{width:42px;height:42px}
 
-.vd-layers{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.vd-layers li{display:grid;grid-template-columns:1fr;gap:8px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:8px;background:#fff}
+.vd-layers li{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:8px;background:#fff}
 .vd-layers li.is-active{border-color:rgba(14,116,144,.5);box-shadow:var(--shadow-sm)}
 .vd-layers__main{display:flex;align-items:center;gap:10px;border:0;background:transparent;text-align:left;padding:0}
 .vd-layers__type{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--soft);font-size:10px;font-weight:800;color:var(--navy)}
 .vd-layers__main strong{display:block;font-size:13px}
 .vd-layers__main small{display:block;font-size:11px;color:var(--muted);text-transform:capitalize}
-.vd-layers__actions{display:flex;gap:4px}
-.vd-layers__actions button{border:0;border-radius:8px;padding:6px 8px;background:var(--soft);font-size:11px;font-weight:700;color:var(--muted)}
+.vd-layers__del{border:0;border-radius:8px;padding:8px 10px;background:#fef2f2;color:var(--danger);font-size:12px;font-weight:800}
+.vd-layers__actions{display:none}
 
 .vd-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:12px 16px;font-size:13px;font-weight:800;transition:var(--ease)}
 .vd-btn--primary{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;box-shadow:0 14px 28px -16px rgba(11,61,74,.85)}
@@ -289,7 +292,7 @@
   .vd-swatches{gap:8px}
   .vd-chips{gap:6px}
   .vd-chip{min-width:40px;padding:8px 10px;font-size:12px}
-  .vd-layers li{grid-template-columns:1fr;gap:6px}
+  .vd-layers li{grid-template-columns:1fr auto;gap:6px}
   .vd-preview-hint{font-size:11px}
   .vd-modal{padding:10px;align-items:flex-end}
   .vd-modal__box,.vd-modal__box.is-wide{width:100%;max-height:min(86vh,720px);border-radius:16px 16px 10px 10px;padding:14px}
@@ -400,7 +403,7 @@
       <section class="vd-panel-card" id="vdLayersCard">
         <div class="vd-card-head"><div>
           <h3 class="vd-card-title">Layers</h3>
-          <p class="vd-card-sub">Tap a layer to select it. Delete with × on the canvas.</p>
+          <p class="vd-card-sub">Tap a layer to select it. Use Delete to remove text or images.</p>
         </div></div>
         <div id="vdLayers"></div>
       </section>
@@ -576,6 +579,35 @@
   function getZoneLayout(store, zoneKey){
     if(store.zoneLayouts && store.zoneLayouts[zoneKey]) return Object.assign({}, store.zoneLayouts[zoneKey]);
     return Object.assign({}, ZONE_DEFAULTS[zoneKey] || ZONE_DEFAULTS.front);
+  }
+
+  function clampText(value){
+    return String(value==null?"":value).slice(0,200);
+  }
+  function autosizeTextarea(el){
+    if(!el) return;
+    el.style.height="auto";
+    el.style.height=Math.min(220, Math.max(48, el.scrollHeight))+"px";
+  }
+  function bindTextInputs(root){
+    root=root||document.getElementById("vdTextEditor");
+    if(!root) return;
+    Array.prototype.forEach.call(root.querySelectorAll("textarea"), function(ta){
+      ta.setAttribute("maxlength","200");
+      autosizeTextarea(ta);
+      if(ta._vdBound) return;
+      ta._vdBound=true;
+      ta.addEventListener("input", function(){
+        if(ta.value.length>200) ta.value=ta.value.slice(0,200);
+        autosizeTextarea(ta);
+        var count=root.querySelector("[data-char-count='"+ta.id+"'], [data-char-for='"+ta.id+"']");
+        if(!count) count=root.querySelector("[data-char-count]");
+        if(count){
+          count.textContent=ta.value.length+"/200";
+          count.classList.toggle("is-limit", ta.value.length>=200);
+        }
+      });
+    });
   }
 
   function deleteLayer(id){
@@ -874,18 +906,37 @@
         if(/colou?r/.test(name)){
           colorAttr=attr;
           VibeDesigner.API.getAttributeTerms(attr, variationDetails, /colou?r/i).forEach(function(label){
-            colors.push({ id:slugify(label), name:label, hex:colorToHex(label), inStock:true, raw:label });
+            var inStock=true;
+            if(variationDetails.length){
+              inStock=variationDetails.some(function(v){
+                if(!VibeDesigner.API.variationMatches(v, label, null)) return false;
+                if(v.is_in_stock===false) return false;
+                if(v.is_purchasable===false || v.purchasable===false) return false;
+                return true;
+              });
+            }
+            colors.push({ id:slugify(label), name:label, hex:colorToHex(label), inStock:inStock, raw:label });
           });
         }
         if(/size/.test(name)){
           sizeAttr=attr;
           VibeDesigner.API.getAttributeTerms(attr, variationDetails, /size/i).forEach(function(label){
-            sizes.push({ id:slugify(label), label:label, inStock:true, raw:label });
+            var inStock=true;
+            if(variationDetails.length){
+              inStock=variationDetails.some(function(v){
+                if(!VibeDesigner.API.variationMatches(v, null, label)) return false;
+                if(v.is_in_stock===false) return false;
+                if(v.is_purchasable===false || v.purchasable===false) return false;
+                return true;
+              });
+            }
+            sizes.push({ id:slugify(label), label:label, inStock:inStock, raw:label });
           });
         }
       });
-      if(!colors.length) colors=SAMPLE.colors.slice();
-      if(!sizes.length) sizes=SAMPLE.sizes.slice();
+      // Only product colors/sizes from the single product — never pad with sample extras
+      if(!colors.length && !data.id) colors=SAMPLE.colors.slice();
+      if(!sizes.length && !data.id) sizes=SAMPLE.sizes.slice();
 
       var front=gallery[0]||"";
       var back=gallery[1]||gallery[0]||"";
@@ -1113,12 +1164,7 @@
 
       var selected=store.getSelectedLayer();
       var tools="";
-      if(selected && selected.visible && !selected.locked){
-        var onCanvas=layers.some(function(l){ return l.id===selected.id; });
-        if(onCanvas){
-          tools='<div class="vd-layer-tools" data-layer-tools style="left:'+selected.x+'%;top:'+selected.y+'%"><button type="button" class="vd-layer-tools__del" data-canvas-del="'+selected.id+'" aria-label="Delete layer">×</button></div>';
-        }
-      }
+      // Canvas delete control removed — delete from Layers panel
       zone.innerHTML=zone.innerHTML+tools+
         '<button type="button" class="vd-zone-grip vd-zone-grip--n" data-zone-resize="n" aria-label="Resize top"></button>'+
         '<button type="button" class="vd-zone-grip vd-zone-grip--s" data-zone-resize="s" aria-label="Resize bottom"></button>'+
@@ -1145,20 +1191,26 @@
     render: function(){
       var store=VibeDesigner.Store;
       document.getElementById("vdPositions").innerHTML=PRINT_POSITIONS.map(function(pos){
-        return '<button type="button" class="vd-segment__btn'+(store.printPositionId===pos.id?" is-active":"")+'" data-pos="'+pos.id+'">'+esc(pos.label)+' <small style="opacity:.8">· '+esc(money(pos.price, store.product.currencySymbol||"Rs "))+'</small></button>';
+        return '<button type="button" class="vd-segment__btn'+(store.printPositionId===pos.id?" is-active":"")+'" data-pos="'+pos.id+'">'+esc(pos.label)+'</button>';
       }).join("");
       var guide=document.getElementById("vdPrintGuide");
       var pos=store.getPosition();
       if(guide && pos){
         guide.hidden=false;
         document.getElementById("vdPrintGuideTitle").textContent=pos.label+" size guide";
-        document.getElementById("vdPrintGuidePrice").textContent=money(pos.price, store.product.currencySymbol||"Rs ");
+        var priceEl=document.getElementById("vdPrintGuidePrice");
+        if(priceEl){ priceEl.hidden=true; priceEl.textContent=""; }
         document.getElementById("vdPrintGuideText").textContent=pos.sizeGuide||"";
       }
-      document.getElementById("vdColors").innerHTML=store.product.colors.map(function(c){
-        var tip=c.inStock?c.name:c.name+" · Out of stock";
-        return '<span class="vd-tip" data-tip="'+esc(tip)+'"><button type="button" class="vd-swatch'+(store.colorId===c.id?" is-active":"")+(!c.inStock?" is-disabled":"")+'" style="background:'+c.hex+'" data-color="'+c.id+'" '+(c.inStock?"":"disabled")+' aria-label="'+esc(c.name)+'"></button></span>';
-      }).join("");
+      var colorsEl=document.getElementById("vdColors");
+      if(!store.product.colors || !store.product.colors.length){
+        colorsEl.innerHTML='<p class="vd-empty">No product colors found for this item.</p>';
+      } else {
+        colorsEl.innerHTML=store.product.colors.map(function(c){
+          var tip=c.inStock?c.name:c.name+" · Out of stock";
+          return '<span class="vd-tip" data-tip="'+esc(tip)+'"><button type="button" class="vd-swatch'+(store.colorId===c.id?" is-active":"")+(!c.inStock?" is-disabled":"")+'" style="background:'+c.hex+'" data-color="'+c.id+'" '+(c.inStock?"":"disabled")+' aria-label="'+esc(c.name)+'"></button></span>';
+        }).join("");
+      }
 
       var sizesEl=document.getElementById("vdSizes");
       if(store.sizeMode==="single"){
@@ -1260,16 +1312,20 @@
       var currentFont=FONTS.find(function(f){return f.id===t.fontId;})||FONTS[0];
 
       var contentHtml = "";
+      var contentLen = 0;
       if(dual){
         contentHtml = '<div class="vd-field"><span class="vd-label">Text by side</span>' + dual.map(function(side){
           var sideLayer = pair.find(function(l){ return l.positionId===side.id; });
-          var val = sideLayer && sideLayer.text ? sideLayer.text.content : "";
+          var val = clampText(sideLayer && sideLayer.text ? sideLayer.text.content : "");
           var lid = sideLayer ? sideLayer.id : "";
           return '<div class="vd-dual-box"><div class="vd-dual-head"><span>'+esc(side.heading)+' <em class="vd-dual-badge">'+esc(side.label)+'</em></span></div>'+
-            '<textarea class="vd-textarea" rows="3" data-side-text="'+side.id+'" data-layer-id="'+lid+'" placeholder="Enter text for '+esc(side.label)+'...">'+esc(val)+'</textarea></div>';
+            '<textarea class="vd-textarea" rows="1" maxlength="200" data-side-text="'+side.id+'" data-layer-id="'+lid+'" placeholder="Enter text for '+esc(side.label)+'...">'+esc(val)+'</textarea>'+
+            '<p class="vd-char-count" data-char-count>'+val.length+'/200</p></div>';
         }).join("") + '</div>';
       } else {
-        contentHtml = '<label class="vd-field"><span class="vd-label">Your text</span><textarea class="vd-textarea" id="vdTextContent" placeholder="Enter your text here..." rows="3">'+esc(t.content)+'</textarea></label>';
+        var textVal=clampText(t.content||"");
+        contentLen=textVal.length;
+        contentHtml = '<label class="vd-field"><span class="vd-label">Your text</span><textarea class="vd-textarea" id="vdTextContent" maxlength="200" rows="1" placeholder="Enter your text here...">'+esc(textVal)+'</textarea><p class="vd-char-count" data-char-count id="vdTextCount">'+contentLen+'/200</p></label>';
       }
 
       root.innerHTML=
@@ -1281,19 +1337,21 @@
         }).join("")+
         '</select></div>'+
         '<div class="vd-field"><span class="vd-label">Text Color</span><div class="vd-swatches">'+PRESET_COLORS.map(function(hex){return '<button type="button" class="vd-swatch'+(t.color.toLowerCase()===hex.toLowerCase()?" is-active":"")+'" style="background:'+hex+'" data-text-color="'+hex+'" aria-label="'+hex+'"></button>';}).join("")+'</div>'+
-        '<div class="vd-color-inputs" style="margin-top:10px"><label>Pick color<input type="color" id="vdColorPicker" value="'+(normalizeHex(t.color)||"#111827")+'" style="width:100%;height:42px;padding:4px;border:1px solid var(--line);border-radius:11px;background:#fff;cursor:pointer"></label><label>HEX<input class="vd-input" id="vdHex" value="'+(normalizeHex(t.color)||t.color)+'" placeholder="#111827"></label></div></div>'+
-        '<p class="vd-preview-hint" style="margin-top:10px;text-align:left">Drag text on the preview to move. Drag the orange corner to resize. Tap <strong>Done</strong> to finish (hides border & delete).</p>';
+        '<div class="vd-color-inputs" style="margin-top:10px"><label>Pick color<input type="color" id="vdColorPicker" value="'+(normalizeHex(t.color)||"#111827")+'" style="width:100%;height:42px;padding:4px;border:1px solid var(--line);border-radius:11px;background:#fff;cursor:pointer"></label><label>HEX<input class="vd-input" id="vdHex" value="'+(normalizeHex(t.color)||t.color)+'" placeholder="#111827"></label></div></div>';
+      bindTextInputs(root);
     },
     update: function(patch, opts){
       opts = opts || {};
       var store=VibeDesigner.Store;
+      if(patch && Object.prototype.hasOwnProperty.call(patch,"content")){
+        patch=Object.assign({}, patch, { content: clampText(patch.content) });
+      }
       var dual=getDualSides(store.printPositionId);
       var applyAll = !!opts.applyAllStyles && dual && store.textPairId;
       store.layers=store.layers.map(function(layer){
         if(!layer.text) return layer;
         if(applyAll){
           if(layer.pairId!==store.textPairId) return layer;
-          // keep per-side content; merge styles only
           var stylePatch = Object.assign({}, patch);
           delete stylePatch.content;
           return Object.assign({}, layer, { text: Object.assign({}, layer.text, stylePatch) });
@@ -1301,15 +1359,15 @@
         if(layer.id!==store.selectedLayerId) return layer;
         return Object.assign({}, layer, { text: Object.assign({}, layer.text, patch) });
       });
-      if(Object.keys(patch).length===1 && Object.prototype.hasOwnProperty.call(patch,"content")){
-        VibeDesigner.Canvas.render();
-        VibeDesigner.Layers.render();
-        return;
-      }
-      store.emit();
+      VibeDesigner.Canvas.render();
+      VibeDesigner.Layers.render();
+      if(opts.live) return;
+      if(store.textEditorOpen) VibeDesigner.Text.render();
+      VibeDesigner.Options.render();
     },
     updateSideContent: function(layerId, content){
       var store=VibeDesigner.Store;
+      content=clampText(content);
       store.layers=store.layers.map(function(layer){
         if(layer.id!==layerId || !layer.text) return layer;
         return Object.assign({}, layer, { text: Object.assign({}, layer.text, { content: content }) });
@@ -1327,7 +1385,8 @@
       if(!store.layers.length){ root.innerHTML='<p class="vd-empty">No layers yet. Add text, image, logo, or clipart.</p>'; return; }
       root.innerHTML='<ul class="vd-layers">'+store.layers.slice().reverse().map(function(layer){
         var type=layer.type==="text"?"T":layer.type==="clipart"?"CLIP":layer.type==="logo"?"LOGO":"IMG";
-        return '<li class="'+(store.selectedLayerId===layer.id?"is-active":"")+'"><button type="button" class="vd-layers__main" data-select-layer="'+layer.id+'"><span class="vd-layers__type">'+type+'</span><span><strong>'+esc(layer.name)+'</strong><small>'+layer.positionId.replace(/_/g," ")+'</small></span></button></li>';
+        var delLabel=layer.type==="text"?"Delete text":(layer.type==="image"||layer.type==="logo"?"Delete image":"Delete");
+        return '<li class="'+(store.selectedLayerId===layer.id?"is-active":"")+'"><button type="button" class="vd-layers__main" data-select-layer="'+layer.id+'"><span class="vd-layers__type">'+type+'</span><span><strong>'+esc(layer.name)+'</strong><small>'+layer.positionId.replace(/_/g," ")+'</small></span></button><button type="button" class="vd-layers__del" data-del="'+layer.id+'">'+delLabel+'</button></li>';
       }).join("")+"</ul>";
     }
   };
@@ -1489,7 +1548,10 @@
                 return;
               }
             }
-            setTimeout(function(){ self.close(); },300); return;
+            status.innerHTML=
+              '<div class="vd-upload-msgs"><p style="color:var(--ok);font-weight:700;margin:0 0 10px">Added for <strong>'+esc(sideLabel)+'</strong>.</p></div>'+
+              '<button type="button" class="vd-btn vd-btn--primary vd-btn--block" id="vdUploadDoneSides">Done</button>';
+            return;
           }
           setTimeout(tick,90);
         }
@@ -1705,6 +1767,7 @@
       var canvasDel=t.closest("[data-canvas-del]"); if(canvasDel){ deleteLayer(canvasDel.getAttribute("data-canvas-del")); return; }
       var layerBtn=t.closest("[data-layer]"); if(layerBtn){ return; }
       var selectLayer=t.closest("[data-select-layer]"); if(selectLayer){ store.selectedLayerId=selectLayer.getAttribute("data-select-layer"); var selected=store.getSelectedLayer(); store.emit(); if(selected&&selected.type==="text"){ store.textPairId=selected.pairId||null; showTextEditor(true);} else showTextEditor(false); return; }
+      var del=t.closest("[data-del]"); if(del){ deleteLayer(del.getAttribute("data-del")); return; }
     });
 
     app.addEventListener("input", function(e){
@@ -1958,15 +2021,29 @@
     document.getElementById("vdPanel").addEventListener("input", function(e){
       if(e.target.id==="vdColorPicker"){
         var live=normalizeHex(e.target.value);
-        if(live) VibeDesigner.Text.update({color:live},{applyAllStyles:true});
+        if(live){
+          VibeDesigner.Text.update({color:live},{applyAllStyles:true, live:true});
+          var hexInput=document.getElementById("vdHex");
+          if(hexInput) hexInput.value=live;
+        }
         return;
       }
-      if(e.target.id==="vdTextContent"){ VibeDesigner.Text.update({content:e.target.value}); return; }
+      if(e.target.id==="vdTextContent"){
+        e.target.value=clampText(e.target.value);
+        VibeDesigner.Text.update({content:e.target.value},{live:true});
+        autosizeTextarea(e.target);
+        var count=document.getElementById("vdTextCount");
+        if(count){ count.textContent=e.target.value.length+"/200"; count.classList.toggle("is-limit", e.target.value.length>=200); }
+        return;
+      }
       var sideText=e.target.closest("[data-side-text]");
       if(sideText){
+        sideText.value=clampText(sideText.value);
         var lid=sideText.getAttribute("data-layer-id");
         if(lid) VibeDesigner.Text.updateSideContent(lid, sideText.value);
-        // Switch preview to the side being typed
+        autosizeTextarea(sideText);
+        var sc=sideText.parentNode && sideText.parentNode.querySelector("[data-char-count]");
+        if(sc){ sc.textContent=sideText.value.length+"/200"; sc.classList.toggle("is-limit", sideText.value.length>=200); }
         var dualNow=getDualSides(store.printPositionId);
         var sideId=sideText.getAttribute("data-side-text");
         if(dualNow){
