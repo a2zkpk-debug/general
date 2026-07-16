@@ -1449,8 +1449,9 @@
       if(e.target.id==="vdClipSearch"){ store.clipQuery=e.target.value; VibeDesigner.Clipart.render(); }
     });
 
-    // Drag layers
+    // Drag layers (anywhere on stage)
     var zone=document.getElementById("vdZone");
+    var stageEl=document.getElementById("vdStage");
     function onPointerDown(e){
       var btn=e.target.closest("[data-layer]");
       var id=null;
@@ -1468,7 +1469,7 @@
       var layer=store.layers.find(function(l){return l.id===id;});
       if(!layer||layer.locked) return;
       if(btn){ store.selectedLayerId=id; store.emit(); }
-      var rect=zone.getBoundingClientRect();
+      var rect=(stageEl||zone).getBoundingClientRect();
       var point=e.touches?e.touches[0]:e;
       VibeDesigner.Canvas.drag={ id:id, rect:rect };
       e.preventDefault();
@@ -1484,8 +1485,8 @@
       e.preventDefault();
     }
     function onPointerUp(){ VibeDesigner.Canvas.drag=null; VibeDesigner.Layers.render(); }
-    zone.addEventListener("mousedown", onPointerDown);
-    zone.addEventListener("touchstart", onPointerDown, {passive:false});
+    (stageEl||zone).addEventListener("mousedown", onPointerDown);
+    (stageEl||zone).addEventListener("touchstart", onPointerDown, {passive:false});
     window.addEventListener("mousemove", onPointerMove);
     window.addEventListener("touchmove", onPointerMove, {passive:false});
     window.addEventListener("mouseup", onPointerUp);
@@ -1668,6 +1669,6 @@
       if(main) main.hidden=false;
       VibeDesigner.UI.toast("Network slow or blocked. Reload or check Store API.");
     }
-  }, 7000);
+  }, 3000);
 })();
 </script>
