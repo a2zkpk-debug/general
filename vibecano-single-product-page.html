@@ -917,7 +917,7 @@
 
   var API = "/wp-json/wc/store/v1";
   var DESIGNER_URL = "/design-editor/";
-  var SIMPLE_CUSTOMIZE_URL = "/customize-product/";
+  var SIMPLE_CUSTOMIZE_URL = "https://vibecano.com/customize-product/";
   var LUMISE_PRODUCT_BASE = "2";
   var CUSTOM_CAT_SLUGS = ["customize", "customizable", "custom", "customize-your-own", "design-your-own"];
   var CUSTOM_TAG_SLUGS = ["customizable", "customize", "custom", "design-your-own"];
@@ -1557,7 +1557,8 @@
 
   window.vcSpChooseSimpleCustomize = function () {
     if (!PRODUCT) return;
-    window.location.href = buildCustomizeUrl(SIMPLE_CUSTOMIZE_URL);
+    // Per request: Simple Method should go to the base URL without params
+    window.location.href = SIMPLE_CUSTOMIZE_URL;
   };
 
   window.vcSpChooseStudioCustomize = function () {
