@@ -34,10 +34,15 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 
 ### Setup
 
-1. Create a WordPress page with slug `design-editor` (URL `/design-editor/`).
+1. Create a WordPress page with slug `design-editor` (URL `/design-editor/`). Use the same paste on `/customize-product/` if that page exists.
 2. Edit with Elementor → add an **HTML** widget at **100%** width.
-3. Paste the full contents of `vibecano-product-designer.html`.
-4. Publish. The single product page already links customizable products here via `DESIGNER_URL`.
+3. Paste the full contents of `vibecano-product-designer.html` (markup + CSS only; spinner overlay removed).
+4. The HTML loads `vibecano-product-designer.js` from jsDelivr. If Elementor strips `<script>` tags and the designer does not run:
+   - **Elementor Pro → Custom Code** → Location **Body End** → paste:
+     `<script src="https://cdn.jsdelivr.net/gh/a2zkpk-debug/general@cursor/premium-product-designer-7bce/vibecano-product-designer.js" defer></script>`
+   - Or host `vibecano-product-designer.js` on your site and point the `src` there.
+5. Clear Elementor / site cache, then hard-refresh the page. Publish.
+6. The single product page opens a chooser modal for customizable products, then links to either the simple customize page or the studio editor.
 
 ### UI modules
 
