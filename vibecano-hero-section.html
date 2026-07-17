@@ -1,648 +1,855 @@
 <!-- ============================================================
-     VIBECANO — HOMEPAGE HERO SECTION (hero content only)
-     Paste into homepage Elementor HTML widget BELOW the header.
-
-     Use vibecano-header.html separately in Theme Builder header.
-     Shows 3 main category cards: Customize, Ready Made, Featured
+     VIBECANO — LUXURY FASHION HERO SECTION
+     Paste into homepage Elementor HTML Widget (width 100%).
+     Self-contained: HTML + CSS + Vanilla JS. No external libs.
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-  .vibecano-hero-root {
-    --ink: #0b1220;
-    --ink-soft: #1e293b;
-    --slate: #64748b;
-    --line: #e2e8f0;
-    --surface: #f8fafc;
-    --brand: #1d9bf0;
-    --brand-dark: #0b7ec7;
-    --accent: #f59e0b;
-    --hero-bg: linear-gradient(135deg, #f8fafc 0%, #eef2ff 42%, #fff7ed 100%);
-    --shadow-sm: 0 4px 14px rgba(15, 23, 42, .06);
-    --shadow-md: 0 18px 40px rgba(15, 23, 42, .10);
+  .vc-lux-hero {
+    --vc-primary: #FFC107;
+    --vc-primary-dark: #E6AC00;
+    --vc-secondary: #63B3ED;
+    --vc-secondary-dark: #4299E1;
+    --vc-ink: #111827;
+    --vc-muted: #6B7280;
+    --vc-bg: #FFFFFF;
+    --vc-surface: #F8FAFC;
+    --vc-line: rgba(17, 24, 39, 0.08);
+    --vc-shadow: 0 20px 50px rgba(17, 24, 39, 0.10);
+    --vc-shadow-soft: 0 10px 30px rgba(17, 24, 39, 0.08);
+    --vc-radius: 24px;
+    --vc-ease: cubic-bezier(0.22, 1, 0.36, 1);
     width: 100%;
     max-width: none;
-    font-family: 'Inter', system-ui, -apple-system, Segoe UI, sans-serif;
-    color: var(--ink);
-    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, sans-serif;
+    color: var(--vc-ink);
+    background: var(--vc-bg);
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
-  }
-
-  .vibecano-hero-root *,
-  .vibecano-hero-root *::before,
-  .vibecano-hero-root *::after { box-sizing: border-box; }
-
-  .vibecano-hero-root a { text-decoration: none; color: inherit; }
-  .vibecano-hero-root img { max-width: 100%; display: block; }
-
-  .vibecano-hero-root .ro-hero {
-    position: relative;
-    background: var(--hero-bg);
-    padding: 56px 24px 72px;
+    -moz-osx-font-smoothing: grayscale;
     overflow: hidden;
   }
 
-  .vibecano-hero-root .ro-hero::before {
-    content: "";
-    position: absolute;
-    top: -120px;
-    right: -80px;
-    width: 420px;
-    height: 420px;
-    background: radial-gradient(circle, rgba(29,155,240,.14) 0%, transparent 70%);
-    pointer-events: none;
+  .vc-lux-hero *,
+  .vc-lux-hero *::before,
+  .vc-lux-hero *::after { box-sizing: border-box; }
+
+  .vc-lux-hero a { text-decoration: none; color: inherit; }
+  .vc-lux-hero img { max-width: 100%; height: auto; display: block; }
+  .vc-lux-hero button {
+    font-family: inherit;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    padding: 0;
   }
 
-  .vibecano-hero-root .ro-hero::after {
-    content: "";
-    position: absolute;
-    bottom: -100px;
-    left: -60px;
-    width: 360px;
-    height: 360px;
-    background: radial-gradient(circle, rgba(245,158,11,.12) 0%, transparent 70%);
-    pointer-events: none;
+  .vc-lux-hero .vc-hero {
+    position: relative;
+    isolation: isolate;
+    padding: clamp(48px, 6vw, 88px) clamp(20px, 4vw, 40px);
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 70% 55% at 88% 18%, rgba(255, 193, 7, 0.16) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 50% at 8% 88%, rgba(99, 179, 237, 0.14) 0%, transparent 58%),
+      linear-gradient(160deg, #FFFFFF 0%, #F8FAFC 48%, #FFFFFF 100%);
   }
 
-  .vibecano-hero-root .ro-hero-wrap {
-    max-width: 1280px;
-    margin: 0 auto;
+  .vc-lux-hero .vc-hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .vc-lux-hero .vc-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(0);
+    will-change: transform;
+  }
+
+  .vc-lux-hero .vc-shape-a {
+    width: 320px;
+    height: 320px;
+    top: -80px;
+    right: 8%;
+    background: radial-gradient(circle, rgba(255, 193, 7, 0.28) 0%, transparent 70%);
+    animation: vcBlob 14s ease-in-out infinite;
+  }
+
+  .vc-lux-hero .vc-shape-b {
+    width: 260px;
+    height: 260px;
+    bottom: 6%;
+    left: -40px;
+    background: radial-gradient(circle, rgba(99, 179, 237, 0.24) 0%, transparent 70%);
+    animation: vcBlob 16s ease-in-out infinite reverse;
+  }
+
+  .vc-lux-hero .vc-shape-c {
+    width: 140px;
+    height: 140px;
+    top: 42%;
+    left: 46%;
+    background: rgba(248, 250, 252, 0.9);
+    border: 1px solid var(--vc-line);
+    border-radius: 28px;
+    transform: rotate(18deg);
+    opacity: 0.7;
+  }
+
+  .vc-lux-hero .vc-shape-d {
+    width: 90px;
+    height: 90px;
+    top: 18%;
+    left: 38%;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.35), rgba(255, 193, 7, 0.05));
+    border-radius: 22px;
+    transform: rotate(-12deg);
+  }
+
+  .vc-lux-hero .vc-shape-e {
+    width: 70px;
+    height: 70px;
+    bottom: 18%;
+    right: 12%;
+    background: linear-gradient(135deg, rgba(99, 179, 237, 0.4), rgba(99, 179, 237, 0.05));
+    border-radius: 50%;
+  }
+
+  .vc-lux-hero .vc-lines {
+    position: absolute;
+    inset: 0;
+    opacity: 0.35;
+    background-image:
+      repeating-linear-gradient(
+        -32deg,
+        transparent,
+        transparent 28px,
+        rgba(17, 24, 39, 0.035) 28px,
+        rgba(17, 24, 39, 0.035) 29px
+      );
+    mask-image: linear-gradient(90deg, transparent 0%, #000 20%, #000 80%, transparent 100%);
+  }
+
+  .vc-lux-hero .vc-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--vc-primary);
+    opacity: 0.55;
+    animation: vcFloatSoft 5s ease-in-out infinite;
+  }
+
+  .vc-lux-hero .vc-dot:nth-child(6) { top: 22%; left: 52%; background: var(--vc-secondary); animation-delay: -1s; }
+  .vc-lux-hero .vc-dot:nth-child(7) { top: 68%; left: 42%; width: 6px; height: 6px; animation-delay: -2.2s; }
+  .vc-lux-hero .vc-dot:nth-child(8) { top: 30%; right: 28%; width: 10px; height: 10px; background: var(--vc-secondary); animation-delay: -0.6s; }
+  .vc-lux-hero .vc-dot:nth-child(9) { bottom: 24%; left: 18%; animation-delay: -3s; }
+
+  .vc-lux-hero .vc-hero-wrap {
     position: relative;
     z-index: 1;
+    max-width: 1240px;
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1.05fr;
-    gap: 56px;
+    grid-template-columns: 45% 55%;
+    gap: clamp(32px, 4vw, 64px);
     align-items: center;
   }
 
-  .vibecano-hero-root .ro-hero-content { max-width: 560px; }
-
-  .vibecano-hero-root .ro-hero-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--brand-dark);
+  /* ---- Content ---- */
+  .vc-lux-hero .vc-content {
+    max-width: 560px;
   }
 
-  .vibecano-hero-root .ro-hero-eyebrow span {
+  .vc-lux-hero .vc-reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    animation: vcReveal 0.9s var(--vc-ease) forwards;
+  }
+
+  .vc-lux-hero .vc-reveal-1 { animation-delay: 0.08s; }
+  .vc-lux-hero .vc-reveal-2 { animation-delay: 0.18s; }
+  .vc-lux-hero .vc-reveal-3 { animation-delay: 0.30s; }
+  .vc-lux-hero .vc-reveal-4 { animation-delay: 0.42s; }
+  .vc-lux-hero .vc-reveal-5 { animation-delay: 0.54s; }
+
+  .vc-lux-hero .vc-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background: #fff;
-    border: 1px solid var(--line);
-    padding: 6px 12px;
+    gap: 8px;
+    padding: 8px 16px;
+    margin-bottom: 22px;
     border-radius: 999px;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .vibecano-hero-root .ro-hero-eyebrow .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: vc-hero-pulse 2s ease infinite;
-  }
-
-  @keyframes vc-hero-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: .5; transform: scale(.85); }
-  }
-
-  .vibecano-hero-root .ro-hero h1 {
-    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
-    font-size: clamp(34px, 4.2vw, 48px);
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(255, 193, 7, 0.45);
+    box-shadow: 0 8px 24px rgba(255, 193, 7, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    font-size: 13px;
     font-weight: 700;
-    line-height: 1.15;
-    color: var(--ink);
-    letter-spacing: -.025em;
-    margin: 0 0 20px;
+    letter-spacing: 0.02em;
+    color: var(--vc-ink);
   }
 
-  .vibecano-hero-root .ro-hero h1 span {
+  .vc-lux-hero .vc-badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--vc-primary);
+    box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.22);
+  }
+
+  .vc-lux-hero .vc-heading {
+    margin: 0 0 18px;
+    font-size: clamp(2.15rem, 4.2vw, 3.55rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    color: var(--vc-ink);
+  }
+
+  .vc-lux-hero .vc-heading span {
     display: block;
-    color: #1e3a8a;
-    font-weight: 600;
-    margin-top: 4px;
+    margin-top: 0.18em;
+    background: linear-gradient(105deg, var(--vc-ink) 0%, #374151 45%, var(--vc-secondary-dark) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
-  .vibecano-hero-root .ro-hero p.lead {
-    font-size: 18px;
-    color: #475569;
+  .vc-lux-hero .vc-desc {
     margin: 0 0 28px;
-    line-height: 1.65;
+    max-width: 480px;
+    font-size: clamp(0.95rem, 1.15vw, 1.05rem);
+    font-weight: 500;
+    color: var(--vc-muted);
+    line-height: 1.7;
   }
 
-  .vibecano-hero-root .ro-hero-stats {
+  .vc-lux-hero .vc-desc p { margin: 0 0 0.7em; }
+  .vc-lux-hero .vc-desc p:last-child { margin-bottom: 0; }
+
+  .vc-lux-hero .vc-cta {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 12px;
     margin-bottom: 32px;
   }
 
-  .vibecano-hero-root .ro-stat {
-    display: flex;
-    flex-direction: column;
-    padding-right: 20px;
-    border-right: 1px solid #cbd5e1;
-  }
-
-  .vibecano-hero-root .ro-stat:last-child { border-right: none; padding-right: 0; }
-  .vibecano-hero-root .ro-stat strong { font-size: 22px; font-weight: 800; color: var(--ink); line-height: 1.1; }
-  .vibecano-hero-root .ro-stat small { font-size: 12px; color: var(--slate); font-weight: 500; margin-top: 2px; }
-
-  .vibecano-hero-root .ro-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 28px; }
-
-  .vibecano-hero-root .ro-btn {
-    padding: 15px 32px;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 15px;
-    transition: all .22s;
+  .vc-lux-hero .vc-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    border: 2px solid transparent;
+    gap: 10px;
+    min-height: 52px;
+    padding: 0 28px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    transition: transform 0.35s var(--vc-ease), box-shadow 0.35s var(--vc-ease), background 0.35s var(--vc-ease), color 0.35s var(--vc-ease), border-color 0.35s var(--vc-ease);
+    will-change: transform;
   }
 
-  .vibecano-hero-root .ro-btn-primary {
-    background: var(--ink);
-    color: #fff;
-    box-shadow: 0 8px 24px rgba(11, 18, 32, .18);
+  .vc-lux-hero .vc-btn:focus-visible {
+    outline: 3px solid rgba(99, 179, 237, 0.55);
+    outline-offset: 3px;
   }
 
-  .vibecano-hero-root .ro-btn-primary:hover {
-    background: #1e293b;
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(11, 18, 32, .22);
+  .vc-lux-hero .vc-btn-primary {
+    color: var(--vc-ink);
+    background: linear-gradient(135deg, #FFD54F 0%, var(--vc-primary) 55%, var(--vc-primary-dark) 100%);
+    box-shadow:
+      0 12px 28px rgba(255, 193, 7, 0.35),
+      0 2px 0 rgba(255, 255, 255, 0.35) inset;
   }
 
-  .vibecano-hero-root .ro-btn-outline {
-    background: #fff;
-    color: var(--ink);
-    border-color: #cbd5e1;
+  .vc-lux-hero .vc-btn-primary:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow:
+      0 18px 36px rgba(255, 193, 7, 0.42),
+      0 2px 0 rgba(255, 255, 255, 0.4) inset;
   }
 
-  .vibecano-hero-root .ro-btn-outline:hover {
-    border-color: var(--ink);
-    background: var(--ink);
-    color: #fff;
+  .vc-lux-hero .vc-btn-primary:active {
+    transform: translateY(-1px) scale(1.01);
   }
 
-  .vibecano-hero-root .ro-btn svg { width: 16px; height: 16px; flex-shrink: 0; }
-
-  .vibecano-hero-root .ro-trust-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px 24px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(148, 163, 184, .35);
+  .vc-lux-hero .vc-btn-secondary {
+    color: var(--vc-ink);
+    background: rgba(255, 255, 255, 0.85);
+    border: 1.5px solid rgba(17, 24, 39, 0.12);
+    box-shadow: var(--vc-shadow-soft);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
 
-  .vibecano-hero-root .ro-trust-item {
+  .vc-lux-hero .vc-btn-secondary:hover {
+    transform: translateY(-3px) scale(1.03);
+    border-color: rgba(99, 179, 237, 0.55);
+    box-shadow: 0 16px 32px rgba(99, 179, 237, 0.18);
+  }
+
+  .vc-lux-hero .vc-btn-secondary:active {
+    transform: translateY(-1px) scale(1.01);
+  }
+
+  .vc-lux-hero .vc-btn-icon {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    transition: transform 0.35s var(--vc-ease);
+  }
+
+  .vc-lux-hero .vc-btn:hover .vc-btn-icon {
+    transform: translateX(3px);
+  }
+
+  .vc-lux-hero .vc-trust {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 16px;
+    max-width: 460px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .vc-lux-hero .vc-trust-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink-soft);
+    min-height: 40px;
+    padding: 8px 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.65);
+    border: 1px solid var(--vc-line);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: transform 0.3s var(--vc-ease), box-shadow 0.3s var(--vc-ease);
   }
 
-  .vibecano-hero-root .ro-trust-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: #fff;
-    border: 1px solid var(--line);
-    display: grid;
-    place-items: center;
-    font-size: 16px;
+  .vc-lux-hero .vc-trust-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--vc-shadow-soft);
+  }
+
+  .vc-lux-hero .vc-trust-icon {
     flex-shrink: 0;
-  }
-
-  .vibecano-hero-root .ro-hero-categories {
-    position: relative;
-    padding: 10px 0 4px;
-  }
-
-  .vibecano-hero-root .ro-categories-header {
-    text-align: center;
-    margin-bottom: 26px;
-  }
-
-  .vibecano-hero-root .ro-categories-header h2 {
-    margin: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: .16em;
-    text-transform: uppercase;
-    color: var(--slate);
-  }
-
-  .vibecano-hero-root .ro-categories {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: clamp(18px, 4vw, 42px);
-    flex-wrap: wrap;
-  }
-
-  .vibecano-hero-root .ro-category {
-    display: flex;
-    flex-direction: column;
+    display: inline-flex;
     align-items: center;
-    gap: 14px;
-    width: clamp(132px, 16vw, 176px);
-    text-align: center;
-    transition: transform .24s ease;
-  }
-
-  .vibecano-hero-root .ro-category:hover { transform: translateY(-6px); }
-
-  .vibecano-hero-root .ro-category-ring {
-    width: clamp(132px, 16vw, 176px);
-    height: clamp(132px, 16vw, 176px);
+    justify-content: center;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    padding: 4px;
-    box-shadow: 0 20px 44px -28px rgba(15, 23, 42, .42);
-    transition: box-shadow .24s ease, transform .24s ease;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.25), rgba(99, 179, 237, 0.2));
+    color: var(--vc-ink);
   }
 
-  .vibecano-hero-root .ro-category.is-customize .ro-category-ring {
-    background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+  .vc-lux-hero .vc-trust-icon svg {
+    width: 14px;
+    height: 14px;
   }
 
-  .vibecano-hero-root .ro-category.is-ready-made .ro-category-ring {
-    background: linear-gradient(135deg, #fb923c 0%, #f59e0b 100%);
+  .vc-lux-hero .vc-trust-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--vc-ink);
   }
 
-  .vibecano-hero-root .ro-category.is-featured .ro-category-ring {
-    background: linear-gradient(135deg, #c084fc 0%, #ec4899 100%);
+  /* ---- Visual / Image ---- */
+  .vc-lux-hero .vc-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 360px;
+    padding: clamp(20px, 3vw, 40px);
   }
 
-  .vibecano-hero-root .ro-category:hover .ro-category-ring {
-    box-shadow: 0 26px 54px -24px rgba(15, 23, 42, .52);
-    transform: scale(1.03);
-  }
-
-  .vibecano-hero-root .ro-category-img {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    border-radius: 50%;
-    background: #f8fafc;
-    border: 4px solid #fff;
-  }
-
-  .vibecano-hero-root .ro-category-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform .4s ease;
-  }
-
-  .vibecano-hero-root .ro-category:hover .ro-category-img img { transform: scale(1.08); }
-
-  .vibecano-hero-root .ro-category-fallback {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    place-items: center;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 34px;
-    font-weight: 800;
-    color: rgba(15, 23, 42, .12);
-    letter-spacing: -.04em;
-    text-transform: uppercase;
-  }
-
-  .vibecano-hero-root .ro-category.is-customize .ro-category-fallback {
-    background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
-    color: rgba(37, 99, 235, .22);
-  }
-
-  .vibecano-hero-root .ro-category.is-ready-made .ro-category-fallback {
-    background: linear-gradient(145deg, #fff7ed 0%, #ffedd5 100%);
-    color: rgba(234, 88, 12, .22);
-  }
-
-  .vibecano-hero-root .ro-category.is-featured .ro-category-fallback {
-    background: linear-gradient(145deg, #faf5ff 0%, #f3e8ff 100%);
-    color: rgba(147, 51, 234, .22);
-  }
-
-  .vibecano-hero-root .ro-category h3 {
-    margin: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 800;
-    letter-spacing: -.01em;
-    color: var(--ink);
-  }
-
-  .vibecano-hero-root .ro-category.is-customize h3 { color: #2563eb; }
-  .vibecano-hero-root .ro-category.is-ready-made h3 { color: #ea580c; }
-  .vibecano-hero-root .ro-category.is-featured h3 { color: #9333ea; }
-
-  .vibecano-hero-root .ro-category-skeleton {
-    width: clamp(132px, 16vw, 176px);
-    height: clamp(132px, 16vw, 176px);
+  .vc-lux-hero .vc-visual-glow {
+    position: absolute;
+    width: min(92%, 520px);
+    aspect-ratio: 1;
     border-radius: 50%;
     background:
-      linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.78), transparent),
-      rgba(226, 232, 240, 0.65);
-    background-size: 220% 100%;
-    animation: vc-hero-shimmer 1.35s linear infinite;
+      radial-gradient(circle at 40% 35%, rgba(255, 193, 7, 0.22) 0%, transparent 45%),
+      radial-gradient(circle at 65% 65%, rgba(99, 179, 237, 0.2) 0%, transparent 50%);
+    filter: blur(8px);
+    z-index: 0;
+    animation: vcGlowPulse 8s ease-in-out infinite;
   }
 
-  @keyframes vc-hero-shimmer {
-    to { background-position: -220% 0; }
+  .vc-lux-hero .vc-deco-ring {
+    position: absolute;
+    width: min(78%, 440px);
+    aspect-ratio: 1;
+    border-radius: 36% 64% 55% 45% / 48% 42% 58% 52%;
+    border: 1.5px dashed rgba(99, 179, 237, 0.35);
+    z-index: 0;
+    animation: vcSpinSlow 28s linear infinite;
   }
 
-  @media (max-width: 1024px) {
-    .vibecano-hero-root .ro-hero-wrap { grid-template-columns: 1fr; gap: 40px; }
-    .vibecano-hero-root .ro-hero-content { max-width: none; }
+  .vc-lux-hero .vc-deco-blob {
+    position: absolute;
+    z-index: 0;
+    border-radius: 40% 60% 55% 45%;
   }
 
-  @media (max-width: 768px) {
-    .vibecano-hero-root .ro-hero { padding: 40px 16px 56px; }
-    .vibecano-hero-root .ro-categories { gap: 22px; }
-    .vibecano-hero-root .ro-stat { border-right: none; padding-right: 0; }
-    .vibecano-hero-root .ro-hero-stats { gap: 12px; }
+  .vc-lux-hero .vc-deco-blob-1 {
+    width: 58%;
+    aspect-ratio: 1.1;
+    background: linear-gradient(145deg, rgba(255, 193, 7, 0.18), rgba(255, 193, 7, 0.04));
+    transform: rotate(-8deg) translate(-6%, 4%);
   }
 
-  @media (max-width: 480px) {
-    .vibecano-hero-root .ro-btn { padding: 13px 22px; font-size: 14px; width: 100%; }
-    .vibecano-hero-root .ro-cta { flex-direction: column; }
+  .vc-lux-hero .vc-deco-blob-2 {
+    width: 48%;
+    aspect-ratio: 1;
+    background: linear-gradient(160deg, rgba(99, 179, 237, 0.2), rgba(99, 179, 237, 0.04));
+    border-radius: 55% 45% 40% 60%;
+    transform: rotate(12deg) translate(18%, -8%);
+  }
+
+  .vc-lux-hero .vc-image-stage {
+    position: relative;
+    z-index: 2;
+    width: min(100%, 560px);
+    animation: vcFloatImage 5.5s ease-in-out infinite;
+  }
+
+  .vc-lux-hero .vc-image-frame {
+    position: relative;
+    border-radius: var(--vc-radius);
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow:
+      0 28px 60px rgba(17, 24, 39, 0.14),
+      0 8px 20px rgba(17, 24, 39, 0.06),
+      0 1px 0 rgba(255, 255, 255, 0.8) inset;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    padding: clamp(12px, 2vw, 20px);
+    transition: transform 0.45s var(--vc-ease), box-shadow 0.45s var(--vc-ease);
+  }
+
+  .vc-lux-hero .vc-image-frame:hover {
+    transform: translateY(-6px) scale(1.015);
+    box-shadow:
+      0 36px 70px rgba(17, 24, 39, 0.16),
+      0 12px 28px rgba(255, 193, 7, 0.12),
+      0 1px 0 rgba(255, 255, 255, 0.85) inset;
+  }
+
+  .vc-lux-hero .vc-image-frame img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 300 / 180;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 16px;
+    background: var(--vc-surface);
+  }
+
+  .vc-lux-hero .vc-image-shadow {
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    bottom: -18px;
+    height: 28px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(17, 24, 39, 0.22) 0%, transparent 70%);
+    filter: blur(8px);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Floating cards */
+  .vc-lux-hero .vc-float-card {
+    position: absolute;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 14px 34px rgba(17, 24, 39, 0.10);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--vc-ink);
+    white-space: nowrap;
+    animation: vcFloatCard 6s ease-in-out infinite;
+  }
+
+  .vc-lux-hero .vc-float-card .vc-fc-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.3), rgba(99, 179, 237, 0.22));
+    font-size: 15px;
+    line-height: 1;
+  }
+
+  .vc-lux-hero .vc-float-card-1 {
+    top: 8%;
+    left: 0;
+    animation-delay: 0s;
+  }
+
+  .vc-lux-hero .vc-float-card-2 {
+    top: 18%;
+    right: 0;
+    animation-delay: -1.5s;
+  }
+
+  .vc-lux-hero .vc-float-card-3 {
+    bottom: 16%;
+    left: 2%;
+    animation-delay: -3s;
+  }
+
+  .vc-lux-hero .vc-float-card-4 {
+    bottom: 8%;
+    right: 4%;
+    animation-delay: -4.2s;
+  }
+
+  @keyframes vcReveal {
+    from { opacity: 0; transform: translateY(22px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes vcFloatImage {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  @keyframes vcFloatCard {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes vcFloatSoft {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes vcBlob {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(18px, -14px) scale(1.06); }
+  }
+
+  @keyframes vcGlowPulse {
+    0%, 100% { opacity: 0.85; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.04); }
+  }
+
+  @keyframes vcSpinSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vc-lux-hero .vc-reveal,
+    .vc-lux-hero .vc-shape-a,
+    .vc-lux-hero .vc-shape-b,
+    .vc-lux-hero .vc-dot,
+    .vc-lux-hero .vc-image-stage,
+    .vc-lux-hero .vc-float-card,
+    .vc-lux-hero .vc-visual-glow,
+    .vc-lux-hero .vc-deco-ring {
+      animation: none !important;
+    }
+    .vc-lux-hero .vc-reveal {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 1100px) {
+    .vc-lux-hero .vc-hero-wrap {
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+    }
+    .vc-lux-hero .vc-float-card {
+      font-size: 12px;
+      padding: 10px 12px;
+    }
+    .vc-lux-hero .vc-float-card .vc-fc-icon {
+      width: 28px;
+      height: 28px;
+      font-size: 13px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .vc-lux-hero .vc-hero {
+      padding: 40px 20px 56px;
+    }
+    .vc-lux-hero .vc-hero-wrap {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .vc-lux-hero .vc-content {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .vc-lux-hero .vc-desc {
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .vc-lux-hero .vc-cta {
+      justify-content: center;
+    }
+    .vc-lux-hero .vc-trust {
+      margin: 0 auto;
+      max-width: 420px;
+      text-align: left;
+    }
+    .vc-lux-hero .vc-visual {
+      min-height: 300px;
+      order: -1;
+      max-width: 560px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .vc-lux-hero .vc-shape-c,
+    .vc-lux-hero .vc-shape-d {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .vc-lux-hero .vc-hero {
+      padding: 32px 16px 48px;
+    }
+    .vc-lux-hero .vc-heading {
+      font-size: clamp(1.85rem, 8vw, 2.4rem);
+    }
+    .vc-lux-hero .vc-cta {
+      flex-direction: column;
+      width: 100%;
+    }
+    .vc-lux-hero .vc-btn {
+      width: 100%;
+    }
+    .vc-lux-hero .vc-trust {
+      grid-template-columns: 1fr;
+      max-width: none;
+    }
+    .vc-lux-hero .vc-float-card-2,
+    .vc-lux-hero .vc-float-card-4 {
+      display: none;
+    }
+    .vc-lux-hero .vc-float-card-1 {
+      top: 4%;
+      left: 2%;
+    }
+    .vc-lux-hero .vc-float-card-3 {
+      bottom: 6%;
+      left: auto;
+      right: 2%;
+    }
+    .vc-lux-hero .vc-visual {
+      padding: 12px 8px 28px;
+      min-height: 240px;
+    }
+    .vc-lux-hero .vc-image-frame {
+      padding: 10px;
+      border-radius: 18px;
+    }
+    .vc-lux-hero .vc-image-frame img {
+      border-radius: 12px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .vc-lux-hero .vc-float-card-1,
+    .vc-lux-hero .vc-float-card-3 {
+      font-size: 11px;
+      padding: 8px 10px;
+      gap: 6px;
+    }
   }
 </style>
 
-<div class="vibecano-hero-root" id="vibecanoHeroRoot">
-  <section class="ro-hero">
-    <div class="ro-hero-wrap">
-      <div class="ro-hero-content">
-        <div class="ro-hero-eyebrow">
-          <span><i class="dot"></i> Spring / Summer '26</span>
+<section class="vc-lux-hero" aria-label="VibeCano hero">
+  <div class="vc-hero">
+    <div class="vc-hero-bg" aria-hidden="true">
+      <div class="vc-shape vc-shape-a"></div>
+      <div class="vc-shape vc-shape-b"></div>
+      <div class="vc-shape vc-shape-c"></div>
+      <div class="vc-shape vc-shape-d"></div>
+      <div class="vc-shape vc-shape-e"></div>
+      <div class="vc-dot"></div>
+      <div class="vc-dot"></div>
+      <div class="vc-dot"></div>
+      <div class="vc-dot"></div>
+      <div class="vc-lines"></div>
+    </div>
+
+    <div class="vc-hero-wrap">
+      <div class="vc-content">
+        <div class="vc-badge vc-reveal vc-reveal-1">
+          <span class="vc-badge-dot" aria-hidden="true"></span>
+          <span>✨ New Collection 2026</span>
         </div>
 
-        <h1>Premium Apparel, Built as a Brand<span>Ready-to-wear collections for every day.</span></h1>
+        <h1 class="vc-heading vc-reveal vc-reveal-2">
+          Wear Your Vibe.
+          <span>Express Yourself with VibeCano.</span>
+        </h1>
 
-        <p class="lead">
-          Vibecano is a lifestyle brand built around quality essentials — curated tees, hoodies, and caps designed to look sharp straight out of the bag. No wait. No minimums. Just gear worth wearing.
-        </p>
-
-        <div class="ro-hero-stats">
-          <div class="ro-stat">
-            <strong>120+</strong>
-            <small>Ready-made styles</small>
-          </div>
-          <div class="ro-stat">
-            <strong>4.9★</strong>
-            <small>Customer rating</small>
-          </div>
-          <div class="ro-stat">
-            <strong>48hr</strong>
-            <small>Fast delivery</small>
-          </div>
+        <div class="vc-desc vc-reveal vc-reveal-3">
+          <p>Premium printed apparel designed for people who love creativity and everyday style.</p>
+          <p>Discover high-quality T-shirts, hoodies, caps, mugs, and more—crafted with comfort, bold designs, and lasting quality.</p>
         </div>
 
-        <div class="ro-cta">
-          <a class="ro-btn ro-btn-primary" id="roCtaReadyMade" href="/product-category/ready-made/">
-            Shop Ready Made
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        <div class="vc-cta vc-reveal vc-reveal-4">
+          <a class="vc-btn vc-btn-primary" href="/shop/" id="vcHeroShopBtn">
+            Shop Collection
+            <svg class="vc-btn-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </a>
-          <a class="ro-btn ro-btn-outline" id="roCtaFeatured" href="/product-category/featured/">View Featured</a>
+          <a class="vc-btn vc-btn-secondary" href="/product-category/customize/" id="vcHeroDesignBtn">
+            Explore Designs
+          </a>
         </div>
 
-        <div class="ro-trust-row">
-          <div class="ro-trust-item">
-            <span class="ro-trust-icon">✓</span>
-            Premium cotton &amp; fleece
-          </div>
-          <div class="ro-trust-item">
-            <span class="ro-trust-icon">↩</span>
-            Easy 7-day returns
-          </div>
-          <div class="ro-trust-item">
-            <span class="ro-trust-icon">🚚</span>
-            Free delivery Rs. 5,000+
-          </div>
-        </div>
+        <ul class="vc-trust vc-reveal vc-reveal-5" aria-label="Trust indicators">
+          <li class="vc-trust-item">
+            <span class="vc-trust-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="vc-trust-label">Premium Quality</span>
+          </li>
+          <li class="vc-trust-item">
+            <span class="vc-trust-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="vc-trust-label">Fast Delivery</span>
+          </li>
+          <li class="vc-trust-item">
+            <span class="vc-trust-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="vc-trust-label">Secure Checkout</span>
+          </li>
+          <li class="vc-trust-item">
+            <span class="vc-trust-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="vc-trust-label">Unique Designs</span>
+          </li>
+        </ul>
       </div>
 
-      <div class="ro-hero-categories">
-        <div class="ro-categories-header">
-          <h2>Collections</h2>
+      <div class="vc-visual" aria-hidden="false">
+        <div class="vc-visual-glow" aria-hidden="true"></div>
+        <div class="vc-deco-blob vc-deco-blob-1" aria-hidden="true"></div>
+        <div class="vc-deco-blob vc-deco-blob-2" aria-hidden="true"></div>
+        <div class="vc-deco-ring" aria-hidden="true"></div>
+
+        <div class="vc-float-card vc-float-card-1">
+          <span class="vc-fc-icon" aria-hidden="true">👕</span>
+          <span>Premium Cotton</span>
         </div>
-        <div class="ro-categories" id="roCategoryGrid" aria-live="polite"></div>
+        <div class="vc-float-card vc-float-card-2">
+          <span class="vc-fc-icon" aria-hidden="true">🎨</span>
+          <span>Exclusive Designs</span>
+        </div>
+        <div class="vc-float-card vc-float-card-3">
+          <span class="vc-fc-icon" aria-hidden="true">🚚</span>
+          <span>Fast Shipping</span>
+        </div>
+        <div class="vc-float-card vc-float-card-4">
+          <span class="vc-fc-icon" aria-hidden="true">⭐</span>
+          <span>Customer Favorite</span>
+        </div>
+
+        <div class="vc-image-stage">
+          <div class="vc-image-frame">
+            <img
+              src="https://vibecano.com/wp-content/uploads/2026/07/hero-image1-300x180.png"
+              alt="VibeCano models wearing premium printed apparel from the new collection"
+              width="300"
+              height="180"
+              loading="eager"
+              decoding="async"
+            >
+          </div>
+          <div class="vc-image-shadow" aria-hidden="true"></div>
+        </div>
       </div>
     </div>
-  </section>
-</div>
+  </div>
+</section>
 
 <script>
 (function () {
   "use strict";
 
-  var CONFIG = {
-    shopUrl: "/shop/",
-    categoriesEndpoint: "/wp-json/wc/store/v1/products/categories",
-    mainCategories: [
-      { key: "customize", slugs: ["customize", "custom"], label: "Customize", toneClass: "is-customize" },
-      { key: "ready-made", slugs: ["ready-made", "ready-made-designs"], label: "Ready Made", toneClass: "is-ready-made" },
-      { key: "featured", slugs: ["featured"], label: "Featured", toneClass: "is-featured" }
-    ]
-  };
-
-  var root = document.getElementById("vibecanoHeroRoot");
+  var root = document.currentScript && document.currentScript.previousElementSibling;
+  if (!root || !root.classList || !root.classList.contains("vc-lux-hero")) {
+    root = document.querySelector(".vc-lux-hero");
+  }
   if (!root) return;
 
-  var categoryGridEl = document.getElementById("roCategoryGrid");
-  var ctaReadyMade = document.getElementById("roCtaReadyMade");
-  var ctaFeatured = document.getElementById("roCtaFeatured");
+  /* Soft parallax on floating cards for desktop pointer devices */
+  var cards = root.querySelectorAll(".vc-float-card");
+  var visual = root.querySelector(".vc-visual");
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-  expandHeroLayout();
-  renderCategorySkeletons();
-  loadMainCategories();
-
-  window.addEventListener("resize", expandHeroLayout);
-  window.addEventListener("load", expandHeroLayout);
-
-  function expandHeroLayout() {
-    var node = root.parentElement;
-    while (node && node !== document.documentElement) {
-      if (
-        node.classList &&
-        (
-          node.classList.contains("elementor-widget") ||
-          node.classList.contains("elementor-element") ||
-          node.classList.contains("e-con") ||
-          node.classList.contains("elementor-widget-wrap") ||
-          node.classList.contains("elementor")
-        )
-      ) {
-        node.style.setProperty("width", "100%", "important");
-        node.style.setProperty("max-width", "none", "important");
-        node.style.setProperty("align-self", "stretch", "important");
-        node.style.setProperty("flex", "1 1 100%", "important");
+  if (!reduceMotion && canHover && visual && cards.length) {
+    visual.addEventListener("pointermove", function (e) {
+      var rect = visual.getBoundingClientRect();
+      var x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      var y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      for (var i = 0; i < cards.length; i++) {
+        var depth = (i % 2 === 0) ? 6 : -8;
+        cards[i].style.transform =
+          "translate(" + (x * depth).toFixed(1) + "px, " + (y * depth).toFixed(1) + "px)";
       }
-      node = node.parentElement;
-    }
+    });
 
-    root.style.setProperty("width", "100%", "important");
-    root.style.setProperty("max-width", "none", "important");
-  }
-
-  function loadMainCategories() {
-    if (!window.fetch) {
-      renderFallbackCategories();
-      return;
-    }
-
-    fetch(CONFIG.categoriesEndpoint + "?per_page=100", { credentials: "same-origin" })
-      .then(function (response) {
-        if (!response.ok) throw new Error("Categories request failed");
-        return response.json();
-      })
-      .then(function (categories) {
-        var safeCategories = Array.isArray(categories) ? categories : [];
-        var resolved = CONFIG.mainCategories.map(function (item) {
-          return resolveMainCategory(safeCategories, item);
-        }).filter(Boolean);
-
-        if (!resolved.length) {
-          renderFallbackCategories();
-          return;
-        }
-
-        renderCategoryCards(resolved);
-        bindCategoryLinks(resolved);
-      })
-      .catch(function () {
-        renderFallbackCategories();
-      });
-  }
-
-  function resolveMainCategory(categories, item) {
-    var category = null;
-    var i;
-
-    for (i = 0; i < item.slugs.length; i += 1) {
-      category = findCategoryBySlug(categories, item.slugs[i]);
-      if (category) break;
-    }
-
-    if (!category) return null;
-
-    return {
-      key: item.key,
-      label: item.label,
-      toneClass: item.toneClass,
-      category: category
-    };
-  }
-
-  function findCategoryBySlug(categories, slug) {
-    return categories.filter(function (category) {
-      return category && category.slug === slug;
-    })[0] || null;
-  }
-
-  function getCategoryUrl(category) {
-    if (category && category.permalink) return category.permalink;
-    if (category && category.slug) return "/product-category/" + category.slug + "/";
-    return CONFIG.shopUrl;
-  }
-
-  function renderCategoryCards(items) {
-    if (!categoryGridEl) return;
-    categoryGridEl.innerHTML = items.map(renderCategoryCard).join("");
-  }
-
-  function renderCategoryCard(item) {
-    var category = item.category;
-    var url = escapeAttr(getCategoryUrl(category));
-    var name = escapeHtml(item.label || category.name || "Category");
-    var toneClass = escapeAttr(item.toneClass || "");
-    var image = category.image && category.image.src ? category.image : null;
-    var imageHtml;
-
-    if (image && image.src) {
-      imageHtml = '<img src="' + escapeAttr(image.src) + '" alt="' + escapeAttr(image.alt || category.name || item.label) + '" loading="lazy" decoding="async">';
-    } else {
-      imageHtml = '<div class="ro-category-fallback">' + escapeHtml((item.label || category.name || "VC").slice(0, 1)) + "</div>";
-    }
-
-    return [
-      '<a href="' + url + '" class="ro-category ' + toneClass + '">',
-        '<div class="ro-category-ring">',
-          '<div class="ro-category-img">',
-            imageHtml,
-          "</div>",
-        "</div>",
-        "<h3>" + name + "</h3>",
-      "</a>"
-    ].join("");
-  }
-
-  function bindCategoryLinks(items) {
-    items.forEach(function (item) {
-      var url = getCategoryUrl(item.category);
-      if (item.key === "ready-made" && ctaReadyMade) ctaReadyMade.href = url;
-      if (item.key === "featured" && ctaFeatured) ctaFeatured.href = url;
+    visual.addEventListener("pointerleave", function () {
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].style.transform = "";
+      }
     });
   }
 
-  function renderCategorySkeletons() {
-    if (!categoryGridEl) return;
-    categoryGridEl.innerHTML = "";
-    for (var i = 0; i < 3; i += 1) {
-      categoryGridEl.innerHTML += '<div class="ro-category-skeleton" aria-hidden="true"></div>';
+  /* Ensure Elementor host does not clip the floating hero */
+  try {
+    var el = root.closest(".elementor-widget-html, .elementor-widget, .elementor-element");
+    while (el && el !== document.body) {
+      if (el.style) {
+        el.style.overflow = "visible";
+      }
+      el = el.parentElement;
+      if (el && el.classList && el.classList.contains("elementor-section")) break;
     }
-  }
-
-  function renderFallbackCategories() {
-    if (!categoryGridEl) return;
-
-    var fallback = CONFIG.mainCategories.map(function (item) {
-      return {
-        key: item.key,
-        label: item.label,
-        toneClass: item.toneClass,
-        category: {
-          name: item.label,
-          slug: item.slugs[0],
-          permalink: "/product-category/" + item.slugs[0] + "/"
-        }
-      };
-    });
-
-    renderCategoryCards(fallback);
-    bindCategoryLinks(fallback);
-  }
-
-  function escapeHtml(value) {
-    return String(value || "").replace(/[&<>"']/g, function (character) {
-      return {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      }[character];
-    });
-  }
-
-  function escapeAttr(value) {
-    return escapeHtml(value).replace(/`/g, "&#96;");
-  }
+  } catch (err) { /* no-op outside Elementor */ }
 })();
 </script>
