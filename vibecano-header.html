@@ -273,6 +273,7 @@
     padding: 0 clamp(14px, 3vw, 24px);
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 16px;
     min-height: 52px;
   }
@@ -318,7 +319,6 @@
   }
 
   .vibecano-header-root .ro-nav-label:hover,
-  .vibecano-header-root .ro-nav-label.is-highlight,
   .vibecano-header-root .ro-has-dropdown:hover .ro-nav-label,
   .vibecano-header-root .ro-has-dropdown.is-open .ro-nav-label {
     color: var(--brand);
@@ -423,6 +423,59 @@
     font-style: italic;
   }
 
+  .vibecano-header-root .ro-design-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #0b1220 0%, #1e293b 100%);
+    color: #fff !important;
+    padding: 11px 22px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    border: 2px solid transparent;
+    transition: transform .2s;
+    white-space: nowrap;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    animation: vc-design-flash 2s ease-in-out infinite;
+  }
+
+  .vibecano-header-root .ro-design-btn::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, rgba(245, 158, 11, .55), transparent);
+    opacity: 0;
+    animation: vc-design-shine 2s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .vibecano-header-root .ro-design-btn:hover {
+    transform: translateY(-1px);
+    animation-play-state: paused;
+  }
+
+  @keyframes vc-design-flash {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(245, 158, 11, .55), 0 4px 14px rgba(15, 23, 42, .15);
+      border-color: rgba(245, 158, 11, .35);
+    }
+    50% {
+      box-shadow: 0 0 0 6px rgba(245, 158, 11, 0), 0 6px 20px rgba(245, 158, 11, .35);
+      border-color: rgba(245, 158, 11, .85);
+    }
+  }
+
+  @keyframes vc-design-shine {
+    0%, 100% { opacity: 0; transform: translateX(-120%); }
+    45%, 55% { opacity: 1; }
+    60% { opacity: 0; transform: translateX(120%); }
+  }
+
   .vibecano-header-root .ro-menu-toggle {
     display: none;
     background: #fff;
@@ -496,6 +549,21 @@
     .vibecano-header-root .ro-has-dropdown.is-open:hover .ro-nav-dropdown {
       display: block;
     }
+
+    .vibecano-header-root .ro-design-btn {
+      margin-left: auto;
+      padding: 9px 14px;
+      font-size: 12px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .vibecano-header-root .ro-design-btn span.ro-design-long { display: none; }
+    .vibecano-header-root .ro-design-btn span.ro-design-short { display: inline; }
+  }
+
+  @media (min-width: 481px) {
+    .vibecano-header-root .ro-design-btn span.ro-design-short { display: none; }
   }
 
   @media (max-width: 768px) {
@@ -528,6 +596,11 @@
     }
 
     .vibecano-header-root .ro-marquee-item { white-space: normal; text-align: center; }
+
+    .vibecano-header-root .ro-design-btn,
+    .vibecano-header-root .ro-design-btn::before {
+      animation: none;
+    }
   }
 </style>
 
@@ -651,7 +724,7 @@
         </li>
         <li class="ro-has-dropdown" data-nav-key="under999">
           <span class="ro-nav-item-wrap">
-            <a class="ro-nav-label is-highlight" href="/product-category/under999/">Under 999</a>
+            <a class="ro-nav-label" href="/product-category/under999/">Under 999</a>
             <button class="ro-nav-caret-btn" type="button" aria-expanded="false" aria-label="Show Under 999 subcategories">
               <svg class="ro-nav-caret" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                 <path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
@@ -661,6 +734,11 @@
           <div class="ro-nav-dropdown" role="menu" aria-label="Under 999 subcategories"></div>
         </li>
       </ul>
+
+      <a class="ro-design-btn" id="roDesignBtn" href="/product-category/under999/">
+        <span class="ro-design-long">Under 999</span>
+        <span class="ro-design-short">Under 999</span>
+      </a>
     </div>
   </nav>
 </div>
@@ -676,6 +754,7 @@
     userEndpoint: "/wp-json/wp/v2/users/me?context=edit",
     cartEndpoint: "/wp-json/wc/store/v1/cart",
     categoriesEndpoint: "/wp-json/wp/v2/product_cat",
+    designUrl: "/product-category/under999/",
     mainNavCategories: [
       { key: "men", slugs: ["men"], label: "Men", viewAll: "Shop All Men" },
       { key: "women", slugs: ["women"], label: "Women", viewAll: "Shop All Women" },
@@ -696,12 +775,14 @@
   var loginLink = document.getElementById("roLoginLink");
   var registerLink = document.getElementById("roRegisterLink");
   var cartCountEl = document.getElementById("roCartCount");
+  var designBtn = document.getElementById("roDesignBtn");
   var navDropdownItems = root.querySelectorAll(".ro-has-dropdown[data-nav-key]");
   var MOBILE_NAV_BREAKPOINT = 992;
 
   if (loginLink) loginLink.href = CONFIG.loginUrl;
   if (registerLink) registerLink.href = CONFIG.registerUrl;
   if (userEl) userEl.href = CONFIG.accountUrl;
+  if (designBtn) designBtn.href = CONFIG.designUrl;
 
   if (toggle && nav) {
     toggle.addEventListener("click", function () {
@@ -837,6 +918,9 @@
             navItem.classList.toggle("ro-no-children", childCount === 0);
           }
         });
+
+        var designCategory = resolveMainCategory(safeCategories, { slugs: ["under999"] });
+        if (designCategory && designBtn) designBtn.href = getCategoryUrl(designCategory);
       })
       .catch(function () {});
   }
