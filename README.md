@@ -8,6 +8,7 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 - `vibecano-hero-section.html` — Homepage hero content only (category circles + CTAs)
 - `vibecano-footer.html` — Site-wide footer (links, contact, copyright)
 - `vibecano-single-product-page.html` — Single product page with size/color swatches
+- `vibecano-women-collection.html` — Premium Women collection grid (Store API products, hover size panel, real add-to-cart + mini popup)
 - `vibecano-cart-page.html` — Custom cart page with Store API integration
 - `vibecano-checkout-page.html` — Custom checkout page with WhatsApp order flow
 
