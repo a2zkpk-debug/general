@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  VibeCano — "Shop by Category" Section
+  ----------------------------------------------------------------------------
+  A premium, fully responsive category showcase built with pure
+  HTML + CSS + Vanilla JavaScript (NO Bootstrap / Tailwind / jQuery / frameworks).
+
+  HOW TO USE IN ELEMENTOR:
+    • Add an "HTML" widget to your page.
+    • Copy EVERYTHING between the <style> and </script> tags below
+      (the .vc-* section, its <style> block and its <script> block).
+    • Paste it into the Elementor HTML widget. That's it.
+
+  The whole thing is scoped under ".vc-section" so it will not clash with
+  your theme's styles.
+
+  Customize quickly:
+    • Colors / spacing  -> see the CSS ":root" variables (--vc-*).
+    • Images            -> search for "Replace with" comments in the HTML.
+    • Category text     -> edit the <h3> titles and subtitles in the HTML.
+  ============================================================================
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VibeCano — Shop by Category</title>
+
+  <!-- Premium typography (optional). Safe to remove if you prefer system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ==========================================================================
+     START: VibeCano "Shop by Category" — copy from here into Elementor
+     ========================================================================== -->
+<style>
+  /* -------------------------------------------------------------------------
+     1) DESIGN TOKENS  (change these to re-theme the whole section instantly)
+     ------------------------------------------------------------------------- */
+  .vc-section {
+    --vc-max-width: 1400px;
+    --vc-bg: #ffffff;
+    --vc-ink: #0d0d0f;          /* near-black text            */
+    --vc-muted: #6b6b73;        /* muted subtext              */
+    --vc-accent: #ff5a3c;       /* youthful brand accent      */
+    --vc-radius: 18px;          /* card corner radius         */
+    --vc-gap: 26px;             /* gap between cards           */
+    --vc-shadow: 0 10px 30px rgba(13, 13, 15, 0.10);
+    --vc-shadow-hover: 0 26px 55px rgba(13, 13, 15, 0.28);
+    --vc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    box-sizing: border-box;
+    max-width: 100%;
+    background: var(--vc-bg);
+    padding: 80px 20px 90px;
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 Roboto, Helvetica, Arial, sans-serif;
+    color: var(--vc-ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .vc-section *,
+  .vc-section *::before,
+  .vc-section *::after { box-sizing: border-box; }
+
+  .vc-inner {
+    max-width: var(--vc-max-width);
+    margin: 0 auto;
+  }
+
+  /* -------------------------------------------------------------------------
+     2) SECTION HEADER
+     ------------------------------------------------------------------------- */
+  .vc-header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 54px;
+  }
+  .vc-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--vc-accent);
+    background: rgba(255, 90, 60, 0.10);
+    padding: 8px 16px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+  .vc-title {
+    font-size: clamp(28px, 4.4vw, 46px);
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 14px;
+  }
+  .vc-subtitle {
+    font-size: clamp(14px, 1.6vw, 17px);
+    line-height: 1.6;
+    color: var(--vc-muted);
+    margin: 0;
+  }
+
+  /* -------------------------------------------------------------------------
+     3) LAYOUT ROWS
+     ------------------------------------------------------------------------- */
+  .vc-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--vc-gap);
+  }
+  .vc-row--top {
+    align-items: center;   /* keeps hero card vertically centered vs. sides */
+    margin-bottom: var(--vc-gap);
+  }
+
+  /* -------------------------------------------------------------------------
+     4) CARD BASE
+     ------------------------------------------------------------------------- */
+  .vc-card {
+    position: relative;
+    border-radius: var(--vc-radius);
+    overflow: hidden;
+    box-shadow: var(--vc-shadow);
+    background: #111;
+    /* Entrance animation start state (revealed by JS via .is-visible) */
+    opacity: 0;
+    transform: translateY(34px);
+    transition:
+      transform 0.6s var(--vc-ease),
+      opacity 0.6s var(--vc-ease),
+      box-shadow 0.4s var(--vc-ease);
+    transition-delay: calc(var(--i, 0) * 90ms); /* staggered fade-in */
+  }
+  .vc-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Desktop card sizes (as specified) */
+  .vc-card--side  { width: 300px; height: 500px; }
+  .vc-card--hero  { width: 430px; height: 600px; }  /* larger center card */
+  .vc-card--small { width: 250px; height: 360px; }
+
+  /* The full card is a link -> keyboard accessible by default */
+  .vc-card__link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: #fff;
+    outline: none;
+  }
+
+  /* Image */
+  .vc-card__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02);
+    transition: transform 0.6s var(--vc-ease), filter 0.4s var(--vc-ease);
+    will-change: transform;
+  }
+
+  /* Dark gradient overlay for text legibility */
+  .vc-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.82) 0%,
+      rgba(0, 0, 0, 0.45) 38%,
+      rgba(0, 0, 0, 0.05) 72%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    transition: opacity 0.4s var(--vc-ease);
+  }
+
+  /* Text + button content */
+  .vc-card__content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 26px 24px 28px;
+    z-index: 2;
+  }
+  .vc-card__subtitle {
+    margin: 0 0 6px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.78);
+  }
+  .vc-card__title {
+    margin: 0 0 16px;
+    font-size: clamp(20px, 2.2vw, 26px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  .vc-card--hero .vc-card__title { font-size: clamp(24px, 2.6vw, 32px); }
+
+  /* Shop Now button */
+  .vc-card__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #0d0d0f;
+    background: #ffffff;
+    padding: 11px 20px;
+    border-radius: 999px;
+    transition:
+      background 0.35s var(--vc-ease),
+      color 0.35s var(--vc-ease),
+      transform 0.35s var(--vc-ease);
+  }
+  .vc-card__btn svg {
+    width: 15px;
+    height: 15px;
+    transition: transform 0.35s var(--vc-ease);
+  }
+
+  /* -------------------------------------------------------------------------
+     5) HOVER / FOCUS INTERACTIONS
+        (:focus-within = same effects when navigating via keyboard)
+     ------------------------------------------------------------------------- */
+  .vc-card:hover,
+  .vc-card:focus-within {
+    transform: translateY(-12px);
+    box-shadow: var(--vc-shadow-hover);
+  }
+  .vc-card:hover .vc-card__img,
+  .vc-card:focus-within .vc-card__img {
+    transform: scale(1.1);          /* image zoom to 110% */
+  }
+  .vc-card:hover .vc-card__overlay,
+  .vc-card:focus-within .vc-card__overlay {
+    opacity: 1.15;                  /* gradient reads slightly darker */
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.92) 0%,
+      rgba(0, 0, 0, 0.55) 40%,
+      rgba(0, 0, 0, 0.12) 75%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+  .vc-card:hover .vc-card__btn,
+  .vc-card:focus-within .vc-card__btn {
+    background: #0d0d0f;            /* button turns black */
+    color: #ffffff;                /* text turns white   */
+    transform: scale(1.06);        /* slight scale       */
+  }
+  .vc-card:hover .vc-card__btn svg,
+  .vc-card:focus-within .vc-card__btn svg {
+    transform: translateX(4px);    /* arrow nudges right */
+  }
+
+  /* Clear keyboard focus ring for accessibility */
+  .vc-card__link:focus-visible {
+    outline: 3px solid var(--vc-accent);
+    outline-offset: 3px;
+    border-radius: var(--vc-radius);
+  }
+
+  /* -------------------------------------------------------------------------
+     6) RESPONSIVE
+        Desktop  : fixed premium sizes (rows of 3 + 4)
+        Tablet   : 2 per row, fluid heights
+        Mobile   : single column, full width
+     ------------------------------------------------------------------------- */
+
+  /* Tablet & down: switch to fluid, 2-up grid */
+  @media (max-width: 1024px) {
+    .vc-row { gap: 20px; }
+
+    .vc-card--side,
+    .vc-card--hero,
+    .vc-card--small {
+      width: calc(50% - 10px);   /* two cards per row */
+      height: auto;
+      aspect-ratio: 3 / 4;       /* consistent, image-friendly ratio */
+    }
+    .vc-card--hero { aspect-ratio: 4 / 5; } /* hero stays a touch taller */
+  }
+
+  /* Mobile: single column, full width */
+  @media (max-width: 560px) {
+    .vc-section { padding: 56px 16px 64px; }
+    .vc-row { gap: 18px; }
+
+    .vc-card--side,
+    .vc-card--hero,
+    .vc-card--small {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+    }
+  }
+
+  /* -------------------------------------------------------------------------
+     7) MOTION SAFETY — respect users who prefer reduced motion
+     ------------------------------------------------------------------------- */
+  @media (prefers-reduced-motion: reduce) {
+    .vc-card,
+    .vc-card__img,
+    .vc-card__overlay,
+    .vc-card__btn,
+    .vc-card__btn svg {
+      transition: none !important;
+    }
+    .vc-card {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+</style>
+
+<!-- Semantic section: proper landmark + heading hierarchy -->
+<section class="vc-section" aria-labelledby="vc-heading">
+  <div class="vc-inner">
+
+    <!-- ================= SECTION HEADER ================= -->
+    <header class="vc-header">
+      <span class="vc-badge">Shop by Category</span>
+      <h2 class="vc-title" id="vc-heading">Find Your Perfect Style</h2>
+      <p class="vc-subtitle">
+        Premium Custom Apparel &amp; Accessories Designed for Every Occasion
+      </p>
+    </header>
+
+    <!-- ================= TOP ROW: 3 LARGE CARDS ================= -->
+    <div class="vc-row vc-row--top">
+
+      <!-- Card: Men's (left, side size) -->
+      <article class="vc-card vc-card--side" style="--i:0">
+        <a class="vc-card__link" href="#" aria-label="Shop Men's collection">
+          <!-- Replace with Men's category image -->
+          <img class="vc-card__img" loading="lazy"
+               src="https://picsum.photos/seed/vibecano-mens/600/1000"
+               alt="Men's custom apparel collection" />
+          <span class="vc-card__overlay" aria-hidden="true"></span>
+          <div class="vc-card__content">
+            <p class="vc-card__subtitle">Everyday Essentials</p>
+            <h3 class="vc-card__title">Men's</h3>
+            <span class="vc-card__btn">
+              Shop Now
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+      </article>
+
+      <!-- Card: Women's (center HERO — larger) -->
+      <article class="vc-card vc-card--hero" style="--i:1">
+        <a class="vc-card__link" href="#" aria-label="Shop Women's collection">
+          <!-- Replace with Women's category image (hero / featured) -->
+          <img class="vc-card__img" loading="lazy"
+               src="https://picsum.photos/seed/vibecano-womens/860/1200"
+               alt="Women's custom apparel featured collection" />
+          <span class="vc-card__overlay" aria-hidden="true"></span>
+          <div class="vc-card__content">
+            <p class="vc-card__subtitle">Featured Collection</p>
+            <h3 class="vc-card__title">Women's</h3>
+            <span class="vc-card__btn">
+              Shop Now
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+      </article>
+
+      <!-- Card: Kids (right, side size) -->
+      <article class="vc-card vc-card--side" style="--i:2">
+        <a class="vc-card__link" href="#" aria-label="Shop Kids collection">
+          <!-- Replace with Kids category image -->
+          <img class="vc-card__img" loading="lazy"
+               src="https://picsum.photos/seed/vibecano-kids/600/1000"
+               alt="Kids custom apparel collection" />
+          <span class="vc-card__overlay" aria-hidden="true"></span>
+          <div class="vc-card__content">
+            <p class="vc-card__subtitle">Little Vibes</p>
+            <h3 class="vc-card__title">Kids</h3>
+            <span class="vc-card__btn">
+              Shop Now
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+      </article>
+
+    </div><!-- /.vc-row--top -->
+
+    <!-- ================= BOTTOM ROW: 4 SMALLER CARDS ================= -->
+    <div class="vc-row vc-row--bottom">
+
+      <!-- Card: Kids T-Shirts -->
+      <article class="vc-card vc-card--small" style="--i:3">
+        <a class="vc-card__link" href="#" aria-label="Shop Kids T-Shirts">
+          <!-- Replace with Kids T-Shirts image -->
+          <img class="vc-card__img" loading="lazy"
+               src="https://picsum.photos/seed/vibecano-kids-tees/500/720"
+               alt="Kids T-Shirts collection" />
+          <span class="vc-card__overlay" aria-hidden="true"></span>
+          <div class="vc-card__content">
+            <p class="vc-card__subtitle">Soft &amp; Playful</p>
+            <h3 class="vc-card__title">Kids T-Shirts</h3>
+            <span class="vc-card__btn">
+              Shop Now
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+      </article>
+
+      <!-- Card: Hoodies -->
+      <article class="vc-card vc-card--small" style="--i:4">
+        <a class="vc-card__link" href="#" aria-label="Shop Hoodies">
+          <!-- Replace with Hoodies image -->
+          <img class="vc-card__img" loading="lazy"
+               src="https://picsum.photos/seed/vibecano-hoodies/500/720"
+               alt="Custom Hoodies collection" />
+          <span class="vc-card__overlay" aria-hidden="true"></span>
+          <div class="vc-card__content">
+            <p class="vc-card__subtitle">Stay Cozy</p>
+            <h3 class="vc-card__title">Hoodies</h3>
+            <span class="vc-card__btn">
+              Shop Now
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+      </article>
+
+      <!-- Card: Sweatshirts -->
+      <article class="vc-card vc-card--small" style="--i:5">
+        <a class="vc-card__link" href="#" aria-label="Shop Sweatshirts">
+          <!-- Replace with Sweatshirts image -->
+          <img class="vc-card__img" loading="lazy"
+               src="https://picsum.photos/seed/vibecano-sweatshirts/500/720"
+               alt="Custom Sweatshirts collection" />
+          <span class="vc-card__overlay" aria-hidden="true"></span>
+          <div class="vc-card__content">
+            <p class="vc-card__subtitle">Layer Up</p>
+            <h3 class="vc-card__title">Sweatshirts</h3>
+            <span class="vc-card__btn">
+              Shop Now
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+      </article>
+
+      <!-- Card: Caps -->
+      <article class="vc-card vc-card--small" style="--i:6">
+        <a class="vc-card__link" href="#" aria-label="Shop Caps">
+          <!-- Replace with Caps image -->
+          <img class="vc-card__img" loading="lazy"
+               src="https://picsum.photos/seed/vibecano-caps/500/720"
+               alt="Custom Caps collection" />
+          <span class="vc-card__overlay" aria-hidden="true"></span>
+          <div class="vc-card__content">
+            <p class="vc-card__subtitle">Top It Off</p>
+            <h3 class="vc-card__title">Caps</h3>
+            <span class="vc-card__btn">
+              Shop Now
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+      </article>
+
+    </div><!-- /.vc-row--bottom -->
+
+  </div><!-- /.vc-inner -->
+</section>
+
+<script>
+  /* -------------------------------------------------------------------------
+     Minimal Vanilla JS
+     • Reveals cards on scroll (fade + slide up), staggered via CSS --i.
+     • Uses IntersectionObserver (no libraries). Falls back gracefully.
+     ------------------------------------------------------------------------- */
+  (function () {
+    var cards = document.querySelectorAll(".vc-section .vc-card");
+    if (!cards.length) return;
+
+    // Fallback: if IntersectionObserver is unavailable, just show everything.
+    if (!("IntersectionObserver" in window)) {
+      cards.forEach(function (card) { card.classList.add("is-visible"); });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          obs.unobserve(entry.target); // reveal once, then stop watching
+        }
+      });
+    }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
+
+    cards.forEach(function (card) { observer.observe(card); });
+  })();
+</script>
+<!-- ==========================================================================
+     END: VibeCano "Shop by Category"
+     ========================================================================== -->
+
+</body>
+</html>
