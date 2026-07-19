@@ -3,45 +3,71 @@
      Paste this whole file into an Elementor HTML widget on the
      WooCommerce Single Product template.
 
+     Gallery: Amazon-style vertical thumbnails on the LEFT of the
+     main image (horizontal strip on mobile).
+
      Behavior:
-     - Auto-loads current product by URL slug or product_cms/product_id query
+     - Auto-loads current product by URL slug or product_cms/product_id
      - Ready-made products show Add to Cart
-     - Customizable products show Customize Now
+     - Customizable products show Customize Now → Simple / Studio
      ============================================================ -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Manrope:wght@700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
 <style>
+  /* Stretch past Elementor boxed wrappers */
+  .elementor-widget:has(.vc-sp),
+  .elementor-widget-html:has(.vc-sp),
+  .elementor-column:has(.vc-sp),
+  .elementor-section:has(.vc-sp),
+  .elementor-top-section:has(.vc-sp),
+  .e-con:has(.vc-sp),
+  .e-con-inner:has(.vc-sp) {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .elementor-section:has(.vc-sp) > .elementor-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
   .vc-sp,
   .vc-sp * {
     box-sizing: border-box;
   }
 
   .vc-sp {
-    --vc-sp-text: #0f172a;
-    --vc-sp-muted: #64748b;
-    --vc-sp-soft: #f8fafc;
-    --vc-sp-line: rgba(148, 163, 184, 0.28);
-    --vc-sp-orange: #f97316;
-    --vc-sp-orange-dark: #ea580c;
-    --vc-sp-blue: #2563eb;
+    --ink: #121212;
+    --ink-2: #3a3a40;
+    --muted: #6f6f78;
+    --line: rgba(18, 18, 18, 0.12);
+    --soft: #f3f1ed;
+    --panel: #ffffff;
+    --accent: #121212;
+    --sale: #b42318;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --pad: clamp(16px, 3.5vw, 48px);
     position: relative;
-    overflow: hidden;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 34px 18px 70px;
-    color: var(--vc-sp-text);
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    overflow-x: clip;
+    padding: clamp(18px, 3vw, 36px) 0 clamp(56px, 8vw, 80px);
+    color: var(--ink);
+    font-family: Manrope, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background:
+      linear-gradient(180deg, #f7f5f2 0%, #fff 38%, #fff 100%);
   }
 
-  .vc-sp::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background:
-      radial-gradient(circle at 12% 8%, rgba(249, 115, 22, 0.1), transparent 28%),
-      radial-gradient(circle at 92% 6%, rgba(37, 99, 235, 0.09), transparent 30%);
-    pointer-events: none;
+  .vc-sp-inner {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--pad);
   }
 
   .vc-sp-crumb {
@@ -50,111 +76,69 @@
     gap: 7px;
     align-items: center;
     margin-bottom: 18px;
-    color: var(--vc-sp-muted);
+    color: var(--muted);
     font-size: 12px;
     font-weight: 700;
   }
 
   .vc-sp-crumb a {
-    color: var(--vc-sp-muted);
+    color: var(--muted);
     text-decoration: none;
   }
 
   .vc-sp-crumb a:hover {
-    color: var(--vc-sp-orange);
+    color: var(--ink);
   }
 
   .vc-sp-wrap {
     display: grid;
-    grid-template-columns: minmax(0, 1.04fr) minmax(360px, 0.96fr);
-    gap: clamp(26px, 4vw, 54px);
+    grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
+    gap: clamp(22px, 3.5vw, 48px);
     align-items: start;
   }
 
+  /* Amazon-style: thumbs LEFT of main image */
   .vc-sp-gallery {
     position: sticky;
-    top: 20px;
+    top: 18px;
     display: grid;
-    gap: 14px;
-  }
-
-  .vc-sp-main {
-    position: relative;
-    overflow: hidden;
-    aspect-ratio: 1 / 1;
-    border: 1px solid var(--vc-sp-line);
-    border-radius: 30px;
-    background:
-      linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(37, 99, 235, 0.08)),
-      var(--vc-sp-soft);
-    box-shadow: 0 30px 80px -58px rgba(15, 23, 42, 0.8);
-  }
-
-  .vc-sp-main img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-    transition: transform 0.55s ease, filter 0.55s ease;
-  }
-
-  .vc-sp-main:hover img {
-    filter: saturate(1.08);
-    transform: scale(1.055);
-  }
-
-  .vc-sp-badge {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    z-index: 2;
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 8px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    border-radius: 999px;
-    background: rgba(15, 23, 42, 0.78);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    backdrop-filter: blur(12px);
-  }
-
-  .vc-sp-badge::before {
-    content: "";
-    width: 7px;
-    height: 7px;
-    border-radius: 999px;
-    background: #22c55e;
-    box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.16);
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    min-width: 0;
   }
 
   .vc-sp-thumbs {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: min(560px, 72vw);
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 2px;
+    scrollbar-width: thin;
+  }
+
+  .vc-sp-thumbs::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .vc-sp-thumbs::-webkit-scrollbar-thumb {
+    background: rgba(18, 18, 18, 0.2);
   }
 
   .vc-sp-thumb {
-    overflow: hidden;
-    aspect-ratio: 1 / 1;
+    position: relative;
+    flex: 0 0 auto;
+    width: 64px;
+    height: 64px;
     padding: 0;
-    border: 2px solid transparent;
-    border-radius: 16px;
-    background: var(--vc-sp-soft);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--soft);
     cursor: pointer;
-    transition: border-color 0.18s ease, transform 0.18s ease;
-  }
-
-  .vc-sp-thumb.is-active {
-    border-color: var(--vc-sp-orange);
-  }
-
-  .vc-sp-thumb:hover {
-    transform: translateY(-2px);
+    transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
   }
 
   .vc-sp-thumb img {
@@ -164,35 +148,95 @@
     object-fit: cover;
   }
 
+  .vc-sp-thumb.is-active {
+    border-color: var(--ink);
+    box-shadow: 0 0 0 1px var(--ink);
+  }
+
+  .vc-sp-thumb:hover {
+    border-color: rgba(18, 18, 18, 0.45);
+  }
+
+  .vc-sp-thumb-more,
+  .vc-sp-thumb-play {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 0, 0, 0.48);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+
+  .vc-sp-thumb-play svg {
+    width: 22px;
+    height: 22px;
+    fill: #fff;
+  }
+
+  .vc-sp-videos-label {
+    margin: 2px 0 0;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .vc-sp-main {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--line);
+    background: var(--soft);
+  }
+
+  .vc-sp-main img,
+  .vc-sp-main video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .vc-sp-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 2;
+    padding: 7px 11px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(18, 18, 18, 0.82);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
   .vc-sp-panel {
-    padding: clamp(20px, 3vw, 30px);
-    border: 1px solid var(--vc-sp-line);
-    border-radius: 30px;
-    background:
-      radial-gradient(circle at top right, rgba(249, 115, 22, 0.08), transparent 38%),
-      rgba(255, 255, 255, 0.92);
-    box-shadow: 0 28px 80px -62px rgba(15, 23, 42, 0.86);
+    min-width: 0;
+    padding: clamp(4px, 1vw, 8px) 0 0;
   }
 
   .vc-sp-type {
-    display: inline-flex;
-    align-items: center;
-    margin-bottom: 12px;
-    padding: 8px 12px;
-    border-radius: 999px;
-    background: #fff7ed;
-    color: #c2410c;
+    display: inline-block;
+    margin-bottom: 10px;
+    color: var(--muted);
     font-size: 11px;
-    font-weight: 900;
+    font-weight: 800;
     letter-spacing: 0.1em;
     text-transform: uppercase;
   }
 
   .vc-sp-title {
     margin: 0 0 12px;
-    color: var(--vc-sp-text);
-    font-family: Manrope, Inter, sans-serif;
-    font-size: clamp(30px, 4vw, 46px);
+    font-family: Syne, Manrope, sans-serif;
+    font-size: clamp(26px, 3.6vw, 40px);
     font-weight: 800;
     line-height: 1.08;
     letter-spacing: -0.03em;
@@ -203,15 +247,15 @@
     flex-wrap: wrap;
     gap: 8px;
     align-items: center;
-    margin-bottom: 16px;
-    color: var(--vc-sp-muted);
+    margin-bottom: 14px;
+    color: var(--muted);
     font-size: 13px;
     font-weight: 700;
   }
 
   .vc-sp-stars {
-    color: #f59e0b;
-    letter-spacing: 2px;
+    color: #c27803;
+    letter-spacing: 1px;
   }
 
   .vc-sp-price {
@@ -219,31 +263,29 @@
     flex-wrap: wrap;
     gap: 10px;
     align-items: baseline;
-    margin-bottom: 18px;
-    color: var(--vc-sp-text);
-    font-family: Manrope, Inter, sans-serif;
-    font-size: 30px;
+    margin-bottom: 16px;
+    font-size: clamp(24px, 2.8vw, 30px);
     font-weight: 800;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.02em;
   }
 
   .vc-sp-price del {
-    color: #94a3b8;
+    color: var(--muted);
     font-size: 16px;
     font-weight: 700;
   }
 
   .vc-sp-price ins {
-    color: var(--vc-sp-text);
+    color: var(--sale);
     text-decoration: none;
   }
 
   .vc-sp-desc {
-    margin: 0 0 22px;
-    color: #475569;
-    font-size: 15px;
-    font-weight: 550;
-    line-height: 1.75;
+    margin: 0 0 20px;
+    color: var(--ink-2);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.7;
   }
 
   .vc-sp-option {
@@ -259,21 +301,20 @@
   }
 
   .vc-sp-label {
-    color: var(--vc-sp-muted);
+    color: var(--muted);
     font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 0.12em;
+    font-weight: 800;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
   .vc-sp-chart {
-    border: 0;
-    border-radius: 999px;
-    background: #eef2ff;
-    color: #1e293b;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
     cursor: pointer;
     font-size: 12px;
-    font-weight: 850;
+    font-weight: 800;
     padding: 8px 12px;
   }
 
@@ -281,48 +322,46 @@
   .vc-sp-colors {
     display: flex;
     flex-wrap: wrap;
-    gap: 9px;
+    gap: 8px;
   }
 
   .vc-sp-size {
-    min-width: 48px;
-    height: 44px;
-    padding: 0 14px;
-    border: 1px solid var(--vc-sp-line);
-    border-radius: 999px;
+    min-width: 46px;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
     background: #fff;
-    color: var(--vc-sp-text);
+    color: var(--ink);
     cursor: pointer;
     font-weight: 800;
-    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+    transition: background 0.18s var(--ease), color 0.18s var(--ease), border-color 0.18s var(--ease);
   }
 
   .vc-sp-size.is-active {
-    border-color: var(--vc-sp-text);
-    background: var(--vc-sp-text);
+    border-color: var(--ink);
+    background: var(--ink);
     color: #fff;
   }
 
   .vc-sp-color {
     position: relative;
-    width: 38px;
-    height: 38px;
-    border: 3px solid #fff;
-    border-radius: 999px;
-    outline: 1px solid var(--vc-sp-line);
+    width: 34px;
+    height: 34px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    outline: 1px solid var(--line);
     cursor: pointer;
-    transition: transform 0.18s ease, outline-color 0.18s ease;
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
+    transition: outline-color 0.18s var(--ease), transform 0.18s var(--ease);
   }
 
   .vc-sp-color.is-active {
-    outline: 3px solid var(--vc-sp-text);
+    outline: 2px solid var(--ink);
   }
 
   .vc-sp-color:hover {
-    transform: scale(1.08);
+    transform: scale(1.06);
   }
 
   .vc-sp-color-label {
@@ -340,25 +379,25 @@
   .vc-sp-actions {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 12px;
+    gap: 10px;
     align-items: center;
-    margin-top: 26px;
+    margin-top: 24px;
   }
 
   .vc-sp-qty {
     display: inline-flex;
-    overflow: hidden;
-    height: 50px;
-    border: 1px solid var(--vc-sp-line);
-    border-radius: 999px;
+    align-items: center;
+    height: 48px;
+    border: 1px solid var(--line);
     background: #fff;
   }
 
   .vc-sp-qty button {
     width: 40px;
+    height: 100%;
     border: 0;
     background: transparent;
-    color: var(--vc-sp-text);
+    color: var(--ink);
     cursor: pointer;
     font-size: 18px;
     font-weight: 800;
@@ -366,11 +405,12 @@
 
   .vc-sp-qty input {
     width: 44px;
+    height: 100%;
     border: 0;
     outline: 0;
-    color: var(--vc-sp-text);
+    color: var(--ink);
     font-size: 15px;
-    font-weight: 850;
+    font-weight: 800;
     text-align: center;
     -moz-appearance: textfield;
     appearance: textfield;
@@ -386,125 +426,115 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 50px;
+    min-height: 48px;
+    padding: 0 18px;
     border: 0;
-    border-radius: 999px;
-    background: #0f172a;
+    background: var(--ink);
     color: #fff;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 900;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     text-decoration: none;
-    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    transition: background 0.18s var(--ease);
   }
 
   .vc-sp-main-btn.is-custom {
-    background: linear-gradient(135deg, var(--vc-sp-orange), #ec4899);
-    box-shadow: 0 22px 38px -26px rgba(249, 115, 22, 0.95);
+    background: var(--ink);
   }
 
   .vc-sp-main-btn:hover,
   .vc-sp-main-btn:focus-visible {
-    transform: translateY(-2px);
+    background: #2a2a2a;
   }
 
   .vc-sp-main-btn:disabled {
     cursor: wait;
     opacity: 0.65;
-    transform: none;
   }
 
   .vc-sp-wish {
     display: grid;
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     place-items: center;
-    border: 1px solid var(--vc-sp-line);
-    border-radius: 999px;
+    border: 1px solid var(--line);
     background: #fff;
-    color: var(--vc-sp-text);
+    color: var(--ink);
     cursor: pointer;
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .vc-sp-features {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 10px;
+    gap: 8px;
     margin-top: 18px;
   }
 
   .vc-sp-feature {
-    padding: 13px 10px;
-    border: 1px solid var(--vc-sp-line);
-    border-radius: 16px;
-    background: var(--vc-sp-soft);
-    color: var(--vc-sp-muted);
-    font-size: 11.5px;
-    font-weight: 800;
+    padding: 12px 8px;
+    border: 1px solid var(--line);
+    background: var(--soft);
+    color: var(--ink-2);
+    font-size: 11px;
+    font-weight: 700;
     line-height: 1.35;
     text-align: center;
-  }
-
-  .vc-sp-feature span {
-    display: block;
-    margin-bottom: 4px;
-    font-size: 20px;
   }
 
   .vc-sp-meta {
     display: grid;
     gap: 7px;
-    margin-top: 22px;
-    padding-top: 18px;
-    border-top: 1px solid var(--vc-sp-line);
-    color: var(--vc-sp-muted);
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
     font-size: 13px;
-    font-weight: 650;
+    font-weight: 600;
   }
 
   .vc-sp-meta b {
-    color: var(--vc-sp-text);
+    color: var(--ink);
   }
 
   .vc-sp-tabs {
-    margin-top: 46px;
-    padding: 24px;
-    border: 1px solid var(--vc-sp-line);
-    border-radius: 28px;
-    background: #fff;
+    margin-top: 40px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
   }
 
   .vc-sp-tab-nav {
     display: flex;
-    gap: 8px;
+    gap: 4px;
     overflow-x: auto;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--vc-sp-line);
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--line);
   }
 
   .vc-sp-tab-btn {
-    padding: 13px 16px;
+    padding: 12px 14px;
     border: 0;
     border-bottom: 2px solid transparent;
     background: transparent;
-    color: var(--vc-sp-muted);
+    color: var(--muted);
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 850;
+    font-size: 13px;
+    font-weight: 800;
     white-space: nowrap;
   }
 
   .vc-sp-tab-btn.is-active {
-    border-color: var(--vc-sp-orange);
-    color: var(--vc-sp-text);
+    border-color: var(--ink);
+    color: var(--ink);
   }
 
   .vc-sp-tab-pane {
     display: none;
-    color: #475569;
-    font-size: 14.5px;
-    font-weight: 550;
+    color: var(--ink-2);
+    font-size: 14px;
+    font-weight: 600;
     line-height: 1.75;
   }
 
@@ -520,8 +550,7 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
-    background: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(8px);
+    background: rgba(18, 18, 18, 0.62);
   }
 
   .vc-sp-modal.is-open {
@@ -533,53 +562,124 @@
     width: min(680px, 100%);
     max-height: 90vh;
     overflow: auto;
-    padding: 26px;
-    border-radius: 26px;
+    padding: 24px;
     background: #fff;
-    box-shadow: 0 32px 80px -40px rgba(0, 0, 0, 0.85);
   }
 
   .vc-sp-modal-close {
     position: absolute;
-    top: 14px;
-    right: 14px;
+    top: 12px;
+    right: 12px;
     width: 36px;
     height: 36px;
-    border: 0;
-    border-radius: 999px;
-    background: var(--vc-sp-soft);
-    color: var(--vc-sp-muted);
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
     cursor: pointer;
     font-size: 18px;
   }
 
   .vc-sp-modal h3 {
-    margin: 0 42px 18px;
-    color: var(--vc-sp-text);
-    font-family: Manrope, Inter, sans-serif;
+    margin: 0 42px 16px;
+    font-family: Syne, Manrope, sans-serif;
     font-size: 22px;
     font-weight: 800;
     text-align: center;
   }
 
+  .vc-sp-modal-box.is-customize {
+    width: min(720px, 100%);
+  }
+
+  .vc-sp-customize-lead {
+    margin: 0 0 20px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .vc-sp-customize-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .vc-sp-customize-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    min-height: 180px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.18s var(--ease), transform 0.18s var(--ease);
+  }
+
+  .vc-sp-customize-card:hover,
+  .vc-sp-customize-card:focus-visible {
+    transform: translateY(-2px);
+    border-color: var(--ink);
+    outline: 0;
+  }
+
+  .vc-sp-customize-icon {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    background: var(--soft);
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .vc-sp-customize-card h4 {
+    margin: 0;
+    font-family: Syne, Manrope, sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  .vc-sp-customize-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.55;
+  }
+
+  .vc-sp-customize-tag {
+    margin-top: auto;
+    color: var(--ink);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
   .vc-sp-table {
     width: 100%;
     border-collapse: collapse;
-    color: var(--vc-sp-text);
     font-size: 14px;
   }
 
   .vc-sp-table th,
   .vc-sp-table td {
     padding: 12px;
-    border: 1px solid var(--vc-sp-line);
+    border: 1px solid var(--line);
     text-align: center;
   }
 
   .vc-sp-table th,
   .vc-sp-table td:first-child {
-    background: var(--vc-sp-soft);
-    font-weight: 850;
+    background: var(--soft);
+    font-weight: 800;
   }
 
   .vc-sp-toast {
@@ -587,16 +687,16 @@
     left: 50%;
     bottom: 24px;
     z-index: 100000;
-    padding: 13px 20px;
-    border-radius: 999px;
-    background: #0f172a;
+    max-width: min(92vw, 420px);
+    padding: 12px 18px;
+    background: var(--ink);
     color: #fff;
-    box-shadow: 0 20px 40px -28px rgba(0, 0, 0, 0.75);
-    font-size: 14px;
-    font-weight: 800;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
     opacity: 0;
-    transform: translateX(-50%) translateY(50px);
-    transition: opacity 0.28s ease, transform 0.28s ease;
+    transform: translateX(-50%) translateY(40px);
+    transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
     pointer-events: none;
   }
 
@@ -606,7 +706,7 @@
   }
 
   .vc-sp-skeleton {
-    background: linear-gradient(90deg, #f1f5f9, #e2e8f0, #f1f5f9);
+    background: linear-gradient(90deg, #eee, #f6f6f6, #eee);
     background-size: 200% 100%;
     animation: vcSpShimmer 1.4s linear infinite;
     color: transparent;
@@ -623,20 +723,29 @@
 
     .vc-sp-gallery {
       position: static;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .vc-sp-thumbs {
+      order: 2;
+      flex-direction: row;
+      max-height: none;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 4px;
+    }
+
+    .vc-sp-main {
+      order: 1;
+    }
+
+    .vc-sp-videos-label {
+      display: none;
     }
   }
 
   @media (max-width: 620px) {
-    .vc-sp {
-      padding: 22px 14px 54px;
-    }
-
-    .vc-sp-panel,
-    .vc-sp-tabs {
-      padding: 18px;
-      border-radius: 24px;
-    }
-
     .vc-sp-actions,
     .vc-sp-features {
       grid-template-columns: 1fr;
@@ -652,101 +761,113 @@
       width: 100%;
     }
 
-    .vc-sp-thumbs {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    .vc-sp-customize-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vc-sp-thumb,
+    .vc-sp-main-btn,
+    .vc-sp-toast,
+    .vc-sp-skeleton {
+      transition: none !important;
+      animation: none !important;
     }
   }
 </style>
 
 <div class="vc-sp" id="vcSpRoot">
-  <div class="vc-sp-crumb">
-    <a href="/">Home</a>
-    <span>/</span>
-    <a href="/shop/">Shop</a>
-    <span>/</span>
-    <span id="vcSpCrumb">Product</span>
-  </div>
-
-  <div class="vc-sp-wrap">
-    <div class="vc-sp-gallery">
-      <div class="vc-sp-main" id="vcSpMain">
-        <div class="vc-sp-skeleton" style="width:100%;height:100%"></div>
-      </div>
-      <div class="vc-sp-thumbs" id="vcSpThumbs"></div>
+  <div class="vc-sp-inner">
+    <div class="vc-sp-crumb">
+      <a href="/">Home</a>
+      <span>/</span>
+      <a href="/shop/">Shop</a>
+      <span>/</span>
+      <span id="vcSpCrumb">Product</span>
     </div>
 
-    <div class="vc-sp-panel">
-      <div class="vc-sp-type" id="vcSpType">Loading product</div>
-      <h1 class="vc-sp-title vc-sp-skeleton" id="vcSpTitle" style="height:52px;width:80%">&nbsp;</h1>
-      <div class="vc-sp-rating">
-        <span class="vc-sp-stars">★★★★★</span>
-        <span id="vcSpReviews">(0 reviews)</span>
-      </div>
-      <div class="vc-sp-price" id="vcSpPrice">—</div>
-      <div class="vc-sp-desc" id="vcSpDesc"></div>
-
-      <div class="vc-sp-option" id="vcSpSizeWrap" style="display:none">
-        <div class="vc-sp-option-head">
-          <span class="vc-sp-label">Choose size</span>
-          <button class="vc-sp-chart" type="button" onclick="vcSpOpenChart()">Size chart</button>
+    <div class="vc-sp-wrap">
+      <div class="vc-sp-gallery">
+        <div class="vc-sp-thumbs" id="vcSpThumbs" aria-label="Product image thumbnails"></div>
+        <div class="vc-sp-main" id="vcSpMain">
+          <div class="vc-sp-skeleton" style="width:100%;height:100%"></div>
         </div>
-        <div class="vc-sp-sizes" id="vcSpSizes"></div>
       </div>
 
-      <div class="vc-sp-option" id="vcSpColorWrap" style="display:none">
-        <div class="vc-sp-option-head">
-          <span class="vc-sp-label">Choose color</span>
-          <span class="vc-sp-label" id="vcSpSelectedColorName" style="letter-spacing:0.04em;text-transform:none;color:#0f172a"></span>
+      <div class="vc-sp-panel">
+        <div class="vc-sp-type" id="vcSpType">Loading product</div>
+        <h1 class="vc-sp-title vc-sp-skeleton" id="vcSpTitle" style="height:52px;width:80%">&nbsp;</h1>
+        <div class="vc-sp-rating">
+          <span class="vc-sp-stars">★★★★★</span>
+          <span id="vcSpReviews">(0 reviews)</span>
         </div>
-        <div class="vc-sp-colors" id="vcSpColors"></div>
-      </div>
+        <div class="vc-sp-price" id="vcSpPrice">—</div>
+        <div class="vc-sp-desc" id="vcSpDesc"></div>
 
-      <div class="vc-sp-actions">
-        <div class="vc-sp-qty">
-          <button type="button" onclick="vcSpQty(-1)">−</button>
-          <input id="vcSpQty" type="number" min="1" value="1">
-          <button type="button" onclick="vcSpQty(1)">+</button>
+        <div class="vc-sp-option" id="vcSpSizeWrap" style="display:none">
+          <div class="vc-sp-option-head">
+            <span class="vc-sp-label">Choose size</span>
+            <button class="vc-sp-chart" type="button" onclick="vcSpOpenChart()">Size chart</button>
+          </div>
+          <div class="vc-sp-sizes" id="vcSpSizes"></div>
         </div>
-        <button class="vc-sp-main-btn" id="vcSpMainBtn" type="button" onclick="vcSpMainAction()">Add to Cart</button>
-        <button class="vc-sp-wish" type="button" title="Wishlist">♡</button>
-      </div>
 
-      <div class="vc-sp-features">
-        <div class="vc-sp-feature"><span>🚚</span>Fast delivery support</div>
-        <div class="vc-sp-feature"><span>🎨</span>Design help available</div>
-        <div class="vc-sp-feature"><span>✅</span>Quality checked</div>
-      </div>
+        <div class="vc-sp-option" id="vcSpColorWrap" style="display:none">
+          <div class="vc-sp-option-head">
+            <span class="vc-sp-label">Choose color</span>
+            <span class="vc-sp-label" id="vcSpSelectedColorName" style="letter-spacing:0.04em;text-transform:none;color:#121212"></span>
+          </div>
+          <div class="vc-sp-colors" id="vcSpColors"></div>
+        </div>
 
-      <div class="vc-sp-meta">
-        <div><b>SKU:</b> <span id="vcSpSku">—</span></div>
-        <div><b>Categories:</b> <span id="vcSpCats">—</span></div>
-        <div><b>Tags:</b> <span id="vcSpTags">—</span></div>
+        <div class="vc-sp-actions">
+          <div class="vc-sp-qty">
+            <button type="button" onclick="vcSpQty(-1)" aria-label="Decrease quantity">−</button>
+            <input id="vcSpQty" type="number" min="1" value="1">
+            <button type="button" onclick="vcSpQty(1)" aria-label="Increase quantity">+</button>
+          </div>
+          <button class="vc-sp-main-btn" id="vcSpMainBtn" type="button" onclick="vcSpMainAction()">Add to Cart</button>
+          <button class="vc-sp-wish" type="button" title="Wishlist" aria-label="Wishlist">♡</button>
+        </div>
+
+        <div class="vc-sp-features">
+          <div class="vc-sp-feature">Fast delivery support</div>
+          <div class="vc-sp-feature">Design help available</div>
+          <div class="vc-sp-feature">Quality checked</div>
+        </div>
+
+        <div class="vc-sp-meta">
+          <div><b>SKU:</b> <span id="vcSpSku">—</span></div>
+          <div><b>Categories:</b> <span id="vcSpCats">—</span></div>
+          <div><b>Tags:</b> <span id="vcSpTags">—</span></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="vc-sp-tabs">
-    <div class="vc-sp-tab-nav">
-      <button class="vc-sp-tab-btn is-active" type="button" data-tab="desc">Description</button>
-      <button class="vc-sp-tab-btn" type="button" data-tab="details">Product Details</button>
-      <button class="vc-sp-tab-btn" type="button" data-tab="ship">Shipping</button>
-      <button class="vc-sp-tab-btn" type="button" data-tab="reviews">Reviews</button>
-    </div>
-    <div class="vc-sp-tab-pane is-active" data-pane="desc" id="vcSpTabDesc"></div>
-    <div class="vc-sp-tab-pane" data-pane="details">
-      <ul>
-        <li>Carefully selected product base for printing.</li>
-        <li>Ready-made designs are prepared by Vibecano.</li>
-        <li>Customizable products can be opened in the designer tool.</li>
-        <li>For best care, wash inside out and avoid bleach.</li>
-      </ul>
-    </div>
-    <div class="vc-sp-tab-pane" data-pane="ship">
-      <p><b>Delivery:</b> Available across Pakistan after order confirmation.</p>
-      <p><b>Custom items:</b> Custom printed products are made for your selected design and may not be returnable unless defective.</p>
-    </div>
-    <div class="vc-sp-tab-pane" data-pane="reviews">
-      <p>No reviews yet. Be the first to review this product.</p>
+    <div class="vc-sp-tabs">
+      <div class="vc-sp-tab-nav">
+        <button class="vc-sp-tab-btn is-active" type="button" data-tab="desc">Description</button>
+        <button class="vc-sp-tab-btn" type="button" data-tab="details">Product Details</button>
+        <button class="vc-sp-tab-btn" type="button" data-tab="ship">Shipping</button>
+        <button class="vc-sp-tab-btn" type="button" data-tab="reviews">Reviews</button>
+      </div>
+      <div class="vc-sp-tab-pane is-active" data-pane="desc" id="vcSpTabDesc"></div>
+      <div class="vc-sp-tab-pane" data-pane="details">
+        <ul>
+          <li>Carefully selected product base for printing.</li>
+          <li>Ready-made designs are prepared by Vibecano.</li>
+          <li>Customizable products can be opened in the designer tool.</li>
+          <li>For best care, wash inside out and avoid bleach.</li>
+        </ul>
+      </div>
+      <div class="vc-sp-tab-pane" data-pane="ship">
+        <p><b>Delivery:</b> Available across Pakistan after order confirmation.</p>
+        <p><b>Custom items:</b> Custom printed products are made for your selected design and may not be returnable unless defective.</p>
+      </div>
+      <div class="vc-sp-tab-pane" data-pane="reviews">
+        <p>No reviews yet. Be the first to review this product.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -773,13 +894,35 @@
     <h3>Added to cart</h3>
     <div id="vcSpAddedProduct"></div>
     <div class="vc-sp-actions" style="grid-template-columns:1fr 1fr;margin-top:18px">
-      <a class="vc-sp-main-btn" href="/cart/" style="text-decoration:none">View Cart</a>
-      <a class="vc-sp-main-btn is-custom" id="vcSpCheckoutLink" href="/checkout/" style="text-decoration:none">Checkout</a>
+      <a class="vc-sp-main-btn" href="/cart/">View Cart</a>
+      <a class="vc-sp-main-btn is-custom" id="vcSpCheckoutLink" href="/checkout/">Checkout</a>
     </div>
   </div>
 </div>
 
-<div class="vc-sp-toast" id="vcSpToast"></div>
+<div class="vc-sp-modal" id="vcSpCustomizeChoice">
+  <div class="vc-sp-modal-box is-customize">
+    <button class="vc-sp-modal-close" type="button" onclick="vcSpCloseCustomizeChoice()" aria-label="Close">×</button>
+    <h3>How would you like to customize?</h3>
+    <p class="vc-sp-customize-lead">Pick a quick guided flow or open the full Customized Studio editor.</p>
+    <div class="vc-sp-customize-grid">
+      <button class="vc-sp-customize-card" type="button" onclick="vcSpChooseSimpleCustomize()">
+        <span class="vc-sp-customize-icon" aria-hidden="true">01</span>
+        <h4>Simple Method</h4>
+        <p>Answer a few steps and customize your product the easy way.</p>
+        <span class="vc-sp-customize-tag">Quick start</span>
+      </button>
+      <button class="vc-sp-customize-card is-studio" type="button" onclick="vcSpChooseStudioCustomize()">
+        <span class="vc-sp-customize-icon" aria-hidden="true">02</span>
+        <h4>Customized Studio</h4>
+        <p>Use the full editor with text, images, clipart, layers, and live preview.</p>
+        <span class="vc-sp-customize-tag">Full editor</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="vc-sp-toast" id="vcSpToast" aria-live="polite"></div>
 
 <script>
 (function () {
@@ -787,18 +930,22 @@
 
   var API = "/wp-json/wc/store/v1";
   var DESIGNER_URL = "/design-editor/";
+  var SIMPLE_CUSTOMIZE_URL = "https://vibecano.com/customize-product/";
   var LUMISE_PRODUCT_BASE = "2";
   var CUSTOM_CAT_SLUGS = ["customize", "customizable", "custom", "customize-your-own", "design-your-own"];
   var CUSTOM_TAG_SLUGS = ["customizable", "customize", "custom", "design-your-own"];
+  var THUMB_VISIBLE_MAX = 6;
   var PRODUCT = null;
   var IS_CUSTOM = false;
   var VARIATIONS = [];
   var VARIATION_BY_KEY = {};
   var HAS_COLOR_VARIATIONS = false;
+  var GALLERY_EXPANDED = false;
   var selectedVariation = null;
   var selectedColor = "";
   var selectedSize = "";
   var CART_TOKEN_KEY = "vcWcCartToken";
+  var PRODUCT_CONTEXT_KEY = "vcDesignerProductContext";
 
   var COLOR_HEX_MAP = {
     black: "#0f172a",
@@ -825,6 +972,25 @@
     sea: "#2e8b57"
   };
 
+  function forceFullWidthParents() {
+    var root = document.getElementById("vcSpRoot");
+    if (!root) return;
+    var node = root.parentElement;
+    var hops = 0;
+    while (node && hops < 12 && node !== document.body) {
+      var className = String(node.className || "");
+      if (/elementor|e-con|site-main|site-content|content-area|ast-container|entry-content|page-content/i.test(className) ||
+          node.id === "content" || node.id === "primary" || node.id === "main") {
+        node.style.setProperty("width", "100%", "important");
+        node.style.setProperty("max-width", "100%", "important");
+      }
+      node = node.parentElement;
+      hops += 1;
+    }
+  }
+
+  forceFullWidthParents();
+
   function getStoredCartToken() {
     try {
       return sessionStorage.getItem(CART_TOKEN_KEY) || "";
@@ -845,7 +1011,6 @@
   function buildCheckoutUrl(token) {
     token = token || getStoredCartToken();
     if (!token) return "/checkout/";
-
     try {
       var url = new URL("/checkout/", window.location.origin);
       url.searchParams.set("session", token);
@@ -980,7 +1145,6 @@
     var hasCustomTag = tags.some(function (tag) {
       return tag && (CUSTOM_TAG_SLUGS.indexOf(tag.slug) >= 0 || /custom|design/i.test(tag.name || ""));
     });
-
     return urlSaysCustomize() || hasCustomCategory || hasCustomTag;
   }
 
@@ -998,9 +1162,7 @@
       .then(checkResponse)
       .then(function (data) {
         PRODUCT = id ? data : (Array.isArray(data) ? data[0] : null);
-        if (!PRODUCT || !PRODUCT.id) {
-          throw new Error("Product not found");
-        }
+        if (!PRODUCT || !PRODUCT.id) throw new Error("Product not found");
         IS_CUSTOM = isCustomProduct(PRODUCT);
         return loadVariations(PRODUCT).then(function () {
           renderProduct(PRODUCT);
@@ -1048,12 +1210,8 @@
       var size = getVariationSize(variation);
       var color = getVariationColor(variation);
       if (color) HAS_COLOR_VARIATIONS = true;
-
       var key = buildVariationKey(size, color);
-      if (key) {
-        VARIATION_BY_KEY[key] = variation;
-      }
-
+      if (key) VARIATION_BY_KEY[key] = variation;
       if (size && !HAS_COLOR_VARIATIONS) {
         VARIATION_BY_KEY[normalizeOption(size)] = variation;
       }
@@ -1068,9 +1226,7 @@
   }
 
   function checkResponse(response) {
-    if (!response.ok) {
-      throw new Error("Request failed: " + response.status);
-    }
+    if (!response.ok) throw new Error("Request failed: " + response.status);
     return response.json();
   }
 
@@ -1096,6 +1252,7 @@
     title.removeAttribute("style");
     title.textContent = product.name || "Product";
 
+    GALLERY_EXPANDED = false;
     renderPrice(product);
     renderGallery(product);
     renderAttributes(product);
@@ -1115,31 +1272,110 @@
     price.textContent = product.prices ? formatMoney(product.prices, product.prices.price) : "";
   }
 
+  function isVideoMedia(item) {
+    if (!item) return false;
+    if (item.type && /video/i.test(item.type)) return true;
+    if (item.media_type && /video/i.test(item.media_type)) return true;
+    var src = String(item.src || item.url || "");
+    return /\.(mp4|webm|ogg|mov)(\?|$)/i.test(src);
+  }
+
+  function normalizeGalleryItems(list) {
+    return (list || []).map(function (item, index) {
+      var src = item && (item.src || item.url || "");
+      var thumb = item && (item.thumbnail || item.src || item.url || "");
+      return {
+        src: src,
+        thumbnail: thumb,
+        alt: (item && item.alt) || "",
+        isVideo: isVideoMedia(item),
+        index: index
+      };
+    }).filter(function (item) { return !!item.src; });
+  }
+
   function renderGallery(product) {
-    var images = getDisplayImages(product);
+    var images = normalizeGalleryItems(getDisplayImages(product));
     var main = document.getElementById("vcSpMain");
     var thumbs = document.getElementById("vcSpThumbs");
+    var videoCount = images.filter(function (item) { return item.isVideo; }).length;
 
     if (!images.length) {
-      main.innerHTML = '<div style="display:grid;place-items:center;height:100%;color:#94a3b8;font-weight:800">No image</div>';
+      main.innerHTML = '<div style="display:grid;place-items:center;height:100%;color:#9a9aa2;font-weight:800">No image</div>';
       thumbs.innerHTML = "";
       return;
     }
 
-    main.innerHTML = '<span class="vc-sp-badge">' + escapeHtml(IS_CUSTOM ? "Customizable" : "Ready-made") + '</span><img id="vcSpMainImg" src="' + escapeAttr(images[0].src) + '" alt="' + escapeAttr(images[0].alt || product.name || "Product") + '">';
-    thumbs.innerHTML = images.map(function (image, index) {
-      return '<button class="vc-sp-thumb ' + (index === 0 ? "is-active" : "") + '" type="button" data-index="' + index + '"><img src="' + escapeAttr(image.thumbnail || image.src) + '" alt=""></button>';
-    }).join("");
+    var visibleCount = GALLERY_EXPANDED ? images.length : Math.min(images.length, THUMB_VISIBLE_MAX);
+    var hiddenCount = Math.max(0, images.length - visibleCount);
+    var showMoreOverlay = !GALLERY_EXPANDED && images.length > THUMB_VISIBLE_MAX;
+
+    setMainMedia(images[0], product);
+
+    var html = "";
+    for (var i = 0; i < visibleCount; i += 1) {
+      var image = images[i];
+      var isLastVisible = i === visibleCount - 1;
+      var moreOverlay = showMoreOverlay && isLastVisible
+        ? '<span class="vc-sp-thumb-more">+' + (images.length - THUMB_VISIBLE_MAX + 1) + "</span>"
+        : "";
+      var playOverlay = image.isVideo && !moreOverlay
+        ? '<span class="vc-sp-thumb-play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>'
+        : "";
+
+      html +=
+        '<button class="vc-sp-thumb' + (i === 0 ? " is-active" : "") + '" type="button" data-index="' + i + '"' +
+        (showMoreOverlay && isLastVisible ? ' data-expand="1"' : "") +
+        ' aria-label="View image ' + (i + 1) + '">' +
+          '<img src="' + escapeAttr(image.thumbnail || image.src) + '" alt="">' +
+          moreOverlay + playOverlay +
+        "</button>";
+    }
+
+    if (videoCount > 0) {
+      html += '<p class="vc-sp-videos-label">' + videoCount + (videoCount === 1 ? " video" : " videos") + "</p>";
+    }
+
+    thumbs.innerHTML = html;
 
     Array.prototype.forEach.call(thumbs.querySelectorAll(".vc-sp-thumb"), function (button) {
       button.addEventListener("click", function () {
+        if (button.getAttribute("data-expand") === "1") {
+          GALLERY_EXPANDED = true;
+          renderGallery(product);
+          return;
+        }
+        var index = Number(button.dataset.index) || 0;
         Array.prototype.forEach.call(thumbs.querySelectorAll(".vc-sp-thumb"), function (item) {
           item.classList.remove("is-active");
         });
         button.classList.add("is-active");
-        document.getElementById("vcSpMainImg").src = images[Number(button.dataset.index)].src;
+        setMainMedia(images[index], product);
       });
     });
+  }
+
+  function setMainMedia(item, product) {
+    var main = document.getElementById("vcSpMain");
+    if (!item) return;
+    var badge = IS_CUSTOM ? '<span class="vc-sp-badge">Custom</span>' : "";
+    if (item.isVideo) {
+      main.innerHTML =
+        badge +
+        '<video id="vcSpMainMedia" controls playsinline preload="metadata" src="' +
+        escapeAttr(item.src) +
+        '"' +
+        (item.thumbnail ? ' poster="' + escapeAttr(item.thumbnail) + '"' : "") +
+        "></video>";
+      return;
+    }
+    main.innerHTML =
+      badge +
+      '<img id="vcSpMainMedia" src="' +
+      escapeAttr(item.src) +
+      '" alt="' +
+      escapeAttr(item.alt || (product && product.name) || "Product") +
+      '">';
   }
 
   function getDisplayImages(product) {
@@ -1167,9 +1403,7 @@
     }
 
     wrap.style.display = "";
-    var activeIndex = terms.findIndex(function (term) {
-      return term && term.default;
-    });
+    var activeIndex = terms.findIndex(function (term) { return term && term.default; });
     if (activeIndex < 0) activeIndex = 0;
 
     terms.forEach(function (term, index) {
@@ -1203,9 +1437,7 @@
     }
 
     wrap.style.display = "";
-    var activeIndex = terms.findIndex(function (term) {
-      return term && term.default;
-    });
+    var activeIndex = terms.findIndex(function (term) { return term && term.default; });
     if (activeIndex < 0) activeIndex = 0;
 
     terms.forEach(function (term, index) {
@@ -1254,10 +1486,7 @@
         backgroundColor: "#fff"
       };
     }
-
-    return {
-      backgroundColor: colorNameToHex(term && term.name)
-    };
+    return { backgroundColor: colorNameToHex(term && term.name) };
   }
 
   function syncSelectedVariation() {
@@ -1271,7 +1500,6 @@
       selectedVariation = null;
       return;
     }
-
     selectedVariation = findMatchingVariation();
   }
 
@@ -1279,9 +1507,7 @@
     if (!VARIATIONS.length) return null;
 
     var key = buildVariationKey(selectedSize, productUsesColorVariations() ? selectedColor : "");
-    if (key && VARIATION_BY_KEY[key]) {
-      return VARIATION_BY_KEY[key];
-    }
+    if (key && VARIATION_BY_KEY[key]) return VARIATION_BY_KEY[key];
 
     return VARIATIONS.filter(function (variation) {
       var text = String(variation.variation || variation.name || "").toLowerCase();
@@ -1294,7 +1520,6 @@
         !colorValue ||
         normalizeOption(colorValue) === normalizeOption(selectedColor) ||
         text.indexOf(String(selectedColor).toLowerCase()) >= 0;
-
       return sizeMatches && colorMatches;
     })[0] || null;
   }
@@ -1303,7 +1528,6 @@
     var text = String(variation.variation || variation.name || "");
     var match = text.match(/size\s*:\s*([^,|]+)/i);
     if (match && match[1]) return match[1].trim();
-
     var attributes = variation.__attributes || variation.attributes || [];
     return getVariationAttributeValue(attributes, /size/i);
   }
@@ -1312,7 +1536,6 @@
     var text = String(variation.variation || variation.name || "");
     var match = text.match(/colou?r\s*:\s*([^,|]+)/i);
     if (match && match[1]) return match[1].trim();
-
     var attributes = variation.__attributes || variation.attributes || [];
     return getVariationAttributeValue(attributes, /colou?r/i);
   }
@@ -1327,7 +1550,6 @@
       var taxonomy = String(attribute.taxonomy || "");
       return pattern.test(name) || pattern.test(taxonomy);
     })[0];
-
     if (!match || match.value == null) return "";
     return String(match.value).trim();
   }
@@ -1342,18 +1564,14 @@
     var normalized = String(name || "").toLowerCase().trim();
     if (!normalized) return "#94a3b8";
     if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(normalized)) return normalized;
-
     if (COLOR_HEX_MAP[normalized]) return COLOR_HEX_MAP[normalized];
-
     var tokens = normalized.split(/[\s\-_/]+/).filter(Boolean);
     for (var i = 0; i < tokens.length; i += 1) {
       if (COLOR_HEX_MAP[tokens[i]]) return COLOR_HEX_MAP[tokens[i]];
     }
-
     for (var key in COLOR_HEX_MAP) {
       if (normalized.indexOf(key) >= 0) return COLOR_HEX_MAP[key];
     }
-
     return "#94a3b8";
   }
 
@@ -1370,7 +1588,7 @@
     var prices = variation.prices || {};
     var current = formatMoney(prices, prices.price);
     if (prices.regular_price && prices.sale_price && prices.regular_price !== prices.sale_price) {
-      return '<del>' + escapeHtml(formatMoney(prices, prices.regular_price)) + '</del><ins>' + escapeHtml(current) + '</ins>';
+      return "<del>" + escapeHtml(formatMoney(prices, prices.regular_price)) + "</del><ins>" + escapeHtml(current) + "</ins>";
     }
     return escapeHtml(current);
   }
@@ -1401,16 +1619,66 @@
     document.getElementById("vcSpAdded").classList.remove("is-open");
   };
 
+  function buildCustomizeParams() {
+    return new URLSearchParams({
+      product_base: LUMISE_PRODUCT_BASE,
+      product_cms: String(PRODUCT.id),
+      color: selectedColor || getRequiredColorValue(),
+      size: selectedSize
+    });
+  }
+
+  function buildCustomizeUrl(baseUrl) {
+    var separator = String(baseUrl || "").indexOf("?") >= 0 ? "&" : "?";
+    return String(baseUrl || "") + separator + buildCustomizeParams().toString();
+  }
+
+  window.vcSpOpenCustomizeChoice = function () {
+    document.getElementById("vcSpCustomizeChoice").classList.add("is-open");
+  };
+
+  window.vcSpCloseCustomizeChoice = function () {
+    document.getElementById("vcSpCustomizeChoice").classList.remove("is-open");
+  };
+
+  function saveProductContext() {
+    try {
+      var ctx = {
+        id: PRODUCT.id,
+        name: PRODUCT.name,
+        color: selectedColor || getRequiredColorValue(),
+        size: selectedSize,
+        permalink: window.location.pathname
+      };
+      sessionStorage.setItem(PRODUCT_CONTEXT_KEY, JSON.stringify(ctx));
+      try { localStorage.setItem(PRODUCT_CONTEXT_KEY, JSON.stringify(ctx)); } catch (e) {}
+    } catch (error) {}
+  }
+
+  window.vcSpChooseSimpleCustomize = function () {
+    if (!PRODUCT) return;
+    saveProductContext();
+    window.location.href = SIMPLE_CUSTOMIZE_URL;
+  };
+
+  window.vcSpChooseStudioCustomize = function () {
+    if (!PRODUCT) return;
+    saveProductContext();
+    window.location.href = buildCustomizeUrl(DESIGNER_URL);
+  };
+
   window.vcSpMainAction = function () {
     if (!PRODUCT) return;
     if (IS_CUSTOM) {
-      var params = new URLSearchParams({
-        product_base: LUMISE_PRODUCT_BASE,
-        product_cms: String(PRODUCT.id),
-        color: selectedColor || getRequiredColorValue(),
-        size: selectedSize
-      });
-      window.location.href = DESIGNER_URL + "?" + params.toString();
+      if (VARIATIONS.length && productHasColorAttribute() && !selectedColor) {
+        showToast("Please choose a color");
+        return;
+      }
+      if (VARIATIONS.length && !selectedSize) {
+        showToast("Please choose a size");
+        return;
+      }
+      vcSpOpenCustomizeChoice();
       return;
     }
 
@@ -1495,6 +1763,17 @@
 
   document.getElementById("vcSpAdded").addEventListener("click", function (event) {
     if (event.target.id === "vcSpAdded") window.vcSpCloseAdded();
+  });
+
+  document.getElementById("vcSpCustomizeChoice").addEventListener("click", function (event) {
+    if (event.target.id === "vcSpCustomizeChoice") window.vcSpCloseCustomizeChoice();
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key !== "Escape") return;
+    if (document.getElementById("vcSpCustomizeChoice").classList.contains("is-open")) {
+      window.vcSpCloseCustomizeChoice();
+    }
   });
 
   var checkoutLink = document.getElementById("vcSpCheckoutLink");
