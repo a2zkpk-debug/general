@@ -9,6 +9,7 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 - `vibecano-footer.html` — Site-wide footer (links, contact, copyright)
 - `vibecano-single-product-page.html` — Single product page with size/color swatches
 - `vibecano-women-collection.html` — Women collection grid with size picker, Store API add-to-cart, and Diners-style cart popup
+- `vibecano-men-collection.html` — Men collection grid (same UX as Women; category slug `men`)
 - `vibecano-cart-page.html` — Custom cart page with Store API integration
 - `vibecano-checkout-page.html` — Custom checkout page with WhatsApp order flow
 
@@ -47,9 +48,12 @@ WooCommerce restores the Store API cart from the `session` query parameter. The 
 
 Color swatches were hidden because `renderColorOptions()` required `COLOR_VARIES`, which only became true when variation API data exposed parseable color values. The fix shows colors whenever the Color attribute has terms.
 
-## Women collection add-to-cart popup
+## Women / Men collection add-to-cart popup
 
-Selecting a size and clicking **Add to Cart** uses a fast Store API payload (parent product + size/attributes, no per-variation fetch waterfall), stays on the page, and opens a centered popup with product image, top-right ✕, **Continue Shopping**, and **View Cart**. Category chips and sort filters are removed; **View All Products** sits under the grid.
+Selecting a size and clicking **Add to Cart** uses a fast Store API payload (parent product + size/attributes, no per-variation fetch waterfall), stays on the page, and opens a centered popup with product image, top-right �** uses a fast Store API payload (parent product + size/attributes, no per-variation fetch waterfall), stays on the page, and opens a centered popup with product image, top-right ✕, **Continue Shopping**, and **View Cart**. Category chips and sort filters are removed; **View All Products** sits under the grid.
+
+- Women widget: `vibecano-women-collection.html` (`women` category)
+- Men widget: `vibecano-men-collection.html` (`men` category)
 
 ## Usage
 
