@@ -1,0 +1,312 @@
+<!-- ============================================================
+     VIBECANO — EXPLORE CATEGORIES
+     Paste this WHOLE file into one Elementor HTML widget
+     (replace the previous explore widget completely).
+
+     Mobile: 2×2 grid with labels under each image (no clipping)
+     Desktop: 4-column row
+     ============================================================ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+<style id="vcExStyles">
+  /* Beat Elementor flexbox wrappers that stretch/clip this widget */
+  .elementor-element:has(#vcExWrap),
+  .elementor-widget:has(#vcExWrap),
+  .elementor-widget-html:has(#vcExWrap),
+  .e-con:has(#vcExWrap),
+  .e-con-inner:has(#vcExWrap) {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    align-self: stretch !important;
+  }
+
+  #vcExWrap.vc-ex-wrap,
+  .vc-ex-wrap#vcExWrap {
+    --ex-ink: #111111;
+    --ex-muted: #6b6b73;
+    --ex-soft: #f3f1ee;
+    --ex-gap: 12px;
+    --ex-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    box-sizing: border-box !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    padding: 40px 16px 48px !important;
+    color: var(--ex-ink);
+    background:
+      radial-gradient(900px 320px at 50% 0%, rgba(17, 17, 17, 0.045), transparent 70%),
+      #ffffff;
+    font-family: Manrope, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: visible !important;
+  }
+
+  #vcExWrap *,
+  #vcExWrap *::before,
+  #vcExWrap *::after { box-sizing: border-box; }
+
+  #vcExWrap .vc-ex-title {
+    margin: 0 0 22px !important;
+    padding: 0 !important;
+    text-align: center;
+    font-family: Syne, Manrope, sans-serif;
+    font-size: clamp(22px, 7vw, 40px) !important;
+    font-weight: 800 !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--ex-ink) !important;
+  }
+
+  #vcExWrap .vc-ex-stage {
+    position: relative;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  /* ===== MOBILE FIRST: 2×2 grid (labels always visible) ===== */
+  #vcExWrap .vc-ex-track {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: var(--ex-gap) !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    list-style: none;
+  }
+
+  #vcExWrap .vc-ex-card {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    flex: none !important;
+    margin: 0 !important;
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  #vcExWrap .vc-ex-media {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    aspect-ratio: 3 / 4 !important;
+    height: auto !important;
+    max-height: none !important;
+    background: var(--ex-soft);
+  }
+
+  #vcExWrap .vc-ex-media img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: cover !important;
+    transition: transform 0.7s var(--ex-ease);
+  }
+
+  #vcExWrap .vc-ex-media::after {
+    content: "Add image";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, #eceae6, #ddd9d2);
+    color: var(--ex-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.25s var(--ex-ease);
+  }
+  #vcExWrap .vc-ex-media.has-image::after { opacity: 0; }
+
+  #vcExWrap .vc-ex-card:hover .vc-ex-media img,
+  #vcExWrap .vc-ex-card:focus-visible .vc-ex-media img {
+    transform: scale(1.04);
+  }
+
+  #vcExWrap .vc-ex-label {
+    display: block !important;
+    margin: 10px 0 0 !important;
+    padding: 0 !important;
+    text-align: center;
+    font-family: Manrope, sans-serif;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    line-height: 1.3 !important;
+    color: var(--ex-ink) !important;
+    white-space: nowrap;
+    overflow: visible !important;
+  }
+
+  #vcExWrap .vc-ex-nav {
+    display: none !important;
+  }
+
+  /* Tablet+ : slightly roomier */
+  @media (min-width: 640px) {
+    #vcExWrap.vc-ex-wrap {
+      padding: 56px 22px 64px !important;
+    }
+    #vcExWrap .vc-ex-title {
+      margin-bottom: 28px !important;
+      font-size: clamp(28px, 4vw, 40px) !important;
+    }
+    #vcExWrap .vc-ex-track {
+      gap: 16px !important;
+    }
+    #vcExWrap .vc-ex-label {
+      margin-top: 12px !important;
+      font-size: 13px !important;
+    }
+  }
+
+  /* Desktop: 4-across row */
+  @media (min-width: 981px) {
+    #vcExWrap.vc-ex-wrap {
+      padding: 72px 22px 80px !important;
+    }
+    #vcExWrap .vc-ex-title {
+      margin-bottom: 42px !important;
+    }
+    #vcExWrap .vc-ex-track {
+      grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+      gap: 14px !important;
+    }
+    #vcExWrap .vc-ex-label {
+      margin-top: 14px !important;
+      letter-spacing: 0.16em;
+    }
+    #vcExWrap .vc-ex-nav {
+      display: none !important; /* grid does not need arrows */
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #vcExWrap .vc-ex-media img { transition: none; }
+  }
+</style>
+
+<section class="vc-ex-wrap" id="vcExWrap" aria-labelledby="vcExTitle">
+  <h2 class="vc-ex-title" id="vcExTitle">What would you<br>like to explore?</h2>
+
+  <div class="vc-ex-stage">
+    <div class="vc-ex-track" id="vcExTrack">
+      <a class="vc-ex-card" href="/product-category/men/">
+        <div class="vc-ex-media">
+          <img src="https://vibecano.com/wp-content/uploads/2026/07/men-201x300.png" alt="Men" loading="lazy" decoding="async" data-ex-img width="600" height="800">
+        </div>
+        <span class="vc-ex-label">Men</span>
+      </a>
+
+      <a class="vc-ex-card" href="/product-category/women/">
+        <div class="vc-ex-media">
+          <img src="https://vibecano.com/wp-content/uploads/2026/07/women-201x300.png" alt="Women" loading="lazy" decoding="async" data-ex-img width="600" height="800">
+        </div>
+        <span class="vc-ex-label">Women</span>
+      </a>
+
+      <a class="vc-ex-card" href="/product-category/kids/">
+        <div class="vc-ex-media">
+          <img src="https://vibecano.com/wp-content/uploads/2026/07/kidsvibe-199x300.png" alt="Kids" loading="lazy" decoding="async" data-ex-img width="600" height="800">
+        </div>
+        <span class="vc-ex-label">Kids</span>
+      </a>
+
+      <a class="vc-ex-card" href="/product-category/under999/">
+        <div class="vc-ex-media">
+          <img src="https://vibecano.com/wp-content/uploads/2026/07/under999vibe3-300x281.png" alt="Under999" loading="lazy" decoding="async" data-ex-img width="600" height="800">
+        </div>
+        <span class="vc-ex-label">Under999</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+
+  var wrap = document.getElementById("vcExWrap");
+  var track = document.getElementById("vcExTrack");
+  if (!wrap || !track) return;
+
+  function forceParents() {
+    var node = wrap.parentElement;
+    var hops = 0;
+    while (node && hops < 14 && node !== document.body) {
+      var className = String(node.className || "");
+      if (/elementor|e-con|e-flexbox|widget/i.test(className)) {
+        node.style.setProperty("width", "100%", "important");
+        node.style.setProperty("max-width", "100%", "important");
+        node.style.setProperty("overflow", "visible", "important");
+        node.style.setProperty("align-self", "stretch", "important");
+        node.style.setProperty("flex", "1 1 100%", "important");
+        node.style.setProperty("min-width", "0", "important");
+      }
+      node = node.parentElement;
+      hops += 1;
+    }
+
+    // Nuclear mobile layout in case Elementor CSS wins media queries
+    var mobile = window.matchMedia("(max-width: 980px)").matches;
+    track.style.setProperty("display", "grid", "important");
+    track.style.setProperty(
+      "grid-template-columns",
+      mobile ? "repeat(2, minmax(0, 1fr))" : "repeat(4, minmax(0, 1fr))",
+      "important"
+    );
+    track.style.setProperty("gap", mobile ? "12px" : "14px", "important");
+    track.style.setProperty("overflow", "visible", "important");
+    track.style.setProperty("width", "100%", "important");
+
+    Array.prototype.forEach.call(track.querySelectorAll(".vc-ex-card"), function (card) {
+      card.style.setProperty("width", "100%", "important");
+      card.style.setProperty("max-width", "none", "important");
+      card.style.setProperty("flex", "none", "important");
+      card.style.setProperty("min-width", "0", "important");
+    });
+
+    Array.prototype.forEach.call(track.querySelectorAll(".vc-ex-label"), function (label) {
+      label.style.setProperty("display", "block", "important");
+      label.style.setProperty("visibility", "visible", "important");
+      label.style.setProperty("opacity", "1", "important");
+    });
+  }
+
+  Array.prototype.forEach.call(track.querySelectorAll("[data-ex-img]"), function (img) {
+    var media = img.closest(".vc-ex-media");
+    function mark() {
+      if (!media) return;
+      var src = img.getAttribute("src") || "";
+      media.classList.toggle("has-image", !!src && src !== "#");
+    }
+    img.addEventListener("load", mark);
+    img.addEventListener("error", function () {
+      if (media) media.classList.remove("has-image");
+    });
+    mark();
+  });
+
+  forceParents();
+  window.addEventListener("resize", forceParents);
+  window.addEventListener("load", forceParents);
+  setTimeout(forceParents, 50);
+  setTimeout(forceParents, 400);
+})();
+</script>
