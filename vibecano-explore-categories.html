@@ -1,0 +1,255 @@
+<!-- ============================================================
+     VIBECANO — EXPLORE CATEGORIES
+     Paste this whole file into a single Elementor HTML widget.
+
+     Diners-style “What would you like to explore?” row for:
+       Men · Women · Kids · Under999
+
+     Images use src="#" — replace each # with your image URL later.
+     Category links are already set; edit CONFIG / hrefs if needed.
+     ============================================================ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+<style>
+  .vc-ex-wrap {
+    --ex-ink: #111111;
+    --ex-muted: #6b6b73;
+    --ex-line: rgba(17, 17, 17, 0.08);
+    --ex-soft: #f3f1ee;
+    --ex-gap: 14px;
+    --ex-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 72px 22px 80px;
+    color: var(--ex-ink);
+    background:
+      radial-gradient(1200px 420px at 50% 0%, rgba(17, 17, 17, 0.04), transparent 70%),
+      #ffffff;
+    font-family: Manrope, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .vc-ex-wrap *,
+  .vc-ex-wrap *::before,
+  .vc-ex-wrap *::after { box-sizing: border-box; }
+
+  .vc-ex-title {
+    margin: 0 0 42px;
+    text-align: center;
+    font-family: Syne, Manrope, sans-serif;
+    font-size: clamp(28px, 4.2vw, 44px);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .vc-ex-stage {
+    position: relative;
+  }
+
+  .vc-ex-track {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--ex-gap);
+  }
+
+  .vc-ex-card {
+    display: block;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .vc-ex-media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+    background: var(--ex-soft);
+  }
+
+  .vc-ex-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s var(--ex-ease);
+  }
+
+  /* Visible placeholder when src is still "#" */
+  .vc-ex-media::after {
+    content: "Add image";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, #eceae6, #ddd9d2);
+    color: var(--ex-muted);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.25s var(--ex-ease);
+  }
+  .vc-ex-media.has-image::after { opacity: 0; }
+
+  .vc-ex-card:hover .vc-ex-media img,
+  .vc-ex-card:focus-visible .vc-ex-media img {
+    transform: scale(1.05);
+  }
+
+  .vc-ex-label {
+    display: block;
+    margin-top: 14px;
+    text-align: center;
+    font-family: Manrope, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .vc-ex-nav {
+    position: absolute;
+    top: 42%;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: rgba(17, 17, 17, 0.55);
+    cursor: pointer;
+    box-shadow: 0 10px 24px -18px rgba(17, 17, 17, 0.7);
+    transition: color 0.25s var(--ex-ease), background 0.25s var(--ex-ease), opacity 0.25s var(--ex-ease);
+  }
+  .vc-ex-nav:hover,
+  .vc-ex-nav:focus-visible {
+    color: var(--ex-ink);
+    background: #fff;
+  }
+  .vc-ex-nav svg { width: 18px; height: 18px; }
+  .vc-ex-nav.prev { left: -6px; }
+  .vc-ex-nav.next { right: -6px; }
+
+  @media (max-width: 980px) {
+    .vc-ex-wrap { padding: 56px 16px 64px; }
+    .vc-ex-track {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      padding-bottom: 4px;
+    }
+    .vc-ex-track::-webkit-scrollbar { display: none; }
+    .vc-ex-card {
+      flex: 0 0 42%;
+      scroll-snap-align: start;
+    }
+    .vc-ex-nav { display: none; }
+  }
+
+  @media (max-width: 560px) {
+    .vc-ex-title { margin-bottom: 28px; }
+    .vc-ex-card { flex-basis: 70%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vc-ex-media img { transition: none; }
+  }
+</style>
+
+<section class="vc-ex-wrap" aria-labelledby="vcExTitle">
+  <h2 class="vc-ex-title" id="vcExTitle">What would you<br>like to explore?</h2>
+
+  <div class="vc-ex-stage">
+    <button class="vc-ex-nav prev" type="button" aria-label="Scroll categories left" data-ex-prev>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M15 6 9 12l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="vc-ex-track" id="vcExTrack">
+      <!-- Replace each src="#" with your image URL -->
+      <a class="vc-ex-card" href="/product-category/men/">
+        <div class="vc-ex-media">
+          <img src="#" alt="Men" loading="lazy" decoding="async" data-ex-img>
+        </div>
+        <span class="vc-ex-label">Men</span>
+      </a>
+
+      <a class="vc-ex-card" href="/product-category/women/">
+        <div class="vc-ex-media">
+          <img src="#" alt="Women" loading="lazy" decoding="async" data-ex-img>
+        </div>
+        <span class="vc-ex-label">Women</span>
+      </a>
+
+      <a class="vc-ex-card" href="/product-category/kids/">
+        <div class="vc-ex-media">
+          <img src="#" alt="Kids" loading="lazy" decoding="async" data-ex-img>
+        </div>
+        <span class="vc-ex-label">Kids</span>
+      </a>
+
+      <a class="vc-ex-card" href="/product-category/under999/">
+        <div class="vc-ex-media">
+          <img src="#" alt="Under999" loading="lazy" decoding="async" data-ex-img>
+        </div>
+        <span class="vc-ex-label">Under999</span>
+      </a>
+    </div>
+
+    <button class="vc-ex-nav next" type="button" aria-label="Scroll categories right" data-ex-next>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+
+  var track = document.getElementById("vcExTrack");
+  if (!track) return;
+
+  // When you replace src="#" with a real URL, hide the placeholder tint.
+  Array.prototype.forEach.call(track.querySelectorAll("[data-ex-img]"), function (img) {
+    var media = img.closest(".vc-ex-media");
+    function mark() {
+      if (!media) return;
+      var src = img.getAttribute("src") || "";
+      media.classList.toggle("has-image", !!src && src !== "#");
+    }
+    img.addEventListener("load", mark);
+    img.addEventListener("error", function () {
+      if (media) media.classList.remove("has-image");
+    });
+    mark();
+  });
+
+  var prev = document.querySelector("[data-ex-prev]");
+  var next = document.querySelector("[data-ex-next]");
+  function scrollByCard(dir) {
+    var card = track.querySelector(".vc-ex-card");
+    var amount = card ? card.getBoundingClientRect().width + 14 : 280;
+    track.scrollBy({ left: dir * amount, behavior: "smooth" });
+  }
+  if (prev) prev.addEventListener("click", function () { scrollByCard(-1); });
+  if (next) next.addEventListener("click", function () { scrollByCard(1); });
+})();
+</script>
