@@ -3,9 +3,7 @@
      Paste into Elementor Theme Builder → Header → HTML widget
 
      Nav: Men / Women / Kids (with subcategory dropdowns)
-          + Shop All / Customize / Featured
-     Right button: Under 999 (not duplicated in the link list)
-     Accessories removed from menu
+     CTA: Under 999 deal button
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,12 +11,14 @@
 
 <style>
   .vibecano-header-root {
-    --ink: #121212;
+    --ink: #0e0e10;
     --ink-soft: #2a2a2e;
     --slate: #6f6f78;
-    --line: rgba(18, 18, 18, 0.12);
-    --surface: #f7f5f2;
-    --accent: #c27803;
+    --line: rgba(14, 14, 16, 0.1);
+    --surface: #f4f2ef;
+    --accent: #e8a317;
+    --accent-deep: #b8730a;
+    --vibe: #1a1a1f;
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
     position: relative;
     z-index: 10050;
@@ -40,7 +40,9 @@
   .vibecano-header-root button { font-family: inherit; }
 
   .vibecano-header-root .ro-topbar {
-    background: var(--ink);
+    background:
+      radial-gradient(120% 180% at 0% 50%, rgba(232, 163, 23, 0.28), transparent 42%),
+      linear-gradient(90deg, #0e0e10 0%, #1a1a1f 55%, #0e0e10 100%);
     color: #fff;
     font-size: 12px;
     font-weight: 600;
@@ -60,13 +62,16 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(255,255,255,.12);
+    background: rgba(232, 163, 23, 0.16);
+    border: 1px solid rgba(232, 163, 23, 0.35);
     padding: 3px 10px;
     font-size: 11px;
     font-weight: 700;
     color: #f0c674;
     flex-shrink: 0;
     white-space: nowrap;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .vibecano-header-root .ro-topbar-marquee {
@@ -133,6 +138,19 @@
     font-size: 20px;
     font-weight: 800;
     border: 2px solid var(--ink);
+    position: relative;
+  }
+
+  .vibecano-header-root .ro-logo-mark::after {
+    content: "";
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 2px #fff;
   }
 
   .vibecano-header-root .ro-logo-text { display: flex; flex-direction: column; }
@@ -266,25 +284,44 @@
     position: relative;
   }
 
-  .vibecano-header-root .ro-nav-link,
-  .vibecano-header-root .ro-nav-links > li > a {
+  .vibecano-header-root .ro-nav-link {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     min-height: 52px;
-    padding: 0 14px;
+    padding: 0 16px;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--ink-soft);
     white-space: nowrap;
+    position: relative;
     transition: color .2s var(--ease);
   }
 
+  .vibecano-header-root .ro-nav-link::after {
+    content: "";
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 10px;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.28s var(--ease);
+  }
+
   .vibecano-header-root .ro-nav-link:hover,
-  .vibecano-header-root .ro-nav-item.is-open > .ro-nav-link,
-  .vibecano-header-root .ro-nav-links > li > a:hover,
-  .vibecano-header-root .ro-nav-links > li > a.is-highlight {
+  .vibecano-header-root .ro-nav-item.is-open > .ro-nav-link {
     color: var(--ink);
+  }
+
+  .vibecano-header-root .ro-nav-link:hover::after,
+  .vibecano-header-root .ro-nav-item.is-open > .ro-nav-link::after,
+  .vibecano-header-root .ro-nav-item:hover > .ro-nav-link::after {
+    transform: scaleX(1);
   }
 
   .vibecano-header-root .ro-nav-caret {
@@ -292,6 +329,12 @@
     height: 10px;
     flex: 0 0 auto;
     opacity: 0.7;
+    transition: transform 0.22s var(--ease);
+  }
+
+  .vibecano-header-root .ro-nav-item.is-open > .ro-nav-link .ro-nav-caret,
+  .vibecano-header-root .ro-nav-item:hover > .ro-nav-link .ro-nav-caret {
+    transform: rotate(180deg);
   }
 
   /* Desktop dropdown */
@@ -335,24 +378,94 @@
   }
 
   .vibecano-header-root .ro-design-btn {
+    --btn-shine: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.45) 48%, transparent 62%);
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 40px;
-    padding: 0 18px;
-    background: var(--ink);
-    color: #fff !important;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 8px 0 16px;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      linear-gradient(135deg, #ffd56a 0%, var(--accent) 42%, var(--accent-deep) 100%);
+    color: #1a1200 !important;
+    font-family: Syne, Manrope, sans-serif;
     font-weight: 800;
     font-size: 13px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     white-space: nowrap;
     flex-shrink: 0;
-    transition: background .2s var(--ease);
+    border: 1px solid rgba(184, 115, 10, 0.45);
+    box-shadow:
+      0 10px 28px -14px rgba(184, 115, 10, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    transition: transform .22s var(--ease), box-shadow .22s var(--ease), filter .22s var(--ease);
+  }
+
+  .vibecano-header-root .ro-design-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--btn-shine);
+    transform: translateX(-120%);
+    animation: vc-btn-shine 3.2s var(--ease) infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .vibecano-header-root .ro-design-btn > * {
+    position: relative;
+    z-index: 1;
   }
 
   .vibecano-header-root .ro-design-btn:hover {
-    background: #2a2a2a;
+    transform: translateY(-2px);
+    filter: brightness(1.04);
+    box-shadow:
+      0 16px 34px -14px rgba(184, 115, 10, 0.85),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  .vibecano-header-root .ro-design-btn:active {
+    transform: translateY(0);
+  }
+
+  .vibecano-header-root .ro-design-btn-label {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.05;
+    gap: 2px;
+  }
+
+  .vibecano-header-root .ro-design-btn-kicker {
+    font-family: Manrope, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    opacity: 0.75;
+  }
+
+  .vibecano-header-root .ro-design-btn-price {
+    display: inline-grid;
+    place-items: center;
+    min-width: 58px;
+    min-height: 32px;
+    padding: 0 10px;
+    background: #0e0e10;
+    color: #ffd56a;
+    font-family: Syne, Manrope, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+
+  @keyframes vc-btn-shine {
+    0%, 55% { transform: translateX(-120%); }
+    100% { transform: translateX(120%); }
   }
 
   .vibecano-header-root .ro-menu-toggle {
@@ -418,12 +531,15 @@
       border-bottom: 1px solid #f1f1f1;
     }
 
-    .vibecano-header-root .ro-nav-link,
-    .vibecano-header-root .ro-nav-links > li > a {
+    .vibecano-header-root .ro-nav-link {
       width: 100%;
       min-height: 48px;
       padding: 12px 18px;
       justify-content: space-between;
+    }
+
+    .vibecano-header-root .ro-nav-link::after {
+      display: none;
     }
 
     .vibecano-header-root .ro-dropdown {
@@ -454,9 +570,15 @@
     }
 
     .vibecano-header-root .ro-design-btn {
-      padding: 0 14px;
+      min-height: 40px;
+      padding: 0 6px 0 12px;
+      gap: 8px;
+    }
+
+    .vibecano-header-root .ro-design-btn-price {
+      min-width: 52px;
+      min-height: 28px;
       font-size: 12px;
-      min-height: 36px;
     }
   }
 
@@ -478,7 +600,8 @@
 
   @media (prefers-reduced-motion: reduce) {
     .vibecano-header-root .ro-topbar-marquee-track,
-    .vibecano-header-root .ro-nav-links {
+    .vibecano-header-root .ro-nav-links,
+    .vibecano-header-root .ro-design-btn::before {
       animation: none !important;
       transition: none !important;
     }
@@ -577,12 +700,15 @@
           </a>
           <div class="ro-dropdown" id="roDropKids" data-dropdown></div>
         </li>
-        <li><a class="is-highlight" href="/shop/">Shop All</a></li>
-        <li><a id="roNavCustomize" href="/product-category/customize/">Customize</a></li>
-        <li><a id="roNavFeatured" href="/product-category/featured/">Featured</a></li>
       </ul>
 
-      <a class="ro-design-btn" id="roUnder999Btn" href="/product-category/under999/">Under 999</a>
+      <a class="ro-design-btn" id="roUnder999Btn" href="/product-category/under999/">
+        <span class="ro-design-btn-label">
+          <span class="ro-design-btn-kicker">Deal zone</span>
+          <span>Under</span>
+        </span>
+        <span class="ro-design-btn-price">999</span>
+      </a>
     </div>
   </nav>
 </div>
@@ -601,15 +727,11 @@
     cartEndpoint: "/wp-json/wc/store/v1/cart",
     categoriesEndpoint: "/wp-json/wc/store/v1/products/categories",
     cartTokenKey: "vcWcCartToken",
-    // Accessories + Under999 intentionally omitted from link list
+    // Accessories / Shop All / Customize / Featured / Under999 omitted from link list
     dropdownParents: [
       { key: "men", slugs: ["men"], linkId: "roNavMen", dropId: "roDropMen" },
       { key: "women", slugs: ["women"], linkId: "roNavWomen", dropId: "roDropWomen" },
       { key: "kids", slugs: ["kids"], linkId: "roNavKids", dropId: "roDropKids" }
-    ],
-    extraLinks: [
-      { key: "customize", slugs: ["customize", "custom"], linkId: "roNavCustomize" },
-      { key: "featured", slugs: ["featured"], linkId: "roNavFeatured" }
     ]
   };
 
@@ -747,13 +869,6 @@
       })
       .then(function (categories) {
         var list = Array.isArray(categories) ? categories : [];
-
-        CONFIG.extraLinks.forEach(function (item) {
-          var category = resolveCategory(list, item.slugs);
-          var linkEl = document.getElementById(item.linkId);
-          if (!category || !linkEl) return;
-          linkEl.href = getCategoryUrl(category);
-        });
 
         CONFIG.dropdownParents.forEach(function (item) {
           var parent = resolveCategory(list, item.slugs);
