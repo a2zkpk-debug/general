@@ -14,6 +14,7 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 - `vibecano-kids-collection.html` — Kids collection grid (same UX; category slug `kids`)
 - `vibecano-under999-collection.html` — Under999 collection grid (same UX; category slug `under999`)
 - `vibecano-explore-categories.html` — Diners-style explore row (Men / Women / Kids / Under999); image `src="#"` placeholders
+- `vibecano-category-page.html` — Diners-style product category archive (filters, size ATC overlay, cart popup)
 - `vibecano-cart-page.html` — Custom cart page with Store API integration
 - `vibecano-checkout-page.html` — Custom checkout page with WhatsApp order flow
 
