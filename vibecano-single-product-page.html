@@ -97,25 +97,44 @@
     align-items: start;
   }
 
-  /* Amazon-style: thumbs LEFT of main image */
-  .vc-sp-gallery {
-    position: sticky;
+  /* Amazon-style: thumbs LEFT of main image
+     Use flex + !important so Elementor/Woo theme CSS cannot stack them. */
+  #vcSpRoot .vc-sp-gallery,
+  .vc-sp .vc-sp-gallery {
+    position: sticky !important;
     top: 18px;
-    display: grid;
-    grid-template-columns: 72px minmax(0, 1fr);
-    gap: 12px;
-    align-items: start;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
     min-width: 0;
+    width: 100% !important;
   }
 
-  .vc-sp-thumbs {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: min(560px, 72vw);
-    overflow-x: hidden;
-    overflow-y: auto;
+  #vcSpRoot .vc-sp-thumbs-col,
+  .vc-sp .vc-sp-thumbs-col {
+    display: block !important;
+    flex: 0 0 72px !important;
+    width: 72px !important;
+    max-width: 72px !important;
+    order: 0 !important;
+    min-width: 72px !important;
+  }
+
+  #vcSpRoot .vc-sp-thumbs,
+  .vc-sp .vc-sp-thumbs {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    width: 72px !important;
+    max-height: min(560px, 70vh);
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
     padding: 2px;
+    margin: 0 !important;
     scrollbar-width: thin;
   }
 
@@ -127,12 +146,23 @@
     background: rgba(18, 18, 18, 0.2);
   }
 
-  .vc-sp-thumb {
+  #vcSpRoot .vc-sp-main-col,
+  .vc-sp .vc-sp-main-col {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    order: 1 !important;
+  }
+
+  #vcSpRoot .vc-sp-thumb,
+  .vc-sp .vc-sp-thumb {
     position: relative;
-    flex: 0 0 auto;
-    width: 64px;
-    height: 64px;
-    padding: 0;
+    display: block !important;
+    flex: 0 0 64px !important;
+    width: 64px !important;
+    height: 64px !important;
+    max-width: 64px !important;
+    padding: 0 !important;
     overflow: hidden;
     border: 1px solid var(--line);
     border-radius: 12px;
@@ -186,9 +216,11 @@
     text-align: center;
   }
 
-  .vc-sp-main {
+  #vcSpRoot .vc-sp-main,
+  .vc-sp .vc-sp-main {
     position: relative;
     overflow: hidden;
+    width: 100% !important;
     min-width: 0;
     aspect-ratio: 1 / 1;
     border: 1px solid var(--line);
@@ -720,24 +752,45 @@
     .vc-sp-wrap {
       grid-template-columns: 1fr;
     }
+  }
 
-    .vc-sp-gallery {
-      position: static;
-      grid-template-columns: 1fr;
-      gap: 12px;
+  /* Only stack thumbs under the main image on small phones */
+  @media (max-width: 700px) {
+    #vcSpRoot .vc-sp-gallery,
+    .vc-sp .vc-sp-gallery {
+      position: static !important;
+      flex-direction: column !important;
+      gap: 12px !important;
     }
 
-    .vc-sp-thumbs {
-      order: 2;
-      flex-direction: row;
-      max-height: none;
-      overflow-x: auto;
-      overflow-y: hidden;
+    #vcSpRoot .vc-sp-thumbs-col,
+    .vc-sp .vc-sp-thumbs-col {
+      order: 2 !important;
+      flex: 0 0 auto !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+    }
+
+    #vcSpRoot .vc-sp-main-col,
+    .vc-sp .vc-sp-main-col {
+      order: 1 !important;
+      width: 100% !important;
+    }
+
+    #vcSpRoot .vc-sp-thumbs,
+    .vc-sp .vc-sp-thumbs {
+      flex-direction: row !important;
+      width: 100% !important;
+      max-height: none !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
       padding-bottom: 4px;
     }
 
-    .vc-sp-main {
-      order: 1;
+    #vcSpRoot .vc-sp-thumb,
+    .vc-sp .vc-sp-thumb {
+      flex: 0 0 64px !important;
     }
 
     .vc-sp-videos-label {
@@ -788,10 +841,14 @@
     </div>
 
     <div class="vc-sp-wrap">
-      <div class="vc-sp-gallery">
-        <div class="vc-sp-thumbs" id="vcSpThumbs" aria-label="Product image thumbnails"></div>
-        <div class="vc-sp-main" id="vcSpMain">
-          <div class="vc-sp-skeleton" style="width:100%;height:100%"></div>
+      <div class="vc-sp-gallery" id="vcSpGallery">
+        <aside class="vc-sp-thumbs-col" id="vcSpThumbsCol" aria-label="Product thumbnails">
+          <div class="vc-sp-thumbs" id="vcSpThumbs"></div>
+        </aside>
+        <div class="vc-sp-main-col" id="vcSpMainCol">
+          <div class="vc-sp-main" id="vcSpMain">
+            <div class="vc-sp-skeleton" style="width:100%;height:100%"></div>
+          </div>
         </div>
       </div>
 
@@ -990,6 +1047,58 @@
   }
 
   forceFullWidthParents();
+
+  function applyAmazonGalleryLayout() {
+    var gallery = document.getElementById("vcSpGallery");
+    var thumbsCol = document.getElementById("vcSpThumbsCol");
+    var thumbs = document.getElementById("vcSpThumbs");
+    var mainCol = document.getElementById("vcSpMainCol");
+    if (!gallery || !thumbsCol || !thumbs || !mainCol) return;
+
+    var mobile = window.matchMedia("(max-width: 700px)").matches;
+
+    if (mobile) {
+      gallery.style.setProperty("display", "flex", "important");
+      gallery.style.setProperty("flex-direction", "column", "important");
+      thumbsCol.style.setProperty("order", "2", "important");
+      thumbsCol.style.setProperty("width", "100%", "important");
+      thumbsCol.style.setProperty("flex", "0 0 auto", "important");
+      mainCol.style.setProperty("order", "1", "important");
+      mainCol.style.setProperty("width", "100%", "important");
+      thumbs.style.setProperty("display", "flex", "important");
+      thumbs.style.setProperty("flex-direction", "row", "important");
+      thumbs.style.setProperty("width", "100%", "important");
+      return;
+    }
+
+    // Desktop / tablet: vertical thumbs on the LEFT of the main image
+    gallery.style.setProperty("display", "flex", "important");
+    gallery.style.setProperty("flex-direction", "row", "important");
+    gallery.style.setProperty("flex-wrap", "nowrap", "important");
+    gallery.style.setProperty("align-items", "flex-start", "important");
+    gallery.style.setProperty("gap", "12px", "important");
+
+    thumbsCol.style.setProperty("display", "block", "important");
+    thumbsCol.style.setProperty("order", "0", "important");
+    thumbsCol.style.setProperty("flex", "0 0 72px", "important");
+    thumbsCol.style.setProperty("width", "72px", "important");
+    thumbsCol.style.setProperty("max-width", "72px", "important");
+    thumbsCol.style.setProperty("min-width", "72px", "important");
+
+    mainCol.style.setProperty("display", "block", "important");
+    mainCol.style.setProperty("order", "1", "important");
+    mainCol.style.setProperty("flex", "1 1 auto", "important");
+    mainCol.style.setProperty("min-width", "0", "important");
+    mainCol.style.setProperty("width", "auto", "important");
+
+    thumbs.style.setProperty("display", "flex", "important");
+    thumbs.style.setProperty("flex-direction", "column", "important");
+    thumbs.style.setProperty("width", "72px", "important");
+    thumbs.style.setProperty("gap", "8px", "important");
+  }
+
+  applyAmazonGalleryLayout();
+  window.addEventListener("resize", applyAmazonGalleryLayout);
 
   function getStoredCartToken() {
     try {
@@ -1352,6 +1461,8 @@
         setMainMedia(images[index], product);
       });
     });
+
+    applyAmazonGalleryLayout();
   }
 
   function setMainMedia(item, product) {
