@@ -1,0 +1,1264 @@
+<!-- ============================================================
+     VIBECANO — FEATURED COLLECTION (Premium fashion grid)
+     Paste this whole file into a single Elementor HTML widget.
+
+     WHAT IT DOES
+     • Pulls live products from WooCommerce (Store API) for the "featured"
+       category and its subcategories.
+     • Premium fashion card: image (+ hover second image), wishlist,
+       discount badge, name, sale/regular price, and a bottom hover panel
+       with size selection + Add to Cart.
+     • Real Add to Cart via the WooCommerce Store API (resolves the
+       matching variation ID so items actually land in the cart).
+     • Diners-style centered "Added to cart" popup with product image,
+       Continue Shopping, and View Cart (no page redirect).
+
+     COMPATIBILITY
+     • Uses the same Store API cart pattern as the rest of the site
+       (Nonce + Cart-Token in sessionStorage key "vcWcCartToken").
+     • No Bootstrap / Tailwind / React / Vue / jQuery. Vanilla JS only.
+
+     CUSTOMIZE FAST
+     • Category / URLs / per-page  -> see CONFIG at the top of <script>.
+     • Colors / spacing / radius   -> see the ":root-like" tokens in .vc-ff-wrap.
+     ============================================================ -->
+
+<!-- Brand typography (matches the rest of the VibeCano templates) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* -----------------------------------------------------------------
+     1) DESIGN TOKENS
+     ----------------------------------------------------------------- */
+  .vc-ff-wrap {
+    --wf-ink: #141418;
+    --wf-ink-2: #3c3c44;
+    --wf-muted: #8a8a93;
+    --wf-line: rgba(20, 20, 24, 0.10);
+    --wf-bg: #ffffff;
+    --wf-soft: #f4f2ef;          /* warm image backdrop */
+    --wf-sale: #c0392b;          /* sale price accent    */
+    --wf-radius: 16px;
+    --wf-gap: 22px;
+    --wf-shadow: 0 14px 34px -24px rgba(20, 20, 24, 0.55);
+    --wf-shadow-hover: 0 30px 60px -28px rgba(20, 20, 24, 0.55);
+    --wf-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    box-sizing: border-box;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 64px 22px 76px;
+    color: var(--wf-ink);
+    background: var(--wf-bg);
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .vc-ff-wrap *,
+  .vc-ff-wrap *::before,
+  .vc-ff-wrap *::after { box-sizing: border-box; }
+
+  /* -----------------------------------------------------------------
+     2) SECTION HEADER
+     ----------------------------------------------------------------- */
+  .vc-ff-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  .vc-ff-head-text { max-width: 640px; }
+
+  .vc-ff-label {
+    display: inline-block;
+    margin-bottom: 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--wf-muted);
+  }
+  .vc-ff-title {
+    margin: 0;
+    font-family: Manrope, Inter, sans-serif;
+    font-size: clamp(30px, 4.6vw, 50px);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+  .vc-ff-sub {
+    margin: 14px 0 0;
+    color: var(--wf-muted);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .vc-ff-foot {
+    display: flex;
+    justify-content: center;
+    margin-top: 42px;
+  }
+  .vc-ff-viewall {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 220px;
+    padding: 14px 28px;
+    border: 1px solid var(--wf-ink);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--wf-ink);
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: background 0.35s var(--wf-ease), color 0.35s var(--wf-ease), transform 0.35s var(--wf-ease);
+  }
+  .vc-ff-viewall:hover,
+  .vc-ff-viewall:focus-visible {
+    background: var(--wf-ink);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  /* -----------------------------------------------------------------
+     3) GRID
+     ----------------------------------------------------------------- */
+  .vc-ff-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--wf-gap);
+  }
+
+  /* -----------------------------------------------------------------
+     5) PRODUCT CARD
+     ----------------------------------------------------------------- */
+  .vc-ff-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    /* Scroll entrance state (revealed via JS .is-visible) */
+    opacity: 0;
+    transform: translateY(26px);
+    transition: transform 0.6s var(--wf-ease), opacity 0.6s var(--wf-ease);
+    transition-delay: calc(var(--i, 0) * 70ms);
+  }
+  .vc-ff-card.is-visible { opacity: 1; transform: translateY(0); }
+
+  .vc-ff-media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+    border-radius: var(--wf-radius);
+    background: var(--wf-soft);
+    box-shadow: var(--wf-shadow);
+    transition: box-shadow 0.4s var(--wf-ease), transform 0.4s var(--wf-ease);
+  }
+  .vc-ff-card:hover .vc-ff-media,
+  .vc-ff-card:focus-within .vc-ff-media {
+    box-shadow: var(--wf-shadow-hover);
+    transform: translateY(-6px);
+  }
+
+  .vc-ff-media-link { display: block; width: 100%; height: 100%; }
+
+  .vc-ff-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s var(--wf-ease), opacity 0.6s var(--wf-ease);
+    will-change: transform;
+  }
+  .vc-ff-img--secondary { opacity: 0; }               /* second image (hover) */
+  .vc-ff-card:hover .vc-ff-img--primary,
+  .vc-ff-card:focus-within .vc-ff-img--primary { transform: scale(1.07); }
+  .vc-ff-card:hover .vc-ff-img--secondary,
+  .vc-ff-card:focus-within .vc-ff-img--secondary { opacity: 1; transform: scale(1.07); }
+
+  /* Discount badge */
+  .vc-ff-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 3;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: var(--wf-ink);
+    color: #fff;
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+
+  /* Wishlist */
+  .vc-ff-wish {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--wf-ink);
+    cursor: pointer;
+    box-shadow: 0 8px 20px -12px rgba(20, 20, 24, 0.8);
+    transition: transform 0.25s var(--wf-ease), background 0.25s var(--wf-ease), color 0.25s var(--wf-ease);
+  }
+  .vc-ff-wish svg { width: 19px; height: 19px; }
+  .vc-ff-wish:hover,
+  .vc-ff-wish:focus-visible { transform: scale(1.08); background: #fff; }
+  .vc-ff-wish.is-active { background: var(--wf-ink); color: #fff; }
+  .vc-ff-wish.is-active svg { fill: #fff; }
+
+  /* Bottom hover panel: size + Add to Cart (no layout shift; overlays image) */
+  .vc-ff-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px 14px 16px;
+    background: linear-gradient(to top, #fff 82%, rgba(255, 255, 255, 0));
+    transform: translateY(102%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.42s var(--wf-ease), opacity 0.42s var(--wf-ease);
+  }
+  .vc-ff-card:hover .vc-ff-panel,
+  .vc-ff-card:focus-within .vc-ff-panel {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .vc-ff-sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .vc-ff-sizes.is-shake { animation: vc-ff-shake 0.4s var(--wf-ease); }
+
+  .vc-ff-size-label {
+    margin: 0 0 2px;
+    color: var(--wf-ink-2);
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .vc-ff-size {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid rgba(20, 20, 24, 0.22);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--wf-ink);
+    cursor: pointer;
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    transition: background 0.2s var(--wf-ease), color 0.2s var(--wf-ease), border-color 0.2s var(--wf-ease);
+  }
+  .vc-ff-size:hover,
+  .vc-ff-size:focus-visible { border-color: var(--wf-ink); }
+  .vc-ff-size.is-selected {
+    background: #4a4a4f;
+    color: #fff;
+    border-color: #4a4a4f;
+  }
+
+  .vc-ff-add {
+    width: 100%;
+    padding: 13px 14px;
+    border: 0;
+    border-radius: 0;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: transform 0.25s var(--wf-ease), box-shadow 0.25s var(--wf-ease), opacity 0.25s var(--wf-ease);
+  }
+  .vc-ff-add:hover,
+  .vc-ff-add:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 26px -16px rgba(20, 20, 24, 0.9);
+  }
+  .vc-ff-add:disabled { opacity: 0.7; cursor: wait; transform: none; box-shadow: none; }
+
+  /* Card info */
+  .vc-ff-info {
+    padding: 15px 4px 0;
+    text-align: center;
+  }
+  .vc-ff-name {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 0 0 8px;
+    color: var(--wf-ink);
+    font-size: 14.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    transition: color 0.25s var(--wf-ease);
+  }
+  .vc-ff-name:hover,
+  .vc-ff-name:focus-visible { color: var(--wf-ink-2); text-decoration: underline; text-underline-offset: 3px; }
+
+  .vc-ff-price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    font-family: Manrope, Inter, sans-serif;
+  }
+  .vc-ff-now { font-size: 16px; font-weight: 800; color: var(--wf-ink); }
+  .vc-ff-was { font-size: 13px; font-weight: 600; color: var(--wf-muted); text-decoration: line-through; }
+  .vc-ff-off { font-size: 12px; font-weight: 800; color: var(--wf-sale); }
+  .vc-ff-price.is-sale .vc-ff-now { color: var(--wf-sale); }
+
+  /* -----------------------------------------------------------------
+     6) LOADING SKELETON + MESSAGES
+     ----------------------------------------------------------------- */
+  .vc-ff-skeleton {
+    aspect-ratio: 3 / 4;
+    border-radius: var(--wf-radius);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent), var(--wf-soft);
+    background-size: 220% 100%;
+    animation: vc-ff-shimmer 1.3s linear infinite;
+  }
+  .vc-ff-message {
+    grid-column: 1 / -1;
+    padding: 46px 20px;
+    border: 1px dashed var(--wf-line);
+    border-radius: var(--wf-radius);
+    color: var(--wf-muted);
+    font-size: 14px;
+    text-align: center;
+  }
+  .vc-ff-message strong {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--wf-ink);
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 16px;
+  }
+
+  /* -----------------------------------------------------------------
+     7) ADDED-TO-CART POPUP (Diners-style centered modal)
+     ----------------------------------------------------------------- */
+  .vc-ff-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.28s var(--wf-ease), visibility 0.28s var(--wf-ease);
+  }
+  .vc-ff-modal.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .vc-ff-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 20, 24, 0.45);
+  }
+  .vc-ff-modal-box {
+    position: relative;
+    z-index: 1;
+    width: min(460px, calc(100vw - 32px));
+    padding: 32px 28px 26px;
+    overflow: visible;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 28px 70px -28px rgba(20, 20, 24, 0.65);
+    transform: translateY(14px) scale(0.98);
+    transition: transform 0.32s var(--wf-ease);
+    font-family: Inter, sans-serif;
+  }
+  .vc-ff-modal.is-open .vc-ff-modal-box { transform: translateY(0) scale(1); }
+
+  .vc-ff-modal-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    border-radius: 0 6px 0 0;
+    background: #111;
+    color: #fff;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    transition: background 0.2s var(--wf-ease);
+  }
+  .vc-ff-modal-close:hover,
+  .vc-ff-modal-close:focus-visible { background: #333; }
+
+  .vc-ff-modal-body {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+  .vc-ff-modal-thumb {
+    flex: 0 0 auto;
+    width: 96px;
+    height: 96px;
+    overflow: hidden;
+    background: var(--wf-soft);
+  }
+  .vc-ff-modal-thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .vc-ff-modal-copy { min-width: 0; flex: 1; padding-top: 2px; }
+  .vc-ff-modal-title {
+    margin: 0;
+    color: var(--wf-ink);
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+  .vc-ff-modal-note {
+    margin: 6px 0 0;
+    color: var(--wf-ink-2);
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .vc-ff-modal-actions {
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .vc-ff-modal-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 999px;
+    font-family: Manrope, Inter, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s var(--wf-ease), background 0.2s var(--wf-ease), color 0.2s var(--wf-ease), border-color 0.2s var(--wf-ease);
+  }
+  .vc-ff-modal-btn.ghost {
+    border: 1px solid #111;
+    background: #fff;
+    color: #111;
+  }
+  .vc-ff-modal-btn.ghost:hover,
+  .vc-ff-modal-btn.ghost:focus-visible { background: #f6f6f6; }
+  .vc-ff-modal-btn.solid {
+    border: 1px solid #111;
+    background: #111;
+    color: #fff;
+  }
+  .vc-ff-modal-btn.solid:hover,
+  .vc-ff-modal-btn.solid:focus-visible { transform: translateY(-1px); }
+
+  /* -----------------------------------------------------------------
+     8) ANIMATIONS
+     ----------------------------------------------------------------- */
+  @keyframes vc-ff-shimmer { to { background-position: -220% 0; } }
+  @keyframes vc-ff-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  /* -----------------------------------------------------------------
+     9) RESPONSIVE
+     ----------------------------------------------------------------- */
+  @media (max-width: 1100px) {
+    .vc-ff-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (max-width: 800px) {
+    .vc-ff-wrap { padding: 48px 16px 60px; }
+    .vc-ff-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .vc-ff-head { align-items: flex-start; }
+  }
+  @media (max-width: 520px) {
+    .vc-ff-grid { grid-template-columns: 1fr; }
+    .vc-ff-viewall { width: 100%; max-width: 320px; }
+    .vc-ff-modal-body { flex-direction: column; align-items: center; text-align: center; }
+    .vc-ff-modal-thumb { width: 112px; height: 112px; }
+    .vc-ff-modal-box { padding: 34px 22px 24px; }
+  }
+
+  /* On touch devices there is no hover, so the reveal-on-hover panel would
+     be unreachable. Keep it as a visible overlay pinned to the image bottom
+     (staying absolutely positioned avoids clipping inside .vc-ff-media). */
+  @media (hover: none) {
+    .vc-ff-panel {
+      transform: none;
+      opacity: 1;
+      pointer-events: auto;
+      background: linear-gradient(to top, #ffffff 88%, rgba(255, 255, 255, 0.55) 100%);
+    }
+    /* Avoid a sticky "lifted" state after tapping on touch screens. */
+    .vc-ff-card:hover .vc-ff-media,
+    .vc-ff-card:focus-within .vc-ff-media { transform: none; box-shadow: var(--wf-shadow); }
+  }
+
+  /* Respect reduced-motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .vc-ff-card, .vc-ff-img, .vc-ff-panel, .vc-ff-media, .vc-ff-modal, .vc-ff-modal-box { transition: none !important; }
+    .vc-ff-card { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+
+<section class="vc-ff-wrap" aria-labelledby="vcFfTitle">
+
+  <!-- ===================== SECTION HEADER ===================== -->
+  <header class="vc-ff-head">
+    <div class="vc-ff-head-text">
+      <span class="vc-ff-label">Featured Collection</span>
+      <h2 class="vc-ff-title" id="vcFfTitle">Featured Picks</h2>
+      <p class="vc-ff-sub">Handpicked styles from our latest arrivals — shop the featured edit.</p>
+    </div>
+  </header>
+
+  <!-- ===================== PRODUCT GRID ===================== -->
+  <div id="vcFfGrid" class="vc-ff-grid" aria-live="polite"></div>
+
+  <!-- ===================== VIEW ALL (bottom, competitor-style) ===================== -->
+  <div class="vc-ff-foot">
+    <!-- Replace href with your Featured shop archive if different -->
+    <a class="vc-ff-viewall" href="/product-category/featured/">View All Products</a>
+  </div>
+
+  <!-- ===================== ADDED-TO-CART POPUP ===================== -->
+  <div class="vc-ff-modal" id="vcFfToast" role="dialog" aria-modal="true" aria-labelledby="vcFfToastTitle" aria-hidden="true">
+    <div class="vc-ff-modal-backdrop" data-ff-toast-close tabindex="-1"></div>
+    <div class="vc-ff-modal-box">
+      <button class="vc-ff-modal-close" type="button" data-ff-toast-close aria-label="Close">&times;</button>
+      <div class="vc-ff-modal-body">
+        <div class="vc-ff-modal-thumb" id="vcFfToastThumb" aria-hidden="true"></div>
+        <div class="vc-ff-modal-copy">
+          <p class="vc-ff-modal-title" id="vcFfToastTitle"></p>
+          <p class="vc-ff-modal-note">is added to your shopping cart.</p>
+          <div class="vc-ff-modal-actions">
+            <button class="vc-ff-modal-btn ghost" type="button" data-ff-toast-close>Continue Shopping</button>
+            <!-- Replace href with your cart URL if different -->
+            <a class="vc-ff-modal-btn solid" id="vcFfToastCart" href="/cart/">View Cart</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =================================================================
+     CONFIG — edit these to match your store
+     ================================================================= */
+  var CONFIG = {
+    api: "/wp-json/wc/store/v1",
+    requiredCategorySlug: "featured",     // main category slug (with subcategories)
+    perPage: 8,
+    cartUrl: "/cart/",
+    cartTokenKey: "vcWcCartToken",     // shared with the rest of the VibeCano site
+    wishlistKey: "vcFeaturedWishlist",
+    addTimeoutMs: 12000
+  };
+
+  var cache = Object.create(null);
+  var productLookup = Object.create(null);
+  var taxonomyCache = Object.create(null);
+  var featuredCategoryIds = [];
+  var featuredCategorySlugs = [CONFIG.requiredCategorySlug];
+  var wishlist = loadWishlist();
+  var toastTimer = null;
+
+  var gridEl = document.getElementById("vcFfGrid");
+  var toastEl = document.getElementById("vcFfToast");
+  var toastThumbEl = document.getElementById("vcFfToastThumb");
+  var toastTitleEl = document.getElementById("vcFfToastTitle");
+  var toastCartEl = document.getElementById("vcFfToastCart");
+
+  if (!gridEl || !window.fetch) return;
+
+  init();
+
+  /* =================================================================
+     INIT + EVENTS
+     ================================================================= */
+  function init() {
+    if (toastCartEl) toastCartEl.setAttribute("href", CONFIG.cartUrl);
+
+    gridEl.addEventListener("click", handleGridClick);
+
+    if (toastEl) {
+      toastEl.addEventListener("click", function (event) {
+        if (event.target && event.target.closest("[data-ff-toast-close]")) hideToast();
+      });
+    }
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") hideToast();
+    });
+
+    resolveFeaturedCategories().then(loadProducts).catch(loadProducts);
+  }
+
+  /* =================================================================
+     LOAD + RENDER PRODUCTS (Featured category + subcategories, no filters)
+     ================================================================= */
+  function resolveFeaturedCategories() {
+    return fetch(CONFIG.api + "/products/categories?per_page=100", { credentials: "same-origin" })
+      .then(checkResponse)
+      .then(function (categories) {
+        var parent = findBySlug(categories, CONFIG.requiredCategorySlug);
+        if (!parent || !parent.id) return;
+        var allFeatured = [parent].concat(getDescendants(categories, parent.id));
+        featuredCategoryIds = allFeatured.map(getId).filter(Boolean);
+        featuredCategorySlugs = allFeatured.map(getSlug).filter(Boolean);
+        allFeatured.forEach(function (c) { taxonomyCache[c.slug] = Number(c.id); });
+      });
+  }
+
+  function loadProducts() {
+    renderLoading();
+
+    resolveCategoryId(CONFIG.requiredCategorySlug)
+      .then(function (requiredId) {
+        var categoryIds = featuredCategoryIds.length ? featuredCategoryIds : (requiredId ? [requiredId] : []);
+        if (!requiredId || !categoryIds.length) {
+          renderMessage("No matching category found", "Check that the Featured category slug in CONFIG is correct.");
+          return [];
+        }
+        return fetchProducts(categoryIds, featuredCategorySlugs);
+      })
+      .then(function (products) { if (Array.isArray(products)) renderProducts(products); })
+      .catch(function () {
+        renderMessage("Products could not be loaded", "Refresh the page or confirm the WooCommerce Store API is enabled.");
+      });
+  }
+
+  function resolveCategoryId(slug) {
+    if (taxonomyCache[slug] !== undefined) return Promise.resolve(taxonomyCache[slug]);
+    return fetch(CONFIG.api + "/products/categories?per_page=100", { credentials: "same-origin" })
+      .then(checkResponse)
+      .then(function (items) {
+        var match = findBySlug(items, slug);
+        var id = match && match.id ? Number(match.id) : 0;
+        taxonomyCache[slug] = id;
+        return id;
+      })
+      .catch(function () { taxonomyCache[slug] = 0; return 0; });
+  }
+
+  function fetchProducts(categoryIds, categorySlugs) {
+    var key = categoryIds.join(",");
+    if (cache[key]) return Promise.resolve(cache[key]);
+
+    return fetch(buildProductsUrl(categoryIds), { credentials: "same-origin" })
+      .then(checkResponse)
+      .then(function (products) {
+        var allowed = categorySlugs && categorySlugs.length ? categorySlugs : [CONFIG.requiredCategorySlug];
+        var safe = Array.isArray(products) ? products.filter(function (p) { return matchesTerms(p, allowed); }) : [];
+        cache[key] = safe;
+        return safe;
+      });
+  }
+
+  function buildProductsUrl(categoryIds) {
+    var params = new URLSearchParams();
+    params.set("per_page", String(CONFIG.perPage));
+    params.set("category", categoryIds.join(","));
+    params.set("orderby", "popularity");
+    params.set("order", "desc");
+    return CONFIG.api + "/products?" + params.toString();
+  }
+
+  function renderLoading() {
+    gridEl.innerHTML = "";
+    for (var i = 0; i < Math.min(CONFIG.perPage, 8); i += 1) {
+      var s = document.createElement("div");
+      s.className = "vc-ff-skeleton";
+      s.setAttribute("aria-hidden", "true");
+      gridEl.appendChild(s);
+    }
+  }
+
+  function renderProducts(products) {
+    if (!products.length) {
+      renderMessage("No Featured products found", "Add products to the Featured category or its subcategories to show them here.");
+      return;
+    }
+    productLookup = Object.create(null);
+    gridEl.innerHTML = products.map(renderCard).join("");
+  }
+
+  function renderCard(product, index) {
+    var id = getProductId(product);
+    if (id) productLookup[id] = product;
+
+    var url = escapeAttr(product.permalink || "#");
+    var name = escapeHtml(product.name || "Product");
+    var safeName = escapeAttr(product.name || "product");
+    var images = getImages(product);
+    var primary = images[0];
+    var secondary = images[1];
+    var wished = id && wishlist[id];
+    var sizeInfo = getSizeInfo(product);
+    var badge = getDiscountPercent(product.prices);
+
+    var primaryImg = primary
+      ? '<img class="vc-ff-img vc-ff-img--primary" src="' + escapeAttr(primary.src) + '" alt="' + escapeAttr(primary.alt || product.name || "Featured product") + '" loading="lazy" decoding="async">'
+      : "";
+    var secondaryImg = secondary
+      ? '<img class="vc-ff-img vc-ff-img--secondary" src="' + escapeAttr(secondary.src) + '" alt="" loading="lazy" decoding="async" aria-hidden="true">'
+      : "";
+
+    var sizesHtml = "";
+    if (sizeInfo && sizeInfo.terms.length) {
+      sizesHtml =
+        '<p class="vc-ff-size-label" data-ff-size-label>Size</p>' +
+        '<div class="vc-ff-sizes" role="group" aria-label="Select size for ' + safeName + '">' +
+          sizeInfo.terms.map(function (term) {
+            return '<button class="vc-ff-size" type="button" data-action="size" data-size="' + escapeAttr(term.name) + '">' + escapeHtml(term.name) + "</button>";
+          }).join("") +
+        "</div>";
+    }
+
+    return [
+      '<article class="vc-ff-card" data-product-id="' + escapeAttr(id) + '" style="--i:' + (index || 0) + '">',
+        '<div class="vc-ff-media">',
+          badge ? '<span class="vc-ff-badge">-' + badge + "%</span>" : "",
+          '<button class="vc-ff-wish' + (wished ? " is-active" : "") + '" type="button" data-action="wishlist" data-product-id="' + escapeAttr(id) + '" aria-pressed="' + (wished ? "true" : "false") + '" aria-label="' + (wished ? "Remove " : "Add ") + safeName + (wished ? " from wishlist" : " to wishlist") + '">' + heartSvg(wished) + "</button>",
+          '<a class="vc-ff-media-link" href="' + url + '" aria-label="View ' + safeName + '">' + primaryImg + secondaryImg + "</a>",
+          '<div class="vc-ff-panel">',
+            sizesHtml,
+            '<button class="vc-ff-add" type="button" data-action="add" data-product-id="' + escapeAttr(id) + '">Add to Cart</button>',
+          "</div>",
+        "</div>",
+        '<div class="vc-ff-info">',
+          '<a class="vc-ff-name" href="' + url + '">' + name + "</a>",
+          renderPrice(product.prices),
+        "</div>",
+      "</article>"
+    ].join("");
+  }
+
+  function renderPrice(prices) {
+    if (!prices || !prices.price) return '<div class="vc-ff-price"></div>';
+    var regular = prices.regular_price;
+    var sale = prices.sale_price;
+    var onSale = regular && sale && String(regular) !== String(sale);
+    if (onSale) {
+      return '<div class="vc-ff-price is-sale">' +
+        '<span class="vc-ff-now">' + escapeHtml(money(prices, sale)) + "</span>" +
+        '<del class="vc-ff-was">' + escapeHtml(money(prices, regular)) + "</del>" +
+        "</div>";
+    }
+    return '<div class="vc-ff-price"><span class="vc-ff-now">' + escapeHtml(money(prices, prices.price)) + "</span></div>";
+  }
+
+  /* =================================================================
+     CARD INTERACTIONS
+     ================================================================= */
+  function handleGridClick(event) {
+    var actionEl = event.target && event.target.closest("[data-action]");
+    if (!actionEl || !gridEl.contains(actionEl)) return;
+    var action = actionEl.dataset.action;
+
+    if (action === "wishlist") {
+      event.preventDefault();
+      toggleWishlist(actionEl, actionEl.getAttribute("data-product-id"));
+    } else if (action === "size") {
+      event.preventDefault();
+      selectSize(actionEl);
+    } else if (action === "add") {
+      event.preventDefault();
+      handleAdd(actionEl);
+    }
+  }
+
+  function selectSize(button) {
+    var group = button.closest(".vc-ff-sizes");
+    var card = button.closest(".vc-ff-card");
+    if (!group || !card) return;
+    var sizeName = button.getAttribute("data-size") || "";
+    Array.prototype.forEach.call(group.querySelectorAll(".vc-ff-size"), function (pill) {
+      pill.classList.toggle("is-selected", pill === button);
+    });
+    group.classList.remove("is-shake");
+    card.dataset.selectedSize = sizeName;
+    var label = card.querySelector("[data-ff-size-label]");
+    if (label) label.textContent = sizeName ? "Size: " + sizeName : "Size";
+  }
+
+  function handleAdd(button) {
+    var card = button.closest(".vc-ff-card");
+    var id = button.getAttribute("data-product-id");
+    var product = productLookup[id];
+    if (!product || !card) return;
+
+    var sizeInfo = getSizeInfo(product);
+    var selectedSize = card.dataset.selectedSize || "";
+
+    if (sizeInfo && sizeInfo.terms.length && !selectedSize) {
+      var sizes = card.querySelector(".vc-ff-sizes");
+      if (sizes) {
+        sizes.classList.remove("is-shake");
+        void sizes.offsetWidth;               // restart animation
+        sizes.classList.add("is-shake");
+      }
+      flashButton(button, "Select a size");
+      return;
+    }
+    addToCart(product, selectedSize, button);
+  }
+
+  function flashButton(button, text) {
+    button.textContent = text;
+    setTimeout(function () {
+      if (!button.disabled) button.textContent = "Add to Cart";
+    }, 1600);
+  }
+
+  /* =================================================================
+     ADD TO CART — fast path (no per-variation API waterfall)
+     1) Build payload from already-loaded product attributes
+     2) Store API add-item (same pattern as single product page)
+     3) Classic wc-ajax fallback if Store API rejects the variation
+     ================================================================= */
+  function addToCart(product, sizeName, button) {
+    button.disabled = true;
+    button.textContent = "Adding...";
+
+    var timedOut = false;
+    var timer = setTimeout(function () {
+      timedOut = true;
+      button.disabled = false;
+      flashButton(button, "Try again");
+    }, CONFIG.addTimeoutMs);
+
+    ensureCartSession()
+      .then(function (session) {
+        if (timedOut) return null;
+        var payloads = buildAddPayloads(product, sizeName);
+        return tryStoreApiAdd(payloads, session.nonce, session.token);
+      })
+      .then(function (cart) {
+        if (timedOut || !cart) return;
+        clearTimeout(timer);
+        try { document.body.dispatchEvent(new CustomEvent("wc-blocks_added_to_cart", { detail: cart })); } catch (e) {}
+        updateHeaderCartCount(cart);
+        button.disabled = false;
+        button.textContent = "Add to Cart";
+        showToast(product);
+      })
+      .catch(function (error) {
+        if (timedOut) return;
+        clearTimeout(timer);
+        button.disabled = false;
+        var message = error && error.message ? String(error.message).replace(/<[^>]+>/g, "") : "Could not add";
+        if (message.length > 22) message = "Could not add";
+        flashButton(button, message);
+      });
+  }
+
+  function withTimeout(promise, ms, label) {
+    return new Promise(function (resolve, reject) {
+      var done = false;
+      var id = setTimeout(function () {
+        if (done) return;
+        done = true;
+        reject(new Error(label || "Timed out"));
+      }, ms);
+      promise.then(function (value) {
+        if (done) return;
+        done = true;
+        clearTimeout(id);
+        resolve(value);
+      }, function (error) {
+        if (done) return;
+        done = true;
+        clearTimeout(id);
+        reject(error);
+      });
+    });
+  }
+
+  function ensureCartSession() {
+    return withTimeout(fetch(CONFIG.api + "/cart", {
+      credentials: "include",
+      headers: getStoredCartToken() ? { "Cart-Token": getStoredCartToken() } : {}
+    }), 8000, "Cart session timed out").then(function (response) {
+      var nonce = response.headers.get("Nonce") || response.headers.get("X-WC-Store-API-Nonce") || "";
+      var token = storeCartToken(response);
+      if (!response.ok || !nonce) throw new Error("Cart session failed");
+      return { nonce: nonce, token: token };
+    });
+  }
+
+  function buildAddPayloads(product, sizeName) {
+    var productId = Number(getProductId(product)) || Number(product.id);
+    var variationByName = [];
+    var variationByTaxonomy = [];
+    var attributes = product && Array.isArray(product.attributes) ? product.attributes : [];
+    var payloads = [];
+
+    // Prefer an embedded variation ID when the products list already includes it.
+    var embeddedMatch = findEmbeddedVariation(product, sizeName);
+    if (embeddedMatch && embeddedMatch.id) {
+      payloads.push({ id: Number(embeddedMatch.id), quantity: 1 });
+    }
+
+    attributes.forEach(function (attr) {
+      if (!attr) return;
+      if (attr.has_variations === false) return;
+      var isSize = /size/i.test(attr.name || "") || /size/i.test(attr.taxonomy || "");
+      var terms = Array.isArray(attr.terms) ? attr.terms.filter(Boolean) : [];
+      var value = "";
+      var slug = "";
+
+      if (isSize) {
+        value = sizeName || "";
+        var sizeTerm = terms.filter(function (term) {
+          return term && normalizeOption(term.name) === normalizeOption(sizeName);
+        })[0];
+        slug = (sizeTerm && (sizeTerm.slug || sizeTerm.name)) || sizeName || "";
+      } else if (terms.length) {
+        var preferred = terms.filter(function (term) { return term && term.default; })[0] || terms[0];
+        value = preferred.name || "";
+        slug = preferred.slug || preferred.name || "";
+      }
+
+      if (!value) return;
+      if (attr.name) variationByName.push({ attribute: String(attr.name), value: String(value) });
+      if (attr.taxonomy) variationByTaxonomy.push({ attribute: String(attr.taxonomy), value: String(slug || value) });
+    });
+
+    if (sizeName && !variationByName.length) {
+      variationByName.push({ attribute: "Size", value: String(sizeName) });
+      variationByTaxonomy.push({ attribute: "pa_size", value: String(sizeName) });
+    }
+
+    if (variationByName.length) {
+      payloads.push({ id: productId, quantity: 1, variation: variationByName });
+    }
+    if (variationByTaxonomy.length) {
+      payloads.push({ id: productId, quantity: 1, variation: variationByTaxonomy });
+    }
+    if (!payloads.length) {
+      payloads.push({ id: productId, quantity: 1 });
+    }
+    return payloads;
+  }
+
+  function findEmbeddedVariation(product, sizeName) {
+    var variations = product && Array.isArray(product.variations) ? product.variations : [];
+    var objects = variations.filter(function (item) {
+      return item && typeof item === "object" && item.id !== undefined;
+    });
+    if (!objects.length) return null;
+    if (!sizeName) return objects[0];
+
+    var match = objects.filter(function (variation) {
+      var attrs = variation.attributes || [];
+      var i;
+      for (i = 0; i < attrs.length; i += 1) {
+        var attr = attrs[i];
+        if (!attr) continue;
+        var name = String(attr.name || attr.attribute || "");
+        var value = String(attr.option || attr.value || "");
+        if (/size/i.test(name) && normalizeOption(value) === normalizeOption(sizeName)) return true;
+      }
+      var text = String(variation.variation || variation.name || "");
+      return normalizeOption(text).indexOf(normalizeOption(sizeName)) !== -1;
+    })[0];
+    return match || null;
+  }
+
+  function tryStoreApiAdd(payloads, nonce, token) {
+    function attempt(index, lastError) {
+      if (index >= payloads.length) {
+        return Promise.reject(lastError || new Error("Add to cart failed"));
+      }
+      return postAddItem(payloads[index], nonce, token).catch(function (error) {
+        return attempt(index + 1, error);
+      });
+    }
+    return attempt(0);
+  }
+
+  function postAddItem(payload, nonce, token) {
+    var body = { id: Number(payload.id), quantity: Number(payload.quantity) || 1 };
+    if (payload.variation && payload.variation.length) body.variation = payload.variation;
+
+    return withTimeout(fetch(CONFIG.api + "/cart/add-item", {
+      method: "POST",
+      credentials: "include",
+      headers: getCartHeaders(nonce, token),
+      body: JSON.stringify(body)
+    }), 8000, "Add to cart timed out").then(function (response) {
+      storeCartToken(response);
+      return response.json().then(function (data) {
+        if (!response.ok) {
+          throw new Error((data && (data.message || data.code)) || "Add to cart failed");
+        }
+        if (!data.items || !data.items.length) {
+          throw new Error("Product was not added to cart");
+        }
+        return data;
+      });
+    });
+  }
+
+  function normalizeOption(value) {
+    return String(value || "").toLowerCase().replace(/\s+/g, " ").trim();
+  }
+
+  function getCartHeaders(nonce, token) {
+    var headers = { "Content-Type": "application/json", "Nonce": nonce, "X-WC-Store-API-Nonce": nonce };
+    token = token || getStoredCartToken();
+    if (token) headers["Cart-Token"] = token;
+    return headers;
+  }
+
+  function getStoredCartToken() {
+    try { return sessionStorage.getItem(CONFIG.cartTokenKey) || ""; } catch (e) { return ""; }
+  }
+
+  function storeCartToken(response) {
+    var token = response.headers.get("Cart-Token");
+    if (!token) return getStoredCartToken();
+    try { sessionStorage.setItem(CONFIG.cartTokenKey, token); } catch (e) {}
+    return token;
+  }
+
+  function updateHeaderCartCount(cart) {
+    var count = cart && Number(cart.items_count);
+    if (!Number.isFinite(count)) return;
+    var badge = document.getElementById("roCartCount");
+    if (badge) badge.textContent = String(count);
+  }
+
+  /* =================================================================
+     ADDED-TO-CART POPUP
+     ================================================================= */
+  function showToast(product) {
+    if (!toastEl) return;
+    var image = getImages(product)[0];
+    if (toastThumbEl) {
+      toastThumbEl.innerHTML = image
+        ? '<img src="' + escapeAttr(image.src) + '" alt="' + escapeAttr(product.name || "") + '">'
+        : "";
+    }
+    if (toastTitleEl) toastTitleEl.textContent = product.name || "Product";
+    if (toastCartEl) toastCartEl.setAttribute("href", CONFIG.cartUrl);
+
+    toastEl.classList.add("is-open");
+    toastEl.setAttribute("aria-hidden", "false");
+    document.documentElement.style.overflow = "hidden";
+
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 8000);
+  }
+
+  function hideToast() {
+    if (!toastEl || !toastEl.classList.contains("is-open")) return;
+    toastEl.classList.remove("is-open");
+    toastEl.setAttribute("aria-hidden", "true");
+    document.documentElement.style.overflow = "";
+    if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+  }
+
+  /* =================================================================
+     WISHLIST (localStorage)
+     ================================================================= */
+  function toggleWishlist(button, id) {
+    if (!id) return;
+    var product = productLookup[id];
+    var name = product && product.name ? product.name : "product";
+    var active;
+    if (wishlist[id]) { delete wishlist[id]; active = false; }
+    else { wishlist[id] = true; active = true; }
+    saveWishlist();
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", active ? "true" : "false");
+    button.setAttribute("aria-label", (active ? "Remove " : "Add ") + name + (active ? " from wishlist" : " to wishlist"));
+    button.innerHTML = heartSvg(active);
+  }
+
+  function loadWishlist() {
+    var items = Object.create(null);
+    var ids;
+    try {
+      var raw = window.localStorage && window.localStorage.getItem(CONFIG.wishlistKey);
+      ids = raw ? JSON.parse(raw) : [];
+    } catch (e) { ids = []; }
+    if (Array.isArray(ids)) ids.forEach(function (id) { if (id) items[String(id)] = true; });
+    return items;
+  }
+
+  function saveWishlist() {
+    try { if (window.localStorage) window.localStorage.setItem(CONFIG.wishlistKey, JSON.stringify(Object.keys(wishlist))); } catch (e) {}
+  }
+
+  /* =================================================================
+     PRODUCT HELPERS
+     ================================================================= */
+  function getProductId(product) { return product && product.id !== undefined ? String(product.id) : ""; }
+
+  function getImages(product) {
+    return product && Array.isArray(product.images) ? product.images : [];
+  }
+
+  // Finds the "Size" attribute and its available terms.
+  function getSizeInfo(product) {
+    var attributes = product && Array.isArray(product.attributes) ? product.attributes : [];
+    var sizeAttr = attributes.filter(function (attr) {
+      return attr && (/size/i.test(attr.name || "") || /size/i.test(attr.taxonomy || ""));
+    })[0];
+    if (!sizeAttr) return null;
+    var terms = Array.isArray(sizeAttr.terms) ? sizeAttr.terms.filter(Boolean) : [];
+    if (!terms.length) return null;
+    return { attribute: sizeAttr, terms: terms };
+  }
+
+  function getDiscountPercent(prices) {
+    if (!prices) return 0;
+    var regular = parseInt(prices.regular_price, 10);
+    var sale = parseInt(prices.sale_price, 10);
+    if (!regular || !sale || sale >= regular) return 0;
+    return Math.round((1 - sale / regular) * 100);
+  }
+
+  function matchesTerms(product, slugs) {
+    var terms = product && Array.isArray(product.categories) ? product.categories : [];
+    return slugs.some(function (slug) {
+      return terms.some(function (term) { return term && term.slug === slug; });
+    });
+  }
+
+  function money(prices, value) {
+    var minor = Number(prices.currency_minor_unit);
+    var decimals = Number.isFinite(minor) ? minor : 2;
+    var amount = parseInt(value, 10);
+    if (!Number.isFinite(amount)) return "";
+    var prefix = prices.currency_prefix || prices.currency_symbol || "";
+    var suffix = prices.currency_suffix || "";
+    var dec = prices.currency_decimal_separator || ".";
+    var thou = prices.currency_thousand_separator || ",";
+    var str = (amount / Math.pow(10, decimals)).toFixed(decimals);
+    var parts = str.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thou);
+    return prefix + parts.join(dec) + suffix;
+  }
+
+  /* =================================================================
+     SMALL UTILITIES
+     ================================================================= */
+  function heartSvg(filled) {
+    return '<svg viewBox="0 0 24 24" aria-hidden="true" fill="' + (filled ? "currentColor" : "none") + '" stroke="currentColor" stroke-width="1.8">' +
+      '<path d="M12 20.5s-7.5-4.7-9.6-9.3C1 8 2.6 5 5.6 5c1.9 0 3.3 1.1 4.4 2.6C11.1 6.1 12.5 5 14.4 5c3 0 4.6 3 3.2 6.2C19.5 15.8 12 20.5 12 20.5z" stroke-linejoin="round"/></svg>';
+  }
+
+  function findBySlug(items, slug) {
+    if (!Array.isArray(items)) return null;
+    return items.filter(function (item) { return item && item.slug === slug; })[0] || null;
+  }
+  function getDescendants(categories, parentId) {
+    var out = [];
+    categories.filter(function (c) { return c && Number(c.parent) === Number(parentId); }).forEach(function (c) {
+      out.push(c);
+      out = out.concat(getDescendants(categories, c.id));
+    });
+    return out;
+  }
+  function getId(c) { return c && c.id ? Number(c.id) : 0; }
+  function getSlug(c) { return c && c.slug ? c.slug : ""; }
+
+  function checkResponse(response) {
+    if (!response.ok) throw new Error("Store API request failed: " + response.status);
+    return response.json();
+  }
+  function renderMessage(title, body) {
+    gridEl.innerHTML = '<div class="vc-ff-message"><strong>' + escapeHtml(title) + "</strong>" + escapeHtml(body) + "</div>";
+  }
+  function escapeHtml(value) {
+    return String(value === undefined || value === null ? "" : value).replace(/[&<>"']/g, function (ch) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch];
+    });
+  }
+  function escapeAttr(value) { return escapeHtml(value).replace(/`/g, "&#96;"); }
+
+  /* =================================================================
+     SCROLL FADE-IN (staggered)
+     ================================================================= */
+  var revealObserver = ("IntersectionObserver" in window)
+    ? new IntersectionObserver(function (entries, obs) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) { entry.target.classList.add("is-visible"); obs.unobserve(entry.target); }
+        });
+      }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" })
+    : null;
+
+  // Observe cards as they are rendered.
+  var gridMutation = new MutationObserver(function () {
+    var cards = gridEl.querySelectorAll(".vc-ff-card:not(.is-visible)");
+    if (!revealObserver) {
+      Array.prototype.forEach.call(cards, function (card) { card.classList.add("is-visible"); });
+      return;
+    }
+    Array.prototype.forEach.call(cards, function (card) { revealObserver.observe(card); });
+  });
+  gridMutation.observe(gridEl, { childList: true });
+})();
+</script>

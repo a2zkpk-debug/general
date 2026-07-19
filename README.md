@@ -50,7 +50,7 @@ Color swatches were hidden because `renderColorOptions()` required `COLOR_VARIES
 
 ## Women / Men collection add-to-cart popup
 
-Selecting a size and clicking **Add to Cart** uses a fast Store API payload (parent product + size/attributes, no per-variation fetch waterfall), stays on the page, and opens a centered popup with product image, top-right �** uses a fast Store API payload (parent product + size/attributes, no per-variation fetch waterfall), stays on the page, and opens a centered popup with product image, top-right ✕, **Continue Shopping**, and **View Cart**. Category chips and sort filters are removed; **View All Products** sits under the grid.
+Selecting a size and clicking **Add to Cart** uses a fast Store API payload (parent product + size/attributes, no per-variation fetch waterfall), stays on the page, and opens a centered popup with product image, top-right close control, **Continue Shopping**, and **View Cart**. Category chips and sort filters are removed; **View All Products** sits under the grid.
 
 - Women widget: `vibecano-women-collection.html` (`women` category)
 - Men widget: `vibecano-men-collection.html` (`men` category)
