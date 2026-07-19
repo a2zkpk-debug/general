@@ -631,12 +631,18 @@
 
   @media (max-width: 960px) {
     .vc-checkout-shell {
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
+      grid-template-columns: none;
+    }
+
+    .vc-checkout-form {
+      order: 1;
     }
 
     .vc-checkout-summary {
       position: static;
-      order: -1;
+      order: 2; /* Delivery first, order summary at the end on mobile */
     }
 
     .vc-order-list {
