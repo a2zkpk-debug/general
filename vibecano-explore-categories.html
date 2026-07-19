@@ -1,0 +1,367 @@
+<!-- ============================================================
+     VIBECANO — EXPLORE CATEGORIES
+     Paste this whole file into a single Elementor HTML widget.
+
+     Diners-style “What would you like to explore?” row for:
+       Men · Women · Kids · Under999
+
+     Mobile: horizontal snap carousel with visible labels + next-card peek.
+     ============================================================ -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+<style>
+  .vc-ex-wrap {
+    --ex-ink: #111111;
+    --ex-muted: #6b6b73;
+    --ex-line: rgba(17, 17, 17, 0.08);
+    --ex-soft: #f3f1ee;
+    --ex-gap: 14px;
+    --ex-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 72px 22px 80px;
+    color: var(--ex-ink);
+    background:
+      radial-gradient(1200px 420px at 50% 0%, rgba(17, 17, 17, 0.04), transparent 70%),
+      #ffffff;
+    font-family: Manrope, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: visible;
+  }
+  .vc-ex-wrap *,
+  .vc-ex-wrap *::before,
+  .vc-ex-wrap *::after { box-sizing: border-box; }
+
+  .vc-ex-title {
+    margin: 0 0 42px;
+    text-align: center;
+    font-family: Syne, Manrope, sans-serif;
+    font-size: clamp(26px, 6vw, 44px);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+
+  .vc-ex-stage {
+    position: relative;
+    overflow: visible;
+  }
+
+  .vc-ex-track {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--ex-gap);
+    overflow: visible;
+  }
+
+  .vc-ex-card {
+    display: block;
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .vc-ex-media {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+    background: var(--ex-soft);
+  }
+
+  .vc-ex-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s var(--ex-ease);
+  }
+
+  /* Visible placeholder when src is still "#" */
+  .vc-ex-media::after {
+    content: "Add image";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, #eceae6, #ddd9d2);
+    color: var(--ex-muted);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.25s var(--ex-ease);
+  }
+  .vc-ex-media.has-image::after { opacity: 0; }
+
+  .vc-ex-card:hover .vc-ex-media img,
+  .vc-ex-card:focus-visible .vc-ex-media img {
+    transform: scale(1.05);
+  }
+
+  .vc-ex-label {
+    display: block;
+    margin-top: 14px;
+    text-align: center;
+    font-family: Manrope, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+
+  /* Overlay label — always visible on mobile if parent clips below-image text */
+  .vc-ex-label-overlay {
+    display: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 28px 12px 14px;
+    background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 12, 0.72) 100%);
+    color: #fff;
+    text-align: center;
+    font-family: Manrope, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  .vc-ex-nav {
+    position: absolute;
+    top: 42%;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: rgba(17, 17, 17, 0.55);
+    cursor: pointer;
+    box-shadow: 0 10px 24px -18px rgba(17, 17, 17, 0.7);
+    transition: color 0.25s var(--ex-ease), background 0.25s var(--ex-ease), opacity 0.25s var(--ex-ease);
+  }
+  .vc-ex-nav:hover,
+  .vc-ex-nav:focus-visible {
+    color: var(--ex-ink);
+    background: #fff;
+  }
+  .vc-ex-nav svg { width: 18px; height: 18px; }
+  .vc-ex-nav.prev { left: -6px; }
+  .vc-ex-nav.next { right: -6px; }
+
+  @media (max-width: 980px) {
+    .vc-ex-wrap {
+      padding: 48px 0 56px;
+      max-width: none;
+    }
+
+    .vc-ex-title {
+      margin: 0 16px 24px;
+      font-size: clamp(24px, 7.2vw, 34px);
+    }
+
+    .vc-ex-stage {
+      padding: 0;
+    }
+
+    .vc-ex-track {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      overflow-y: visible;
+      -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: 16px;
+      scrollbar-width: none;
+      padding: 0 16px 8px;
+      /* Extra bottom space so below-image labels are not clipped */
+      padding-bottom: 8px;
+    }
+    .vc-ex-track::-webkit-scrollbar { display: none; }
+
+    .vc-ex-card {
+      /* ~1.45 cards visible so next category peeks */
+      flex: 0 0 clamp(168px, 58vw, 240px);
+      width: clamp(168px, 58vw, 240px);
+      max-width: 240px;
+      scroll-snap-align: start;
+    }
+
+    .vc-ex-media {
+      aspect-ratio: 3 / 4;
+      max-height: min(52vh, 360px);
+    }
+
+    .vc-ex-label {
+      margin-top: 10px;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+    }
+
+    .vc-ex-label-overlay {
+      display: block;
+    }
+
+    /* Keep below label too, but overlay guarantees visibility in Elementor */
+    .vc-ex-nav { display: none; }
+  }
+
+  @media (max-width: 560px) {
+    .vc-ex-wrap { padding: 40px 0 48px; }
+
+    .vc-ex-title {
+      margin: 0 14px 20px;
+      font-size: clamp(22px, 7.8vw, 28px);
+      line-height: 1.15;
+    }
+
+    .vc-ex-track {
+      gap: 10px;
+      scroll-padding-inline: 14px;
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+
+    .vc-ex-card {
+      flex: 0 0 clamp(150px, 62vw, 220px);
+      width: clamp(150px, 62vw, 220px);
+      max-width: 220px;
+    }
+
+    .vc-ex-media {
+      max-height: min(48vh, 320px);
+    }
+
+    .vc-ex-label {
+      margin-top: 8px;
+      font-size: 11px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vc-ex-media img { transition: none; }
+  }
+</style>
+
+<section class="vc-ex-wrap" id="vcExWrap" aria-labelledby="vcExTitle">
+  <h2 class="vc-ex-title" id="vcExTitle">What would you<br>like to explore?</h2>
+
+  <div class="vc-ex-stage">
+    <button class="vc-ex-nav prev" type="button" aria-label="Scroll categories left" data-ex-prev>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M15 6 9 12l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="vc-ex-track" id="vcExTrack">
+      <a class="vc-ex-card" href="/product-category/men/">
+        <div class="vc-ex-media">
+          <img src="https://vibecano.com/wp-content/uploads/2026/07/men-201x300.png" alt="Men" loading="lazy" decoding="async" data-ex-img>
+          <span class="vc-ex-label-overlay">Men</span>
+        </div>
+        <span class="vc-ex-label">Men</span>
+      </a>
+
+      <a class="vc-ex-card" href="/product-category/women/">
+        <div class="vc-ex-media">
+          <img src="https://vibecano.com/wp-content/uploads/2026/07/women-201x300.png" alt="Women" loading="lazy" decoding="async" data-ex-img>
+          <span class="vc-ex-label-overlay">Women</span>
+        </div>
+        <span class="vc-ex-label">Women</span>
+      </a>
+
+      <a class="vc-ex-card" href="/product-category/kids/">
+        <div class="vc-ex-media">
+          <img src="https://vibecano.com/wp-content/uploads/2026/07/kidsvibe-199x300.png" alt="Kids" loading="lazy" decoding="async" data-ex-img>
+          <span class="vc-ex-label-overlay">Kids</span>
+        </div>
+        <span class="vc-ex-label">Kids</span>
+      </a>
+
+      <a class="vc-ex-card" href="/product-category/under999/">
+        <div class="vc-ex-media">
+          <img src="https://vibecano.com/wp-content/uploads/2026/07/under999vibe3-300x281.png" alt="Under999" loading="lazy" decoding="async" data-ex-img>
+          <span class="vc-ex-label-overlay">Under999</span>
+        </div>
+        <span class="vc-ex-label">Under999</span>
+      </a>
+    </div>
+
+    <button class="vc-ex-nav next" type="button" aria-label="Scroll categories right" data-ex-next>
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+
+  var wrap = document.getElementById("vcExWrap");
+  var track = document.getElementById("vcExTrack");
+  if (!track) return;
+
+  // Elementor sections often clip labels / force boxed width on mobile
+  function expandParents() {
+    if (!wrap) return;
+    var node = wrap.parentElement;
+    var hops = 0;
+    while (node && hops < 10 && node !== document.body) {
+      var className = String(node.className || "");
+      if (/elementor|e-con|elementor-widget|elementor-container/i.test(className)) {
+        node.style.setProperty("overflow", "visible", "important");
+        node.style.setProperty("max-width", "100%", "important");
+        node.style.setProperty("width", "100%", "important");
+      }
+      node = node.parentElement;
+      hops += 1;
+    }
+  }
+
+  expandParents();
+  window.addEventListener("resize", expandParents);
+
+  Array.prototype.forEach.call(track.querySelectorAll("[data-ex-img]"), function (img) {
+    var media = img.closest(".vc-ex-media");
+    function mark() {
+      if (!media) return;
+      var src = img.getAttribute("src") || "";
+      media.classList.toggle("has-image", !!src && src !== "#");
+    }
+    img.addEventListener("load", mark);
+    img.addEventListener("error", function () {
+      if (media) media.classList.remove("has-image");
+    });
+    mark();
+  });
+
+  var prev = document.querySelector("[data-ex-prev]");
+  var next = document.querySelector("[data-ex-next]");
+  function scrollByCard(dir) {
+    var card = track.querySelector(".vc-ex-card");
+    var amount = card ? card.getBoundingClientRect().width + 12 : 220;
+    track.scrollBy({ left: dir * amount, behavior: "smooth" });
+  }
+  if (prev) prev.addEventListener("click", function () { scrollByCard(-1); });
+  if (next) next.addEventListener("click", function () { scrollByCard(1); });
+})();
+</script>
