@@ -1234,7 +1234,7 @@
       "*Customer:* " + formData.firstName + " " + formData.lastName,
       "*Phone:* " + formData.phone,
       formData.email ? "*Email:* " + formData.email : "",
-      "*Address:* " + formData.address + ", " + formData.city + ", " + formData.province + (formData.postcode ? " " + formData.postcode : ""),
+      "*Address:* " + formData.address + ", " + formData.city,
       "",
       "*Items:*"
     ].filter(Boolean);
@@ -1361,23 +1361,65 @@
       email: String(($("#vcEmail") && $("#vcEmail").value) || "").trim(),
       address: String(($("#vcAddress") && $("#vcAddress").value) || "").trim(),
       city: String(($("#vcCity") && $("#vcCity").value) || "").trim(),
-      province: String(($("#vcProvince") && $("#vcProvince").value) || "").trim(),
-      postcode: String(($("#vcPostcode") && $("#vcPostcode").value) || "").trim(),
       note: String(($("#vcNote") && $("#vcNote").value) || "").trim()
     };
   }
 
   function validateForm(formData) {
-    if (!formData.firstName) return "Please enter your first name.";
-    if (!formData.lastName) return "Please enter your last name.";
-    if (!formData.phone) return "Please enter your phone number.";
-    if (!formData.address) return "Please enter your delivery address.";
-    if (!formData.city) return "Please enter your city.";
-    if (!formData.province) return "Please enter your province.";
-    if (selectedPayment() !== "cod" && !receipt) {
-      return "Please upload your payment receipt for the selected payment method.";
+    if (!formData.firstName) {
+      return { message: "Please enter your first name.", focusId: "vcFn" };
     }
-    return "";
+    if (!formData.lastName) {
+      return { message: "Please enter your last name.", focusId: "vcLn" };
+    }
+    if (!formData.phone) {
+      return { message: "Please enter your WhatsApp / phone number.", focusId: "vcPhone" };
+    }
+    if (!formData.address) {
+      return { message: "Please enter your complete delivery address.", focusId: "vcAddress" };
+    }
+    if (!formData.city) {
+      return { message: "Please enter your city.", focusId: "vcCity" };
+    }
+    if (selectedPayment() !== "cod" && !receipt) {
+      var pay = selectedPayment();
+      var focusId = pay === "jazzcash" ? "vcReceiptJc" : pay === "bank" ? "vcReceiptBank" : "vcReceiptEp";
+      return {
+        message: "Please upload your payment receipt before placing the order.",
+        focusId: focusId
+      };
+    }
+    return null;
+  }
+
+  function alertMissingField(result) {
+    if (!result) return;
+    window.alert(result.message);
+    showToast(result.message);
+    var field = result.focusId ? $("#" + result.focusId) : null;
+    if (field && typeof field.focus === "function") {
+      try {
+        field.scrollIntoView({ behavior: "smooth", block: "center" });
+      } catch (error) {}
+      try { field.focus(); } catch (error) {}
+    }
+  }
+
+  function resetPlaceOrderButtons() {
+    var submitButton = $("#vcPlaceOrder");
+    var whatsappButton = $("#vcWhatsAppBtn");
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = "Place Order";
+    }
+    if (mobilePlaceEl) {
+      mobilePlaceEl.disabled = false;
+      mobilePlaceEl.textContent = "Place Order";
+    }
+    if (whatsappButton) {
+      whatsappButton.disabled = false;
+      whatsappButton.textContent = "Confirm on WhatsApp";
+    }
   }
 
   function ensureBillingEmail(formData) {
@@ -1400,10 +1442,12 @@
   }
 
   function placeOrder() {
+    resetPlaceOrderButtons();
+
     var formData = readFormData();
     var validationError = validateForm(formData);
     if (validationError) {
-      showToast(validationError);
+      alertMissingField(validationError);
       return;
     }
 
@@ -1422,7 +1466,8 @@
     var receiptName = receipt && receipt.name ? receipt.name : "";
     var customerNote = buildCustomerNote(formData, payLabel, receiptName);
     var billingEmail = ensureBillingEmail(formData);
-    var provinceCode = normalizeProvince(formData.province);
+    var provinceCode = "PB";
+    var postcode = "00000";
 
     // Open during the user click so browsers do not block WhatsApp
     var waWindow = null;
@@ -1442,7 +1487,7 @@
         address_2: "",
         city: formData.city,
         state: provinceCode,
-        postcode: formData.postcode || "00000",
+        postcode: postcode,
         country: "PK",
         email: billingEmail,
         phone: formData.phone
@@ -1455,7 +1500,7 @@
         address_2: "",
         city: formData.city,
         state: provinceCode,
-        postcode: formData.postcode || "00000",
+        postcode: postcode,
         country: "PK",
         phone: formData.phone
       }
@@ -1710,14 +1755,12 @@
           '<div class="vc-checkout-section">',
             "<h3>Delivery details</h3>",
             '<div class="vc-checkout-grid">',
-              '<div class="vc-checkout-field"><label for="vcFn">First name</label><input id="vcFn" type="text" autocomplete="given-name" required></div>',
-              '<div class="vc-checkout-field"><label for="vcLn">Last name</label><input id="vcLn" type="text" autocomplete="family-name" required></div>',
-              '<div class="vc-checkout-field"><label for="vcPhone">WhatsApp / phone</label><input id="vcPhone" type="tel" autocomplete="tel" required></div>',
+              '<div class="vc-checkout-field"><label for="vcFn">First name *</label><input id="vcFn" type="text" autocomplete="given-name"></div>',
+              '<div class="vc-checkout-field"><label for="vcLn">Last name *</label><input id="vcLn" type="text" autocomplete="family-name"></div>',
+              '<div class="vc-checkout-field"><label for="vcPhone">WhatsApp / phone *</label><input id="vcPhone" type="tel" autocomplete="tel"></div>',
               '<div class="vc-checkout-field"><label for="vcEmail">Email (optional)</label><input id="vcEmail" type="email" autocomplete="email"></div>',
-              '<div class="vc-checkout-field is-full"><label for="vcAddress">Complete address</label><input id="vcAddress" type="text" autocomplete="street-address" required></div>',
-              '<div class="vc-checkout-field"><label for="vcCity">City</label><input id="vcCity" type="text" autocomplete="address-level2" required></div>',
-              '<div class="vc-checkout-field"><label for="vcProvince">Province</label><input id="vcProvince" type="text" autocomplete="address-level1" required></div>',
-              '<div class="vc-checkout-field"><label for="vcPostcode">Postcode</label><input id="vcPostcode" type="text" autocomplete="postal-code"></div>',
+              '<div class="vc-checkout-field is-full"><label for="vcAddress">Complete address *</label><input id="vcAddress" type="text" autocomplete="street-address"></div>',
+              '<div class="vc-checkout-field is-full"><label for="vcCity">City *</label><input id="vcCity" type="text" autocomplete="address-level2"></div>',
               '<div class="vc-checkout-field is-full"><label for="vcNote">Order notes (optional)</label><textarea id="vcNote" placeholder="Delivery instructions, gift message, etc."></textarea></div>',
             "</div>",
           "</div>",
