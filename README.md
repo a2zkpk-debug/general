@@ -8,6 +8,7 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 - `vibecano-hero-section.html` — Homepage hero content only (category circles + CTAs)
 - `vibecano-footer.html` — Site-wide footer (links, contact, copyright)
 - `vibecano-single-product-page.html` — Single product page with size/color swatches
+- `vibecano-women-collection.html` — Women collection grid with size picker, Store API add-to-cart, and Diners-style cart popup
 - `vibecano-cart-page.html` — Custom cart page with Store API integration
 - `vibecano-checkout-page.html` — Custom checkout page with WhatsApp order flow
 
@@ -45,6 +46,10 @@ WooCommerce restores the Store API cart from the `session` query parameter. The 
 ## Single product color swatches fix
 
 Color swatches were hidden because `renderColorOptions()` required `COLOR_VARIES`, which only became true when variation API data exposed parseable color values. The fix shows colors whenever the Color attribute has terms.
+
+## Women collection add-to-cart popup
+
+Selecting a size and clicking **Add to Cart** now resolves the WooCommerce variation ID through the Store API, adds the item without leaving the page, and opens a centered popup with the product image, **Continue Shopping**, and **View Cart**. A bottom **View All Products** button matches the competitor layout. Failed adds no longer redirect to `/cart/` (which previously looked like an empty cart).
 
 ## Usage
 
