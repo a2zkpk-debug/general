@@ -219,7 +219,11 @@
       display: block;
     }
 
-    /* Keep below label too, but overlay guarantees visibility in Elementor */
+    /* Avoid double labels on mobile — overlay stays readable if Elementor clips */
+    .vc-ex-label {
+      display: none;
+    }
+
     .vc-ex-nav { display: none; }
   }
 
