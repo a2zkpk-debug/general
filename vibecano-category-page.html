@@ -765,12 +765,12 @@
     }
   }
 
-  /* Mobile / tablet: image → name/price → sizes → ATC (never cover the image) */
+  /* Mobile: one full-width product card; hide size picker */
   @media (max-width: 800px) {
     .vc-cat-wrap { padding: 14px 14px 56px; }
     .vc-cat-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px 10px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 22px;
     }
     .vc-cat-bar { flex-direction: column; align-items: stretch; }
     .vc-cat-sort-wrap { margin-left: 0; width: 100%; justify-content: space-between; }
@@ -785,10 +785,11 @@
       order: 1;
       aspect-ratio: 3 / 4;
       width: 100%;
+      max-height: min(70vh, 520px);
     }
     .vc-cat-info {
       order: 2;
-      padding-top: 8px;
+      padding-top: 12px;
     }
     .vc-cat-panel {
       order: 3;
@@ -796,31 +797,27 @@
       transform: none !important;
       opacity: 1 !important;
       pointer-events: auto !important;
-      padding: 8px 0 0 !important;
+      padding: 12px 0 0 !important;
       background: transparent !important;
-      gap: 6px;
+      gap: 0;
       width: 100%;
     }
     .vc-cat-name {
-      font-size: 12px;
-      margin-bottom: 4px;
+      font-size: 15px;
+      margin-bottom: 6px;
     }
     .vc-cat-price {
-      font-size: 13px;
+      font-size: 17px;
     }
-    .vc-cat-size-label {
-      font-size: 10px;
-    }
-    .vc-cat-size {
-      min-width: 26px;
-      height: 26px;
-      padding: 0 6px;
-      font-size: 9px;
+    /* Hide size options above Add to Cart on mobile */
+    .vc-cat-size-label,
+    .vc-cat-sizes {
+      display: none !important;
     }
     .vc-cat-add {
-      padding: 10px 8px;
-      font-size: 9px;
-      letter-spacing: 0.08em;
+      padding: 14px 12px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
     }
     .vc-cat-card:hover .vc-cat-img--secondary,
     .vc-cat-card:focus-within .vc-cat-img--secondary {
@@ -830,7 +827,7 @@
 
   @media (max-width: 520px) {
     .vc-cat-modal-body { flex-direction: column; align-items: center; text-align: center; }
-    .vc-cat-grid { gap: 14px 8px; }
+    .vc-cat-grid { gap: 20px; }
   }
 
   /* Desktop with hover: size/ATC slide up over the image */
@@ -1868,16 +1865,23 @@
 
     var sizeInfo = getSizeInfo(product);
     var selectedSize = card.dataset.selectedSize || "";
+    var sizePickerHidden = window.matchMedia("(max-width: 800px)").matches;
 
+    // On mobile the size UI is hidden — auto-pick the first available size
     if (sizeInfo && sizeInfo.terms.length && !selectedSize) {
-      var sizes = card.querySelector(".vc-cat-sizes");
-      if (sizes) {
-        sizes.classList.remove("is-shake");
-        void sizes.offsetWidth;
-        sizes.classList.add("is-shake");
+      if (sizePickerHidden) {
+        selectedSize = sizeInfo.terms[0].name || sizeInfo.terms[0].slug || "";
+        card.dataset.selectedSize = selectedSize;
+      } else {
+        var sizes = card.querySelector(".vc-cat-sizes");
+        if (sizes) {
+          sizes.classList.remove("is-shake");
+          void sizes.offsetWidth;
+          sizes.classList.add("is-shake");
+        }
+        flashButton(button, "Select a size");
+        return;
       }
-      flashButton(button, "Select a size");
-      return;
     }
     addToCart(product, selectedSize, button);
   }
