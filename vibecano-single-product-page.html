@@ -1262,6 +1262,35 @@
     }
   }
 
+  function getProductIdFromPage() {
+    var fromQuery = getProductIdFromUrl();
+    if (fromQuery) return fromQuery;
+    try {
+      var bodyClass = (document.body && document.body.className) || "";
+      var match = bodyClass.match(/postid-(\d+)/);
+      if (match && match[1]) return match[1];
+    } catch (error) {}
+    return "";
+  }
+
+  function delay(ms) {
+    return new Promise(function (resolve) { setTimeout(resolve, ms); });
+  }
+
+  function fetchJson(url, options, retries) {
+    retries = retries == null ? 4 : retries;
+    options = options || { credentials: "same-origin" };
+    return fetch(url, options).then(function (response) {
+      if ((response.status === 429 || response.status === 503) && retries > 0) {
+        var wait = (5 - retries) * 900;
+        return delay(wait).then(function () {
+          return fetchJson(url, options, retries - 1);
+        });
+      }
+      return checkResponse(response);
+    });
+  }
+
   function urlSaysCustomize() {
     try {
       var params = new URLSearchParams(window.location.search);
@@ -1285,57 +1314,82 @@
   }
 
   function loadProduct() {
-    var id = getProductIdFromUrl();
+    var id = getProductIdFromPage();
     var slug = getProductSlug();
-    var url = id ? API + "/products/" + encodeURIComponent(id) : API + "/products?slug=" + encodeURIComponent(slug);
+    var url = id
+      ? API + "/products/" + encodeURIComponent(id)
+      : API + "/products?slug=" + encodeURIComponent(slug);
 
     if (!id && !slug) {
       showLoadError("Product not found");
       return;
     }
 
-    fetch(url, { credentials: "same-origin" })
-      .then(checkResponse)
+    var typeEl = document.getElementById("vcSpType");
+    if (typeEl) typeEl.textContent = "Loading product";
+
+    fetchJson(url)
       .then(function (data) {
         PRODUCT = id ? data : (Array.isArray(data) ? data[0] : null);
         if (!PRODUCT || !PRODUCT.id) throw new Error("Product not found");
         IS_CUSTOM = isCustomProduct(PRODUCT);
-        return loadVariations(PRODUCT).then(function () {
-          renderProduct(PRODUCT);
-        });
+        loadVariations(PRODUCT);
+        renderProduct(PRODUCT);
       })
-      .catch(function () {
-        showLoadError("Product could not be loaded");
+      .catch(function (error) {
+        var msg = (error && error.message) || "";
+        if (/429|rate|too many/i.test(msg)) {
+          showLoadError("Server busy — refresh in a moment");
+        } else {
+          showLoadError("Product could not be loaded");
+        }
       });
   }
 
+  // Use variation summaries already on the parent product.
+  // Do NOT fetch every variation up-front (that triggers Store API 429).
   function loadVariations(product) {
     var variations = Array.isArray(product.variations) ? product.variations : [];
-    if (!variations.length) {
-      VARIATIONS = [];
-      VARIATION_BY_KEY = {};
-      HAS_COLOR_VARIATIONS = productUsesColorVariations();
-      selectedVariation = null;
-      return Promise.resolve();
-    }
-
-    return Promise.all(variations.map(function (variation) {
-      return fetch(API + "/products/" + encodeURIComponent(variation.id), { credentials: "same-origin" })
-        .then(checkResponse)
-        .then(function (details) {
-          details.__attributes = details.attributes || variation.attributes || [];
-          details.__parentVariation = variation;
-          return details;
-        })
-        .catch(function () {
-          variation.__attributes = variation.attributes || [];
-          return variation;
-        });
-    })).then(function (details) {
-      VARIATIONS = details;
-      buildVariationMaps();
-      selectedVariation = null;
+    VARIATIONS = variations.map(function (variation) {
+      return {
+        id: variation.id,
+        attributes: variation.attributes || [],
+        __attributes: variation.attributes || [],
+        permalink: variation.permalink,
+        name: variation.name,
+        variation: variation.variation
+      };
     });
+    buildVariationMaps();
+    selectedVariation = null;
+  }
+
+  function ensureVariationDetails(variation) {
+    if (!variation || !variation.id) return Promise.resolve(variation);
+    if (variation.prices || (variation.images && variation.images.length)) {
+      return Promise.resolve(variation);
+    }
+    if (variation.__loading) return variation.__loading;
+
+    variation.__loading = fetchJson(API + "/products/" + encodeURIComponent(variation.id))
+      .then(function (details) {
+        variation.prices = details.prices;
+        variation.images = details.images;
+        variation.price_html = details.price_html;
+        variation.name = details.name || variation.name;
+        if (details.attributes && details.attributes.length) {
+          variation.__attributes = details.attributes;
+          variation.attributes = details.attributes;
+        }
+        delete variation.__loading;
+        return variation;
+      })
+      .catch(function () {
+        delete variation.__loading;
+        return variation;
+      });
+
+    return variation.__loading;
   }
 
   function buildVariationMaps() {
@@ -1362,6 +1416,7 @@
   }
 
   function checkResponse(response) {
+    if (response.status === 429) throw new Error("429 Too many requests");
     if (!response.ok) throw new Error("Request failed: " + response.status);
     return response.json();
   }
@@ -1630,6 +1685,13 @@
     selectVariationForCurrentOptions();
     renderPrice(PRODUCT);
     renderGallery(PRODUCT);
+
+    if (selectedVariation && selectedVariation.id && !(selectedVariation.prices || (selectedVariation.images && selectedVariation.images.length))) {
+      ensureVariationDetails(selectedVariation).then(function () {
+        renderPrice(PRODUCT);
+        renderGallery(PRODUCT);
+      });
+    }
   }
 
   function selectVariationForCurrentOptions() {
@@ -1687,7 +1749,7 @@
       var taxonomy = String(attribute.taxonomy || "");
       return pattern.test(name) || pattern.test(taxonomy);
     })[0];
-    if (!match || match.value == null) return "";
+    if (!match || match.value == null || match.value === "") return "";
     return String(match.value).trim();
   }
 
