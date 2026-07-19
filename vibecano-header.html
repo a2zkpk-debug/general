@@ -794,7 +794,8 @@
     });
 
     if (!children.length) {
-      container.innerHTML = '<div class="ro-dropdown-empty">View all ' + escapeHtml(parent.name || "") + "</div>";
+      container.innerHTML =
+        '<a href="' + escapeAttr(getCategoryUrl(parent)) + '">View all ' + escapeHtml(parent.name || "") + "</a>";
       return;
     }
 
