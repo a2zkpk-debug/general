@@ -96,207 +96,299 @@
     padding: 18px 22px 72px;
   }
 
-  /* Breadcrumb */
+  /* Breadcrumb: Home > Current category only */
   .vc-cat-crumb {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: baseline;
     gap: 8px;
     margin-bottom: 18px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--muted);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-size: 15px;
+    color: #9a9a9a;
   }
+  .vc-cat-crumb a { color: #9a9a9a; }
   .vc-cat-crumb a:hover { color: var(--ink); }
-  .vc-cat-crumb .sep { opacity: 0.45; }
+  .vc-cat-crumb .sep { opacity: 0.7; }
+  .vc-cat-crumb-current {
+    color: var(--ink);
+    font-weight: 800;
+  }
 
-  /* Collection header (Diners-clean) */
-  .vc-cat-head {
+  /* Top bar: Filter + Items  ……  SORT BY */
+  .vc-cat-bar {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 28px;
-    padding-bottom: 18px;
-    border-bottom: 1px solid var(--line);
-  }
-  .vc-cat-title {
-    margin: 0;
-    font-family: Syne, Manrope, sans-serif;
-    font-size: clamp(28px, 4vw, 42px);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
-    text-transform: uppercase;
-  }
-  .vc-cat-desc {
-    margin: 10px 0 0;
-    max-width: 560px;
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.6;
-  }
-  .vc-cat-results {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink-2);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  /* Main category row */
-  .vc-cat-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
     margin-bottom: 22px;
   }
-  .vc-cat-pill {
+  .vc-cat-bar-left { min-width: 0; }
+  .vc-cat-filter-btn {
     display: inline-flex;
     align-items: center;
-    min-height: 36px;
-    padding: 0 14px;
-    border: 1px solid var(--line);
-    background: #fff;
-    color: var(--muted);
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    transition: background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
-  }
-  .vc-cat-pill:hover,
-  .vc-cat-pill.is-active {
-    border-color: var(--ink);
-    background: var(--ink);
-    color: #fff;
-  }
-
-  /* Layout */
-  .vc-cat-layout {
-    display: grid;
-    grid-template-columns: 240px minmax(0, 1fr);
-    gap: 28px;
-    align-items: start;
-  }
-
-  .vc-cat-filters {
-    position: sticky;
-    top: 18px;
-  }
-  .vc-cat-filter-title {
-    margin: 0 0 16px;
-    font-family: Syne, Manrope, sans-serif;
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  .vc-cat-filter-block {
-    padding: 16px 0;
-    border-top: 1px solid var(--line);
-  }
-  .vc-cat-filter-block h3 {
-    margin: 0 0 12px;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-  .vc-cat-clear {
+    gap: 10px;
+    padding: 0;
     border: 0;
-    background: none;
-    color: var(--muted);
+    background: transparent;
+    color: var(--ink);
     cursor: pointer;
-    font-size: 11px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .vc-cat-filter-btn svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+  }
+  .vc-cat-filter-btn.is-active { font-weight: 800; }
+  .vc-cat-items {
+    margin: 8px 0 0;
+    color: var(--ink);
+    font-size: 14px;
+  }
+  .vc-cat-items strong { font-weight: 800; }
+
+  .vc-cat-sort-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+  }
+  .vc-cat-sort-label {
+    font-size: 13px;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .vc-cat-sort-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    min-width: 150px;
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid #d5d5d5;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .vc-cat-sort-trigger svg {
+    width: 12px;
+    height: 12px;
+    flex: 0 0 auto;
+    opacity: 0.7;
+  }
+  .vc-cat-sort-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    z-index: 40;
+    display: none;
+    min-width: 220px;
+    padding: 8px 0;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.35);
+  }
+  .vc-cat-sort-wrap.is-open .vc-cat-sort-menu { display: block; }
+  .vc-cat-sort-option {
+    display: block;
+    width: 100%;
+    padding: 10px 16px;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+  }
+  .vc-cat-sort-option:hover { background: #f7f7f7; }
+  .vc-cat-sort-option.is-active {
+    font-weight: 700;
     text-decoration: underline;
     text-underline-offset: 3px;
   }
-  .vc-cat-clear:hover { color: var(--ink); }
 
-  .vc-cat-subcats {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  /* Layout: filters hidden until Filter is clicked */
+  .vc-cat-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
   }
-  .vc-cat-subcat-btn {
+  .vc-cat-layout.is-filtering {
+    grid-template-columns: 280px minmax(0, 1fr);
+  }
+
+  .vc-cat-filters {
+    display: none;
+    position: sticky;
+    top: 18px;
+    max-height: calc(100vh - 36px);
+    overflow: auto;
+    padding-right: 8px;
+  }
+  .vc-cat-layout.is-filtering .vc-cat-filters { display: block; }
+
+  .vc-cat-filter-title {
+    margin: 0 0 8px;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .vc-cat-acc {
+    border-bottom: 1px solid #e8e8e8;
+  }
+  .vc-cat-acc-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
     width: 100%;
-    padding: 9px 0;
+    padding: 16px 0;
     border: 0;
     background: transparent;
-    color: var(--ink-2);
+    color: var(--ink);
     cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: left;
+  }
+  .vc-cat-acc-head span.symbol {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .vc-cat-acc-body {
+    display: none;
+    padding: 0 0 16px;
+  }
+  .vc-cat-acc.is-open .vc-cat-acc-body { display: block; }
+
+  .vc-cat-dual-range {
+    position: relative;
+    height: 28px;
+    margin: 4px 0 14px;
+  }
+  .vc-cat-dual-range input[type="range"] {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 8px;
+    margin: 0;
+    pointer-events: none;
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+  }
+  .vc-cat-dual-range input[type="range"]::-webkit-slider-runnable-track {
+    height: 4px;
+    background: #111;
+  }
+  .vc-cat-dual-range input[type="range"]::-moz-range-track {
+    height: 4px;
+    background: #111;
+  }
+  .vc-cat-dual-range input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    pointer-events: auto;
+    width: 16px;
+    height: 16px;
+    margin-top: -6px;
+    border: 2px solid #111;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+  }
+  .vc-cat-dual-range input[type="range"]::-moz-range-thumb {
+    pointer-events: auto;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #111;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+  }
+
+  .vc-cat-price-inputs {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    align-items: center;
+  }
+  .vc-cat-price-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 10px;
+    border: 1px solid #d5d5d5;
+    background: #fff;
+  }
+  .vc-cat-price-box span {
+    color: var(--muted);
     font-size: 13px;
     font-weight: 600;
-    text-align: left;
-    transition: color 0.2s var(--ease);
+    white-space: nowrap;
   }
-  .vc-cat-subcat-btn:hover,
-  .vc-cat-subcat-btn.is-active { color: var(--ink); }
-  .vc-cat-subcat-btn.is-active { font-weight: 800; }
-  .vc-cat-subcat-btn em {
-    font-style: normal;
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 700;
-  }
-
-  .vc-cat-price-fields {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .vc-cat-price-fields label {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .vc-cat-price-fields input {
+  .vc-cat-price-box input {
     width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--line);
-    background: #fff;
+    border: 0;
+    outline: none;
+    background: transparent;
     color: var(--ink);
     font-size: 13px;
-    font-weight: 700;
-    outline: none;
+    font-weight: 600;
   }
-  .vc-cat-price-fields input:focus { border-color: var(--ink); }
+  .vc-cat-price-to {
+    color: var(--muted);
+    font-size: 13px;
+  }
 
-  .vc-cat-range-wrap { margin-bottom: 12px; }
-  .vc-cat-range-wrap input[type="range"] {
-    width: 100%;
-    accent-color: var(--ink);
+  .vc-cat-check-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .vc-cat-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .vc-cat-check input {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: #111;
     cursor: pointer;
   }
-  .vc-cat-range-labels {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--muted);
+  .vc-cat-check em {
+    font-style: normal;
+    font-weight: 500;
+    color: var(--ink);
   }
-
+  .vc-cat-no-subcats {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+  }
   .vc-cat-filter-actions {
     display: grid;
     gap: 8px;
+    margin-top: 12px;
   }
   .vc-cat-apply-btn,
   .vc-cat-clear-btn {
@@ -307,67 +399,12 @@
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    transition: background 0.2s var(--ease), color 0.2s var(--ease);
   }
   .vc-cat-apply-btn { background: var(--ink); color: #fff; }
-  .vc-cat-apply-btn:hover { background: #333; }
   .vc-cat-clear-btn { background: #fff; color: var(--ink); }
-  .vc-cat-clear-btn:hover { background: var(--soft); }
-
-  .vc-cat-filter-toggle {
-    display: none;
-    width: 100%;
-    min-height: 44px;
-    margin-bottom: 14px;
-    border: 1px solid var(--ink);
-    background: #fff;
-    color: var(--ink);
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-  .vc-cat-no-subcats {
-    margin: 0;
-    color: var(--muted);
-    font-size: 13px;
-    font-weight: 600;
-  }
 
   .vc-cat-main { min-width: 0; }
-
-  .vc-cat-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 18px;
-  }
-  .vc-cat-count {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--ink-2);
-  }
-  .vc-cat-count em {
-    font-style: normal;
-    color: var(--ink);
-  }
-  .vc-cat-sort {
-    min-width: 180px;
-    padding: 10px 36px 10px 12px;
-    border: 1px solid var(--line);
-    background: #fff
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%237a7a82' d='M1.41.59 6 5.17 10.59.59 12 2l-6 6-6-6z'/></svg>")
-      no-repeat right 12px center;
-    color: var(--ink);
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
-    font-size: 13px;
-    font-weight: 700;
-  }
+  .vc-cat-desc { display: none; }
 
   /* Product grid — Diners fashion cards */
   .vc-cat-grid {
@@ -691,16 +728,20 @@
     .vc-cat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
   @media (max-width: 960px) {
-    .vc-cat-layout { grid-template-columns: 1fr; }
-    .vc-cat-filters { position: static; display: none; }
-    .vc-cat-filters.is-open { display: block; }
-    .vc-cat-filter-toggle { display: inline-flex; align-items: center; justify-content: center; }
+    .vc-cat-layout.is-filtering { grid-template-columns: 1fr; }
+    .vc-cat-filters {
+      position: static;
+      max-height: none;
+      padding-right: 0;
+    }
   }
   @media (max-width: 800px) {
     .vc-cat-wrap { padding: 14px 16px 56px; }
     .vc-cat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-    .vc-cat-toolbar { flex-direction: column; align-items: stretch; }
-    .vc-cat-sort { width: 100%; }
+    .vc-cat-bar { flex-direction: column; align-items: stretch; }
+    .vc-cat-sort-wrap { margin-left: 0; width: 100%; justify-content: space-between; }
+    .vc-cat-sort-trigger { flex: 1; }
+    .vc-cat-sort-menu { left: auto; right: 0; width: min(260px, 100%); }
   }
   @media (max-width: 520px) {
     .vc-cat-modal-body { flex-direction: column; align-items: center; text-align: center; }
@@ -722,73 +763,132 @@
   <div class="vc-cat-wrap">
     <nav class="vc-cat-crumb" id="vcCatCrumb" aria-label="Breadcrumb">
       <a href="/">Home</a>
-      <span class="sep">/</span>
-      <a href="/shop/">Shop</a>
-      <span class="sep">/</span>
-      <span id="vcCatCrumbCurrent">Category</span>
+      <span class="sep">&gt;</span>
+      <span class="vc-cat-crumb-current" id="vcCatCrumbCurrent">Category</span>
     </nav>
 
-    <header class="vc-cat-head">
-      <div>
-        <h1 class="vc-cat-title" id="vcCatTitle">Loading...</h1>
-        <p class="vc-cat-desc" id="vcCatDesc"></p>
+    <div class="vc-cat-bar">
+      <div class="vc-cat-bar-left">
+        <button type="button" class="vc-cat-filter-btn" id="vcCatFilterToggle" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 5h16l-6 7v5l-4 2v-7L4 5z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+          </svg>
+          Filter
+        </button>
+        <p class="vc-cat-items" id="vcCatItemsLabel"><strong>Items :</strong> 0</p>
       </div>
-      <div class="vc-cat-results" id="vcCatProductCount">0 results</div>
-    </header>
 
-    <div class="vc-cat-pills" id="vcCatPills"></div>
+      <div class="vc-cat-sort-wrap" id="vcCatSortWrap">
+        <span class="vc-cat-sort-label">Sort By</span>
+        <button type="button" class="vc-cat-sort-trigger" id="vcCatSortTrigger" aria-haspopup="listbox" aria-expanded="false">
+          <span id="vcCatSortLabel">Featured</span>
+          <svg viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5 6 6.5 11 1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+        <div class="vc-cat-sort-menu" id="vcCatSortMenu" role="listbox" hidden>
+          <button type="button" class="vc-cat-sort-option is-active" data-sort="featured">Featured</button>
+          <button type="button" class="vc-cat-sort-option" data-sort="relevant">Most relevant</button>
+          <button type="button" class="vc-cat-sort-option" data-sort="best-selling">Best selling</button>
+          <button type="button" class="vc-cat-sort-option" data-sort="title-asc">Alphabetically, A-Z</button>
+          <button type="button" class="vc-cat-sort-option" data-sort="title-desc">Alphabetically, Z-A</button>
+          <button type="button" class="vc-cat-sort-option" data-sort="price-asc">Price, low to high</button>
+          <button type="button" class="vc-cat-sort-option" data-sort="price-desc">Price, high to low</button>
+          <button type="button" class="vc-cat-sort-option" data-sort="date-asc">Date, old to new</button>
+          <button type="button" class="vc-cat-sort-option" data-sort="date-desc">Date, new to old</button>
+        </div>
+      </div>
+    </div>
 
-    <button type="button" class="vc-cat-filter-toggle" id="vcCatFilterToggle">Show filters</button>
+    <!-- Hidden title used for document.title / a11y -->
+    <h1 class="vc-cat-title" id="vcCatTitle" hidden>Loading...</h1>
+    <p class="vc-cat-desc" id="vcCatDesc" hidden></p>
 
-    <div class="vc-cat-layout">
+    <div class="vc-cat-layout" id="vcCatLayout">
       <aside class="vc-cat-filters" id="vcCatFilters" aria-label="Product filters">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px;">
-          <h2 class="vc-cat-filter-title" style="margin:0;">Refined By</h2>
-          <button type="button" class="vc-cat-clear" id="vcCatClearTop">Clear all</button>
-        </div>
+        <h2 class="vc-cat-filter-title">Filter</h2>
 
-        <div class="vc-cat-filter-block">
-          <h3>Category</h3>
-          <div class="vc-cat-subcats" id="vcCatSubcats"></div>
-        </div>
-
-        <div class="vc-cat-filter-block">
-          <h3>Price</h3>
-          <div class="vc-cat-price-fields">
-            <label>
-              Min (Rs)
-              <input type="number" id="vcCatMinPrice" min="0" step="100" placeholder="0">
-            </label>
-            <label>
-              Max (Rs)
-              <input type="number" id="vcCatMaxPrice" min="0" step="100" placeholder="50000">
-            </label>
-          </div>
-          <div class="vc-cat-range-wrap">
-            <input type="range" id="vcCatMaxRange" min="0" max="50000" step="500" value="50000">
-            <div class="vc-cat-range-labels">
-              <span>Rs 0</span>
-              <span id="vcCatMaxRangeLabel">Rs 50,000</span>
+        <div class="vc-cat-acc is-open" data-acc>
+          <button type="button" class="vc-cat-acc-head" data-acc-toggle>
+            Price <span class="symbol" data-acc-symbol>−</span>
+          </button>
+          <div class="vc-cat-acc-body">
+            <div class="vc-cat-dual-range">
+              <input type="range" id="vcCatMinRange" min="0" max="50000" step="100" value="0">
+              <input type="range" id="vcCatMaxRange" min="0" max="50000" step="100" value="50000">
+            </div>
+            <div class="vc-cat-price-inputs">
+              <label class="vc-cat-price-box">
+                <span>Rs</span>
+                <input type="number" id="vcCatMinPrice" min="0" step="100" value="0">
+              </label>
+              <span class="vc-cat-price-to">to</span>
+              <label class="vc-cat-price-box">
+                <span>Rs</span>
+                <input type="number" id="vcCatMaxPrice" min="0" step="100" value="50000">
+              </label>
+            </div>
+            <div class="vc-cat-filter-actions">
+              <button type="button" class="vc-cat-apply-btn" id="vcCatApplyFilters">Apply</button>
+              <button type="button" class="vc-cat-clear-btn" id="vcCatClearFilters">Clear</button>
             </div>
           </div>
-          <div class="vc-cat-filter-actions">
-            <button type="button" class="vc-cat-apply-btn" id="vcCatApplyFilters">Apply</button>
-            <button type="button" class="vc-cat-clear-btn" id="vcCatClearFilters">Clear filters</button>
+        </div>
+
+        <div class="vc-cat-acc is-open" data-acc>
+          <button type="button" class="vc-cat-acc-head" data-acc-toggle>
+            Category <span class="symbol" data-acc-symbol>−</span>
+          </button>
+          <div class="vc-cat-acc-body">
+            <div class="vc-cat-check-list" id="vcCatSubcats"></div>
+          </div>
+        </div>
+
+        <div class="vc-cat-acc" data-acc>
+          <button type="button" class="vc-cat-acc-head" data-acc-toggle>
+            Color <span class="symbol" data-acc-symbol>+</span>
+          </button>
+          <div class="vc-cat-acc-body">
+            <div class="vc-cat-check-list" id="vcCatColors">
+              <p class="vc-cat-no-subcats">Color options load from your products when available.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="vc-cat-acc" data-acc>
+          <button type="button" class="vc-cat-acc-head" data-acc-toggle>
+            Size <span class="symbol" data-acc-symbol>+</span>
+          </button>
+          <div class="vc-cat-acc-body">
+            <div class="vc-cat-check-list" id="vcCatSizes">
+              <p class="vc-cat-no-subcats">Size options load from your products when available.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="vc-cat-acc" data-acc>
+          <button type="button" class="vc-cat-acc-head" data-acc-toggle>
+            Percentage <span class="symbol" data-acc-symbol>+</span>
+          </button>
+          <div class="vc-cat-acc-body">
+            <div class="vc-cat-check-list" id="vcCatSaleOnly">
+              <label class="vc-cat-check"><input type="checkbox" id="vcCatOnSale"> <span>On Sale</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="vc-cat-acc" data-acc>
+          <button type="button" class="vc-cat-acc-head" data-acc-toggle>
+            Product Type <span class="symbol" data-acc-symbol>+</span>
+          </button>
+          <div class="vc-cat-acc-body">
+            <div class="vc-cat-check-list" id="vcCatTypes">
+              <label class="vc-cat-check"><input type="checkbox" name="vcCatType" value="simple"> <span>Simple</span></label>
+              <label class="vc-cat-check"><input type="checkbox" name="vcCatType" value="variable"> <span>Variable</span></label>
+            </div>
           </div>
         </div>
       </aside>
 
       <div class="vc-cat-main">
-        <div class="vc-cat-toolbar">
-          <div class="vc-cat-count" id="vcCatCountLabel">Showing <em>0</em> products</div>
-          <select class="vc-cat-sort" id="vcCatSort" aria-label="Sort products">
-            <option value="popularity">Most Popular</option>
-            <option value="date">Newest</option>
-            <option value="price">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-          </select>
-        </div>
-
         <div class="vc-cat-grid" id="vcCatGrid" aria-live="polite"></div>
 
         <div class="vc-cat-loadmore" id="vcCatLoadMoreWrap" hidden>
@@ -827,13 +927,6 @@
     cartTokenKey: "vcWcCartToken",
     perPage: 12,
     addTimeoutMs: 12000,
-    mainCategories: [
-      { slug: "men", label: "Men" },
-      { slug: "women", label: "Women" },
-      { slug: "kids", label: "Kids" },
-      { slug: "under999", label: "Under999" },
-      { slug: "featured", label: "Featured" }
-    ],
     slugAliases: {
       custom: "customize",
       "under-999": "under999",
@@ -844,9 +937,22 @@
     endpoints: {
       categories: "/wp-json/wc/store/v1/products/categories",
       products: "/wp-json/wc/store/v1/products",
+      attributes: "/wp-json/wc/store/v1/products/attributes",
       cart: "/wp-json/wc/store/v1/cart",
       addItem: "/wp-json/wc/store/v1/cart/add-item"
     }
+  };
+
+  var SORT_LABELS = {
+    featured: "Featured",
+    relevant: "Most relevant",
+    "best-selling": "Best selling",
+    "title-asc": "Alphabetically, A-Z",
+    "title-desc": "Alphabetically, Z-A",
+    "price-asc": "Price, low to high",
+    "price-desc": "Price, high to low",
+    "date-asc": "Date, old to new",
+    "date-desc": "Date, new to old"
   };
 
   var state = {
@@ -854,10 +960,16 @@
     categoryId: 0,
     parentCategoryId: 0,
     activeCategoryId: 0,
-    subcategoryId: 0,
-    minPrice: null,
-    maxPrice: null,
-    sort: "popularity",
+    selectedSubcats: [],
+    minPrice: 0,
+    maxPrice: 50000,
+    sort: "featured",
+    onSaleOnly: false,
+    types: [],
+    colorSlugs: [],
+    sizeSlugs: [],
+    colorAttribute: "",
+    sizeAttribute: "",
     page: 1,
     totalPages: 1,
     totalProducts: 0,
@@ -871,21 +983,25 @@
   var crumbCurrent = document.getElementById("vcCatCrumbCurrent");
   var catTitle = document.getElementById("vcCatTitle");
   var catDesc = document.getElementById("vcCatDesc");
-  var catProductCount = document.getElementById("vcCatProductCount");
-  var catCountLabel = document.getElementById("vcCatCountLabel");
-  var pillsEl = document.getElementById("vcCatPills");
+  var itemsLabelEl = document.getElementById("vcCatItemsLabel");
+  var layoutEl = document.getElementById("vcCatLayout");
   var subcatsEl = document.getElementById("vcCatSubcats");
+  var colorsEl = document.getElementById("vcCatColors");
+  var sizesEl = document.getElementById("vcCatSizes");
   var filtersEl = document.getElementById("vcCatFilters");
   var filterToggleEl = document.getElementById("vcCatFilterToggle");
   var minPriceEl = document.getElementById("vcCatMinPrice");
   var maxPriceEl = document.getElementById("vcCatMaxPrice");
+  var minRangeEl = document.getElementById("vcCatMinRange");
   var maxRangeEl = document.getElementById("vcCatMaxRange");
-  var maxRangeLabelEl = document.getElementById("vcCatMaxRangeLabel");
   var applyFiltersBtn = document.getElementById("vcCatApplyFilters");
   var clearFiltersBtn = document.getElementById("vcCatClearFilters");
-  var clearTopBtn = document.getElementById("vcCatClearTop");
+  var onSaleEl = document.getElementById("vcCatOnSale");
   var gridEl = document.getElementById("vcCatGrid");
-  var sortEl = document.getElementById("vcCatSort");
+  var sortWrapEl = document.getElementById("vcCatSortWrap");
+  var sortTriggerEl = document.getElementById("vcCatSortTrigger");
+  var sortMenuEl = document.getElementById("vcCatSortMenu");
+  var sortLabelEl = document.getElementById("vcCatSortLabel");
   var loadMoreWrap = document.getElementById("vcCatLoadMoreWrap");
   var loadMoreBtn = document.getElementById("vcCatLoadMore");
   var toastEl = document.getElementById("vcCatToast");
@@ -898,6 +1014,8 @@
   if (toastCartEl) toastCartEl.setAttribute("href", CONFIG.cartUrl);
 
   setupFilterControls();
+  setupSortMenu();
+  setupAccordions();
   gridEl.addEventListener("click", handleGridClick);
 
   if (toastEl) {
@@ -906,13 +1024,13 @@
     });
   }
   document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") hideToast();
+    if (event.key === "Escape") {
+      hideToast();
+      closeSortMenu();
+    }
   });
-
-  sortEl.addEventListener("change", function () {
-    state.sort = sortEl.value;
-    state.page = 1;
-    loadProducts(false);
+  document.addEventListener("click", function (event) {
+    if (sortWrapEl && !sortWrapEl.contains(event.target)) closeSortMenu();
   });
 
   if (loadMoreBtn) {
@@ -925,99 +1043,189 @@
 
   init();
 
-  function setupFilterControls() {
-    if (maxRangeEl) {
-      maxRangeEl.max = String(CONFIG.priceMaxDefault);
-      maxRangeEl.value = String(CONFIG.priceMaxDefault);
-      updateMaxRangeLabel(CONFIG.priceMaxDefault);
-      maxRangeEl.addEventListener("input", function () {
-        var value = Number(maxRangeEl.value);
-        if (maxPriceEl) maxPriceEl.value = String(value);
-        updateMaxRangeLabel(value);
+  function setupAccordions() {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-acc-toggle]"), function (btn) {
+      btn.addEventListener("click", function () {
+        var acc = btn.closest("[data-acc]");
+        if (!acc) return;
+        var open = acc.classList.toggle("is-open");
+        var symbol = acc.querySelector("[data-acc-symbol]");
+        if (symbol) symbol.textContent = open ? "−" : "+";
       });
+    });
+  }
+
+  function setupSortMenu() {
+    if (!sortTriggerEl || !sortMenuEl || !sortWrapEl) return;
+
+    sortTriggerEl.addEventListener("click", function (event) {
+      event.stopPropagation();
+      var open = !sortWrapEl.classList.contains("is-open");
+      sortWrapEl.classList.toggle("is-open", open);
+      sortMenuEl.hidden = !open;
+      sortTriggerEl.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    Array.prototype.forEach.call(sortMenuEl.querySelectorAll("[data-sort]"), function (btn) {
+      btn.addEventListener("click", function () {
+        var value = btn.getAttribute("data-sort") || "featured";
+        state.sort = value;
+        if (sortLabelEl) sortLabelEl.textContent = SORT_LABELS[value] || "Featured";
+        Array.prototype.forEach.call(sortMenuEl.querySelectorAll("[data-sort]"), function (item) {
+          item.classList.toggle("is-active", item === btn);
+        });
+        closeSortMenu();
+        state.page = 1;
+        loadProducts(false);
+      });
+    });
+  }
+
+  function closeSortMenu() {
+    if (!sortWrapEl || !sortMenuEl || !sortTriggerEl) return;
+    sortWrapEl.classList.remove("is-open");
+    sortMenuEl.hidden = true;
+    sortTriggerEl.setAttribute("aria-expanded", "false");
+  }
+
+  function setupFilterControls() {
+    syncPriceControls(0, CONFIG.priceMaxDefault);
+
+    function onRangeInput() {
+      var minVal = Number(minRangeEl.value);
+      var maxVal = Number(maxRangeEl.value);
+      if (minVal > maxVal) {
+        if (this === minRangeEl) maxVal = minVal;
+        else minVal = maxVal;
+      }
+      syncPriceControls(minVal, maxVal);
     }
 
+    if (minRangeEl) minRangeEl.addEventListener("input", onRangeInput);
+    if (maxRangeEl) maxRangeEl.addEventListener("input", onRangeInput);
+
+    if (minPriceEl) {
+      minPriceEl.addEventListener("change", function () {
+        var minVal = Number(minPriceEl.value) || 0;
+        var maxVal = Number(maxPriceEl.value) || CONFIG.priceMaxDefault;
+        if (minVal > maxVal) minVal = maxVal;
+        syncPriceControls(minVal, maxVal);
+      });
+    }
     if (maxPriceEl) {
-      maxPriceEl.placeholder = String(CONFIG.priceMaxDefault);
-      maxPriceEl.addEventListener("input", function () {
-        if (!maxRangeEl) return;
-        var value = Number(maxPriceEl.value);
-        if (Number.isFinite(value)) {
-          maxRangeEl.value = String(Math.min(value, CONFIG.priceMaxDefault));
-          updateMaxRangeLabel(Number(maxRangeEl.value));
-        }
+      maxPriceEl.addEventListener("change", function () {
+        var minVal = Number(minPriceEl.value) || 0;
+        var maxVal = Number(maxPriceEl.value) || CONFIG.priceMaxDefault;
+        if (maxVal < minVal) maxVal = minVal;
+        syncPriceControls(minVal, maxVal);
       });
     }
 
     if (applyFiltersBtn) {
       applyFiltersBtn.addEventListener("click", function () {
-        applyPriceFilters();
+        applyFiltersFromUi();
         state.page = 1;
         loadProducts(false);
-        closeMobileFilters();
       });
     }
 
-    function onClear() {
-      clearAllFilters();
-      state.page = 1;
-      loadProducts(false);
+    if (clearFiltersBtn) {
+      clearFiltersBtn.addEventListener("click", function () {
+        clearAllFilters();
+        state.page = 1;
+        loadProducts(false);
+      });
     }
-    if (clearFiltersBtn) clearFiltersBtn.addEventListener("click", onClear);
-    if (clearTopBtn) clearTopBtn.addEventListener("click", onClear);
 
-    if (filterToggleEl && filtersEl) {
+    if (filterToggleEl && layoutEl) {
       filterToggleEl.addEventListener("click", function () {
-        var isOpen = filtersEl.classList.toggle("is-open");
-        filterToggleEl.textContent = isOpen ? "Hide filters" : "Show filters";
+        var open = layoutEl.classList.toggle("is-filtering");
+        filterToggleEl.classList.toggle("is-active", open);
+        filterToggleEl.setAttribute("aria-expanded", open ? "true" : "false");
       });
     }
+
+    if (onSaleEl) {
+      onSaleEl.addEventListener("change", function () {
+        state.onSaleOnly = !!onSaleEl.checked;
+        state.page = 1;
+        loadProducts(false);
+      });
+    }
+
+    Array.prototype.forEach.call(document.querySelectorAll('input[name="vcCatType"]'), function (input) {
+      input.addEventListener("change", function () {
+        state.types = Array.prototype.map.call(
+          document.querySelectorAll('input[name="vcCatType"]:checked'),
+          function (el) { return el.value; }
+        );
+        state.page = 1;
+        loadProducts(false);
+      });
+    });
   }
 
-  function applyPriceFilters() {
-    var minVal = minPriceEl ? Number(minPriceEl.value) : NaN;
-    var maxVal = maxPriceEl ? Number(maxPriceEl.value) : NaN;
-    state.minPrice = Number.isFinite(minVal) && minVal > 0 ? minVal : null;
-    state.maxPrice = Number.isFinite(maxVal) && maxVal > 0 ? maxVal : null;
-    if (state.minPrice !== null && state.maxPrice !== null && state.minPrice > state.maxPrice) {
-      var swap = state.minPrice;
-      state.minPrice = state.maxPrice;
-      state.maxPrice = swap;
-      if (minPriceEl) minPriceEl.value = String(state.minPrice);
-      if (maxPriceEl) maxPriceEl.value = String(state.maxPrice);
+  function syncPriceControls(minVal, maxVal) {
+    minVal = Math.max(0, Number(minVal) || 0);
+    maxVal = Math.min(CONFIG.priceMaxDefault, Number(maxVal) || CONFIG.priceMaxDefault);
+    if (minRangeEl) {
+      minRangeEl.max = String(CONFIG.priceMaxDefault);
+      minRangeEl.value = String(minVal);
     }
+    if (maxRangeEl) {
+      maxRangeEl.max = String(CONFIG.priceMaxDefault);
+      maxRangeEl.value = String(maxVal);
+    }
+    if (minPriceEl) minPriceEl.value = String(minVal);
+    if (maxPriceEl) maxPriceEl.value = String(maxVal);
+    state.minPrice = minVal;
+    state.maxPrice = maxVal;
+  }
+
+  function applyFiltersFromUi() {
+    syncPriceControls(
+      minPriceEl ? Number(minPriceEl.value) : 0,
+      maxPriceEl ? Number(maxPriceEl.value) : CONFIG.priceMaxDefault
+    );
+    state.onSaleOnly = !!(onSaleEl && onSaleEl.checked);
+    state.types = Array.prototype.map.call(
+      document.querySelectorAll('input[name="vcCatType"]:checked'),
+      function (el) { return el.value; }
+    );
+    collectCheckedAttributeFilters();
+  }
+
+  function collectCheckedAttributeFilters() {
+    state.colorSlugs = Array.prototype.map.call(
+      document.querySelectorAll("#vcCatColors input[type='checkbox']:checked"),
+      function (el) { return el.value; }
+    );
+    state.sizeSlugs = Array.prototype.map.call(
+      document.querySelectorAll("#vcCatSizes input[type='checkbox']:checked"),
+      function (el) { return el.value; }
+    );
   }
 
   function clearAllFilters() {
-    state.subcategoryId = 0;
+    state.selectedSubcats = [];
     state.activeCategoryId = state.parentCategoryId;
-    state.minPrice = null;
-    state.maxPrice = null;
-    if (minPriceEl) minPriceEl.value = "";
-    if (maxPriceEl) maxPriceEl.value = "";
-    if (maxRangeEl) {
-      maxRangeEl.value = String(CONFIG.priceMaxDefault);
-      updateMaxRangeLabel(CONFIG.priceMaxDefault);
-    }
+    state.onSaleOnly = false;
+    state.types = [];
+    state.colorSlugs = [];
+    state.sizeSlugs = [];
+    syncPriceControls(0, CONFIG.priceMaxDefault);
+    if (onSaleEl) onSaleEl.checked = false;
+    Array.prototype.forEach.call(document.querySelectorAll('input[name="vcCatType"]'), function (input) {
+      input.checked = false;
+    });
     renderSubcategoryFilters();
-  }
-
-  function updateMaxRangeLabel(value) {
-    if (maxRangeLabelEl) {
-      maxRangeLabelEl.textContent = "Rs " + Number(value).toLocaleString("en-PK");
-    }
-  }
-
-  function closeMobileFilters() {
-    if (filtersEl && window.matchMedia("(max-width: 960px)").matches) {
-      filtersEl.classList.remove("is-open");
-      if (filterToggleEl) filterToggleEl.textContent = "Show filters";
-    }
+    Array.prototype.forEach.call(document.querySelectorAll("#vcCatColors input, #vcCatSizes input"), function (input) {
+      input.checked = false;
+    });
   }
 
   function init() {
     renderSkeletons();
-    renderMainPills();
 
     if (!state.slug) {
       showError("Category not found", "Open a product category URL like /product-category/men/");
@@ -1032,6 +1240,7 @@
         }
         renderCategoryHero(result.category);
         renderSubcategoryFilters();
+        loadAttributeFilters();
         state.page = 1;
         return loadProducts(false);
       })
@@ -1096,32 +1305,90 @@
       return;
     }
 
-    var html = [
-      '<button type="button" class="vc-cat-subcat-btn' + (state.subcategoryId === 0 ? " is-active" : "") + '" data-subcat="0">',
-        "<span>All</span>",
-      "</button>"
-    ];
-
-    subcats.forEach(function (cat) {
-      var isActive = Number(state.subcategoryId) === Number(cat.id);
+    subcatsEl.innerHTML = subcats.map(function (cat) {
+      var id = Number(cat.id);
+      var checked = state.selectedSubcats.indexOf(id) !== -1 ? " checked" : "";
       var count = Number(cat.count) || 0;
-      html.push(
-        '<button type="button" class="vc-cat-subcat-btn' + (isActive ? " is-active" : "") + '" data-subcat="' + cat.id + '">',
-          "<span>" + escapeHtml(cat.name) + "</span>",
-          "<em>" + count + "</em>",
-        "</button>"
+      return (
+        '<label class="vc-cat-check">' +
+          '<input type="checkbox" data-subcat="' + id + '"' + checked + ">" +
+          "<span>" + escapeHtml(cat.name) + "<em>(" + count + ")</em></span>" +
+        "</label>"
       );
-    });
+    }).join("");
 
-    subcatsEl.innerHTML = html.join("");
-    subcatsEl.querySelectorAll(".vc-cat-subcat-btn").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        state.subcategoryId = Number(btn.getAttribute("data-subcat")) || 0;
-        state.activeCategoryId = state.subcategoryId || state.parentCategoryId;
+    Array.prototype.forEach.call(subcatsEl.querySelectorAll("input[data-subcat]"), function (input) {
+      input.addEventListener("change", function () {
+        state.selectedSubcats = Array.prototype.map.call(
+          subcatsEl.querySelectorAll("input[data-subcat]:checked"),
+          function (el) { return Number(el.getAttribute("data-subcat")); }
+        ).filter(Boolean);
+        state.activeCategoryId = state.selectedSubcats[0] || state.parentCategoryId;
         state.page = 1;
-        renderSubcategoryFilters();
         loadProducts(false);
-        closeMobileFilters();
+      });
+    });
+  }
+
+  function loadAttributeFilters() {
+    fetch(CONFIG.endpoints.attributes + "?per_page=100", { credentials: "same-origin" })
+      .then(checkResponse)
+      .then(function (attrs) {
+        var list = Array.isArray(attrs) ? attrs : [];
+        var colorAttr = list.filter(function (attr) {
+          return attr && (/colou?r/i.test(attr.name || "") || /colou?r/i.test(attr.slug || "") || /colou?r/i.test(attr.taxonomy || ""));
+        })[0];
+        var sizeAttr = list.filter(function (attr) {
+          return attr && (/size/i.test(attr.name || "") || /size/i.test(attr.slug || "") || /size/i.test(attr.taxonomy || ""));
+        })[0];
+
+        var jobs = [];
+        if (colorAttr && colorAttr.id) {
+          state.colorAttribute = colorAttr.taxonomy || colorAttr.slug || "";
+          jobs.push(fetchAttributeTerms(colorAttr.id).then(function (terms) {
+            renderAttributeChecks(colorsEl, terms, "color");
+          }));
+        }
+        if (sizeAttr && sizeAttr.id) {
+          state.sizeAttribute = sizeAttr.taxonomy || sizeAttr.slug || "";
+          jobs.push(fetchAttributeTerms(sizeAttr.id).then(function (terms) {
+            renderAttributeChecks(sizesEl, terms, "size");
+          }));
+        }
+        return Promise.all(jobs);
+      })
+      .catch(function () {});
+  }
+
+  function fetchAttributeTerms(attributeId) {
+    return fetch(CONFIG.endpoints.attributes + "/" + encodeURIComponent(attributeId) + "/terms?per_page=100", { credentials: "same-origin" })
+      .then(checkResponse)
+      .then(function (terms) { return Array.isArray(terms) ? terms : []; })
+      .catch(function () { return []; });
+  }
+
+  function renderAttributeChecks(container, terms, kind) {
+    if (!container) return;
+    if (!terms.length) {
+      container.innerHTML = '<p class="vc-cat-no-subcats">No ' + kind + " options found.</p>";
+      return;
+    }
+    container.innerHTML = terms.map(function (term) {
+      var slug = term.slug || term.name || "";
+      var name = term.name || slug;
+      return (
+        '<label class="vc-cat-check">' +
+          '<input type="checkbox" value="' + escapeAttr(slug) + '" data-attr-kind="' + kind + '">' +
+          "<span>" + escapeHtml(name) + "</span>" +
+        "</label>"
+      );
+    }).join("");
+
+    Array.prototype.forEach.call(container.querySelectorAll("input[type='checkbox']"), function (input) {
+      input.addEventListener("change", function () {
+        collectCheckedAttributeFilters();
+        state.page = 1;
+        loadProducts(false);
       });
     });
   }
@@ -1168,30 +1435,76 @@
 
   function buildProductsUrl() {
     var params = new URLSearchParams();
-    var categoryId = state.subcategoryId || state.activeCategoryId || state.categoryId;
+    var categoryIds = state.selectedSubcats.length
+      ? state.selectedSubcats
+      : [state.activeCategoryId || state.categoryId];
+
     params.set("per_page", String(CONFIG.perPage));
     params.set("page", String(state.page));
-    params.set("category", String(categoryId));
+    params.set("category", categoryIds.filter(Boolean).join(","));
 
-    if (state.minPrice !== null) {
+    if (Number.isFinite(state.minPrice) && state.minPrice > 0) {
       params.set("min_price", String(toMinorUnits(state.minPrice, state.priceMinorUnit)));
     }
-    if (state.maxPrice !== null) {
+    if (Number.isFinite(state.maxPrice) && state.maxPrice < CONFIG.priceMaxDefault) {
       params.set("max_price", String(toMinorUnits(state.maxPrice, state.priceMinorUnit)));
     }
+    if (state.onSaleOnly) params.set("on_sale", "true");
+    if (state.types.length === 1) params.set("type", state.types[0]);
 
-    if (state.sort === "price" || state.sort === "price-desc") {
-      params.set("orderby", "price");
-      params.set("order", state.sort === "price-desc" ? "desc" : "asc");
-    } else if (state.sort === "date") {
-      params.set("orderby", "date");
-      params.set("order", "desc");
-    } else {
-      params.set("orderby", "popularity");
-      params.set("order", "desc");
+    if (state.colorAttribute && state.colorSlugs.length) {
+      params.set("attributes[0][attribute]", state.colorAttribute);
+      params.set("attributes[0][slug]", state.colorSlugs.join(","));
+      params.set("attributes[0][operator]", "in");
+    }
+    if (state.sizeAttribute && state.sizeSlugs.length) {
+      var idx = state.colorAttribute && state.colorSlugs.length ? 1 : 0;
+      params.set("attributes[" + idx + "][attribute]", state.sizeAttribute);
+      params.set("attributes[" + idx + "][slug]", state.sizeSlugs.join(","));
+      params.set("attributes[" + idx + "][operator]", "in");
     }
 
+    applySortParams(params);
     return CONFIG.endpoints.products + "?" + params.toString();
+  }
+
+  function applySortParams(params) {
+    switch (state.sort) {
+      case "title-asc":
+        params.set("orderby", "title");
+        params.set("order", "asc");
+        break;
+      case "title-desc":
+        params.set("orderby", "title");
+        params.set("order", "desc");
+        break;
+      case "price-asc":
+        params.set("orderby", "price");
+        params.set("order", "asc");
+        break;
+      case "price-desc":
+        params.set("orderby", "price");
+        params.set("order", "desc");
+        break;
+      case "date-asc":
+        params.set("orderby", "date");
+        params.set("order", "asc");
+        break;
+      case "date-desc":
+        params.set("orderby", "date");
+        params.set("order", "desc");
+        break;
+      case "best-selling":
+      case "relevant":
+        params.set("orderby", "popularity");
+        params.set("order", "desc");
+        break;
+      case "featured":
+      default:
+        params.set("orderby", "menu_order");
+        params.set("order", "asc");
+        break;
+    }
   }
 
   function toMinorUnits(amount, minorUnit) {
@@ -1206,29 +1519,9 @@
 
     if (crumbCurrent) crumbCurrent.textContent = name;
     if (catTitle) catTitle.textContent = name;
-    if (catDesc) {
-      catDesc.textContent = desc || ("Explore the " + name + " collection.");
-      catDesc.hidden = !desc && false;
-    }
-    if (catProductCount) catProductCount.textContent = count + (count === 1 ? " result" : " results");
+    if (catDesc) catDesc.textContent = desc || "";
+    updateItemsLabel(count);
     document.title = name + " | Vibecano";
-    highlightActivePill();
-  }
-
-  function renderMainPills() {
-    if (!pillsEl) return;
-    pillsEl.innerHTML = CONFIG.mainCategories.map(function (item) {
-      var active = item.slug === state.slug ? " is-active" : "";
-      return '<a class="vc-cat-pill' + active + '" href="/product-category/' + escapeAttr(item.slug) + '/">' + escapeHtml(item.label) + "</a>";
-    }).join("");
-  }
-
-  function highlightActivePill() {
-    if (!pillsEl) return;
-    Array.prototype.forEach.call(pillsEl.children, function (pill) {
-      var href = pill.getAttribute("href") || "";
-      pill.classList.toggle("is-active", href.indexOf("/" + state.slug + "/") !== -1);
-    });
   }
 
   function renderSkeletons() {
@@ -1597,12 +1890,13 @@
   }
 
   function updateCountLabel(count) {
-    var total = state.totalProducts || count;
-    if (catCountLabel) {
-      catCountLabel.innerHTML = "Showing <em>" + count + "</em> of <em>" + total + "</em> products";
-    }
-    if (catProductCount && Number.isFinite(total)) {
-      catProductCount.textContent = total + (total === 1 ? " result" : " results");
+    var total = state.totalProducts || count || 0;
+    updateItemsLabel(total);
+  }
+
+  function updateItemsLabel(total) {
+    if (itemsLabelEl) {
+      itemsLabelEl.innerHTML = "<strong>Items :</strong> " + Number(total || 0).toLocaleString("en-PK");
     }
   }
 
