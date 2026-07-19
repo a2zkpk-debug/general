@@ -50,11 +50,10 @@
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
     --pad: clamp(16px, 3.5vw, 48px);
     position: relative;
-    width: 100vw;
-    max-width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
-    overflow-x: clip;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    overflow: visible;
     padding: clamp(18px, 3vw, 36px) 0 clamp(56px, 8vw, 80px);
     color: var(--ink);
     font-family: Manrope, "Segoe UI", sans-serif;
@@ -97,43 +96,60 @@
     align-items: start;
   }
 
-  /* Amazon-style: thumbs LEFT of main image
-     Use flex + !important so Elementor/Woo theme CSS cannot stack them. */
-  #vcSpRoot .vc-sp-gallery,
-  .vc-sp .vc-sp-gallery {
+  /* Amazon-style LEFT thumbs: table layout resists Elementor/theme overrides */
+  #vcSpRoot table.vc-sp-gallery,
+  .vc-sp table.vc-sp-gallery {
     position: sticky !important;
     top: 18px;
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    align-items: flex-start !important;
-    gap: 12px !important;
-    min-width: 0;
+    display: table !important;
     width: 100% !important;
+    max-width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 12px 0 !important;
+    table-layout: fixed !important;
+    margin: 0 !important;
   }
 
-  #vcSpRoot .vc-sp-thumbs-col,
-  .vc-sp .vc-sp-thumbs-col {
-    display: block !important;
-    flex: 0 0 72px !important;
-    width: 72px !important;
-    max-width: 72px !important;
-    order: 0 !important;
-    min-width: 72px !important;
+  #vcSpRoot table.vc-sp-gallery > tbody,
+  .vc-sp table.vc-sp-gallery > tbody {
+    display: table-row-group !important;
+  }
+
+  #vcSpRoot table.vc-sp-gallery > tbody > tr,
+  .vc-sp table.vc-sp-gallery > tbody > tr {
+    display: table-row !important;
+  }
+
+  #vcSpRoot td.vc-sp-thumbs-col,
+  .vc-sp td.vc-sp-thumbs-col {
+    display: table-cell !important;
+    width: 76px !important;
+    max-width: 76px !important;
+    min-width: 76px !important;
+    vertical-align: top !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  #vcSpRoot td.vc-sp-main-col,
+  .vc-sp td.vc-sp-main-col {
+    display: table-cell !important;
+    width: auto !important;
+    vertical-align: top !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
   }
 
   #vcSpRoot .vc-sp-thumbs,
   .vc-sp .vc-sp-thumbs {
-    display: flex !important;
-    flex-direction: column !important;
-    flex-wrap: nowrap !important;
-    align-items: stretch !important;
-    gap: 8px !important;
-    width: 72px !important;
+    display: block !important;
+    width: 64px !important;
     max-height: min(560px, 70vh);
     overflow-x: hidden !important;
     overflow-y: auto !important;
-    padding: 2px;
+    padding: 0 !important;
     margin: 0 !important;
     scrollbar-width: thin;
   }
@@ -146,29 +162,26 @@
     background: rgba(18, 18, 18, 0.2);
   }
 
-  #vcSpRoot .vc-sp-main-col,
-  .vc-sp .vc-sp-main-col {
-    flex: 1 1 auto !important;
-    width: auto !important;
-    min-width: 0 !important;
-    order: 1 !important;
-  }
-
   #vcSpRoot .vc-sp-thumb,
   .vc-sp .vc-sp-thumb {
     position: relative;
     display: block !important;
-    flex: 0 0 64px !important;
     width: 64px !important;
     height: 64px !important;
     max-width: 64px !important;
+    margin: 0 0 8px !important;
     padding: 0 !important;
     overflow: hidden;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line) !important;
     border-radius: 12px;
     background: var(--soft);
     cursor: pointer;
     transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+  }
+
+  #vcSpRoot .vc-sp-thumb:last-child,
+  .vc-sp .vc-sp-thumb:last-child {
+    margin-bottom: 0 !important;
   }
 
   .vc-sp-thumb img {
@@ -754,43 +767,54 @@
     }
   }
 
-  /* Only stack thumbs under the main image on small phones */
+  /* Phones only: main image on top, horizontal thumbs below */
   @media (max-width: 700px) {
-    #vcSpRoot .vc-sp-gallery,
-    .vc-sp .vc-sp-gallery {
+    #vcSpRoot table.vc-sp-gallery,
+    .vc-sp table.vc-sp-gallery {
       position: static !important;
-      flex-direction: column !important;
-      gap: 12px !important;
+      display: block !important;
+      border-spacing: 0 !important;
     }
 
-    #vcSpRoot .vc-sp-thumbs-col,
-    .vc-sp .vc-sp-thumbs-col {
-      order: 2 !important;
-      flex: 0 0 auto !important;
+    #vcSpRoot table.vc-sp-gallery > tbody,
+    #vcSpRoot table.vc-sp-gallery > tbody > tr,
+    .vc-sp table.vc-sp-gallery > tbody,
+    .vc-sp table.vc-sp-gallery > tbody > tr {
+      display: block !important;
+      width: 100% !important;
+    }
+
+    #vcSpRoot td.vc-sp-main-col,
+    .vc-sp td.vc-sp-main-col {
+      display: block !important;
+      width: 100% !important;
+      order: 1;
+    }
+
+    #vcSpRoot td.vc-sp-thumbs-col,
+    .vc-sp td.vc-sp-thumbs-col {
+      display: block !important;
       width: 100% !important;
       max-width: 100% !important;
       min-width: 0 !important;
-    }
-
-    #vcSpRoot .vc-sp-main-col,
-    .vc-sp .vc-sp-main-col {
-      order: 1 !important;
-      width: 100% !important;
+      margin-top: 12px;
     }
 
     #vcSpRoot .vc-sp-thumbs,
     .vc-sp .vc-sp-thumbs {
-      flex-direction: row !important;
       width: 100% !important;
       max-height: none !important;
       overflow-x: auto !important;
       overflow-y: hidden !important;
+      white-space: nowrap !important;
       padding-bottom: 4px;
     }
 
     #vcSpRoot .vc-sp-thumb,
     .vc-sp .vc-sp-thumb {
-      flex: 0 0 64px !important;
+      display: inline-block !important;
+      vertical-align: top;
+      margin: 0 8px 0 0 !important;
     }
 
     .vc-sp-videos-label {
@@ -841,16 +865,20 @@
     </div>
 
     <div class="vc-sp-wrap">
-      <div class="vc-sp-gallery" id="vcSpGallery">
-        <aside class="vc-sp-thumbs-col" id="vcSpThumbsCol" aria-label="Product thumbnails">
-          <div class="vc-sp-thumbs" id="vcSpThumbs"></div>
-        </aside>
-        <div class="vc-sp-main-col" id="vcSpMainCol">
-          <div class="vc-sp-main" id="vcSpMain">
-            <div class="vc-sp-skeleton" style="width:100%;height:100%"></div>
-          </div>
-        </div>
-      </div>
+      <table class="vc-sp-gallery" id="vcSpGallery" role="presentation" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:separate;border-spacing:12px 0;table-layout:fixed;">
+        <tbody>
+          <tr>
+            <td class="vc-sp-thumbs-col" id="vcSpThumbsCol" style="width:76px;vertical-align:top;padding:0;">
+              <div class="vc-sp-thumbs" id="vcSpThumbs" style="display:block;width:64px;"></div>
+            </td>
+            <td class="vc-sp-main-col" id="vcSpMainCol" style="vertical-align:top;padding:0;">
+              <div class="vc-sp-main" id="vcSpMain">
+                <div class="vc-sp-skeleton" style="width:100%;height:100%"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
       <div class="vc-sp-panel">
         <div class="vc-sp-type" id="vcSpType">Loading product</div>
@@ -1053,48 +1081,47 @@
     var thumbsCol = document.getElementById("vcSpThumbsCol");
     var thumbs = document.getElementById("vcSpThumbs");
     var mainCol = document.getElementById("vcSpMainCol");
+    var row = gallery ? gallery.querySelector("tr") : null;
+    var body = gallery ? gallery.querySelector("tbody") : null;
     if (!gallery || !thumbsCol || !thumbs || !mainCol) return;
 
     var mobile = window.matchMedia("(max-width: 700px)").matches;
 
     if (mobile) {
-      gallery.style.setProperty("display", "flex", "important");
-      gallery.style.setProperty("flex-direction", "column", "important");
-      thumbsCol.style.setProperty("order", "2", "important");
-      thumbsCol.style.setProperty("width", "100%", "important");
-      thumbsCol.style.setProperty("flex", "0 0 auto", "important");
-      mainCol.style.setProperty("order", "1", "important");
-      mainCol.style.setProperty("width", "100%", "important");
-      thumbs.style.setProperty("display", "flex", "important");
-      thumbs.style.setProperty("flex-direction", "row", "important");
-      thumbs.style.setProperty("width", "100%", "important");
+      gallery.style.cssText = "display:block!important;width:100%!important;position:static!important;border-collapse:separate!important;border-spacing:0!important;";
+      if (body) body.style.cssText = "display:block!important;width:100%!important;";
+      if (row) row.style.cssText = "display:block!important;width:100%!important;";
+      // Keep DOM order: thumbs cell first in HTML — move main visually first via insert
+      if (mainCol.parentNode === row && thumbsCol.parentNode === row && row.firstElementChild !== mainCol) {
+        row.insertBefore(mainCol, thumbsCol);
+      }
+      mainCol.style.cssText = "display:block!important;width:100%!important;padding:0!important;border:0!important;";
+      thumbsCol.style.cssText = "display:block!important;width:100%!important;max-width:100%!important;padding:0!important;border:0!important;margin-top:12px!important;";
+      thumbs.style.cssText = "display:block!important;width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;";
+      Array.prototype.forEach.call(thumbs.querySelectorAll(".vc-sp-thumb"), function (btn) {
+        btn.style.setProperty("display", "inline-block", "important");
+        btn.style.setProperty("margin", "0 8px 0 0", "important");
+      });
       return;
     }
 
-    // Desktop / tablet: vertical thumbs on the LEFT of the main image
-    gallery.style.setProperty("display", "flex", "important");
-    gallery.style.setProperty("flex-direction", "row", "important");
-    gallery.style.setProperty("flex-wrap", "nowrap", "important");
-    gallery.style.setProperty("align-items", "flex-start", "important");
-    gallery.style.setProperty("gap", "12px", "important");
+    // Desktop: restore thumbs cell on the LEFT, main on the RIGHT (table row)
+    if (mainCol.parentNode === row && thumbsCol.parentNode === row && row.firstElementChild !== thumbsCol) {
+      row.insertBefore(thumbsCol, mainCol);
+    }
 
-    thumbsCol.style.setProperty("display", "block", "important");
-    thumbsCol.style.setProperty("order", "0", "important");
-    thumbsCol.style.setProperty("flex", "0 0 72px", "important");
-    thumbsCol.style.setProperty("width", "72px", "important");
-    thumbsCol.style.setProperty("max-width", "72px", "important");
-    thumbsCol.style.setProperty("min-width", "72px", "important");
-
-    mainCol.style.setProperty("display", "block", "important");
-    mainCol.style.setProperty("order", "1", "important");
-    mainCol.style.setProperty("flex", "1 1 auto", "important");
-    mainCol.style.setProperty("min-width", "0", "important");
-    mainCol.style.setProperty("width", "auto", "important");
-
-    thumbs.style.setProperty("display", "flex", "important");
-    thumbs.style.setProperty("flex-direction", "column", "important");
-    thumbs.style.setProperty("width", "72px", "important");
-    thumbs.style.setProperty("gap", "8px", "important");
+    gallery.style.cssText = "display:table!important;width:100%!important;border-collapse:separate!important;border-spacing:12px 0!important;table-layout:fixed!important;position:sticky!important;top:18px;";
+    if (body) body.style.cssText = "display:table-row-group!important;";
+    if (row) row.style.cssText = "display:table-row!important;";
+    thumbsCol.style.cssText = "display:table-cell!important;width:76px!important;max-width:76px!important;min-width:76px!important;vertical-align:top!important;padding:0!important;border:0!important;";
+    mainCol.style.cssText = "display:table-cell!important;width:auto!important;vertical-align:top!important;padding:0!important;border:0!important;";
+    thumbs.style.cssText = "display:block!important;width:64px!important;max-height:70vh;overflow-x:hidden!important;overflow-y:auto!important;";
+    Array.prototype.forEach.call(thumbs.querySelectorAll(".vc-sp-thumb"), function (btn) {
+      btn.style.setProperty("display", "block", "important");
+      btn.style.setProperty("width", "64px", "important");
+      btn.style.setProperty("height", "64px", "important");
+      btn.style.setProperty("margin", "0 0 8px 0", "important");
+    });
   }
 
   applyAmazonGalleryLayout();
