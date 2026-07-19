@@ -607,19 +607,18 @@
      ================================================================= */
   var CONFIG = {
     api: "/wp-json/wc/store/v1",
-    requiredCategorySlug: "featured",     // main category slug (with subcategories)
+    // Try these category slugs first (same pattern as the older Featured widget).
+    categorySlugs: ["featured", "featured-products", "feature"],
     perPage: 8,
     cartUrl: "/cart/",
     cartTokenKey: "vcWcCartToken",     // shared with the rest of the VibeCano site
     wishlistKey: "vcFeaturedWishlist",
-    addTimeoutMs: 12000
+    addTimeoutMs: 12000,
+    viewAllUrl: "/product-category/featured/"
   };
 
   var cache = Object.create(null);
   var productLookup = Object.create(null);
-  var taxonomyCache = Object.create(null);
-  var featuredCategoryIds = [];
-  var featuredCategorySlugs = [CONFIG.requiredCategorySlug];
   var wishlist = loadWishlist();
   var toastTimer = null;
 
@@ -639,6 +638,9 @@
   function init() {
     if (toastCartEl) toastCartEl.setAttribute("href", CONFIG.cartUrl);
 
+    var viewAll = document.querySelector(".vc-ff-viewall");
+    if (viewAll && CONFIG.viewAllUrl) viewAll.setAttribute("href", CONFIG.viewAllUrl);
+
     gridEl.addEventListener("click", handleGridClick);
 
     if (toastEl) {
@@ -650,77 +652,124 @@
       if (event.key === "Escape") hideToast();
     });
 
-    resolveFeaturedCategories().then(loadProducts).catch(loadProducts);
+    loadProducts();
   }
 
   /* =================================================================
-     LOAD + RENDER PRODUCTS (Featured category + subcategories, no filters)
+     LOAD + RENDER PRODUCTS
+     Same proven strategy as the site's Featured widget:
+       1) products?category=featured (slug)
+       2) products?category=<resolved-id>
+       3) products?featured=true   (Woo "star" featured flag)
      ================================================================= */
-  function resolveFeaturedCategories() {
-    return fetch(CONFIG.api + "/products/categories?per_page=100", { credentials: "same-origin" })
-      .then(checkResponse)
-      .then(function (categories) {
-        var parent = findBySlug(categories, CONFIG.requiredCategorySlug);
-        if (!parent || !parent.id) return;
-        var allFeatured = [parent].concat(getDescendants(categories, parent.id));
-        featuredCategoryIds = allFeatured.map(getId).filter(Boolean);
-        featuredCategorySlugs = allFeatured.map(getSlug).filter(Boolean);
-        allFeatured.forEach(function (c) { taxonomyCache[c.slug] = Number(c.id); });
-      });
-  }
-
   function loadProducts() {
     renderLoading();
 
-    resolveCategoryId(CONFIG.requiredCategorySlug)
-      .then(function (requiredId) {
-        var categoryIds = featuredCategoryIds.length ? featuredCategoryIds : (requiredId ? [requiredId] : []);
-        if (!requiredId || !categoryIds.length) {
-          renderMessage("No matching category found", "Check that the Featured category slug in CONFIG is correct.");
-          return [];
-        }
-        return fetchProducts(categoryIds, featuredCategorySlugs);
-      })
-      .then(function (products) { if (Array.isArray(products)) renderProducts(products); })
+    fetchFeaturedProducts()
+      .then(function (products) { renderProducts(Array.isArray(products) ? products : []); })
       .catch(function () {
         renderMessage("Products could not be loaded", "Refresh the page or confirm the WooCommerce Store API is enabled.");
       });
   }
 
-  function resolveCategoryId(slug) {
-    if (taxonomyCache[slug] !== undefined) return Promise.resolve(taxonomyCache[slug]);
-    return fetch(CONFIG.api + "/products/categories?per_page=100", { credentials: "same-origin" })
-      .then(checkResponse)
-      .then(function (items) {
-        var match = findBySlug(items, slug);
-        var id = match && match.id ? Number(match.id) : 0;
-        taxonomyCache[slug] = id;
-        return id;
-      })
-      .catch(function () { taxonomyCache[slug] = 0; return 0; });
+  function fetchFeaturedProducts() {
+    if (cache.featured) return Promise.resolve(cache.featured);
+
+    return firstNonEmpty([
+      function () { return fetchProductsByQuery({ category: CONFIG.categorySlugs[0], orderby: "date", order: "desc" }); },
+      function () { return fetchProductsByCategoryIds(); },
+      function () { return fetchProductsByQuery({ featured: "true", orderby: "date", order: "desc" }); },
+      function () { return fetchProductsByQuery({ orderby: "popularity", order: "desc" }).then(function (products) {
+        // Last resort: keep only items already marked featured in the payload.
+        return (products || []).filter(function (p) { return p && p.featured === true; });
+      }); }
+    ]).then(function (products) {
+      cache.featured = products || [];
+      return cache.featured;
+    });
   }
 
-  function fetchProducts(categoryIds, categorySlugs) {
-    var key = categoryIds.join(",");
-    if (cache[key]) return Promise.resolve(cache[key]);
-
-    return fetch(buildProductsUrl(categoryIds), { credentials: "same-origin" })
-      .then(checkResponse)
-      .then(function (products) {
-        var allowed = categorySlugs && categorySlugs.length ? categorySlugs : [CONFIG.requiredCategorySlug];
-        var safe = Array.isArray(products) ? products.filter(function (p) { return matchesTerms(p, allowed); }) : [];
-        cache[key] = safe;
-        return safe;
-      });
+  function firstNonEmpty(factories) {
+    var index = 0;
+    function next() {
+      if (index >= factories.length) return Promise.resolve([]);
+      var factory = factories[index];
+      index += 1;
+      return Promise.resolve()
+        .then(factory)
+        .then(function (products) {
+          if (Array.isArray(products) && products.length) return products;
+          return next();
+        })
+        .catch(function () { return next(); });
+    }
+    return next();
   }
 
-  function buildProductsUrl(categoryIds) {
+  function fetchProductsByQuery(query) {
     var params = new URLSearchParams();
     params.set("per_page", String(CONFIG.perPage));
-    params.set("category", categoryIds.join(","));
-    params.set("orderby", "popularity");
-    params.set("order", "desc");
-    return CONFIG.api + "/products?" + params.toString();
+    Object.keys(query || {}).forEach(function (key) {
+      if (query[key] !== undefined && query[key] !== null && query[key] !== "") {
+        params.set(key, String(query[key]));
+      }
+    });
+    return fetch(CONFIG.api + "/products?" + params.toString(), { credentials: "same-origin" })
+      .then(checkResponse)
+      .then(function (products) { return Array.isArray(products) ? products : []; });
+  }
+
+  function fetchProductsByCategoryIds() {
+    return resolveFeaturedCategoryIds().then(function (ids) {
+      if (!ids.length) return [];
+      return fetchProductsByQuery({
+        category: ids.join(","),
+        orderby: "date",
+        order: "desc"
+      });
+    });
+  }
+
+  function resolveFeaturedCategoryIds() {
+    return Promise.all([
+      fetch(CONFIG.api + "/products/categories?per_page=100&hide_empty=false", { credentials: "same-origin" })
+        .then(checkResponse)
+        .catch(function () { return []; }),
+      fetch("/wp-json/wp/v2/product_cat?per_page=100&hide_empty=false&slug=" + encodeURIComponent(CONFIG.categorySlugs[0]), { credentials: "same-origin" })
+        .then(function (response) { return response.ok ? response.json() : []; })
+        .catch(function () { return []; })
+    ]).then(function (results) {
+      var storeCats = Array.isArray(results[0]) ? results[0] : [];
+      var wpCats = Array.isArray(results[1]) ? results[1] : [];
+      var ids = [];
+      var seen = Object.create(null);
+
+      function pushId(id) {
+        id = Number(id);
+        if (!id || seen[id]) return;
+        seen[id] = true;
+        ids.push(id);
+      }
+
+      CONFIG.categorySlugs.forEach(function (slug) {
+        var match = findBySlug(storeCats, slug);
+        if (match) {
+          pushId(match.id);
+          getDescendants(storeCats, match.id).forEach(function (child) { pushId(child.id); });
+        }
+      });
+
+      // Name fallback: category titled/slug containing "Featured"
+      storeCats.forEach(function (cat) {
+        if (!cat) return;
+        if (/featured/i.test(cat.name || "") || /featured/i.test(cat.slug || "")) {
+          pushId(cat.id);
+        }
+      });
+
+      wpCats.forEach(function (cat) { pushId(cat && cat.id); });
+      return ids;
+    });
   }
 
   function renderLoading() {
