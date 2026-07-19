@@ -1426,6 +1426,16 @@
     title.classList.remove("vc-sp-skeleton");
     title.removeAttribute("style");
     title.textContent = message;
+    var typeEl = document.getElementById("vcSpType");
+    if (typeEl) typeEl.textContent = "Try again";
+    var main = document.getElementById("vcSpMain");
+    if (main && !main.querySelector("img, video, .vc-sp-retry")) {
+      main.innerHTML = '<div style="display:grid;place-items:center;height:100%;gap:12px;padding:20px;text-align:center">' +
+        '<div style="color:#6f6f78;font-weight:700">Gallery will appear when product loads</div>' +
+        '<button type="button" class="vc-sp-main-btn vc-sp-retry" style="min-width:160px">Retry</button></div>';
+      var retry = main.querySelector(".vc-sp-retry");
+      if (retry) retry.addEventListener("click", function () { loadProduct(); });
+    }
   }
 
   function renderProduct(product) {
