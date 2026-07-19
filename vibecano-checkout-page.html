@@ -1565,18 +1565,7 @@
         finishToWhatsApp(null, "WhatsApp opened — WooCommerce order failed: " + message);
       })
       .finally(function () {
-        if (submitButton) {
-          submitButton.disabled = false;
-          submitButton.textContent = "Place Order";
-        }
-        if (mobilePlaceEl) {
-          mobilePlaceEl.disabled = false;
-          mobilePlaceEl.textContent = "Place Order";
-        }
-        if (whatsappButton) {
-          whatsappButton.disabled = false;
-          whatsappButton.textContent = "Confirm on WhatsApp";
-        }
+        resetPlaceOrderButtons();
       });
   }
 
