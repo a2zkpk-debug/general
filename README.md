@@ -49,7 +49,7 @@ Color swatches were hidden because `renderColorOptions()` required `COLOR_VARIES
 
 ## Women collection add-to-cart popup
 
-Selecting a size and clicking **Add to Cart** now resolves the WooCommerce variation ID through the Store API, adds the item without leaving the page, and opens a centered popup with the product image, **Continue Shopping**, and **View Cart**. A bottom **View All Products** button matches the competitor layout. Failed adds no longer redirect to `/cart/` (which previously looked like an empty cart).
+Selecting a size and clicking **Add to Cart** uses a fast Store API payload (parent product + size/attributes, no per-variation fetch waterfall), stays on the page, and opens a centered popup with product image, top-right ✕, **Continue Shopping**, and **View Cart**. Category chips and sort filters are removed; **View All Products** sits under the grid.
 
 ## Usage
 
