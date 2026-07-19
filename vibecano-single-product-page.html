@@ -1307,7 +1307,6 @@
     }
 
     var visibleCount = GALLERY_EXPANDED ? images.length : Math.min(images.length, THUMB_VISIBLE_MAX);
-    var hiddenCount = Math.max(0, images.length - visibleCount);
     var showMoreOverlay = !GALLERY_EXPANDED && images.length > THUMB_VISIBLE_MAX;
 
     setMainMedia(images[0], product);
