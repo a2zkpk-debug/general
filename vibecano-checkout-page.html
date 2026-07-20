@@ -21,7 +21,7 @@
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
 <style>
   /* Break out of Elementor/theme boxed containers that leave empty right space */
@@ -51,6 +51,8 @@
   }
 
   .vc-checkout {
+    --font-body: "Source Sans 3", "Segoe UI", sans-serif;
+    --font-display: "Cormorant Garamond", Georgia, serif;
     --ink: #121212;
     --ink-2: #3a3a40;
     --muted: #6f6f78;
@@ -78,7 +80,7 @@
         rgba(18, 18, 18, 0.015) 23px
       );
     color: var(--ink);
-    font-family: Manrope, "Segoe UI", sans-serif;
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
   }
 
@@ -101,19 +103,21 @@
 
   .vc-checkout-brand {
     margin: 0 0 8px;
-    font-family: Syne, Manrope, sans-serif;
+    font-family: var(--font-display);
     font-size: clamp(28px, 4vw, 40px);
-    font-weight: 800;
-    letter-spacing: -0.03em;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     line-height: 1;
   }
 
   .vc-checkout-title {
     margin: 0;
     color: var(--ink-2);
+    font-family: var(--font-body);
     font-size: clamp(15px, 1.6vw, 17px);
-    font-weight: 700;
-    letter-spacing: 0.01em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
   }
 
   .vc-checkout-sub {
@@ -142,9 +146,9 @@
   }
 
   .vc-checkout-total-chip b {
-    font-family: Manrope, "Segoe UI", sans-serif;
+    font-family: var(--font-body);
     font-size: clamp(22px, 3vw, 28px);
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.1;
     word-break: break-word;
@@ -179,9 +183,9 @@
 
   .vc-checkout-section h3 {
     margin: 0;
-    font-family: Syne, Manrope, sans-serif;
+    font-family: var(--font-display);
     font-size: 18px;
-    font-weight: 800;
+    font-weight: 600;
     letter-spacing: -0.02em;
   }
 
@@ -356,9 +360,9 @@
 
   .vc-checkout-summary h3 {
     margin: 0 0 16px;
-    font-family: Syne, Manrope, sans-serif;
+    font-family: var(--font-display);
     font-size: 18px;
-    font-weight: 800;
+    font-weight: 600;
     letter-spacing: -0.02em;
   }
 
@@ -445,9 +449,9 @@
     padding-top: 14px;
     border-top: 1px solid var(--line);
     color: var(--ink);
-    font-family: Syne, Manrope, sans-serif;
+    font-family: var(--font-display);
     font-size: 18px;
-    font-weight: 800;
+    font-weight: 600;
   }
 
   .vc-checkout-actions {
@@ -531,9 +535,9 @@
   .vc-checkout-empty h3 {
     margin: 0 0 8px;
     color: var(--ink);
-    font-family: Syne, Manrope, sans-serif;
+    font-family: var(--font-display);
     font-size: clamp(22px, 3vw, 28px);
-    font-weight: 800;
+    font-weight: 600;
   }
 
   .vc-checkout-empty p {
@@ -637,7 +641,7 @@
     margin: 0 auto 16px;
     border: 2px solid var(--ok);
     color: var(--ok);
-    font-family: Fraunces, "Times New Roman", serif;
+    font-family: var(--font-display);
     font-size: 28px;
     font-weight: 700;
     line-height: 1;
@@ -645,7 +649,7 @@
 
   .vc-thanks-title {
     margin: 0 0 8px;
-    font-family: Fraunces, "Times New Roman", serif;
+    font-family: var(--font-display);
     font-size: clamp(24px, 4vw, 30px);
     font-weight: 700;
     letter-spacing: -0.02em;
@@ -742,9 +746,9 @@
   .vc-checkout-mobile-bar-copy b {
     display: block;
     margin-top: 2px;
-    font-family: Syne, Manrope, sans-serif;
+    font-family: var(--font-display);
     font-size: 18px;
-    font-weight: 800;
+    font-weight: 600;
     letter-spacing: -0.02em;
     word-break: break-word;
   }
@@ -1504,7 +1508,7 @@
         if (!receiptWindow) return;
         receiptWindow.document.write(
           "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Attach payment receipt</title></head>" +
-          "<body style=\"font-family:Manrope,sans-serif;padding:24px;max-width:720px;margin:0 auto;text-align:center;color:#121212\">" +
+          "<body style=\"font-family:'Source Sans 3',sans-serif;padding:24px;max-width:720px;margin:0 auto;text-align:center;color:#121212\">" +
           "<h2 style=\"margin:0 0 10px\">Payment receipt</h2>" +
           "<p style=\"color:#6f6f78;line-height:1.6\">WhatsApp links cannot attach files automatically. Long-press or save this image, then attach it in your WhatsApp chat.</p>" +
           "<img src=\"" + receipt.dataUrl + "\" alt=\"Payment receipt\" style=\"max-width:100%;height:auto;border:1px solid #ddd;margin:18px 0\">" +
@@ -1591,7 +1595,7 @@
     try {
       win.document.write(
         "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Opening WhatsApp…</title></head>" +
-        "<body style=\"font-family:Manrope,Segoe UI,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;background:#f7f5f2;color:#121212;text-align:center;padding:24px\">" +
+        "<body style=\"font-family:'Source Sans 3',Segoe UI,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;background:#f7f5f2;color:#121212;text-align:center;padding:24px\">" +
         "<div><h2 style=\"margin:0 0 8px\">Preparing your order…</h2>" +
         "<p style=\"margin:0;color:#6f6f78;font-weight:600\">WhatsApp will open with your order details.</p></div></body></html>"
       );
