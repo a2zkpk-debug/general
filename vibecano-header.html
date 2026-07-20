@@ -496,12 +496,17 @@
   }
 
   .vibecano-header-root .ro-shop-btn {
+    --shop-shine: linear-gradient(110deg, transparent 28%, rgba(255, 255, 255, 0.55) 48%, transparent 68%);
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
     min-height: 44px;
-    padding: 0 20px;
-    background: var(--ink);
+    padding: 0 22px;
+    overflow: hidden;
+    isolation: isolate;
+    background: linear-gradient(135deg, #ff8f70 0%, #ef4444 48%, #dc2626 100%);
     color: #fff !important;
     font-family: Syne, Manrope, sans-serif;
     font-weight: 800;
@@ -510,15 +515,64 @@
     text-transform: uppercase;
     white-space: nowrap;
     flex-shrink: 0;
-    border: 1px solid var(--ink);
-    box-shadow: 0 10px 28px -18px rgba(14, 14, 16, 0.65);
-    transition: transform 0.22s var(--ease), background 0.22s var(--ease), box-shadow 0.22s var(--ease);
+    border: 1px solid rgba(220, 38, 38, 0.42);
+    box-shadow:
+      0 10px 28px -14px rgba(220, 38, 38, 0.72),
+      inset 0 1px 0 rgba(255, 255, 255, 0.38);
+    animation: vc-shop-btn-pulse 2.1s ease-in-out infinite;
+    transition: transform 0.22s var(--ease), filter 0.22s var(--ease);
+  }
+
+  .vibecano-header-root .ro-shop-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--shop-shine);
+    transform: translateX(-120%);
+    animation: vc-btn-shine 2.6s var(--ease) infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .vibecano-header-root .ro-shop-btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    opacity: 0;
+    animation: vc-shop-btn-blink 2.1s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .vibecano-header-root .ro-shop-btn-text {
+    position: relative;
+    z-index: 1;
   }
 
   .vibecano-header-root .ro-shop-btn:hover {
     transform: translateY(-2px);
-    background: #1a1a1f;
-    box-shadow: 0 14px 32px -16px rgba(14, 14, 16, 0.75);
+    filter: brightness(1.06);
+    animation-play-state: paused;
+  }
+
+  @keyframes vc-shop-btn-pulse {
+    0%, 100% {
+      box-shadow:
+        0 10px 28px -14px rgba(220, 38, 38, 0.72),
+        inset 0 1px 0 rgba(255, 255, 255, 0.38);
+    }
+    50% {
+      box-shadow:
+        0 16px 36px -10px rgba(220, 38, 38, 0.92),
+        0 0 0 4px rgba(239, 68, 68, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.48);
+    }
+  }
+
+  @keyframes vc-shop-btn-blink {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
   }
 
   .vibecano-header-root .ro-design-btn {
@@ -796,14 +850,17 @@
   @media (prefers-reduced-motion: reduce) {
     .vibecano-header-root .ro-topbar-marquee-track,
     .vibecano-header-root .ro-nav-links,
-    .vibecano-header-root .ro-design-btn::before {
+    .vibecano-header-root .ro-design-btn::before,
+    .vibecano-header-root .ro-shop-btn,
+    .vibecano-header-root .ro-shop-btn::before,
+    .vibecano-header-root .ro-shop-btn::after {
       animation: none !important;
       transition: none !important;
     }
   }
 </style>
 
-<div class="vibecano-header-root" id="vibecanoHeaderRoot" data-vc-header-version="2.0">
+<div class="vibecano-header-root" id="vibecanoHeaderRoot" data-vc-header-version="2.1">
   <div class="ro-topbar">
     <div class="ro-topbar-wrap">
       <span class="ro-topbar-badge">New Collection Live</span>
@@ -898,7 +955,9 @@
       </ul>
 
       <div class="ro-nav-ctas">
-        <a class="ro-shop-btn" id="roShopNowBtn" href="/shop/">Shop Now</a>
+        <a class="ro-shop-btn" id="roShopNowBtn" href="/shop/">
+          <span class="ro-shop-btn-text">Shop Now</span>
+        </a>
         <a class="ro-design-btn" id="roUnder999Btn" href="/product-category/under999/">
           <span class="ro-design-btn-label">
             <span class="ro-design-btn-kicker">Deal zone</span>
