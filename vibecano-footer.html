@@ -1,26 +1,26 @@
 <!-- ============================================================
-     VIBECANO — SITE FOOTER (use on all pages)
-     Paste into Elementor Theme Builder → Footer → HTML widget
+     VIBECANO — SITE FOOTER v1.4
+     Paste this WHOLE file into Elementor → Theme Builder → Footer → HTML widget.
+
+     Select ALL old code → Delete → Paste → Update → Purge cache → Ctrl+Shift+R
+     MUST show: data-vc-footer-version="1.4" on #vibecanoFooterRoot
+     WhatsApp: click green icon → chat popup → WhatsApp Us Now!
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
 <style>
   .vibecano-footer-root {
-    --ink: #0b1220;
-    --ink-soft: #1e293b;
-    --slate: #64748b;
-    --line: #e2e8f0;
-    --surface: #f8fafc;
-    --brand: #1d9bf0;
-    --accent: #f59e0b;
-    --accent-soft: #fef3c7;
+    --ink: #0e0e10;
+    --muted: #a1a1aa;
+    --line: rgba(255, 255, 255, 0.1);
+    --accent: #e8a317;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
     width: 100%;
     max-width: none;
-    font-family: 'Inter', system-ui, -apple-system, Segoe UI, sans-serif;
-    color: var(--ink);
-    background: #fff;
+    font-family: Manrope, "Segoe UI", sans-serif;
+    color: #ececee;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
@@ -29,23 +29,33 @@
   .vibecano-footer-root *::before,
   .vibecano-footer-root *::after { box-sizing: border-box; }
 
-  .vibecano-footer-root a { text-decoration: none; color: inherit; transition: color .2s; }
-  .vibecano-footer-root a:hover { color: var(--brand); }
+  .vibecano-footer-root a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s var(--ease);
+  }
+
+  .vibecano-footer-root img { display: block; max-width: 100%; }
 
   .vibecano-footer-root .ro-footer {
     background: var(--ink);
-    color: #e2e8f0;
-    padding: 48px 24px 0;
+    border-top: 1px solid var(--line);
+    padding: 0;
+  }
+
+  .vibecano-footer-root .ro-footer-accent {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.85;
   }
 
   .vibecano-footer-root .ro-footer-wrap {
     max-width: 1280px;
     margin: 0 auto;
+    padding: 40px clamp(16px, 3vw, 24px) 32px;
     display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr;
-    gap: 40px;
-    padding-bottom: 36px;
-    border-bottom: 1px solid rgba(255, 255, 255, .1);
+    grid-template-columns: 1.15fr 1fr 1fr 1fr;
+    gap: clamp(24px, 3.5vw, 40px);
   }
 
   .vibecano-footer-root .ro-footer-brand {
@@ -57,50 +67,24 @@
   .vibecano-footer-root .ro-footer-logo {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    color: #fff;
-    font-weight: 800;
-    font-size: 14px;
-    letter-spacing: .04em;
-    text-transform: uppercase;
+    line-height: 0;
+    min-width: 0;
   }
 
-  .vibecano-footer-root .ro-footer-logo-mark {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #fff;
-    color: var(--ink);
-    display: grid;
-    place-items: center;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    position: relative;
-  }
-
-  .vibecano-footer-root .ro-footer-logo-mark::after {
-    content: "";
-    position: absolute;
-    right: 5px;
-    bottom: 5px;
-    width: 7px;
-    height: 7px;
-    background: var(--accent);
-    border-radius: 50%;
-  }
-
-  .vibecano-footer-root .ro-footer-tagline {
-    font-size: 10px;
-    font-weight: 500;
-    color: #94a3b8;
-    letter-spacing: .08em;
+  .vibecano-footer-root .ro-footer-logo-img {
+    display: block;
+    width: auto;
+    height: clamp(40px, 5vw, 54px);
+    max-width: min(160px, 42vw);
+    object-fit: contain;
+    object-position: left center;
+    filter: brightness(1.06);
   }
 
   .vibecano-footer-root .ro-footer-desc {
     margin: 0;
-    max-width: 320px;
-    color: #94a3b8;
+    max-width: 280px;
+    color: var(--muted);
     font-size: 13px;
     line-height: 1.65;
   }
@@ -108,36 +92,34 @@
   .vibecano-footer-root .ro-footer-social {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 4px;
+    gap: 8px;
   }
 
   .vibecano-footer-root .ro-footer-social a {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    border: 1px solid rgba(255, 255, 255, .14);
-    border-radius: 999px;
-    background: rgba(255, 255, 255, .06);
+    min-height: 34px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.04);
     color: #fff;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .vibecano-footer-root .ro-footer-social a:hover {
-    background: rgba(255, 255, 255, .12);
-    color: #fff;
+    border-color: rgba(232, 163, 23, 0.45);
+    color: var(--accent);
   }
 
   .vibecano-footer-root .ro-footer-col h4 {
     margin: 0 0 14px;
-    color: #fff;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: .08em;
+    font-family: Syne, Manrope, sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
+    color: #fff;
   }
 
   .vibecano-footer-root .ro-footer-links {
@@ -145,154 +127,517 @@
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 10px;
+    gap: 9px;
   }
 
   .vibecano-footer-root .ro-footer-links a {
-    color: #cbd5e1;
+    color: var(--muted);
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
+  }
+
+  .vibecano-footer-root .ro-footer-links a:hover {
+    color: #fff;
+  }
+
+  .vibecano-footer-root .ro-footer-links a.is-gold {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .vibecano-footer-root .ro-footer-links a.is-gold:hover {
+    color: #ffd56a;
   }
 
   .vibecano-footer-root .ro-footer-contact {
     display: grid;
-    gap: 10px;
-    color: #cbd5e1;
-    font-size: 14px;
-    font-weight: 500;
+    gap: 9px;
   }
 
   .vibecano-footer-root .ro-footer-contact a {
     color: #fff;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .vibecano-footer-root .ro-footer-contact a:hover {
+    color: var(--accent);
   }
 
   .vibecano-footer-root .ro-footer-note {
-    margin: 0;
-    color: #94a3b8;
+    margin: 6px 0 0;
+    color: var(--muted);
     font-size: 12px;
-    line-height: 1.55;
+    line-height: 1.6;
   }
 
   .vibecano-footer-root .ro-footer-bar {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 18px 24px 22px;
+    padding: 16px clamp(16px, 3vw, 24px) 20px;
+    border-top: 1px solid var(--line);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    color: #64748b;
+    gap: 10px;
+    color: #71717a;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
   }
 
-  .vibecano-footer-root .ro-footer-bar-badges {
+  .vibecano-footer-root .ro-footer-badges {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
   }
 
   .vibecano-footer-root .ro-footer-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, .06);
-    color: #cbd5e1;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
+    color: #a1a1aa;
   }
 
-  @media (max-width: 860px) {
+  .vibecano-footer-root .ro-footer-badge + .ro-footer-badge::before {
+    content: "·";
+    margin-right: 8px;
+    color: #52525b;
+  }
+
+  /* Floating WhatsApp chat widget (site-wide) */
+  .vc-wa-float {
+    position: fixed;
+    right: max(18px, env(safe-area-inset-right, 0px));
+    bottom: max(20px, env(safe-area-inset-bottom, 0px));
+    z-index: 99980;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+    line-height: 1.4;
+    font-family: Manrope, "Segoe UI", sans-serif;
+  }
+
+  .vc-wa-panel {
+    width: min(340px, calc(100vw - 36px));
+    overflow: hidden;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 22px 60px -24px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(12px) scale(0.96);
+    transform-origin: bottom right;
+    transition: opacity 0.24s var(--ease), transform 0.24s var(--ease), visibility 0.24s;
+  }
+
+  .vc-wa-float.is-open .vc-wa-panel {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+
+  .vc-wa-panel-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: #2c2e3a;
+    color: #fff;
+  }
+
+  .vc-wa-panel-head-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #25d366;
+    flex-shrink: 0;
+  }
+
+  .vc-wa-panel-head-icon svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  .vc-wa-panel-head-title {
+    flex: 1;
+    min-width: 0;
+    font-family: Syne, Manrope, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .vc-wa-panel-close {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.18s var(--ease);
+  }
+
+  .vc-wa-panel-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .vc-wa-panel-body {
+    padding: 18px 16px 16px;
+    background: #f3f3f4;
+  }
+
+  .vc-wa-bubble {
+    position: relative;
+    margin: 0 0 16px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: #fff;
+    color: #3f3f46;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.55;
+    box-shadow: 0 8px 24px -18px rgba(0, 0, 0, 0.35);
+  }
+
+  .vc-wa-bubble::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    border-radius: 999px;
+    background: #111;
+  }
+
+  .vc-wa-panel-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 48px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #2c2e3a;
+    color: #fff !important;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: background 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+
+  .vc-wa-panel-cta:hover {
+    background: #1a1b22;
+    transform: translateY(-1px);
+  }
+
+  .vc-wa-panel-cta svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .vc-wa-panel-foot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #e8faf0;
+    color: #128c7e;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .vc-wa-panel-foot svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .vc-wa-float-btn {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #2bd46a 0%, #25d366 52%, #1ebe57 100%);
+    color: #fff;
+    cursor: pointer;
+    box-shadow:
+      0 14px 34px -12px rgba(37, 211, 102, 0.72),
+      0 8px 18px -10px rgba(0, 0, 0, 0.28);
+    transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease);
+  }
+
+  .vc-wa-float-btn:hover {
+    transform: translateY(-3px) scale(1.04);
+    box-shadow:
+      0 18px 40px -12px rgba(37, 211, 102, 0.82),
+      0 10px 22px -10px rgba(0, 0, 0, 0.32);
+  }
+
+  .vc-wa-float-btn:active {
+    transform: translateY(-1px) scale(1.01);
+  }
+
+  .vc-wa-float-btn svg {
+    width: 30px;
+    height: 30px;
+    display: block;
+  }
+
+  .vc-wa-float-btn .vc-wa-icon-close {
+    display: none;
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 300;
+  }
+
+  .vc-wa-float.is-open .vc-wa-float-btn .vc-wa-icon-wa {
+    display: none;
+  }
+
+  .vc-wa-float.is-open .vc-wa-float-btn .vc-wa-icon-close {
+    display: block;
+  }
+
+  body:has(#vcCheckoutMobileBar.is-active) .vc-wa-float,
+  body:has(.vc-checkout-mobile-bar.is-active) .vc-wa-float {
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (max-width: 900px) {
     .vibecano-footer-root .ro-footer-wrap {
-      grid-template-columns: 1fr;
-      gap: 28px;
+      grid-template-columns: 1fr 1fr;
+    }
+    .vibecano-footer-root .ro-footer-brand {
+      grid-column: 1 / -1;
     }
   }
 
-  @media (max-width: 480px) {
-    .vibecano-footer-root .ro-footer { padding: 36px 16px 0; }
-    .vibecano-footer-root .ro-footer-bar { padding: 16px; flex-direction: column; align-items: flex-start; }
+  @media (max-width: 520px) {
+    .vibecano-footer-root .ro-footer-wrap {
+      grid-template-columns: 1fr;
+      gap: 22px;
+      padding-top: 32px;
+    }
+    .vibecano-footer-root .ro-footer-logo-img {
+      height: 38px;
+      max-width: 132px;
+    }
+    .vibecano-footer-root .ro-footer-bar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .vc-wa-float-btn {
+      width: 54px;
+      height: 54px;
+    }
+    .vc-wa-float-btn svg {
+      width: 28px;
+      height: 28px;
+    }
+    .vc-wa-panel {
+      width: min(320px, calc(100vw - 32px));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vc-wa-float-btn,
+    .vc-wa-panel {
+      transition: none !important;
+    }
   }
 </style>
 
-<footer class="vibecano-footer-root" id="vibecanoFooterRoot">
+<footer class="vibecano-footer-root" id="vibecanoFooterRoot" data-vc-footer-version="1.4">
   <div class="ro-footer">
+    <div class="ro-footer-accent" aria-hidden="true"></div>
+
     <div class="ro-footer-wrap">
       <div class="ro-footer-brand">
-        <a href="/" class="ro-footer-logo">
-          <span class="ro-footer-logo-mark">V</span>
-          <span>
-            <span>VIBECANO</span><br>
-            <span class="ro-footer-tagline">WEAR YOUR VIBE</span>
-          </span>
+        <a href="/" class="ro-footer-logo" aria-label="Vibecano — home">
+          <img
+            class="ro-footer-logo-img"
+            src="https://vibecano.com/wp-content/uploads/2026/07/logo2-300x201.jpg"
+            srcset="https://vibecano.com/wp-content/uploads/2026/07/logo2-300x201.jpg 300w"
+            sizes="(max-width: 520px) 132px, 160px"
+            alt="Vibecano"
+            width="300"
+            height="201"
+            decoding="async"
+            loading="lazy"
+          />
         </a>
-        <p class="ro-footer-desc">Premium ready-made apparel and customizable designs — quality tees, hoodies, and caps delivered across Pakistan.</p>
+        <p class="ro-footer-desc">Premium ready-made apparel and essentials delivered across Pakistan.</p>
         <div class="ro-footer-social">
-          <a href="https://wa.me/923332929254" target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
-          <a href="tel:+923332929254">📞 Call</a>
+          <a href="/shop/">Shop</a>
+          <a href="https://wa.me/923332929254" target="_blank" rel="noopener noreferrer">WhatsApp</a>
         </div>
       </div>
 
       <div class="ro-footer-col">
-        <h4>Shop</h4>
+        <h4>Collections</h4>
         <ul class="ro-footer-links">
           <li><a href="/shop/">Shop All</a></li>
-          <li><a id="roFooterCustomize" href="/product-category/customize/">Customize</a></li>
-          <li><a id="roFooterReadyMade" href="/product-category/ready-made/">Ready Made</a></li>
+          <li><a id="roFooterMen" href="/product-category/men/">Men</a></li>
+          <li><a id="roFooterWomen" href="/product-category/women/">Women</a></li>
+          <li><a id="roFooterKids" href="/product-category/kids/">Kids</a></li>
+          <li><a id="roFooterUnder999" href="/product-category/under999/" class="is-gold">Under 999</a></li>
           <li><a id="roFooterFeatured" href="/product-category/featured/">Featured</a></li>
+        </ul>
+      </div>
+
+      <div class="ro-footer-col">
+        <h4>Account</h4>
+        <ul class="ro-footer-links">
+          <li><a href="/my-account/">My Account</a></li>
+          <li><a href="/my-account/?action=register">Register</a></li>
           <li><a href="/cart/">Cart</a></li>
         </ul>
       </div>
 
       <div class="ro-footer-col">
-        <h4>Help</h4>
+        <h4>Contact</h4>
         <div class="ro-footer-contact">
-          <a href="https://wa.me/923332929254" target="_blank" rel="noopener noreferrer">+923332929254</a>
-          <a href="/my-account/">My Account</a>
-          <a href="/my-account/?action=register">Register</a>
-          <p class="ro-footer-note">Free shipping on orders over Rs. 5,000. Easy 7-day returns on ready-made items.</p>
+          <a href="tel:+923332929254">+923332929254</a>
+          <a href="https://wa.me/923332929254" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+          <p class="ro-footer-note">Free shipping over Rs. 5,000 · 7-day returns on ready-made items.</p>
         </div>
       </div>
     </div>
 
     <div class="ro-footer-bar">
-      <span>© <span id="roFooterYear"></span> Vibecano. All rights reserved.</span>
-      <div class="ro-footer-bar-badges">
-        <span class="ro-footer-badge">🚚 Nationwide delivery</span>
-        <span class="ro-footer-badge">✓ Quality essentials</span>
+      <span>© <span id="roFooterYear"></span> Vibecano</span>
+      <div class="ro-footer-badges">
+        <span class="ro-footer-badge">Nationwide delivery</span>
         <span class="ro-footer-badge">4.9★ rated</span>
+        <span class="ro-footer-badge">Secure checkout</span>
       </div>
     </div>
   </div>
 </footer>
 
+<div class="vc-wa-float" id="vcWhatsAppFloat" data-vc-wa-version="1.1">
+  <div class="vc-wa-panel" id="vcWhatsAppPanel" role="dialog" aria-modal="true" aria-labelledby="vcWhatsAppTitle" aria-hidden="true">
+    <div class="vc-wa-panel-head">
+      <span class="vc-wa-panel-head-icon" aria-hidden="true">
+        <svg viewBox="0 0 32 32" focusable="false"><path fill="currentColor" d="M16.01 2.667c-7.364 0-13.344 5.979-13.344 13.343 0 2.353.615 4.658 1.784 6.686L2.667 29.333l6.828-1.724a13.28 13.28 0 0 0 6.515 1.667h.005c7.364 0 13.343-5.98 13.343-13.344C29.358 8.646 23.378 2.667 16.01 2.667zm0 24.01h-.004a11.02 11.02 0 0 1-5.617-1.536l-.403-.24-4.052 1.026 1.082-3.953-.262-.406a11.01 11.01 0 0 1-1.69-5.858c0-6.094 4.958-11.052 11.056-11.052 2.954 0 5.73 1.15 7.817 3.24a10.98 10.98 0 0 1 3.233 7.812c0 6.094-4.958 11.052-11.06 11.052zm6.07-8.276c-.333-.167-1.969-.972-2.274-1.083-.305-.11-.527-.167-.749.167-.222.333-.86 1.083-1.055 1.305-.194.222-.389.25-.722.083-.333-.167-1.405-.518-2.676-1.65-.99-.882-1.658-1.972-1.852-2.305-.194-.333-.02-.513.146-.679.15-.149.333-.389.5-.583.167-.194.222-.333.333-.556.111-.222.056-.417-.028-.583-.083-.167-.749-1.805-1.026-2.472-.27-.64-.544-.553-.749-.563l-.638-.011c-.222 0-.583.083-.889.417-.305.333-1.166 1.14-1.166 2.78 0 1.64 1.194 3.226 1.361 3.448.167.222 2.35 3.587 5.694 5.03.795.343 1.416.548 1.899.702.798.254 1.525.218 2.1.132.64-.096 1.969-.805 2.247-1.583.278-.778.278-1.444.194-1.583-.083-.139-.305-.222-.638-.389z"/></svg>
+      </span>
+      <span class="vc-wa-panel-head-title" id="vcWhatsAppTitle">Vibecano</span>
+      <button class="vc-wa-panel-close" type="button" id="vcWhatsAppClose" aria-label="Close chat">×</button>
+    </div>
+    <div class="vc-wa-panel-body">
+      <div class="vc-wa-bubble">Assalam O Alikum</div>
+      <a class="vc-wa-panel-cta" id="vcWhatsAppCta" href="https://wa.me/923332929254" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path fill="currentColor" d="M16.01 2.667c-7.364 0-13.344 5.979-13.344 13.343 0 2.353.615 4.658 1.784 6.686L2.667 29.333l6.828-1.724a13.28 13.28 0 0 0 6.515 1.667h.005c7.364 0 13.343-5.98 13.343-13.344C29.358 8.646 23.378 2.667 16.01 2.667zm0 24.01h-.004a11.02 11.02 0 0 1-5.617-1.536l-.403-.24-4.052 1.026 1.082-3.953-.262-.406a11.01 11.01 0 0 1-1.69-5.858c0-6.094 4.958-11.052 11.056-11.052 2.954 0 5.73 1.15 7.817 3.24a10.98 10.98 0 0 1 3.233 7.812c0 6.094-4.958 11.052-11.06 11.052zm6.07-8.276c-.333-.167-1.969-.972-2.274-1.083-.305-.11-.527-.167-.749.167-.222.333-.86 1.083-1.055 1.305-.194.222-.389.25-.722.083-.333-.167-1.405-.518-2.676-1.65-.99-.882-1.658-1.972-1.852-2.305-.194-.333-.02-.513.146-.679.15-.149.333-.389.5-.583.167-.194.222-.333.333-.556.111-.222.056-.417-.028-.583-.083-.167-.749-1.805-1.026-2.472-.27-.64-.544-.553-.749-.563l-.638-.011c-.222 0-.583.083-.889.417-.305.333-1.166 1.14-1.166 2.78 0 1.64 1.194 3.226 1.361 3.448.167.222 2.35 3.587 5.694 5.03.795.343 1.416.548 1.899.702.798.254 1.525.218 2.1.132.64-.096 1.969-.805 2.247-1.583.278-.778.278-1.444.194-1.583-.083-.139-.305-.222-.638-.389z"/></svg>
+        WhatsApp Us Now!
+      </a>
+    </div>
+    <div class="vc-wa-panel-foot" aria-hidden="true">
+      <svg viewBox="0 0 32 32" focusable="false"><path fill="currentColor" d="M16.01 2.667c-7.364 0-13.344 5.979-13.344 13.343 0 2.353.615 4.658 1.784 6.686L2.667 29.333l6.828-1.724a13.28 13.28 0 0 0 6.515 1.667h.005c7.364 0 13.343-5.98 13.343-13.344C29.358 8.646 23.378 2.667 16.01 2.667zm0 24.01h-.004a11.02 11.02 0 0 1-5.617-1.536l-.403-.24-4.052 1.026 1.082-3.953-.262-.406a11.01 11.01 0 0 1-1.69-5.858c0-6.094 4.958-11.052 11.056-11.052 2.954 0 5.73 1.15 7.817 3.24a10.98 10.98 0 0 1 3.233 7.812c0 6.094-4.958 11.052-11.06 11.052zm6.07-8.276c-.333-.167-1.969-.972-2.274-1.083-.305-.11-.527-.167-.749.167-.222.333-.86 1.083-1.055 1.305-.194.222-.389.25-.722.083-.333-.167-1.405-.518-2.676-1.65-.99-.882-1.658-1.972-1.852-2.305-.194-.333-.02-.513.146-.679.15-.149.333-.389.5-.583.167-.194.222-.333.333-.556.111-.222.056-.417-.028-.583-.083-.167-.749-1.805-1.026-2.472-.27-.64-.544-.553-.749-.563l-.638-.011c-.222 0-.583.083-.889.417-.305.333-1.166 1.14-1.166 2.78 0 1.64 1.194 3.226 1.361 3.448.167.222 2.35 3.587 5.694 5.03.795.343 1.416.548 1.899.702.798.254 1.525.218 2.1.132.64-.096 1.969-.805 2.247-1.583.278-.778.278-1.444.194-1.583-.083-.139-.305-.222-.638-.389z"/></svg>
+      Powered by WhatsApp
+    </div>
+  </div>
+  <button class="vc-wa-float-btn" type="button" id="vcWhatsAppFloatBtn" aria-label="Open WhatsApp chat" aria-expanded="false" aria-controls="vcWhatsAppPanel">
+    <span class="vc-wa-icon-close" aria-hidden="true">×</span>
+    <svg class="vc-wa-icon-wa" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path fill="currentColor" d="M16.01 2.667c-7.364 0-13.344 5.979-13.344 13.343 0 2.353.615 4.658 1.784 6.686L2.667 29.333l6.828-1.724a13.28 13.28 0 0 0 6.515 1.667h.005c7.364 0 13.343-5.98 13.343-13.344C29.358 8.646 23.378 2.667 16.01 2.667zm0 24.01h-.004a11.02 11.02 0 0 1-5.617-1.536l-.403-.24-4.052 1.026 1.082-3.953-.262-.406a11.01 11.01 0 0 1-1.69-5.858c0-6.094 4.958-11.052 11.056-11.052 2.954 0 5.73 1.15 7.817 3.24a10.98 10.98 0 0 1 3.233 7.812c0 6.094-4.958 11.052-11.06 11.052zm6.07-8.276c-.333-.167-1.969-.972-2.274-1.083-.305-.11-.527-.167-.749.167-.222.333-.86 1.083-1.055 1.305-.194.222-.389.25-.722.083-.333-.167-1.405-.518-2.676-1.65-.99-.882-1.658-1.972-1.852-2.305-.194-.333-.02-.513.146-.679.15-.149.333-.389.5-.583.167-.194.222-.333.333-.556.111-.222.056-.417-.028-.583-.083-.167-.749-1.805-1.026-2.472-.27-.64-.544-.553-.749-.563l-.638-.011c-.222 0-.583.083-.889.417-.305.333-1.166 1.14-1.166 2.78 0 1.64 1.194 3.226 1.361 3.448.167.222 2.35 3.587 5.694 5.03.795.343 1.416.548 1.899.702.798.254 1.525.218 2.1.132.64-.096 1.969-.805 2.247-1.583.278-.778.278-1.444.194-1.583-.083-.139-.305-.222-.638-.389z"/>
+    </svg>
+  </button>
+</div>
+
 <script>
 (function () {
   "use strict";
 
+  var WHATSAPP_PHONE = "923332929254";
+  var WHATSAPP_TEXT = "Hi Vibecano, I need help with...";
+
   var CONFIG = {
+    shopUrl: "/shop/",
     categoriesEndpoint: "/wp-json/wc/store/v1/products/categories",
-    mainCategories: [
-      { key: "customize", slugs: ["customize", "custom"], label: "Customize" },
-      { key: "ready-made", slugs: ["ready-made", "ready-made-designs"], label: "Ready Made" },
-      { key: "featured", slugs: ["featured"], label: "Featured" }
+    footerCategories: [
+      { key: "men", slugs: ["men"], linkId: "roFooterMen" },
+      { key: "women", slugs: ["women"], linkId: "roFooterWomen" },
+      { key: "kids", slugs: ["kids"], linkId: "roFooterKids" },
+      { key: "under999", slugs: ["under999", "under-999"], linkId: "roFooterUnder999", label: "Under 999" },
+      { key: "featured", slugs: ["featured"], linkId: "roFooterFeatured" }
     ]
   };
 
   var root = document.getElementById("vibecanoFooterRoot");
+  var waFloat = document.getElementById("vcWhatsAppFloat");
+  var waPanel = document.getElementById("vcWhatsAppPanel");
+  var waBtn = document.getElementById("vcWhatsAppFloatBtn");
+  var waClose = document.getElementById("vcWhatsAppClose");
+  var waCta = document.getElementById("vcWhatsAppCta");
+
   if (!root) return;
 
-  var yearEl = document.getElementById("roFooterYear");
-  var footerLinks = {
-    customize: document.getElementById("roFooterCustomize"),
-    "ready-made": document.getElementById("roFooterReadyMade"),
-    featured: document.getElementById("roFooterFeatured")
-  };
+  if (waCta) {
+    waCta.href = "https://wa.me/" + WHATSAPP_PHONE + "?text=" + encodeURIComponent(WHATSAPP_TEXT);
+  }
+  if (waFloat && waFloat.parentNode !== document.body) {
+    document.body.appendChild(waFloat);
+  }
 
+  setupWhatsAppWidget();
+
+  function setupWhatsAppWidget() {
+    if (!waFloat || !waBtn || !waPanel) return;
+
+    waBtn.addEventListener("click", function () {
+      if (waFloat.classList.contains("is-open")) closeWhatsAppPanel();
+      else openWhatsAppPanel();
+    });
+
+    if (waClose) {
+      waClose.addEventListener("click", closeWhatsAppPanel);
+    }
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeWhatsAppPanel();
+    });
+  }
+
+  function openWhatsAppPanel() {
+    if (!waFloat || !waBtn || !waPanel) return;
+    waFloat.classList.add("is-open");
+    waBtn.setAttribute("aria-expanded", "true");
+    waBtn.setAttribute("aria-label", "Close WhatsApp chat");
+    waPanel.setAttribute("aria-hidden", "false");
+  }
+
+  function closeWhatsAppPanel() {
+    if (!waFloat || !waBtn || !waPanel) return;
+    waFloat.classList.remove("is-open");
+    waBtn.setAttribute("aria-expanded", "false");
+    waBtn.setAttribute("aria-label", "Open WhatsApp chat");
+    waPanel.setAttribute("aria-hidden", "true");
+  }
+
+  var yearEl = document.getElementById("roFooterYear");
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
   expandFooterLayout();
@@ -303,7 +648,8 @@
 
   function expandFooterLayout() {
     var node = root.parentElement;
-    while (node && node !== document.documentElement) {
+    var hops = 0;
+    while (node && node !== document.documentElement && hops < 12) {
       if (
         node.classList &&
         (
@@ -320,8 +666,8 @@
         node.style.setProperty("flex", "1 1 100%", "important");
       }
       node = node.parentElement;
+      hops += 1;
     }
-
     root.style.setProperty("width", "100%", "important");
     root.style.setProperty("max-width", "none", "important");
   }
@@ -329,32 +675,33 @@
   function loadFooterCategories() {
     if (!window.fetch) return;
 
-    fetch(CONFIG.categoriesEndpoint + "?per_page=100", { credentials: "same-origin" })
+    fetch(CONFIG.categoriesEndpoint + "?per_page=100&hide_empty=false", { credentials: "same-origin" })
       .then(function (response) {
         if (!response.ok) throw new Error("Categories request failed");
         return response.json();
       })
       .then(function (categories) {
-        var safeCategories = Array.isArray(categories) ? categories : [];
-        CONFIG.mainCategories.forEach(function (item) {
-          var category = resolveMainCategory(safeCategories, item);
-          if (!category) return;
-          var linkEl = footerLinks[item.key];
-          var url = getCategoryUrl(category);
-          if (linkEl) {
-            linkEl.href = url;
-            linkEl.textContent = item.label || category.name;
+        var list = Array.isArray(categories) ? categories : [];
+        CONFIG.footerCategories.forEach(function (item) {
+          var category = resolveCategory(list, item.slugs);
+          var linkEl = document.getElementById(item.linkId);
+          if (!linkEl) return;
+          if (category) {
+            linkEl.href = getCategoryUrl(category);
+            if (!item.label) linkEl.textContent = category.name || linkEl.textContent;
+          } else if (item.label) {
+            linkEl.textContent = item.label;
           }
         });
       })
       .catch(function () {});
   }
 
-  function resolveMainCategory(categories, item) {
+  function resolveCategory(categories, slugs) {
     var i;
-    for (i = 0; i < item.slugs.length; i += 1) {
+    for (i = 0; i < slugs.length; i += 1) {
       var match = categories.filter(function (category) {
-        return category && category.slug === item.slugs[i];
+        return category && category.slug === slugs[i];
       })[0];
       if (match) return match;
     }
@@ -364,7 +711,7 @@
   function getCategoryUrl(category) {
     if (category && category.permalink) return category.permalink;
     if (category && category.slug) return "/product-category/" + category.slug + "/";
-    return "/shop/";
+    return CONFIG.shopUrl;
   }
 })();
 </script>
