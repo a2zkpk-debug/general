@@ -1,11 +1,11 @@
 <!-- ============================================================
-     VIBECANO — SHOP PAGE v1.6 (banner head framing)
+     VIBECANO — SHOP PAGE v1.7 (full banner image)
      Paste this WHOLE file into your Elementor HTML widget on /shop/.
 
      IMPORTANT: GitHub updates do NOT change your live site automatically.
      After every update you must open Elementor → Shop template → HTML widget,
      select all, paste this file, Update, then hard-refresh the shop page
-     (Ctrl+Shift+R). Check for "v1.6" on the page wrapper to confirm.
+     (Ctrl+Shift+R). Check for "v1.7" on the page wrapper to confirm.
 
      HOW TO USE
      ────────────────────────────────────────
@@ -75,22 +75,21 @@
 
   .vc-shop-root .vc-shop-hero-banner {
     position: relative;
-    overflow: hidden;
     width: 100%;
-    height: 360px;
-    max-height: 360px;
-    min-height: 360px;
+    line-height: 0;
     background: #e6e2dc;
+    overflow: hidden;
   }
 
   .vc-shop-root .vc-shop-hero-banner img {
+    display: block !important;
     width: 100% !important;
-    height: 100% !important;
-    max-width: none !important;
+    height: auto !important;
+    max-width: 100% !important;
     max-height: none !important;
-    object-fit: cover !important;
-    object-position: center 16% !important;
-    display: block;
+    aspect-ratio: 1168 / 784;
+    object-fit: contain !important;
+    object-position: center center !important;
   }
 
   .vc-shop-chips {
@@ -806,14 +805,6 @@
   /* Mobile: one full-width product card; hide size picker */
   @media (max-width: 800px) {
     .vc-shop-wrap { padding: 14px 14px 56px; }
-    .vc-shop-root .vc-shop-hero-banner {
-      height: 250px;
-      max-height: 250px;
-      min-height: 250px;
-    }
-    .vc-shop-root .vc-shop-hero-banner img {
-      object-position: center 14% !important;
-    }
     .vc-shop-grid {
       grid-template-columns: minmax(0, 1fr);
       gap: 22px;
@@ -940,7 +931,7 @@
   }
 </style>
 
-<div class="vc-shop-root" id="vcShopRoot" data-vc-shop-version="1.6">
+<div class="vc-shop-root" id="vcShopRoot" data-vc-shop-version="1.7">
   <div class="vc-shop-wrap">
     <header class="vc-shop-hero">
       <div class="vc-shop-hero-banner" aria-label="Vibecano shop">
@@ -1189,23 +1180,9 @@
   if (bannerImgEl) {
     bannerImgEl.setAttribute("src", CONFIG.bannerImage);
     if (CONFIG.bannerImageSrcset) bannerImgEl.setAttribute("srcset", CONFIG.bannerImageSrcset);
-    applyBannerLayout();
-    window.addEventListener("resize", applyBannerLayout);
-  }
-
-  function applyBannerLayout() {
-    if (!bannerImgEl) return;
-    var banner = bannerImgEl.closest(".vc-shop-hero-banner");
-    if (!banner) return;
-    var height = window.innerWidth <= 800 ? 250 : 360;
-    banner.style.setProperty("height", height + "px", "important");
-    banner.style.setProperty("max-height", height + "px", "important");
-    banner.style.setProperty("min-height", height + "px", "important");
-    banner.style.setProperty("overflow", "hidden", "important");
     bannerImgEl.style.setProperty("width", "100%", "important");
-    bannerImgEl.style.setProperty("height", "100%", "important");
-    bannerImgEl.style.setProperty("object-fit", "cover", "important");
-    bannerImgEl.style.setProperty("object-position", window.innerWidth <= 800 ? "center 14%" : "center 16%", "important");
+    bannerImgEl.style.setProperty("height", "auto", "important");
+    bannerImgEl.style.setProperty("object-fit", "contain", "important");
   }
 
   setupFilterControls();
