@@ -1,10 +1,50 @@
 <!-- ============================================================
-     VIBECANO — CUSTOM CHECKOUT PAGE
+     VIBECANO — CUSTOM CHECKOUT PAGE v1.2 (responsive)
      Paste this whole file into an Elementor HTML widget.
-     Uses WooCommerce Store API.
+
+     Confirm: data-vc-checkout-version="1.2" on #vcCheckoutSection
+     Uses WooCommerce Store API + WhatsApp confirmation.
+
+     Place Order:
+       1) Creates a real WooCommerce order (shipping rate + payment)
+       2) Opens WhatsApp to +923332929254 with full order details
+
+     Tips:
+     • Page template: Elementor Full Width or Canvas
+     • In Elementor, select the SECTION → Layout → Content Width: Full Width
+       (page template alone is not enough if the section is still Boxed)
+     • Hide default Woo checkout if it still shows:
+
+       body.woocommerce-checkout .woocommerce,
+       body.woocommerce-checkout .woocommerce-checkout {
+         display: none !important;
+       }
      ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
 <style>
-  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Manrope:wght@700;800&display=swap");
+  /* Break out of Elementor/theme boxed containers that leave empty right space */
+  .elementor-widget:has(.vc-checkout),
+  .elementor-widget-html:has(.vc-checkout),
+  .elementor-element:has(> .elementor-widget-container > .vc-checkout),
+  .elementor-column:has(.vc-checkout),
+  .elementor-top-section:has(.vc-checkout),
+  .elementor-section:has(.vc-checkout),
+  .e-con:has(.vc-checkout),
+  .e-con-inner:has(.vc-checkout) {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .elementor-section:has(.vc-checkout) > .elementor-container,
+  .elementor-top-section:has(.vc-checkout) > .elementor-container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 
   .vc-checkout,
   .vc-checkout * {
@@ -12,154 +52,150 @@
   }
 
   .vc-checkout {
-    --vc-co-text: #0f172a;
-    --vc-co-muted: #64748b;
-    --vc-co-line: rgba(148, 163, 184, 0.28);
-    --vc-co-soft: #f8fafc;
-    --vc-co-orange: #f97316;
-    --vc-co-blue: #2563eb;
+    --ink: #121212;
+    --ink-2: #3a3a40;
+    --muted: #6f6f78;
+    --line: rgba(18, 18, 18, 0.12);
+    --soft: #f3f1ed;
+    --panel: #ffffff;
+    --ok: #0f7a4c;
+    --warn: #9a3412;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --vc-co-pad: clamp(16px, 3.5vw, 48px);
     position: relative;
-    width: 100%;
-    max-width: none;
-    overflow-x: hidden;
-    padding: 44px 0 72px;
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    overflow-x: clip;
+    padding: clamp(20px, 3vw, 40px) 0 clamp(88px, 10vw, 72px);
     background:
-      radial-gradient(circle at 8% 4%, rgba(249, 115, 22, 0.11), transparent 28%),
-      radial-gradient(circle at 92% 0%, rgba(37, 99, 235, 0.11), transparent 30%),
-      linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-    color: var(--vc-co-text);
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      linear-gradient(180deg, rgba(243, 241, 237, 0.9) 0%, rgba(255, 255, 255, 0.96) 42%, #fff 100%),
+      repeating-linear-gradient(
+        -12deg,
+        transparent,
+        transparent 22px,
+        rgba(18, 18, 18, 0.015) 22px,
+        rgba(18, 18, 18, 0.015) 23px
+      );
+    color: var(--ink);
+    font-family: Manrope, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 
   .vc-checkout-inner {
     width: 100%;
-    max-width: 1280px;
+    max-width: 1320px;
     margin: 0 auto;
-    padding: 0 clamp(16px, 2.6vw, 30px);
+    padding: 0 var(--vc-co-pad);
   }
 
-  .vc-checkout-hero {
+  .vc-checkout-head {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 22px;
+    gap: 16px 24px;
     align-items: end;
-    margin-bottom: 24px;
-    padding: clamp(24px, 4vw, 38px);
-    border-radius: 34px;
-    background:
-      radial-gradient(circle at top right, rgba(249, 115, 22, 0.22), transparent 35%),
-      linear-gradient(135deg, #07111f 0%, #0f172a 52%, #172554 100%);
-    color: #fff;
-    box-shadow: 0 30px 80px -58px rgba(15, 23, 42, 0.9);
+    margin-bottom: clamp(20px, 3vw, 28px);
+    padding-bottom: clamp(16px, 2.4vw, 22px);
+    border-bottom: 1px solid var(--line);
   }
 
-  .vc-checkout-kicker {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 14px;
-    padding: 8px 13px;
-    border: 1px solid rgba(249, 115, 22, 0.35);
-    border-radius: 999px;
-    background: rgba(249, 115, 22, 0.13);
-    color: #fed7aa;
-    font-size: 12px;
-    font-weight: 900;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .vc-checkout-kicker::before {
-    content: "";
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 999px;
-    background: var(--vc-co-orange);
-    box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.13);
+  .vc-checkout-brand {
+    margin: 0 0 8px;
+    font-family: Syne, Manrope, sans-serif;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
   }
 
   .vc-checkout-title {
-    max-width: 760px;
     margin: 0;
-    font-family: Manrope, Inter, sans-serif;
-    font-size: clamp(34px, 5vw, 58px);
-    font-weight: 800;
-    line-height: 1.06;
-    letter-spacing: -0.035em;
-  }
-
-  .vc-checkout-title span {
-    color: #fb923c;
+    color: var(--ink-2);
+    font-size: clamp(15px, 1.6vw, 17px);
+    font-weight: 700;
+    letter-spacing: 0.01em;
   }
 
   .vc-checkout-sub {
-    max-width: 650px;
-    margin: 14px 0 0;
-    color: #cbd5e1;
-    font-size: 16px;
-    font-weight: 650;
-    line-height: 1.75;
+    margin: 8px 0 0;
+    max-width: 46ch;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.55;
   }
 
-  .vc-checkout-hero-card {
-    min-width: 220px;
-    padding: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 22px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
+  .vc-checkout-total-chip {
+    display: grid;
+    gap: 4px;
+    justify-items: end;
+    text-align: right;
+    min-width: 0;
   }
 
-  .vc-checkout-hero-card b {
-    display: block;
-    font-size: 24px;
-    font-weight: 900;
-  }
-
-  .vc-checkout-hero-card span {
-    display: block;
-    margin-top: 4px;
-    color: rgba(255, 255, 255, 0.66);
+  .vc-checkout-total-chip span {
+    color: var(--muted);
     font-size: 11px;
-    font-weight: 900;
+    font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
+  .vc-checkout-total-chip b {
+    font-family: Manrope, "Segoe UI", sans-serif;
+    font-size: clamp(22px, 3vw, 28px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    word-break: break-word;
+  }
+
   .vc-checkout-shell {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 380px;
-    gap: 22px;
+    grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.85fr);
+    gap: clamp(18px, 2.5vw, 32px);
     align-items: start;
+    width: 100%;
+  }
+
+  .vc-checkout-form,
+  .vc-checkout-summary {
+    min-width: 0;
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--line);
   }
 
   .vc-checkout-form {
     display: grid;
-    gap: 18px;
-    padding: 22px;
-    border: 1px solid var(--vc-co-line);
-    border-radius: 26px;
-    background: #fff;
-    box-shadow: 0 22px 58px -48px rgba(15, 23, 42, 0.7);
+    gap: 22px;
+    padding: clamp(18px, 2.4vw, 28px);
   }
 
-  .vc-checkout-form h3 {
+  .vc-checkout-section {
+    display: grid;
+    gap: 12px;
+  }
+
+  .vc-checkout-section h3 {
     margin: 0;
-    font-family: Manrope, Inter, sans-serif;
-    font-size: 22px;
+    font-family: Syne, Manrope, sans-serif;
+    font-size: 18px;
     font-weight: 800;
+    letter-spacing: -0.02em;
   }
 
   .vc-checkout-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    gap: 12px;
   }
 
   .vc-checkout-field {
     display: grid;
-    gap: 7px;
+    gap: 6px;
+    min-width: 0;
   }
 
   .vc-checkout-field.is-full {
@@ -167,10 +203,10 @@
   }
 
   .vc-checkout-field label {
-    color: var(--vc-co-muted);
+    color: var(--muted);
     font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 0.08em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
@@ -178,19 +214,29 @@
   .vc-checkout-field textarea,
   .vc-checkout-field select {
     width: 100%;
-    padding: 13px 14px;
-    border: 1px solid var(--vc-co-line);
-    border-radius: 14px;
-    background: var(--vc-co-soft);
-    color: var(--vc-co-text);
+    max-width: 100%;
+    min-height: 46px;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: #faf9f7;
+    color: var(--ink);
     font: inherit;
     font-size: 14px;
-    font-weight: 650;
+    font-weight: 600;
     outline: 0;
+    transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+  }
+
+  .vc-checkout-field input:focus,
+  .vc-checkout-field textarea:focus,
+  .vc-checkout-field select:focus {
+    border-color: var(--ink);
+    background: #fff;
   }
 
   .vc-checkout-field textarea {
-    min-height: 92px;
+    min-height: 96px;
     resize: vertical;
   }
 
@@ -207,56 +253,55 @@
     gap: 12px;
     align-items: start;
     padding: 14px;
-    border: 1px solid var(--vc-co-line);
-    border-radius: 18px;
-    background: var(--vc-co-soft);
+    border: 1px solid var(--line);
+    background: #faf9f7;
     cursor: pointer;
-    transition: border-color 0.18s ease, background 0.18s ease;
+    transition: border-color 0.18s var(--ease), background 0.18s var(--ease);
   }
 
   .vc-checkout-pay.is-active,
   .vc-checkout-ship.is-active {
-    border-color: var(--vc-co-orange);
-    background: #fff7ed;
+    border-color: var(--ink);
+    background: #fff;
   }
 
   .vc-checkout-pay.is-disabled {
-    opacity: 0.45;
+    opacity: 0.42;
     cursor: not-allowed;
   }
 
   .vc-checkout-pay input,
   .vc-checkout-ship input {
     margin-top: 3px;
+    accent-color: var(--ink);
   }
 
   .vc-checkout-pay b,
   .vc-checkout-ship b {
     display: block;
     margin-bottom: 3px;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 800;
   }
 
   .vc-checkout-pay span,
   .vc-checkout-ship span {
     display: block;
-    color: var(--vc-co-muted);
+    color: var(--muted);
     font-size: 13px;
-    font-weight: 650;
-    line-height: 1.55;
+    font-weight: 600;
+    line-height: 1.5;
   }
 
   .vc-checkout-bank {
     display: none;
-    margin-top: 12px;
+    margin-top: 4px;
     padding: 14px;
-    border: 1px dashed var(--vc-co-line);
-    border-radius: 16px;
+    border: 1px dashed var(--line);
     background: #fff;
-    color: var(--vc-co-muted);
+    color: var(--ink-2);
     font-size: 13px;
-    font-weight: 650;
+    font-weight: 600;
     line-height: 1.65;
   }
 
@@ -264,62 +309,67 @@
     display: block;
   }
 
+  .vc-checkout-bank strong {
+    color: var(--ink);
+    font-weight: 800;
+  }
+
   .vc-checkout-receipt {
     display: none;
-    margin-top: 12px;
+    margin-top: 4px;
+    gap: 8px;
   }
 
   .vc-checkout-receipt.is-visible {
     display: grid;
-    gap: 8px;
   }
 
   .vc-checkout-receipt label {
-    color: var(--vc-co-muted);
+    color: var(--muted);
     font-size: 11px;
-    font-weight: 900;
-    letter-spacing: 0.08em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
   }
 
   .vc-checkout-receipt input[type="file"] {
     width: 100%;
-    padding: 10px;
-    border: 1px dashed var(--vc-co-line);
-    border-radius: 14px;
-    background: #fff;
+    max-width: 100%;
+    padding: 12px;
+    border: 1px dashed var(--line);
+    background: #faf9f7;
     font-size: 13px;
+    font-weight: 600;
   }
 
   .vc-checkout-receipt-name {
-    color: #16a34a;
+    color: var(--ok);
     font-size: 12px;
-    font-weight: 800;
+    font-weight: 700;
+    word-break: break-word;
   }
 
   .vc-checkout-summary {
     position: sticky;
     top: 18px;
-    padding: 20px;
-    border: 1px solid var(--vc-co-line);
-    border-radius: 26px;
-    background:
-      radial-gradient(circle at top right, rgba(249, 115, 22, 0.08), transparent 38%),
-      #fff;
-    box-shadow: 0 26px 70px -56px rgba(15, 23, 42, 0.9);
+    padding: clamp(18px, 2.2vw, 24px);
   }
 
   .vc-checkout-summary h3 {
     margin: 0 0 16px;
-    font-family: Manrope, Inter, sans-serif;
-    font-size: 22px;
+    font-family: Syne, Manrope, sans-serif;
+    font-size: 18px;
     font-weight: 800;
+    letter-spacing: -0.02em;
   }
 
   .vc-order-list {
     display: grid;
-    gap: 12px;
+    gap: 14px;
     margin-bottom: 14px;
+    max-height: min(42vh, 360px);
+    overflow: auto;
+    padding-right: 4px;
   }
 
   .vc-order-item {
@@ -328,7 +378,7 @@
     gap: 12px;
     align-items: start;
     padding-bottom: 12px;
-    border-bottom: 1px dashed var(--vc-co-line);
+    border-bottom: 1px solid var(--line);
   }
 
   .vc-order-item:last-child {
@@ -339,9 +389,8 @@
   .vc-order-img {
     overflow: hidden;
     width: 64px;
-    height: 64px;
-    border-radius: 14px;
-    background: var(--vc-co-soft);
+    height: 80px;
+    background: var(--soft);
   }
 
   .vc-order-img img {
@@ -353,22 +402,20 @@
 
   .vc-order-name {
     margin: 0 0 4px;
-    font-family: Manrope, Inter, sans-serif;
     font-size: 14px;
     font-weight: 800;
     line-height: 1.3;
   }
 
   .vc-order-meta {
-    margin-top: 2px;
-    color: var(--vc-co-muted);
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1.35;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    word-break: break-word;
   }
 
   .vc-order-price {
-    color: var(--vc-co-text);
     font-size: 14px;
     font-weight: 800;
     white-space: nowrap;
@@ -378,170 +425,422 @@
     display: flex;
     justify-content: space-between;
     gap: 18px;
-    padding: 9px 0;
-    color: var(--vc-co-muted);
+    padding: 8px 0;
+    color: var(--muted);
     font-size: 14px;
     font-weight: 700;
   }
 
+  .vc-checkout-row span:last-child {
+    color: var(--ink);
+    text-align: right;
+    word-break: break-word;
+  }
+
+  .vc-checkout-row.is-discount span:last-child {
+    color: var(--ok);
+  }
+
   .vc-checkout-row.total {
-    margin-top: 10px;
-    padding-top: 16px;
-    border-top: 1px dashed var(--vc-co-line);
-    color: var(--vc-co-text);
-    font-size: 19px;
-    font-weight: 900;
+    margin-top: 8px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    color: var(--ink);
+    font-family: Syne, Manrope, sans-serif;
+    font-size: 18px;
+    font-weight: 800;
   }
 
-  .vc-checkout-submit {
+  .vc-checkout-actions {
+    display: grid;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .vc-checkout-submit,
+  .vc-checkout-whatsapp,
+  .vc-checkout-empty a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    min-height: 50px;
-    margin-top: 14px;
+    min-height: 48px;
+    padding: 0 16px;
     border: 0;
-    border-radius: 16px;
-    background: linear-gradient(135deg, var(--vc-co-orange), #ec4899);
-    color: #fff;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 900;
-    box-shadow: 0 22px 38px -26px rgba(249, 115, 22, 0.95);
-  }
-
-  .vc-checkout-submit:disabled {
-    cursor: wait;
-    opacity: 0.7;
-  }
-
-  .vc-checkout-whatsapp {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 46px;
-    margin-top: 10px;
-    border: 1px solid var(--vc-co-line);
-    border-radius: 16px;
-    background: #fff;
-    color: var(--vc-co-text);
+    border-radius: 0;
     cursor: pointer;
     font-family: inherit;
     font-size: 13px;
-    font-weight: 900;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: transform 0.2s var(--ease), background 0.2s var(--ease), color 0.2s var(--ease);
   }
 
+  .vc-checkout-submit,
+  .vc-checkout-empty a {
+    background: var(--ink);
+    color: #fff;
+  }
+
+  .vc-checkout-submit:hover,
+  .vc-checkout-empty a:hover {
+    background: #2a2a2a;
+  }
+
+  .vc-checkout-whatsapp {
+    border: 1px solid var(--ink);
+    background: #fff;
+    color: var(--ink);
+  }
+
+  .vc-checkout-whatsapp:hover {
+    background: var(--soft);
+  }
+
+  .vc-checkout-submit:disabled,
   .vc-checkout-whatsapp:disabled {
     cursor: wait;
-    opacity: 0.7;
+    opacity: 0.65;
   }
 
   .vc-checkout-back {
     display: inline-flex;
     justify-content: center;
     width: 100%;
-    margin-top: 12px;
-    color: var(--vc-co-muted);
+    margin-top: 4px;
+    color: var(--muted);
     font-size: 13px;
-    font-weight: 800;
+    font-weight: 700;
     text-decoration: none;
+  }
+
+  .vc-checkout-back:hover {
+    color: var(--ink);
   }
 
   .vc-checkout-empty,
   .vc-checkout-loading {
-    padding: 48px 20px;
-    border: 1px dashed var(--vc-co-line);
-    border-radius: 26px;
+    padding: clamp(36px, 6vw, 56px) clamp(18px, 4vw, 28px);
+    border: 1px solid var(--line);
     background: #fff;
-    color: var(--vc-co-muted);
+    color: var(--muted);
     text-align: center;
-    box-shadow: 0 22px 58px -48px rgba(15, 23, 42, 0.7);
   }
 
   .vc-checkout-empty h3 {
     margin: 0 0 8px;
-    color: var(--vc-co-text);
-    font-family: Manrope, Inter, sans-serif;
-    font-size: 24px;
+    color: var(--ink);
+    font-family: Syne, Manrope, sans-serif;
+    font-size: clamp(22px, 3vw, 28px);
     font-weight: 800;
   }
 
   .vc-checkout-empty p {
     margin: 0 auto 18px;
-    max-width: 440px;
+    max-width: 42ch;
     font-size: 14px;
-    font-weight: 650;
+    font-weight: 600;
     line-height: 1.6;
   }
 
   .vc-checkout-empty a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 46px;
-    padding: 0 18px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, var(--vc-co-orange), #ec4899);
-    color: #fff;
-    font-size: 14px;
-    font-weight: 900;
-    text-decoration: none;
+    width: auto;
+    min-width: min(100%, 220px);
+    margin: 0 auto;
+  }
+
+  .vc-checkout-free-note {
+    margin: 0 0 10px;
+    padding: 10px 12px;
+    background: #edf8f2;
+    color: var(--ok);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.45;
   }
 
   .vc-checkout-toast {
     position: fixed;
-    right: 22px;
-    bottom: 22px;
+    left: 50%;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
     z-index: 100000;
-    padding: 13px 18px;
-    border-radius: 999px;
-    background: #0f172a;
+    max-width: min(92vw, 420px);
+    padding: 12px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--ink);
     color: #fff;
-    box-shadow: 0 20px 40px -28px rgba(0, 0, 0, 0.75);
-    font-size: 14px;
-    font-weight: 800;
+    box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.55);
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
     opacity: 0;
-    transform: translateY(18px);
-    transition: opacity 0.28s ease, transform 0.28s ease;
+    transform: translate(-50%, 16px);
+    transition: opacity 0.28s var(--ease), transform 0.28s var(--ease);
     pointer-events: none;
   }
 
   .vc-checkout-toast.is-showing {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate(-50%, 0);
   }
 
-  .vc-checkout-free-note {
-    margin: 0;
-    padding: 10px 12px;
-    border-radius: 12px;
-    background: #ecfdf5;
-    color: #047857;
-    font-size: 12px;
+  /* Thank-you confirmation popup */
+  .vc-thanks-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100120;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    padding-top: max(20px, env(safe-area-inset-top, 0px));
+    padding-bottom: max(20px, env(safe-area-inset-bottom, 0px));
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.28s var(--ease), visibility 0.28s var(--ease);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .vc-thanks-modal.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .vc-thanks-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(18, 18, 18, 0.55);
+  }
+
+  .vc-thanks-box {
+    position: relative;
+    z-index: 1;
+    width: min(440px, calc(100vw - 32px));
+    max-height: calc(100dvh - 40px);
+    overflow-y: auto;
+    padding: 36px 28px 28px;
+    background: #fff;
+    border: 1px solid var(--line);
+    box-shadow: 0 28px 70px -28px rgba(0, 0, 0, 0.55);
+    text-align: center;
+    transform: translateY(14px) scale(0.98);
+    transition: transform 0.32s var(--ease);
+  }
+
+  .vc-thanks-modal.is-open .vc-thanks-box {
+    transform: none;
+  }
+
+  .vc-thanks-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 16px;
+    border: 2px solid var(--ok);
+    color: var(--ok);
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .vc-thanks-title {
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+    font-size: clamp(24px, 4vw, 30px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  .vc-thanks-order {
+    margin: 0 0 12px;
+    color: var(--ink-2);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .vc-thanks-copy {
+    margin: 0 auto 22px;
+    max-width: 34ch;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+  }
+
+  .vc-thanks-actions {
+    display: grid;
+    gap: 10px;
+  }
+
+  .vc-thanks-wa,
+  .vc-thanks-shop {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+    padding: 0 16px;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .vc-thanks-wa {
+    background: #128c7e;
+    color: #fff;
+  }
+
+  .vc-thanks-wa:hover {
+    background: #0e7a6e;
+  }
+
+  .vc-thanks-shop {
+    border: 1px solid var(--ink);
+    background: #fff;
+    color: var(--ink);
+  }
+
+  .vc-thanks-shop:hover {
+    background: var(--soft);
+  }
+
+  @media (max-width: 640px) {
+    .vc-thanks-modal {
+      align-items: center;
+      padding: 16px;
+    }
+
+    .vc-thanks-box {
+      width: 100%;
+      padding: 28px 20px 24px;
+    }
+  }
+
+  .vc-checkout-mobile-bar {
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100100;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 -12px 36px -24px rgba(0, 0, 0, 0.35);
+  }
+
+  .vc-checkout-mobile-bar.is-active {
+    display: flex !important;
+  }
+
+  .vc-checkout-form-actions {
+    display: none;
+  }
+
+  .vc-checkout-mobile-bar-copy {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .vc-checkout-mobile-bar-copy span {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .vc-checkout-mobile-bar-copy b {
+    display: block;
+    margin-top: 2px;
+    font-family: Syne, Manrope, sans-serif;
+    font-size: 18px;
     font-weight: 800;
-    line-height: 1.5;
+    letter-spacing: -0.02em;
+    word-break: break-word;
+  }
+
+  .vc-checkout-mobile-bar .vc-checkout-submit {
+    width: auto;
+    min-width: 148px;
+    flex: 0 0 auto;
+    margin: 0;
   }
 
   @media (max-width: 960px) {
-    .vc-checkout-hero,
     .vc-checkout-shell {
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
+      grid-template-columns: none;
+    }
+
+    .vc-checkout-form {
+      order: 1;
     }
 
     .vc-checkout-summary {
       position: static;
+      order: 2; /* Delivery first, order summary at the end on mobile */
+    }
+
+    .vc-order-list {
+      max-height: none;
+    }
+
+    .vc-checkout-actions .vc-checkout-submit {
+      display: none;
+    }
+
+    .vc-checkout-form-actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .vc-checkout-mobile-bar.is-active {
+      display: flex !important;
+    }
+
+    .vc-checkout-mobile-bar {
+      display: none;
+    }
+
+    .vc-checkout-toast {
+      bottom: calc(84px + env(safe-area-inset-bottom, 0px));
     }
   }
 
-  @media (max-width: 620px) {
+  @media (max-width: 640px) {
     .vc-checkout {
-      padding: 28px 0 58px;
+      padding-top: 16px;
     }
 
-    .vc-checkout-inner {
-      padding: 0 14px;
+    .vc-checkout-head {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .vc-checkout-total-chip {
+      justify-items: start;
+      text-align: left;
     }
 
     .vc-checkout-grid {
@@ -552,26 +851,44 @@
       grid-template-columns: 56px minmax(0, 1fr);
     }
 
+    .vc-order-img {
+      width: 56px;
+      height: 70px;
+    }
+
     .vc-order-price {
       grid-column: 2;
       justify-self: start;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vc-checkout-submit,
+    .vc-checkout-whatsapp,
+    .vc-checkout-toast,
+    .vc-thanks-modal,
+    .vc-thanks-box,
+    .vc-checkout-field input,
+    .vc-checkout-pay,
+    .vc-checkout-ship {
+      transition: none !important;
+    }
+  }
 </style>
 
-<section class="vc-checkout" id="vcCheckoutSection">
+<section class="vc-checkout" id="vcCheckoutSection" data-vc-checkout-version="1.2">
   <div class="vc-checkout-inner">
-    <div class="vc-checkout-hero">
+    <header class="vc-checkout-head">
       <div>
-        <span class="vc-checkout-kicker">Vibecano checkout</span>
-        <h1 class="vc-checkout-title">Complete your <span>order</span> securely.</h1>
-        <p class="vc-checkout-sub">Enter your delivery details, choose shipping and payment, then confirm your order on WhatsApp.</p>
+        <p class="vc-checkout-brand">Vibecano</p>
+        <h1 class="vc-checkout-title">Checkout</h1>
+        <p class="vc-checkout-sub">Enter delivery details, choose shipping and payment, then confirm on WhatsApp.</p>
       </div>
-      <div class="vc-checkout-hero-card">
-        <b id="vcCheckoutTotal">—</b>
+      <div class="vc-checkout-total-chip">
         <span>Order total</span>
+        <b id="vcCheckoutTotal">—</b>
       </div>
-    </div>
+    </header>
 
     <div id="vcCheckoutRoot">
       <div class="vc-checkout-loading">Loading checkout...</div>
@@ -579,7 +896,31 @@
   </div>
 </section>
 
-<div id="vcCheckoutToast" class="vc-checkout-toast"></div>
+<div class="vc-checkout-mobile-bar" id="vcCheckoutMobileBar" hidden>
+  <div class="vc-checkout-mobile-bar-copy">
+    <span>Total</span>
+    <b id="vcMobileTotal">—</b>
+  </div>
+  <button class="vc-checkout-submit" type="button" id="vcMobilePlaceOrder">Place Order</button>
+</div>
+
+<div id="vcCheckoutToast" class="vc-checkout-toast" aria-live="polite"></div>
+
+<div class="vc-thanks-modal" id="vcThanksModal" role="dialog" aria-modal="true" aria-labelledby="vcThanksTitle" aria-hidden="true">
+  <div class="vc-thanks-backdrop" data-thanks-close tabindex="-1"></div>
+  <div class="vc-thanks-box">
+    <div class="vc-thanks-icon" aria-hidden="true">✓</div>
+    <h2 class="vc-thanks-title" id="vcThanksTitle">Thank you</h2>
+    <p class="vc-thanks-order" id="vcThanksOrder">Your order is confirmed.</p>
+    <p class="vc-thanks-copy">
+      Your order has been placed successfully. For a quicker response, send your order details on WhatsApp.
+    </p>
+    <div class="vc-thanks-actions">
+      <button class="vc-thanks-wa" type="button" id="vcThanksWhatsApp">Send WhatsApp message</button>
+      <a class="vc-thanks-shop" id="vcThanksShop" href="/shop/">Continue shopping</a>
+    </div>
+  </div>
+</div>
 
 <script>
 (function () {
@@ -598,13 +939,74 @@
   var root = document.getElementById("vcCheckoutRoot");
   var toastEl = document.getElementById("vcCheckoutToast");
   var totalEl = document.getElementById("vcCheckoutTotal");
+  var mobileBarEl = document.getElementById("vcCheckoutMobileBar");
+  var mobileTotalEl = document.getElementById("vcMobileTotal");
+  var mobilePlaceEl = document.getElementById("vcMobilePlaceOrder");
+  var sectionEl = document.getElementById("vcCheckoutSection");
+  var thanksModalEl = document.getElementById("vcThanksModal");
+  var thanksOrderEl = document.getElementById("vcThanksOrder");
+  var thanksWhatsAppBtn = document.getElementById("vcThanksWhatsApp");
+  var thanksShopLink = document.getElementById("vcThanksShop");
   var nonce = "";
   var cart = null;
   var receipt = null;
+  var pendingWhatsAppMessage = "";
 
   if (!root || !toastEl || !window.fetch) {
     return;
   }
+
+  if (thanksShopLink) thanksShopLink.setAttribute("href", SHOP);
+
+  if (thanksWhatsAppBtn) {
+    thanksWhatsAppBtn.addEventListener("click", sendPendingWhatsApp);
+  }
+  if (thanksModalEl) {
+    thanksModalEl.addEventListener("click", function (event) {
+      if (event.target && event.target.closest("[data-thanks-close]")) hideThanksPopup();
+    });
+  }
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") hideThanksPopup();
+  });
+
+  // Elementor "Full Width" page template can still wrap HTML in a boxed
+  // section/column — force ancestors to full width so content is not left-stuck.
+  function forceFullWidthParents() {
+    if (!sectionEl) return;
+    var node = sectionEl.parentElement;
+    var hops = 0;
+    while (node && hops < 12 && node !== document.body) {
+      var className = String(node.className || "");
+      var isLayoutNode =
+        /elementor|e-con|site-main|site-content|content-area|ast-container|entry-content|page-content|woocommerce/i.test(className) ||
+        node.id === "content" ||
+        node.id === "primary" ||
+        node.id === "main";
+      if (isLayoutNode) {
+        node.style.setProperty("width", "100%", "important");
+        node.style.setProperty("max-width", "100%", "important");
+        node.style.setProperty("margin-left", "0", "important");
+        node.style.setProperty("margin-right", "0", "important");
+        if (/elementor-container|e-con-inner/i.test(className)) {
+          node.style.setProperty("padding-left", "0", "important");
+          node.style.setProperty("padding-right", "0", "important");
+        }
+      }
+      node = node.parentElement;
+      hops += 1;
+    }
+  }
+
+  forceFullWidthParents();
+  window.addEventListener("resize", function () {
+    forceFullWidthParents();
+    if (cart && cart.items && cart.items.length) {
+      setMobileBarVisible(true);
+    } else {
+      setMobileBarVisible(false);
+    }
+  });
 
   function $(selector, context) {
     return (context || document).querySelector(selector);
@@ -618,9 +1020,7 @@
     try {
       var params = new URLSearchParams(window.location.search);
       var session = params.get("session");
-      if (session) {
-        sessionStorage.setItem(CART_TOKEN_KEY, session);
-      }
+      if (session) sessionStorage.setItem(CART_TOKEN_KEY, session);
     } catch (error) {}
   }
 
@@ -690,6 +1090,34 @@
     }, 2300);
   }
 
+  function isMobileCheckoutView() {
+    return window.matchMedia("(max-width: 960px)").matches;
+  }
+
+  function mountCheckoutOverlaysToBody() {
+    [mobileBarEl, toastEl, thanksModalEl].forEach(function (el) {
+      if (el && el.parentNode !== document.body) {
+        document.body.appendChild(el);
+      }
+    });
+  }
+
+  mountCheckoutOverlaysToBody();
+
+  function setMobileBarVisible(visible) {
+    if (!mobileBarEl) return;
+    var show = !!(visible && isMobileCheckoutView());
+    if (show) {
+      mobileBarEl.removeAttribute("hidden");
+      mobileBarEl.classList.add("is-active");
+      mobileBarEl.style.setProperty("display", "flex", "important");
+    } else {
+      mobileBarEl.setAttribute("hidden", "");
+      mobileBarEl.classList.remove("is-active");
+      mobileBarEl.style.setProperty("display", "none", "important");
+    }
+  }
+
   function fetchCart() {
     var headers = {};
     var token = getStoredCartToken();
@@ -714,7 +1142,28 @@
       storeCartToken(response);
       return response.json().then(function (data) {
         if (!response.ok) {
-          throw new Error(data && data.message ? data.message : "Could not update customer details");
+          throw new Error(stripApiError(data) || "Could not update customer details");
+        }
+        return data;
+      });
+    });
+  }
+
+  function selectShippingRate(packageId, rateId) {
+    return fetch(API + "/cart/select-shipping-rate", {
+      method: "POST",
+      credentials: "include",
+      headers: getCartHeaders(),
+      body: JSON.stringify({
+        package_id: packageId,
+        rate_id: rateId
+      })
+    }).then(function (response) {
+      nonce = response.headers.get("Nonce") || response.headers.get("X-WC-Store-API-Nonce") || nonce;
+      storeCartToken(response);
+      return response.json().then(function (data) {
+        if (!response.ok) {
+          throw new Error(stripApiError(data) || "Could not select shipping method");
         }
         return data;
       });
@@ -732,11 +1181,111 @@
       storeCartToken(response);
       return response.json().then(function (data) {
         if (!response.ok) {
-          throw new Error(data && data.message ? data.message : "Checkout failed");
+          throw new Error(stripApiError(data) || "Checkout failed");
         }
         return data;
       });
     });
+  }
+
+  function stripApiError(data) {
+    if (!data) return "";
+    var message = String(data.message || data.code || "");
+    return message.replace(/<[^>]+>/g, "").trim();
+  }
+
+  function normalizeProvince(value) {
+    var raw = String(value || "").trim();
+    if (!raw) return "PB";
+    var key = raw.toLowerCase().replace(/\s+/g, " ");
+    var map = {
+      pb: "PB",
+      punjab: "PB",
+      sd: "SD",
+      sindh: "SD",
+      kp: "KP",
+      kpk: "KP",
+      "khyber pakhtunkhwa": "KP",
+      "khyber pakhtoonkhwa": "KP",
+      balochistan: "BA",
+      ba: "BA",
+      is: "IS",
+      islamabad: "IS",
+      "azad kashmir": "AJK",
+      ajk: "AJK",
+      gilgit: "GB",
+      "gilgit baltistan": "GB",
+      gb: "GB"
+    };
+    return map[key] || raw;
+  }
+
+  function resolveShippingChoice(cartData) {
+    var packages = cartData && Array.isArray(cartData.shipping_rates) ? cartData.shipping_rates : [];
+    var pkg = packages[0];
+    if (!pkg) return null;
+    var rates = Array.isArray(pkg.shipping_rates) ? pkg.shipping_rates : [];
+    if (!rates.length) return null;
+
+    var wantUrgent = selectedShipping() === "urgent";
+    var match = null;
+    var i;
+
+    for (i = 0; i < rates.length; i += 1) {
+      var rate = rates[i];
+      var name = String((rate && rate.name) || "").toLowerCase();
+      var id = String((rate && rate.rate_id) || "");
+      if (wantUrgent && (/urgent|express|priority|same.?day/.test(name) || /:2$/.test(id))) {
+        match = rate;
+        break;
+      }
+      if (!wantUrgent && (/normal|standard|flat|regular/.test(name) || /:1$/.test(id))) {
+        match = rate;
+        break;
+      }
+    }
+
+    if (!match) {
+      match = rates.filter(function (rate) { return rate && rate.selected; })[0] || rates[0];
+    }
+
+    return {
+      package_id: pkg.package_id !== undefined ? pkg.package_id : 0,
+      rate_id: match.rate_id
+    };
+  }
+
+  function resolvePaymentMethod(preferred, cartData) {
+    var available = (cartData && Array.isArray(cartData.payment_methods) ? cartData.payment_methods : [])
+      .map(function (method) { return String(method || ""); })
+      .filter(Boolean);
+    var mapped = wcPaymentMethod(preferred);
+
+    if (!available.length) return mapped;
+    if (available.indexOf(mapped) >= 0) return mapped;
+
+    // Prefer COD, then bank transfer, then cheque, then first available
+    var fallbacks = ["cod", "bacs", "cheque"];
+    var i;
+    for (i = 0; i < fallbacks.length; i += 1) {
+      if (available.indexOf(fallbacks[i]) >= 0) return fallbacks[i];
+    }
+    return available[0];
+  }
+
+  function paymentMethodsToTry(preferred, cartData) {
+    var primary = resolvePaymentMethod(preferred, cartData);
+    var available = (cartData && Array.isArray(cartData.payment_methods) ? cartData.payment_methods : []).slice();
+    var list = [primary];
+    ["cod", "bacs", "cheque"].forEach(function (method) {
+      if (list.indexOf(method) === -1 && (!available.length || available.indexOf(method) >= 0)) {
+        list.push(method);
+      }
+    });
+    available.forEach(function (method) {
+      if (list.indexOf(method) === -1) list.push(method);
+    });
+    return list;
   }
 
   function hasCustomItems(items) {
@@ -768,6 +1317,7 @@
       shipping = Math.round(shipping / 2);
       shippingNote += " — 50% advance payment discount";
     }
+
     var total = subtotal - discount + shipping + Number(totals.total_tax || 0) / Math.pow(10, minor);
     return {
       minor: minor,
@@ -782,44 +1332,6 @@
       total: total,
       freeShipping: subtotal - discount >= FREE_SHIPPING_MIN
     };
-  }
-
-  function expandCheckoutHost() {
-    var section = $("#vcCheckoutSection");
-    if (!section) return;
-
-    var node = section.parentElement;
-    while (node && node !== document.documentElement) {
-      if (
-        node.classList &&
-        (
-          node.classList.contains("elementor-widget") ||
-          node.classList.contains("elementor-element") ||
-          node.classList.contains("e-con") ||
-          node.classList.contains("elementor-widget-wrap") ||
-          node.classList.contains("elementor")
-        )
-      ) {
-        node.style.setProperty("width", "100%", "important");
-        node.style.setProperty("max-width", "none", "important");
-        node.style.setProperty("align-self", "stretch", "important");
-        node.style.setProperty("flex", "1 1 100%", "important");
-      }
-      node = node.parentElement;
-    }
-
-    section.style.setProperty("width", "100%", "important");
-    section.style.setProperty("max-width", "none", "important");
-  }
-
-  function fitCheckoutToViewport() {
-    expandCheckoutHost();
-
-    var section = $("#vcCheckoutSection");
-    if (!section) return;
-
-    var viewport = window.innerHeight || document.documentElement.clientHeight || 0;
-    section.style.minHeight = viewport > 640 ? "" : viewport + "px";
   }
 
   function normalizeMetaLabel(raw) {
@@ -846,7 +1358,6 @@
       var cleanLabel = normalizeMetaLabel(label);
       var cleanValue = String(value || "").trim();
       if (!cleanValue) return;
-
       var key = cleanLabel.toLowerCase() + "::" + cleanValue.toLowerCase();
       if (seen[key]) return;
       seen[key] = true;
@@ -874,7 +1385,7 @@
       });
     }
 
-    if (typeof item && item.variation === "string" && item.variation.trim()) {
+    if (item && typeof item.variation === "string" && item.variation.trim()) {
       item.variation.split(/,\s*/).forEach(function (part) {
         var pieces = String(part || "").split(/\s*:\s*/);
         if (pieces.length >= 2) pushLine(pieces[0], pieces.slice(1).join(": "));
@@ -882,7 +1393,7 @@
     }
 
     if (!lines.length) {
-      var name = String(item && item.name || "");
+      var name = String((item && item.name) || "");
       var dashIndex = name.indexOf(" - ");
       if (dashIndex >= 0) {
         name.slice(dashIndex + 3).split(/,\s*/).forEach(function (part) {
@@ -919,16 +1430,11 @@
     var lines = [
       "Vibecano custom checkout",
       "Payment: " + payLabel,
-      "Shipping: " + (selectedShipping() === "pickup" ? "Self pickup" : "Standard delivery")
+      "Shipping: " + (selectedShipping() === "urgent" ? "Urgent delivery" : "Normal delivery")
     ];
 
-    if (receiptName) {
-      lines.push("Receipt file: " + receiptName);
-    }
-
-    if (formData.note) {
-      lines.push("Customer note: " + formData.note);
-    }
+    if (receiptName) lines.push("Receipt file: " + receiptName);
+    if (formData.note) lines.push("Customer note: " + formData.note);
 
     lines.push("Items:");
     (cart.items || []).forEach(function (item) {
@@ -937,7 +1443,9 @@
 
     lines.push(
       "Subtotal: " + formatMoney(computed.subtotalRaw, computed.minor, computed.prefix),
-      "Shipping: " + (computed.shipping > 0 ? formatMoney(Math.round(computed.shipping * Math.pow(10, computed.minor)), computed.minor, computed.prefix) : "Free"),
+      "Shipping: " + (computed.shipping > 0
+        ? formatMoney(Math.round(computed.shipping * Math.pow(10, computed.minor)), computed.minor, computed.prefix)
+        : "Free"),
       "Total: " + formatMoney(Math.round(computed.total * Math.pow(10, computed.minor)), computed.minor, computed.prefix)
     );
 
@@ -947,12 +1455,12 @@
   function buildWhatsAppMessage(order, formData, payLabel) {
     var computed = checkoutTotals(cart);
     var lines = [
-      "🛍️ *NEW ORDER — Vibecano*",
+      "*NEW ORDER — Vibecano*",
       "",
       "*Customer:* " + formData.firstName + " " + formData.lastName,
       "*Phone:* " + formData.phone,
       formData.email ? "*Email:* " + formData.email : "",
-      "*Address:* " + formData.address + ", " + formData.city + ", " + formData.province + (formData.postcode ? " " + formData.postcode : ""),
+      "*Address:* " + formData.address + ", " + formData.city,
       "",
       "*Items:*"
     ].filter(Boolean);
@@ -964,23 +1472,23 @@
         " — " + formatMoney(item.totals && item.totals.line_total, computed.minor, computed.prefix)
       );
       getItemMetaLines(item).forEach(function (meta) {
-        lines.push("  ↳ " + meta.label + ": " + meta.value);
+        lines.push("  - " + meta.label + ": " + meta.value);
       });
     });
 
     lines.push("");
     lines.push("*Subtotal:* " + formatMoney(computed.subtotalRaw, computed.minor, computed.prefix));
     lines.push("*Delivery:* " + (selectedShipping() === "urgent" ? "Urgent Delivery" : "Normal Delivery"));
-    lines.push("*Shipping:* " + (computed.shipping > 0 ? formatMoney(Math.round(computed.shipping * Math.pow(10, computed.minor)), computed.minor, computed.prefix) : computed.shippingNote));
+    lines.push("*Shipping:* " + (computed.shipping > 0
+      ? formatMoney(Math.round(computed.shipping * Math.pow(10, computed.minor)), computed.minor, computed.prefix)
+      : computed.shippingNote));
     lines.push("*TOTAL:* " + formatMoney(Math.round(computed.total * Math.pow(10, computed.minor)), computed.minor, computed.prefix));
     lines.push("");
     lines.push("*Payment:* " + payLabel);
 
     if (selectedPayment() !== "cod") {
       lines.push("_Advance payment receipt is required before order confirmation._");
-      if (receipt && receipt.name) {
-        lines.push("*Receipt file:* " + receipt.name);
-      }
+      if (receipt && receipt.name) lines.push("*Receipt file:* " + receipt.name);
     }
 
     if (hasCustomItems()) {
@@ -1000,17 +1508,43 @@
     return lines.join("\n");
   }
 
-  function openWhatsAppWithReceipt(message) {
-    var waUrl = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(message);
+  function buildWhatsAppUrl(message) {
+    return "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(message);
+  }
+
+  function openWhatsAppWithReceipt(message, preOpenedWindow) {
+    var waUrl = buildWhatsAppUrl(message);
+    var target = preOpenedWindow || null;
+
+    function navigateToWhatsApp() {
+      if (target && !target.closed) {
+        try {
+          target.location.href = waUrl;
+          return true;
+        } catch (error) {
+          try { target.close(); } catch (e) {}
+        }
+      }
+
+      var opened = window.open(waUrl, "_blank");
+      if (opened) return true;
+
+      // Last resort: same-tab redirect (never blocked)
+      window.location.href = waUrl;
+      return false;
+    }
 
     if (receipt && receipt.file && navigator.share) {
       try {
         var sharePayload = { text: message, files: [receipt.file] };
         if (!navigator.canShare || navigator.canShare(sharePayload)) {
           navigator.share(sharePayload).then(function () {
+            if (target && !target.closed) {
+              try { target.close(); } catch (e) {}
+            }
             showToast("Order sent — receipt shared");
           }).catch(function () {
-            window.open(waUrl, "_blank");
+            navigateToWhatsApp();
             showToast("Attach your payment receipt in WhatsApp");
           });
           return;
@@ -1018,10 +1552,8 @@
       } catch (error) {}
     }
 
-    window.open(waUrl, "_blank");
-    if (receipt && receipt.name) {
-      showToast("Attach your payment receipt in WhatsApp");
-    }
+    navigateToWhatsApp();
+    if (receipt && receipt.name) showToast("Attach your payment receipt in WhatsApp");
 
     if (
       receipt &&
@@ -1034,12 +1566,12 @@
         var receiptWindow = window.open("", "_blank");
         if (!receiptWindow) return;
         receiptWindow.document.write(
-          "<!doctype html><html><head><meta charset=\"utf-8\"><title>Attach payment receipt</title></head>" +
-          "<body style=\"font-family:Inter,sans-serif;padding:24px;max-width:720px;margin:0 auto;text-align:center;color:#0f172a\">" +
+          "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Attach payment receipt</title></head>" +
+          "<body style=\"font-family:Manrope,sans-serif;padding:24px;max-width:720px;margin:0 auto;text-align:center;color:#121212\">" +
           "<h2 style=\"margin:0 0 10px\">Payment receipt</h2>" +
-          "<p style=\"color:#64748b;line-height:1.6\">WhatsApp links cannot attach files automatically. Long-press or save this image, then attach it in your WhatsApp chat.</p>" +
-          "<img src=\"" + receipt.dataUrl + "\" alt=\"Payment receipt\" style=\"max-width:100%;height:auto;border-radius:16px;border:1px solid #e2e8f0;margin:18px 0\">" +
-          "<p style=\"font-size:13px;color:#64748b\">File: " + escapeHtml(receipt.name || "receipt") + "</p>" +
+          "<p style=\"color:#6f6f78;line-height:1.6\">WhatsApp links cannot attach files automatically. Long-press or save this image, then attach it in your WhatsApp chat.</p>" +
+          "<img src=\"" + receipt.dataUrl + "\" alt=\"Payment receipt\" style=\"max-width:100%;height:auto;border:1px solid #ddd;margin:18px 0\">" +
+          "<p style=\"font-size:13px;color:#6f6f78\">File: " + escapeHtml(receipt.name || "receipt") + "</p>" +
           "</body></html>"
         );
         receiptWindow.document.close();
@@ -1055,45 +1587,121 @@
       email: String(($("#vcEmail") && $("#vcEmail").value) || "").trim(),
       address: String(($("#vcAddress") && $("#vcAddress").value) || "").trim(),
       city: String(($("#vcCity") && $("#vcCity").value) || "").trim(),
-      province: String(($("#vcProvince") && $("#vcProvince").value) || "").trim(),
-      postcode: String(($("#vcPostcode") && $("#vcPostcode").value) || "").trim(),
       note: String(($("#vcNote") && $("#vcNote").value) || "").trim()
     };
   }
 
   function validateForm(formData) {
-    if (!formData.firstName) return "Please enter your first name.";
-    if (!formData.lastName) return "Please enter your last name.";
-    if (!formData.phone) return "Please enter your phone number.";
-    if (!formData.address) return "Please enter your delivery address.";
-    if (!formData.city) return "Please enter your city.";
-    if (!formData.province) return "Please enter your province.";
-    if (selectedPayment() !== "cod" && !receipt) {
-      return "Please upload your payment receipt for the selected payment method.";
+    if (!formData.firstName) {
+      return { message: "Please enter your first name.", focusId: "vcFn" };
     }
-    return "";
+    if (!formData.lastName) {
+      return { message: "Please enter your last name.", focusId: "vcLn" };
+    }
+    if (!formData.phone) {
+      return { message: "Please enter your WhatsApp / phone number.", focusId: "vcPhone" };
+    }
+    if (!formData.address) {
+      return { message: "Please enter your complete delivery address.", focusId: "vcAddress" };
+    }
+    if (!formData.city) {
+      return { message: "Please enter your city.", focusId: "vcCity" };
+    }
+    if (selectedPayment() !== "cod" && !receipt) {
+      var pay = selectedPayment();
+      var focusId = pay === "jazzcash" ? "vcReceiptJc" : pay === "bank" ? "vcReceiptBank" : "vcReceiptEp";
+      return {
+        message: "Please upload your payment receipt before placing the order.",
+        focusId: focusId
+      };
+    }
+    return null;
+  }
+
+  function alertMissingField(result) {
+    if (!result) return;
+    window.alert(result.message);
+    showToast(result.message);
+    var field = result.focusId ? $("#" + result.focusId) : null;
+    if (field && typeof field.focus === "function") {
+      try {
+        field.scrollIntoView({ behavior: "smooth", block: "center" });
+      } catch (error) {}
+      try { field.focus(); } catch (error) {}
+    }
+  }
+
+  function resetPlaceOrderButtons() {
+    var submitButton = $("#vcPlaceOrder");
+    var whatsappButton = $("#vcWhatsAppBtn");
+    var formPlaceButton = $("#vcFormPlaceOrder");
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.textContent = "Place Order";
+    }
+    if (formPlaceButton) {
+      formPlaceButton.disabled = false;
+      formPlaceButton.textContent = "Place Order";
+    }
+    if (mobilePlaceEl) {
+      mobilePlaceEl.disabled = false;
+      mobilePlaceEl.textContent = "Place Order";
+    }
+    if (whatsappButton) {
+      whatsappButton.disabled = false;
+      whatsappButton.textContent = "Confirm on WhatsApp";
+    }
+  }
+
+  function ensureBillingEmail(formData) {
+    if (formData.email) return formData.email;
+    var digits = String(formData.phone || "").replace(/\D+/g, "") || "guest";
+    return "order+" + digits + "@vibecano.com";
+  }
+
+  function writeWaPlaceholder(win) {
+    if (!win || win.closed) return;
+    try {
+      win.document.write(
+        "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Opening WhatsApp…</title></head>" +
+        "<body style=\"font-family:Manrope,Segoe UI,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;background:#f7f5f2;color:#121212;text-align:center;padding:24px\">" +
+        "<div><h2 style=\"margin:0 0 8px\">Preparing your order…</h2>" +
+        "<p style=\"margin:0;color:#6f6f78;font-weight:600\">WhatsApp will open with your order details.</p></div></body></html>"
+      );
+      win.document.close();
+    } catch (error) {}
   }
 
   function placeOrder() {
+    resetPlaceOrderButtons();
+
     var formData = readFormData();
     var validationError = validateForm(formData);
     if (validationError) {
-      showToast(validationError);
+      alertMissingField(validationError);
       return;
     }
 
     var submitButton = $("#vcPlaceOrder");
     var whatsappButton = $("#vcWhatsAppBtn");
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = "Placing order...";
-    }
-    if (whatsappButton) whatsappButton.disabled = true;
+    var formPlaceButton = $("#vcFormPlaceOrder");
+    var buttons = [submitButton, formPlaceButton, whatsappButton, mobilePlaceEl].filter(Boolean);
+
+    buttons.forEach(function (btn) {
+      btn.disabled = true;
+      if (btn.id === "vcPlaceOrder" || btn.id === "vcMobilePlaceOrder" || btn.id === "vcFormPlaceOrder") {
+        btn.textContent = "Placing order...";
+      }
+      if (btn.id === "vcWhatsAppBtn") btn.textContent = "Placing...";
+    });
 
     var payMethod = selectedPayment();
     var payLabel = paymentName(payMethod);
     var receiptName = receipt && receipt.name ? receipt.name : "";
     var customerNote = buildCustomerNote(formData, payLabel, receiptName);
+    var billingEmail = ensureBillingEmail(formData);
+    var provinceCode = "PB";
+    var postcode = "00000";
 
     var addressPayload = {
       billing_address: {
@@ -1103,10 +1711,10 @@
         address_1: formData.address,
         address_2: "",
         city: formData.city,
-        state: formData.province || "PB",
-        postcode: formData.postcode,
+        state: provinceCode,
+        postcode: postcode,
         country: "PK",
-        email: formData.email,
+        email: billingEmail,
         phone: formData.phone
       },
       shipping_address: {
@@ -1116,39 +1724,113 @@
         address_1: formData.address,
         address_2: "",
         city: formData.city,
-        state: formData.province || "PB",
-        postcode: formData.postcode,
+        state: provinceCode,
+        postcode: postcode,
         country: "PK",
         phone: formData.phone
       }
     };
 
+    function attemptCheckout(methods, index, lastError) {
+      if (index >= methods.length) {
+        return Promise.reject(lastError || new Error("Could not create WooCommerce order"));
+      }
+      var method = methods[index];
+      var note = customerNote;
+      if (method !== wcPaymentMethod(payMethod)) {
+        note += "\nPreferred payment UI: " + payLabel;
+      }
+      return checkoutOrder({
+        billing_address: addressPayload.billing_address,
+        shipping_address: addressPayload.shipping_address,
+        payment_method: method,
+        payment_data: [],
+        customer_note: note,
+        create_account: false
+      }).catch(function (error) {
+        return attemptCheckout(methods, index + 1, error);
+      });
+    }
+
+    // Create WooCommerce order, then show thank-you popup (WhatsApp is optional)
     updateCustomer(addressPayload)
       .then(function (updatedCart) {
-        cart = updatedCart;
-        return checkoutOrder({
-          billing_address: addressPayload.billing_address,
-          shipping_address: addressPayload.shipping_address,
-          payment_method: wcPaymentMethod(payMethod),
-          customer_note: customerNote
+        cart = updatedCart || cart;
+        var shippingChoice = resolveShippingChoice(cart);
+        if (!shippingChoice || !shippingChoice.rate_id) return cart;
+        return selectShippingRate(shippingChoice.package_id, shippingChoice.rate_id).then(function (nextCart) {
+          cart = nextCart || cart;
+          return cart;
+        }).catch(function () {
+          // Continue — some carts already have a selected rate
+          return cart;
         });
       })
+      .then(function (readyCart) {
+        cart = readyCart || cart;
+        var methods = paymentMethodsToTry(payMethod, cart);
+        return attemptCheckout(methods, 0, null);
+      })
       .then(function (order) {
-        var message = buildWhatsAppMessage(order, formData, payLabel);
-        openWhatsAppWithReceipt(message);
-        showToast("Order placed — opening WhatsApp");
-        renderSuccess(order);
+        if (!order || !(order.order_id || order.id || order.order_number)) {
+          throw new Error("WooCommerce did not return an order ID");
+        }
+        pendingWhatsAppMessage = buildWhatsAppMessage(order, formData, payLabel);
+        showThanksPopup(order);
+        showToast("Order confirmed");
       })
       .catch(function (error) {
-        showToast(error.message || "Could not place order");
+        var message = (error && error.message) ? String(error.message) : "Could not create WooCommerce order";
+        window.alert("Order could not be placed: " + message);
+        showToast(message);
+        resetPlaceOrderButtons();
       })
       .finally(function () {
-        if (submitButton) {
-          submitButton.disabled = false;
-          submitButton.textContent = "Place Order";
-        }
-        if (whatsappButton) whatsappButton.disabled = false;
+        resetPlaceOrderButtons();
       });
+  }
+
+  function showThanksPopup(order) {
+    mountCheckoutOverlaysToBody();
+
+    var orderId = order && (order.order_id || order.id || order.order_number)
+      ? String(order.order_id || order.id || order.order_number)
+      : "";
+
+    setMobileBarVisible(false);
+    renderSuccess(order);
+
+    if (thanksOrderEl) {
+      thanksOrderEl.textContent = orderId
+        ? ("Order #" + orderId + " is confirmed.")
+        : "Your order is confirmed.";
+    }
+    if (thanksModalEl) {
+      thanksModalEl.classList.add("is-open");
+      thanksModalEl.setAttribute("aria-hidden", "false");
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+      try {
+        thanksModalEl.scrollTop = 0;
+      } catch (error) {}
+    }
+  }
+
+  function hideThanksPopup() {
+    if (!thanksModalEl || !thanksModalEl.classList.contains("is-open")) return;
+    thanksModalEl.classList.remove("is-open");
+    thanksModalEl.setAttribute("aria-hidden", "true");
+    document.documentElement.style.overflow = "";
+    document.body.style.overflow = "";
+  }
+
+  function sendPendingWhatsApp() {
+    if (!pendingWhatsAppMessage) {
+      window.alert("Order message is not ready yet. Please place the order again.");
+      return;
+    }
+    openWhatsAppWithReceipt(pendingWhatsAppMessage, null);
+    showToast("Opening WhatsApp…");
   }
 
   function enforcePaymentRules() {
@@ -1188,21 +1870,17 @@
     var shippingEl = $("#vcCoShippingAmount");
     var totalElSummary = $("#vcCoTotalAmount");
     var freeNote = $("#vcCoFreeShippingNote");
+    var formatted = formatMoney(Math.round(computed.total * Math.pow(10, computed.minor)), computed.minor, computed.prefix);
 
     if (shippingEl) {
       shippingEl.textContent = computed.shipping > 0
         ? formatMoney(Math.round(computed.shipping * Math.pow(10, computed.minor)), computed.minor, computed.prefix)
         : "Free";
     }
-    if (totalElSummary) {
-      totalElSummary.textContent = formatMoney(Math.round(computed.total * Math.pow(10, computed.minor)), computed.minor, computed.prefix);
-    }
-    if (totalEl) {
-      totalEl.textContent = formatMoney(Math.round(computed.total * Math.pow(10, computed.minor)), computed.minor, computed.prefix);
-    }
-    if (freeNote) {
-      freeNote.hidden = !computed.freeShipping;
-    }
+    if (totalElSummary) totalElSummary.textContent = formatted;
+    if (totalEl) totalEl.textContent = formatted;
+    if (mobileTotalEl) mobileTotalEl.textContent = formatted;
+    if (freeNote) freeNote.hidden = !computed.freeShipping;
   }
 
   function setupPayments() {
@@ -1223,7 +1901,8 @@
     $all('input[name="vcShip"]').forEach(function (radio) {
       radio.addEventListener("change", function () {
         $all(".vc-checkout-ship").forEach(function (node) {
-          node.classList.toggle("is-active", node.querySelector("input") && node.querySelector("input").checked);
+          var input = node.querySelector("input");
+          node.classList.toggle("is-active", !!(input && input.checked));
         });
         updateSummaryTotals();
       });
@@ -1259,9 +1938,12 @@
     bindReceiptInput("vcReceiptBank", "vcReceiptBankName");
 
     var placeButton = $("#vcPlaceOrder");
+    var formPlaceButton = $("#vcFormPlaceOrder");
     var whatsappButton = $("#vcWhatsAppBtn");
     if (placeButton) placeButton.addEventListener("click", placeOrder);
+    if (formPlaceButton) formPlaceButton.addEventListener("click", placeOrder);
     if (whatsappButton) whatsappButton.addEventListener("click", placeOrder);
+    if (mobilePlaceEl) mobilePlaceEl.addEventListener("click", placeOrder);
 
     var form = $("#vcCheckoutForm");
     if (form) {
@@ -1275,12 +1957,12 @@
   function renderPaymentOption(method, isActive) {
     return [
       '<label class="vc-checkout-pay' + (isActive ? " is-active" : "") + '">',
-        '<input type="radio" name="vcPay" id="vcPay' + escapeAttr(method) + '" value="' + escapeAttr(method) + '"' + (isActive ? " checked" : "") + '>',
-        '<div>',
-          '<b>' + escapeHtml(paymentName(method)) + '</b>',
-          '<span>' + escapeHtml(getPaymentDescription(method)) + '</span>',
-        '</div>',
-      '</label>'
+        '<input type="radio" name="vcPay" id="vcPay' + escapeAttr(method) + '" value="' + escapeAttr(method) + '"' + (isActive ? " checked" : "") + ">",
+        "<div>",
+          "<b>" + escapeHtml(paymentName(method)) + "</b>",
+          "<span>" + escapeHtml(getPaymentDescription(method)) + "</span>",
+        "</div>",
+      "</label>"
     ].join("");
   }
 
@@ -1295,12 +1977,12 @@
   function renderShippingOption(method, isActive, label, description) {
     return [
       '<label class="vc-checkout-ship' + (isActive ? " is-active" : "") + '">',
-        '<input type="radio" name="vcShip" id="vcShip' + escapeAttr(method) + '" value="' + escapeAttr(method) + '"' + (isActive ? " checked" : "") + '>',
-        '<div>',
-          '<b>' + escapeHtml(label) + '</b>',
-          '<span>' + escapeHtml(description) + '</span>',
-        '</div>',
-      '</label>'
+        '<input type="radio" name="vcShip" id="vcShip' + escapeAttr(method) + '" value="' + escapeAttr(method) + '"' + (isActive ? " checked" : "") + ">",
+        "<div>",
+          "<b>" + escapeHtml(label) + "</b>",
+          "<span>" + escapeHtml(description) + "</span>",
+        "</div>",
+      "</label>"
     ].join("");
   }
 
@@ -1310,90 +1992,117 @@
     var computed = checkoutTotals(cart);
     var custom = hasCustomItems(items);
     var defaultPayment = custom ? "easypaisa" : "cod";
+    var formattedTotal = formatMoney(Math.round(computed.total * Math.pow(10, computed.minor)), computed.minor, computed.prefix);
 
-    totalEl.textContent = formatMoney(Math.round(computed.total * Math.pow(10, computed.minor)), computed.minor, computed.prefix);
+    if (totalEl) totalEl.textContent = formattedTotal;
+    if (mobileTotalEl) mobileTotalEl.textContent = formattedTotal;
 
     if (!items.length) {
       renderEmpty();
       return;
     }
 
+    setMobileBarVisible(true);
+
     root.innerHTML = [
       '<div class="vc-checkout-shell">',
         '<form class="vc-checkout-form" id="vcCheckoutForm" novalidate>',
-          '<h3>Delivery details</h3>',
-          '<div class="vc-checkout-grid">',
-            '<div class="vc-checkout-field"><label for="vcFn">First name</label><input id="vcFn" type="text" autocomplete="given-name" required></div>',
-            '<div class="vc-checkout-field"><label for="vcLn">Last name</label><input id="vcLn" type="text" autocomplete="family-name" required></div>',
-            '<div class="vc-checkout-field"><label for="vcPhone">WhatsApp / phone</label><input id="vcPhone" type="tel" autocomplete="tel" required></div>',
-            '<div class="vc-checkout-field"><label for="vcEmail">Email (optional)</label><input id="vcEmail" type="email" autocomplete="email"></div>',
-            '<div class="vc-checkout-field is-full"><label for="vcAddress">Complete address</label><input id="vcAddress" type="text" autocomplete="street-address" required></div>',
-            '<div class="vc-checkout-field"><label for="vcCity">City</label><input id="vcCity" type="text" autocomplete="address-level2" required></div>',
-            '<div class="vc-checkout-field"><label for="vcProvince">Province</label><input id="vcProvince" type="text" autocomplete="address-level1" required></div>',
-            '<div class="vc-checkout-field"><label for="vcPostcode">Postcode</label><input id="vcPostcode" type="text" autocomplete="postal-code"></div>',
-            '<div class="vc-checkout-field is-full"><label for="vcNote">Order notes (optional)</label><textarea id="vcNote" placeholder="Delivery instructions, gift message, etc."></textarea></div>',
-          '</div>',
-          '<h3>Shipping method</h3>',
-          '<div class="vc-checkout-shipping" id="vcCoShipping">',
-            renderShippingOption("normal", true, "Normal Delivery", "Flat Rs. 300 all over Pakistan."),
-            renderShippingOption("urgent", false, "Urgent Delivery", "Priority delivery support for Rs. 500."),
-          '</div>',
-          '<h3>Payment method</h3>',
-          '<div class="vc-checkout-payments" id="vcCoPayments">',
-            renderPaymentOption("cod", !custom && defaultPayment === "cod"),
-            renderPaymentOption("easypaisa", defaultPayment === "easypaisa"),
-            renderPaymentOption("jazzcash", defaultPayment === "jazzcash"),
-            renderPaymentOption("bank", defaultPayment === "bank"),
-          '</div>',
-          '<div class="vc-checkout-bank' + (defaultPayment !== "cod" ? " is-visible" : "") + '" id="vcCoBankDetails">',
-            '<strong>Bank / wallet details</strong><br>',
-            'Account Title: Vibecano<br>',
-            'Bank: Meezan Bank<br>',
-            'Account #: 01234567890123<br>',
-            'JazzCash / EasyPaisa: 0333-2929254',
-          '</div>',
-          '<div class="vc-checkout-receipt' + (defaultPayment === "easypaisa" ? " is-visible" : "") + '" id="vcReceiptEpWrap">',
-            '<label for="vcReceiptEp">EasyPaisa receipt</label>',
-            '<input id="vcReceiptEp" type="file" accept="image/*,.pdf">',
-            '<div class="vc-checkout-receipt-name" id="vcReceiptEpName"></div>',
-          '</div>',
-          '<div class="vc-checkout-receipt' + (defaultPayment === "jazzcash" ? " is-visible" : "") + '" id="vcReceiptJcWrap">',
-            '<label for="vcReceiptJc">JazzCash receipt</label>',
-            '<input id="vcReceiptJc" type="file" accept="image/*,.pdf">',
-            '<div class="vc-checkout-receipt-name" id="vcReceiptJcName"></div>',
-          '</div>',
-          '<div class="vc-checkout-receipt' + (defaultPayment === "bank" ? " is-visible" : "") + '" id="vcReceiptBankWrap">',
-            '<label for="vcReceiptBank">Bank transfer receipt</label>',
-            '<input id="vcReceiptBank" type="file" accept="image/*,.pdf">',
-            '<div class="vc-checkout-receipt-name" id="vcReceiptBankName"></div>',
-          '</div>',
-        '</form>',
+          '<div class="vc-checkout-section">',
+            "<h3>Delivery details</h3>",
+            '<div class="vc-checkout-grid">',
+              '<div class="vc-checkout-field"><label for="vcFn">First name *</label><input id="vcFn" type="text" autocomplete="given-name"></div>',
+              '<div class="vc-checkout-field"><label for="vcLn">Last name *</label><input id="vcLn" type="text" autocomplete="family-name"></div>',
+              '<div class="vc-checkout-field"><label for="vcPhone">WhatsApp / phone *</label><input id="vcPhone" type="tel" autocomplete="tel"></div>',
+              '<div class="vc-checkout-field"><label for="vcEmail">Email (optional)</label><input id="vcEmail" type="email" autocomplete="email"></div>',
+              '<div class="vc-checkout-field is-full"><label for="vcAddress">Complete address *</label><input id="vcAddress" type="text" autocomplete="street-address"></div>',
+              '<div class="vc-checkout-field is-full"><label for="vcCity">City *</label><input id="vcCity" type="text" autocomplete="address-level2"></div>',
+              '<div class="vc-checkout-field is-full"><label for="vcNote">Order notes (optional)</label><textarea id="vcNote" placeholder="Delivery instructions, gift message, etc."></textarea></div>',
+            "</div>",
+          "</div>",
+          '<div class="vc-checkout-section">',
+            "<h3>Shipping method</h3>",
+            '<div class="vc-checkout-shipping" id="vcCoShipping">',
+              renderShippingOption("normal", true, "Normal Delivery", "Flat Rs. 300 all over Pakistan."),
+              renderShippingOption("urgent", false, "Urgent Delivery", "Priority delivery support for Rs. 500."),
+            "</div>",
+          "</div>",
+          '<div class="vc-checkout-section">',
+            "<h3>Payment method</h3>",
+            '<div class="vc-checkout-payments" id="vcCoPayments">',
+              renderPaymentOption("cod", !custom && defaultPayment === "cod"),
+              renderPaymentOption("easypaisa", defaultPayment === "easypaisa"),
+              renderPaymentOption("jazzcash", defaultPayment === "jazzcash"),
+              renderPaymentOption("bank", defaultPayment === "bank"),
+            "</div>",
+            '<div class="vc-checkout-bank' + (defaultPayment !== "cod" ? " is-visible" : "") + '" id="vcCoBankDetails">',
+              "<strong>Bank / wallet details</strong><br>",
+              "Account Title For Bank Transfer: Muhammad Ahsan<br>",
+              "Bank: Meezan Bank<br>",
+              "Account #: 01234567890123<br>",
+              "Account Title For Easy Paisa Jazz Cash: Ayaz Ali<br>",
+              "JazzCash / EasyPaisa: 0301-11110679 / 0333-2929254",
+            "</div>",
+            '<div class="vc-checkout-receipt' + (defaultPayment === "easypaisa" ? " is-visible" : "") + '" id="vcReceiptEpWrap">',
+              '<label for="vcReceiptEp">EasyPaisa receipt</label>',
+              '<input id="vcReceiptEp" type="file" accept="image/*,.pdf">',
+              '<div class="vc-checkout-receipt-name" id="vcReceiptEpName"></div>',
+            "</div>",
+            '<div class="vc-checkout-receipt' + (defaultPayment === "jazzcash" ? " is-visible" : "") + '" id="vcReceiptJcWrap">',
+              '<label for="vcReceiptJc">JazzCash receipt</label>',
+              '<input id="vcReceiptJc" type="file" accept="image/*,.pdf">',
+              '<div class="vc-checkout-receipt-name" id="vcReceiptJcName"></div>',
+            "</div>",
+            '<div class="vc-checkout-receipt' + (defaultPayment === "bank" ? " is-visible" : "") + '" id="vcReceiptBankWrap">',
+              '<label for="vcReceiptBank">Bank transfer receipt</label>',
+              '<input id="vcReceiptBank" type="file" accept="image/*,.pdf">',
+              '<div class="vc-checkout-receipt-name" id="vcReceiptBankName"></div>',
+            "</div>",
+            '<div class="vc-checkout-form-actions">',
+              '<button class="vc-checkout-submit" type="button" id="vcFormPlaceOrder">Place Order</button>',
+            "</div>",
+          "</div>",
+        "</form>",
         renderSummary(items, computed),
-      '</div>'
+      "</div>"
     ].join("");
 
     setupPayments();
     enforcePaymentRules();
-    fitCheckoutToViewport();
   }
 
   function renderSummary(items, computed) {
     return [
       '<aside class="vc-checkout-summary">',
-        '<h3>Order Summary</h3>',
+        "<h3>Order summary</h3>",
         '<div class="vc-order-list">',
           items.map(function (item) { return renderItem(item, computed.minor, computed.prefix); }).join(""),
-        '</div>',
-        computed.freeShipping ? '<p class="vc-checkout-free-note" id="vcCoFreeShippingNote">You qualify for free shipping!</p>' : '<p class="vc-checkout-free-note" id="vcCoFreeShippingNote" hidden>You qualify for free shipping!</p>',
-        '<div class="vc-checkout-row"><span>Subtotal</span><span>' + formatMoney(computed.subtotalRaw, computed.minor, computed.prefix) + '</span></div>',
-        computed.discount > 0 ? '<div class="vc-checkout-row" style="color:#16a34a"><span>Discount</span><span>− ' + formatMoney(computed.discountRaw, computed.minor, computed.prefix) + '</span></div>' : "",
-        '<div class="vc-checkout-row"><span>Shipping</span><span id="vcCoShippingAmount">' + (computed.shipping > 0 ? formatMoney(Math.round(computed.shipping * Math.pow(10, computed.minor)), computed.minor, computed.prefix) : "Free") + '</span></div>',
-        computed.tax > 0 ? '<div class="vc-checkout-row"><span>Tax</span><span>' + formatMoney(Math.round(computed.tax * Math.pow(10, computed.minor)), computed.minor, computed.prefix) + '</span></div>' : "",
-        '<div class="vc-checkout-row total"><span>Total</span><span id="vcCoTotalAmount">' + formatMoney(Math.round(computed.total * Math.pow(10, computed.minor)), computed.minor, computed.prefix) + '</span></div>',
-        '<button class="vc-checkout-submit" type="button" id="vcPlaceOrder">Place Order</button>',
-        '<button class="vc-checkout-whatsapp" type="button" id="vcWhatsAppBtn">Confirm on WhatsApp</button>',
-        '<a class="vc-checkout-back" href="' + CART + '">← Back to cart</a>',
-      '</aside>'
+        "</div>",
+        computed.freeShipping
+          ? '<p class="vc-checkout-free-note" id="vcCoFreeShippingNote">You qualify for free shipping.</p>'
+          : '<p class="vc-checkout-free-note" id="vcCoFreeShippingNote" hidden>You qualify for free shipping.</p>',
+        '<div class="vc-checkout-row"><span>Subtotal</span><span>' + formatMoney(computed.subtotalRaw, computed.minor, computed.prefix) + "</span></div>",
+        computed.discount > 0
+          ? '<div class="vc-checkout-row is-discount"><span>Discount</span><span>− ' + formatMoney(computed.discountRaw, computed.minor, computed.prefix) + "</span></div>"
+          : "",
+        '<div class="vc-checkout-row"><span>Shipping</span><span id="vcCoShippingAmount">' +
+          (computed.shipping > 0
+            ? formatMoney(Math.round(computed.shipping * Math.pow(10, computed.minor)), computed.minor, computed.prefix)
+            : "Free") +
+        "</span></div>",
+        computed.tax > 0
+          ? '<div class="vc-checkout-row"><span>Tax</span><span>' +
+              formatMoney(Math.round(computed.tax * Math.pow(10, computed.minor)), computed.minor, computed.prefix) +
+            "</span></div>"
+          : "",
+        '<div class="vc-checkout-row total"><span>Total</span><span id="vcCoTotalAmount">' +
+          formatMoney(Math.round(computed.total * Math.pow(10, computed.minor)), computed.minor, computed.prefix) +
+        "</span></div>",
+        '<div class="vc-checkout-actions">',
+          '<button class="vc-checkout-submit" type="button" id="vcPlaceOrder">Place Order</button>',
+          '<button class="vc-checkout-whatsapp" type="button" id="vcWhatsAppBtn">Confirm on WhatsApp</button>',
+          '<a class="vc-checkout-back" href="' + CART + '">Back to cart</a>',
+        "</div>",
+      "</aside>"
     ].join("");
   }
 
@@ -1403,36 +2112,50 @@
       '<article class="vc-order-item">',
         '<div class="vc-order-img">',
           image ? '<img src="' + escapeAttr(image) + '" alt="' + escapeAttr(item.name || "Product") + '">' : "",
-        '</div>',
-        '<div>',
-          '<h4 class="vc-order-name">' + escapeHtml(item.name || "Product") + '</h4>',
-          '<div class="vc-order-meta">' + escapeHtml(formatItemMetaInline(item)) + '</div>',
-        '</div>',
-        '<div class="vc-order-price">' + formatMoney(item.totals && item.totals.line_total, minor, prefix) + '</div>',
-      '</article>'
+        "</div>",
+        "<div>",
+          '<h4 class="vc-order-name">' + escapeHtml(item.name || "Product") + "</h4>",
+          '<div class="vc-order-meta">' + escapeHtml(formatItemMetaInline(item)) + "</div>",
+        "</div>",
+        '<div class="vc-order-price">' + formatMoney(item.totals && item.totals.line_total, minor, prefix) + "</div>",
+      "</article>"
     ].join("");
   }
 
   function renderEmpty() {
-    totalEl.textContent = "—";
+    if (totalEl) totalEl.textContent = "—";
+    if (mobileTotalEl) mobileTotalEl.textContent = "—";
+    setMobileBarVisible(false);
     root.innerHTML = [
       '<div class="vc-checkout-empty">',
-        '<h3>Your cart is empty</h3>',
-        '<p>Add products to your cart before checkout.</p>',
+        "<h3>Your cart is empty</h3>",
+        "<p>Add products to your cart before checkout.</p>",
         '<a href="' + SHOP + '">Start Shopping</a>',
-      '</div>'
+      "</div>"
     ].join("");
   }
 
   function renderSuccess(order) {
-    var orderId = order && (order.order_id || order.id) ? (order.order_id || order.id) : "";
+    var orderId = order && (order.order_id || order.id || order.order_number)
+      ? (order.order_id || order.id || order.order_number)
+      : "";
+    setMobileBarVisible(false);
     root.innerHTML = [
       '<div class="vc-checkout-empty">',
-        '<h3>Order placed successfully</h3>',
-        '<p>' + (orderId ? "Order #" + escapeHtml(String(orderId)) + " has been created. " : "") + 'Continue in WhatsApp to confirm payment and delivery details.</p>',
-        '<a href="' + SHOP + '">Continue Shopping</a>',
-      '</div>'
+        "<h3>Order confirmed</h3>",
+        "<p>" +
+          (orderId ? "Order #" + escapeHtml(String(orderId)) + " has been placed successfully. " : "Your order has been placed successfully. ") +
+          "Use WhatsApp below if you want a quicker response from our team." +
+        "</p>",
+        '<button class="vc-checkout-whatsapp" type="button" id="vcSuccessWhatsApp">Send WhatsApp message</button>',
+        '<a class="vc-checkout-back" href="' + SHOP + '" style="margin-top:12px">Continue Shopping</a>',
+      "</div>"
     ].join("");
+
+    var successWa = document.getElementById("vcSuccessWhatsApp");
+    if (successWa) {
+      successWa.addEventListener("click", sendPendingWhatsApp);
+    }
   }
 
   function formatMoney(raw, minor, prefix) {
@@ -1459,14 +2182,16 @@
     return escapeHtml(value).replace(/`/g, "&#96;");
   }
 
-  fitCheckoutToViewport();
-  window.addEventListener("resize", fitCheckoutToViewport);
-  window.addEventListener("load", fitCheckoutToViewport);
+  setMobileBarVisible(false);
 
   fetchCart()
     .then(render)
     .catch(function () {
-      root.innerHTML = '<div class="vc-checkout-empty"><h3>Could not load checkout</h3><p>Please refresh the page or return to your cart.</p><a href="' + CART + '">Back to cart</a></div>';
+      setMobileBarVisible(false);
+      root.innerHTML =
+        '<div class="vc-checkout-empty"><h3>Could not load checkout</h3><p>Please refresh the page or return to your cart.</p><a href="' +
+        CART +
+        '">Back to cart</a></div>';
     });
 })();
 </script>
