@@ -1,14 +1,19 @@
 <!-- ============================================================
-     VIBECANO — SITE HEADER v2.2
+     VIBECANO — SITE HEADER v2.3
      Paste this WHOLE file into Elementor Theme Builder → Header → HTML widget.
 
-     IMPORTANT: GitHub updates do NOT change your live site automatically.
-     After every update: open Elementor → Header → HTML widget → select all →
-     paste this file → Update → hard refresh (Ctrl+Shift+R).
-     Confirm: data-vc-header-version="2.2" on #vibecanoHeaderRoot
+     IMPORTANT — your live site will NOT update until you paste here:
+     1) Elementor → Theme Builder → Header template → Edit
+     2) Click the HTML widget → Select ALL old code → Delete
+     3) Paste this ENTIRE file → Update (green button top)
+     4) LiteSpeed → Purge All (if you use cache)
+     5) Ctrl+Shift+R on your site
+
+     SUCCESS CHECK: Inspect header — must show data-vc-header-version="2.3"
+     Shop Now button must be CORAL/RED (not black). 401 in console is normal for guests.
 
      Nav: Men / Women / Kids (modern mega menu)
-     CTAs: Shop Now (blinking) + Under 999 deal buttons
+     CTAs: Shop Now (blinking coral) + Under 999 deal buttons
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -869,7 +874,7 @@
   }
 </style>
 
-<div class="vibecano-header-root" id="vibecanoHeaderRoot" data-vc-header-version="2.2">
+<div class="vibecano-header-root" id="vibecanoHeaderRoot" data-vc-header-version="2.3">
   <div class="ro-topbar">
     <div class="ro-topbar-wrap">
       <span class="ro-topbar-badge">New Collection Live</span>
@@ -964,7 +969,12 @@
       </ul>
 
       <div class="ro-nav-ctas">
-        <a class="ro-shop-btn" id="roShopNowBtn" href="/shop/">
+        <a
+          class="ro-shop-btn"
+          id="roShopNowBtn"
+          href="/shop/"
+          style="background:linear-gradient(135deg,#ff8f70 0%,#ef4444 48%,#dc2626 100%)!important;color:#fff!important;border:1px solid rgba(220,38,38,.42)!important;box-shadow:0 10px 28px -14px rgba(220,38,38,.72)!important;font-weight:800!important;text-transform:uppercase!important;letter-spacing:.06em!important;min-height:44px!important;padding:0 22px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;position:relative!important;overflow:hidden!important;font-family:Syne,Manrope,sans-serif!important;font-size:13px!important;text-decoration:none!important;"
+        >
           <span class="ro-shop-btn-text">Shop Now</span>
         </a>
         <a class="ro-design-btn" id="roUnder999Btn" href="/product-category/under999/">
@@ -1015,15 +1025,21 @@
   var cartCountEl = document.getElementById("roCartCount");
   var under999Btn = document.getElementById("roUnder999Btn");
   var shopNowBtn = document.getElementById("roShopNowBtn");
+  var shopBlinkTimer = null;
+  var shopStyleRetry = null;
 
   if (loginLink) loginLink.href = CONFIG.loginUrl;
   if (registerLink) registerLink.href = CONFIG.registerUrl;
   if (userEl) userEl.href = CONFIG.accountUrl;
   if (under999Btn) under999Btn.href = CONFIG.under999Url;
-  if (shopNowBtn) {
-    shopNowBtn.href = CONFIG.shopUrl;
+  injectShopBtnStyles();
+  styleShopNowButton();
+  shopStyleRetry = window.setInterval(function () {
     styleShopNowButton();
-  }
+  }, 500);
+  window.setTimeout(function () {
+    if (shopStyleRetry) window.clearInterval(shopStyleRetry);
+  }, 5000);
 
   expandHeaderLayout();
   setupMobileMenu();
@@ -1040,6 +1056,16 @@
     expandHeaderLayout();
     styleShopNowButton();
   });
+
+  function injectShopBtnStyles() {
+    if (document.getElementById("vcShopBtnAnimStyles")) return;
+    var styleEl = document.createElement("style");
+    styleEl.id = "vcShopBtnAnimStyles";
+    styleEl.textContent =
+      "@keyframes vc-shop-btn-pulse{0%,100%{box-shadow:0 10px 28px -14px rgba(220,38,38,.72),inset 0 1px 0 rgba(255,255,255,.38)}50%{box-shadow:0 16px 36px -10px rgba(220,38,38,.92),0 0 0 5px rgba(239,68,68,.28),inset 0 1px 0 rgba(255,255,255,.48)}}" +
+      "#roShopNowBtn.ro-shop-btn{animation:vc-shop-btn-pulse 2.1s ease-in-out infinite!important;}";
+    document.head.appendChild(styleEl);
+  }
 
   function styleShopNowButton() {
     if (!shopNowBtn) return;
@@ -1058,7 +1084,26 @@
     shopNowBtn.style.setProperty("display", "inline-flex", "important");
     shopNowBtn.style.setProperty("align-items", "center", "important");
     shopNowBtn.style.setProperty("justify-content", "center", "important");
+    shopNowBtn.style.setProperty("font-family", "Syne, Manrope, sans-serif", "important");
+    shopNowBtn.style.setProperty("font-size", "13px", "important");
     shopNowBtn.setAttribute("data-vc-shop-btn", "pulse");
+    startShopBtnBlink();
+  }
+
+  function startShopBtnBlink() {
+    if (!shopNowBtn || shopBlinkTimer) return;
+    var bright = false;
+    shopBlinkTimer = window.setInterval(function () {
+      bright = !bright;
+      shopNowBtn.style.setProperty(
+        "box-shadow",
+        bright
+          ? "0 16px 36px -10px rgba(220, 38, 38, 0.92), 0 0 0 5px rgba(239, 68, 68, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.48)"
+          : "0 10px 28px -14px rgba(220, 38, 38, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.38)",
+        "important"
+      );
+      shopNowBtn.style.setProperty("filter", bright ? "brightness(1.12)" : "brightness(1)", "important");
+    }, 1050);
   }
 
   function expandHeaderLayout() {
