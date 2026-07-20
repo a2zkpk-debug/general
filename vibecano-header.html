@@ -1,9 +1,14 @@
 <!-- ============================================================
-     VIBECANO — SITE HEADER (use on all pages)
-     Paste into Elementor Theme Builder → Header → HTML widget
+     VIBECANO — SITE HEADER v2.2
+     Paste this WHOLE file into Elementor Theme Builder → Header → HTML widget.
+
+     IMPORTANT: GitHub updates do NOT change your live site automatically.
+     After every update: open Elementor → Header → HTML widget → select all →
+     paste this file → Update → hard refresh (Ctrl+Shift+R).
+     Confirm: data-vc-header-version="2.2" on #vibecanoHeaderRoot
 
      Nav: Men / Women / Kids (modern mega menu)
-     CTAs: Shop Now + Under 999 deal buttons
+     CTAs: Shop Now (blinking) + Under 999 deal buttons
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -495,35 +500,37 @@
     margin-left: auto;
   }
 
-  .vibecano-header-root .ro-shop-btn {
+  #roShopNowBtn.ro-shop-btn,
+  .vibecano-header-root #roShopNowBtn.ro-shop-btn {
     --shop-shine: linear-gradient(110deg, transparent 28%, rgba(255, 255, 255, 0.55) 48%, transparent 68%);
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    position: relative !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     gap: 8px;
-    min-height: 44px;
-    padding: 0 22px;
-    overflow: hidden;
+    min-height: 44px !important;
+    padding: 0 22px !important;
+    overflow: hidden !important;
     isolation: isolate;
-    background: linear-gradient(135deg, #ff8f70 0%, #ef4444 48%, #dc2626 100%);
+    background: linear-gradient(135deg, #ff8f70 0%, #ef4444 48%, #dc2626 100%) !important;
     color: #fff !important;
-    font-family: Syne, Manrope, sans-serif;
-    font-weight: 800;
-    font-size: 13px;
+    font-family: Syne, Manrope, sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 13px !important;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     white-space: nowrap;
     flex-shrink: 0;
-    border: 1px solid rgba(220, 38, 38, 0.42);
+    border: 1px solid rgba(220, 38, 38, 0.42) !important;
     box-shadow:
       0 10px 28px -14px rgba(220, 38, 38, 0.72),
-      inset 0 1px 0 rgba(255, 255, 255, 0.38);
-    animation: vc-shop-btn-pulse 2.1s ease-in-out infinite;
+      inset 0 1px 0 rgba(255, 255, 255, 0.38) !important;
+    animation: vc-shop-btn-pulse 2.1s ease-in-out infinite !important;
     transition: transform 0.22s var(--ease), filter 0.22s var(--ease);
   }
 
-  .vibecano-header-root .ro-shop-btn::before {
+  #roShopNowBtn.ro-shop-btn::before,
+  .vibecano-header-root #roShopNowBtn.ro-shop-btn::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -534,7 +541,8 @@
     z-index: 0;
   }
 
-  .vibecano-header-root .ro-shop-btn::after {
+  #roShopNowBtn.ro-shop-btn::after,
+  .vibecano-header-root #roShopNowBtn.ro-shop-btn::after {
     content: "";
     position: absolute;
     inset: 0;
@@ -550,10 +558,11 @@
     z-index: 1;
   }
 
-  .vibecano-header-root .ro-shop-btn:hover {
+  #roShopNowBtn.ro-shop-btn:hover,
+  .vibecano-header-root #roShopNowBtn.ro-shop-btn:hover {
     transform: translateY(-2px);
     filter: brightness(1.06);
-    animation-play-state: paused;
+    animation-play-state: paused !important;
   }
 
   @keyframes vc-shop-btn-pulse {
@@ -860,7 +869,7 @@
   }
 </style>
 
-<div class="vibecano-header-root" id="vibecanoHeaderRoot" data-vc-header-version="2.1">
+<div class="vibecano-header-root" id="vibecanoHeaderRoot" data-vc-header-version="2.2">
   <div class="ro-topbar">
     <div class="ro-topbar-wrap">
       <span class="ro-topbar-badge">New Collection Live</span>
@@ -1011,7 +1020,10 @@
   if (registerLink) registerLink.href = CONFIG.registerUrl;
   if (userEl) userEl.href = CONFIG.accountUrl;
   if (under999Btn) under999Btn.href = CONFIG.under999Url;
-  if (shopNowBtn) shopNowBtn.href = CONFIG.shopUrl;
+  if (shopNowBtn) {
+    shopNowBtn.href = CONFIG.shopUrl;
+    styleShopNowButton();
+  }
 
   expandHeaderLayout();
   setupMobileMenu();
@@ -1024,7 +1036,30 @@
     expandHeaderLayout();
     if (window.matchMedia("(min-width: 981px)").matches) closeMobileMenu();
   });
-  window.addEventListener("load", expandHeaderLayout);
+  window.addEventListener("load", function () {
+    expandHeaderLayout();
+    styleShopNowButton();
+  });
+
+  function styleShopNowButton() {
+    if (!shopNowBtn) return;
+    shopNowBtn.href = CONFIG.shopUrl;
+    shopNowBtn.style.setProperty("background", "linear-gradient(135deg, #ff8f70 0%, #ef4444 48%, #dc2626 100%)", "important");
+    shopNowBtn.style.setProperty("color", "#fff", "important");
+    shopNowBtn.style.setProperty("border", "1px solid rgba(220, 38, 38, 0.42)", "important");
+    shopNowBtn.style.setProperty("box-shadow", "0 10px 28px -14px rgba(220, 38, 38, 0.72), inset 0 1px 0 rgba(255, 255, 255, 0.38)", "important");
+    shopNowBtn.style.setProperty("font-weight", "800", "important");
+    shopNowBtn.style.setProperty("text-transform", "uppercase", "important");
+    shopNowBtn.style.setProperty("letter-spacing", "0.06em", "important");
+    shopNowBtn.style.setProperty("min-height", "44px", "important");
+    shopNowBtn.style.setProperty("padding", "0 22px", "important");
+    shopNowBtn.style.setProperty("position", "relative", "important");
+    shopNowBtn.style.setProperty("overflow", "hidden", "important");
+    shopNowBtn.style.setProperty("display", "inline-flex", "important");
+    shopNowBtn.style.setProperty("align-items", "center", "important");
+    shopNowBtn.style.setProperty("justify-content", "center", "important");
+    shopNowBtn.setAttribute("data-vc-shop-btn", "pulse");
+  }
 
   function expandHeaderLayout() {
     var node = root.parentElement;
