@@ -1,10 +1,9 @@
 <!-- ============================================================
-     VIBECANO — SITE FOOTER v1.1 (clean modern)
-     Paste this WHOLE file into Elementor Theme Builder → Footer → HTML widget.
+     VIBECANO — SITE FOOTER v1.2
+     Paste this WHOLE file into Elementor → Theme Builder → Footer → HTML widget.
 
-     1) Elementor → Footer → HTML widget → select all → delete → paste → Update
-     2) Purge cache + Ctrl+Shift+R
-     Confirm: data-vc-footer-version="1.1" on #vibecanoFooterRoot
+     Select ALL old code → Delete → Paste → Update → Purge cache → Ctrl+Shift+R
+     MUST show: data-vc-footer-version="1.2" (not 1.0)
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,16 +12,14 @@
 <style>
   .vibecano-footer-root {
     --ink: #0e0e10;
-    --muted: #6f6f78;
-    --line: rgba(14, 14, 16, 0.1);
-    --soft: #f4f2ef;
+    --muted: #a1a1aa;
+    --line: rgba(255, 255, 255, 0.1);
     --accent: #e8a317;
-    --accent-deep: #b8730a;
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
     width: 100%;
     max-width: none;
     font-family: Manrope, "Segoe UI", sans-serif;
-    color: var(--ink);
+    color: #ececee;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
@@ -34,22 +31,28 @@
   .vibecano-footer-root a {
     text-decoration: none;
     color: inherit;
-    transition: color 0.2s var(--ease), border-color 0.2s var(--ease), background 0.2s var(--ease);
+    transition: color 0.2s var(--ease);
   }
 
   .vibecano-footer-root .ro-footer {
-    background: var(--soft);
+    background: var(--ink);
     border-top: 1px solid var(--line);
-    padding: 44px 0 0;
+    padding: 0;
+  }
+
+  .vibecano-footer-root .ro-footer-accent {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.85;
   }
 
   .vibecano-footer-root .ro-footer-wrap {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 0 clamp(16px, 3vw, 24px) 36px;
+    padding: 40px clamp(16px, 3vw, 24px) 32px;
     display: grid;
-    grid-template-columns: 1.3fr repeat(3, minmax(0, 1fr));
-    gap: clamp(28px, 4vw, 48px);
+    grid-template-columns: 1.15fr 1fr 1fr 1fr;
+    gap: clamp(24px, 3.5vw, 40px);
   }
 
   .vibecano-footer-root .ro-footer-brand {
@@ -62,23 +65,23 @@
     display: inline-flex;
     align-items: center;
     gap: 11px;
-    color: var(--ink);
+    color: #fff;
     font-weight: 800;
-    font-size: 14px;
-    letter-spacing: 0.04em;
+    font-size: 13px;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
   }
 
   .vibecano-footer-root .ro-footer-logo-mark {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: var(--ink);
-    color: #fff;
+    background: #fff;
+    color: var(--ink);
     display: grid;
     place-items: center;
     font-family: Syne, Manrope, sans-serif;
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 800;
     position: relative;
   }
@@ -88,67 +91,51 @@
     position: absolute;
     right: 4px;
     bottom: 4px;
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: var(--accent);
-    box-shadow: 0 0 0 2px var(--soft);
+    box-shadow: 0 0 0 2px var(--ink);
   }
 
   .vibecano-footer-root .ro-footer-tagline {
     display: block;
-    margin-top: 3px;
-    font-size: 10px;
+    margin-top: 2px;
+    font-size: 9px;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     color: var(--muted);
   }
 
   .vibecano-footer-root .ro-footer-desc {
     margin: 0;
-    max-width: 320px;
+    max-width: 280px;
     color: var(--muted);
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.65;
   }
 
-  .vibecano-footer-root .ro-footer-actions {
+  .vibecano-footer-root .ro-footer-social {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 4px;
   }
 
-  .vibecano-footer-root .ro-footer-mini-btn {
+  .vibecano-footer-root .ro-footer-social a {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    min-height: 38px;
-    padding: 0 16px;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  .vibecano-footer-root .ro-footer-mini-btn.is-solid {
-    background: linear-gradient(135deg, #ffd56a 0%, var(--accent) 50%, var(--accent-deep) 100%);
-    color: #1a1200 !important;
-    border: 1px solid rgba(184, 115, 10, 0.35);
-  }
-
-  .vibecano-footer-root .ro-footer-mini-btn.is-solid:hover {
-    filter: brightness(1.04);
-  }
-
-  .vibecano-footer-root .ro-footer-mini-btn.is-outline {
-    background: #fff;
-    color: var(--ink) !important;
+    min-height: 34px;
+    padding: 0 14px;
     border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.04);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
   }
 
-  .vibecano-footer-root .ro-footer-mini-btn.is-outline:hover {
-    border-color: var(--ink);
+  .vibecano-footer-root .ro-footer-social a:hover {
+    border-color: rgba(232, 163, 23, 0.45);
+    color: var(--accent);
   }
 
   .vibecano-footer-root .ro-footer-col h4 {
@@ -158,7 +145,7 @@
     font-weight: 800;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--ink);
+    color: #fff;
   }
 
   .vibecano-footer-root .ro-footer-links {
@@ -166,7 +153,7 @@
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 10px;
+    gap: 9px;
   }
 
   .vibecano-footer-root .ro-footer-links a {
@@ -176,35 +163,35 @@
   }
 
   .vibecano-footer-root .ro-footer-links a:hover {
-    color: var(--ink);
+    color: #fff;
   }
 
-  .vibecano-footer-root .ro-footer-links a.is-accent {
-    color: var(--accent-deep);
+  .vibecano-footer-root .ro-footer-links a.is-gold {
+    color: var(--accent);
     font-weight: 700;
   }
 
-  .vibecano-footer-root .ro-footer-links a.is-accent:hover {
-    color: var(--ink);
+  .vibecano-footer-root .ro-footer-links a.is-gold:hover {
+    color: #ffd56a;
   }
 
   .vibecano-footer-root .ro-footer-contact {
     display: grid;
-    gap: 10px;
+    gap: 9px;
   }
 
   .vibecano-footer-root .ro-footer-contact a {
-    color: var(--ink);
+    color: #fff;
     font-size: 14px;
     font-weight: 700;
   }
 
   .vibecano-footer-root .ro-footer-contact a:hover {
-    color: var(--accent-deep);
+    color: var(--accent);
   }
 
   .vibecano-footer-root .ro-footer-note {
-    margin: 4px 0 0;
+    margin: 6px 0 0;
     color: var(--muted);
     font-size: 12px;
     line-height: 1.6;
@@ -213,37 +200,37 @@
   .vibecano-footer-root .ro-footer-bar {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 16px clamp(16px, 3vw, 24px) 22px;
+    padding: 16px clamp(16px, 3vw, 24px) 20px;
     border-top: 1px solid var(--line);
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    color: var(--muted);
+    gap: 10px;
+    color: #71717a;
     font-size: 12px;
     font-weight: 600;
   }
 
-  .vibecano-footer-root .ro-footer-bar-badges {
+  .vibecano-footer-root .ro-footer-badges {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
   }
 
   .vibecano-footer-root .ro-footer-badge {
-    display: inline-flex;
-    align-items: center;
-    min-height: 28px;
-    padding: 0 10px;
-    background: #fff;
-    border: 1px solid var(--line);
-    color: var(--muted);
     font-size: 11px;
     font-weight: 700;
+    color: #a1a1aa;
   }
 
-  @media (max-width: 980px) {
+  .vibecano-footer-root .ro-footer-badge + .ro-footer-badge::before {
+    content: "·";
+    margin-right: 8px;
+    color: #52525b;
+  }
+
+  @media (max-width: 900px) {
     .vibecano-footer-root .ro-footer-wrap {
       grid-template-columns: 1fr 1fr;
     }
@@ -252,13 +239,11 @@
     }
   }
 
-  @media (max-width: 560px) {
-    .vibecano-footer-root .ro-footer {
-      padding-top: 32px;
-    }
+  @media (max-width: 520px) {
     .vibecano-footer-root .ro-footer-wrap {
       grid-template-columns: 1fr;
-      gap: 24px;
+      gap: 22px;
+      padding-top: 32px;
     }
     .vibecano-footer-root .ro-footer-bar {
       flex-direction: column;
@@ -267,8 +252,10 @@
   }
 </style>
 
-<footer class="vibecano-footer-root" id="vibecanoFooterRoot" data-vc-footer-version="1.1">
+<footer class="vibecano-footer-root" id="vibecanoFooterRoot" data-vc-footer-version="1.2">
   <div class="ro-footer">
+    <div class="ro-footer-accent" aria-hidden="true"></div>
+
     <div class="ro-footer-wrap">
       <div class="ro-footer-brand">
         <a href="/" class="ro-footer-logo">
@@ -278,10 +265,10 @@
             <span class="ro-footer-tagline">WEAR YOUR VIBE</span>
           </span>
         </a>
-        <p class="ro-footer-desc">Premium ready-made apparel and essentials — quality tees, hoodies, and caps delivered across Pakistan.</p>
-        <div class="ro-footer-actions">
-          <a class="ro-footer-mini-btn is-solid" id="roFooterShopBtn" href="/shop/">Shop Now</a>
-          <a class="ro-footer-mini-btn is-outline" href="https://wa.me/923332929254" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        <p class="ro-footer-desc">Premium ready-made apparel and essentials delivered across Pakistan.</p>
+        <div class="ro-footer-social">
+          <a href="/shop/">Shop</a>
+          <a href="https://wa.me/923332929254" target="_blank" rel="noopener noreferrer">WhatsApp</a>
         </div>
       </div>
 
@@ -292,19 +279,17 @@
           <li><a id="roFooterMen" href="/product-category/men/">Men</a></li>
           <li><a id="roFooterWomen" href="/product-category/women/">Women</a></li>
           <li><a id="roFooterKids" href="/product-category/kids/">Kids</a></li>
-          <li><a id="roFooterUnder999" href="/product-category/under999/" class="is-accent">Under 999</a></li>
+          <li><a id="roFooterUnder999" href="/product-category/under999/" class="is-gold">Under 999</a></li>
           <li><a id="roFooterFeatured" href="/product-category/featured/">Featured</a></li>
-          <li><a id="roFooterNewArrival" href="/product-category/new-arrival/">New Arrival</a></li>
         </ul>
       </div>
 
       <div class="ro-footer-col">
-        <h4>Customer care</h4>
+        <h4>Account</h4>
         <ul class="ro-footer-links">
           <li><a href="/my-account/">My Account</a></li>
           <li><a href="/my-account/?action=register">Register</a></li>
           <li><a href="/cart/">Cart</a></li>
-          <li><a href="https://wa.me/923332929254" target="_blank" rel="noopener noreferrer">Live chat</a></li>
         </ul>
       </div>
 
@@ -312,15 +297,15 @@
         <h4>Contact</h4>
         <div class="ro-footer-contact">
           <a href="tel:+923332929254">+923332929254</a>
-          <a href="https://wa.me/923332929254" target="_blank" rel="noopener noreferrer">WhatsApp support</a>
-          <p class="ro-footer-note">Free shipping on orders over Rs. 5,000. Easy 7-day returns on ready-made items.</p>
+          <a href="https://wa.me/923332929254" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+          <p class="ro-footer-note">Free shipping over Rs. 5,000 · 7-day returns on ready-made items.</p>
         </div>
       </div>
     </div>
 
     <div class="ro-footer-bar">
-      <span>© <span id="roFooterYear"></span> Vibecano. All rights reserved.</span>
-      <div class="ro-footer-bar-badges">
+      <span>© <span id="roFooterYear"></span> Vibecano</span>
+      <div class="ro-footer-badges">
         <span class="ro-footer-badge">Nationwide delivery</span>
         <span class="ro-footer-badge">4.9★ rated</span>
         <span class="ro-footer-badge">Secure checkout</span>
@@ -341,8 +326,7 @@
       { key: "women", slugs: ["women"], linkId: "roFooterWomen" },
       { key: "kids", slugs: ["kids"], linkId: "roFooterKids" },
       { key: "under999", slugs: ["under999", "under-999"], linkId: "roFooterUnder999", label: "Under 999" },
-      { key: "featured", slugs: ["featured"], linkId: "roFooterFeatured" },
-      { key: "new-arrival", slugs: ["new-arrival", "new_arrival"], linkId: "roFooterNewArrival", label: "New Arrival" }
+      { key: "featured", slugs: ["featured"], linkId: "roFooterFeatured" }
     ]
   };
 
@@ -350,10 +334,7 @@
   if (!root) return;
 
   var yearEl = document.getElementById("roFooterYear");
-  var shopBtn = document.getElementById("roFooterShopBtn");
-
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
-  if (shopBtn) shopBtn.href = CONFIG.shopUrl;
 
   expandFooterLayout();
   loadFooterCategories();
