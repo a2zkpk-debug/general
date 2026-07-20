@@ -65,80 +65,24 @@
   }
 
   .vc-shop-hero {
-    margin-bottom: 26px;
+    margin-bottom: 18px;
     animation: vc-shop-rise 0.7s var(--ease) both;
   }
 
   .vc-shop-hero-banner {
     position: relative;
     overflow: hidden;
-    min-height: clamp(240px, 34vw, 440px);
+    width: 100%;
+    height: clamp(128px, 12vw, 200px);
     background: #ddd8d2;
   }
 
   .vc-shop-hero-banner img {
     width: 100%;
     height: 100%;
-    min-height: clamp(240px, 34vw, 440px);
     object-fit: cover;
-    object-position: center 22%;
+    object-position: center 28%;
     display: block;
-  }
-
-  .vc-shop-hero-copy {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    gap: 10px;
-    padding: clamp(22px, 4vw, 44px);
-    background: linear-gradient(
-      105deg,
-      rgba(17, 17, 17, 0.78) 0%,
-      rgba(17, 17, 17, 0.42) 38%,
-      rgba(17, 17, 17, 0.08) 62%,
-      rgba(17, 17, 17, 0) 78%
-    );
-    max-width: min(620px, 88%);
-  }
-
-  .vc-shop-hero-kicker {
-    margin: 0;
-    color: rgba(255, 255, 255, 0.72);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-
-  .vc-shop-hero-brand {
-    margin: 0;
-    font-family: var(--font-display);
-    font-size: clamp(18px, 2.4vw, 22px);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #fff;
-  }
-
-  .vc-shop-hero-title {
-    margin: 0;
-    font-family: var(--font-display);
-    font-size: clamp(40px, 7vw, 64px);
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    line-height: 0.95;
-    color: #fff;
-  }
-
-  .vc-shop-hero-sub {
-    margin: 2px 0 0;
-    max-width: 42ch;
-    color: rgba(255, 255, 255, 0.84);
-    font-size: 15px;
-    font-weight: 500;
-    line-height: 1.55;
   }
 
   .vc-shop-chips {
@@ -855,24 +799,11 @@
   @media (max-width: 800px) {
     .vc-shop-wrap { padding: 14px 14px 56px; }
     .vc-shop-hero-banner {
-      min-height: clamp(220px, 58vw, 320px);
+      height: clamp(112px, 30vw, 152px);
     }
     .vc-shop-hero-banner img {
-      min-height: clamp(220px, 58vw, 320px);
-      object-position: center 18%;
+      object-position: center 22%;
     }
-    .vc-shop-hero-copy {
-      max-width: 100%;
-      justify-content: flex-end;
-      padding: 18px 16px 20px;
-      background: linear-gradient(
-        180deg,
-        rgba(17, 17, 17, 0) 0%,
-        rgba(17, 17, 17, 0.35) 38%,
-        rgba(17, 17, 17, 0.82) 100%
-      );
-    }
-    .vc-shop-hero-title { font-size: clamp(34px, 10vw, 48px); }
     .vc-shop-grid {
       grid-template-columns: minmax(0, 1fr);
       gap: 22px;
@@ -1002,25 +933,19 @@
 <div class="vc-shop-root" id="vcShopRoot">
   <div class="vc-shop-wrap">
     <header class="vc-shop-hero">
-      <div class="vc-shop-hero-banner">
+      <div class="vc-shop-hero-banner" aria-label="Vibecano shop">
         <img
           id="vcShopBannerImg"
           src="https://vibecano.com/wp-content/uploads/2026/07/shoppage.webp"
           srcset="https://vibecano.com/wp-content/uploads/2026/07/shoppage-300x201.webp 300w, https://vibecano.com/wp-content/uploads/2026/07/shoppage.webp 1168w"
           sizes="100vw"
-          alt="Vibecano models wearing Love Live Born to Vibecano collection tees"
+          alt="Vibecano shop banner"
           width="1168"
           height="784"
           loading="eager"
           decoding="async"
           fetchpriority="high"
         >
-        <div class="vc-shop-hero-copy">
-          <p class="vc-shop-hero-kicker">Collection</p>
-          <p class="vc-shop-hero-brand">Vibecano</p>
-          <h1 class="vc-shop-hero-title" id="vcShopTitle">Shop</h1>
-          <p class="vc-shop-hero-sub" id="vcShopDesc">Browse ready-made designs and essentials. Filter by collection, color, size, or price.</p>
-        </div>
       </div>
     </header>
 
@@ -1220,9 +1145,6 @@
   var productLookup = Object.create(null);
   var toastTimer = null;
 
-  var crumbCurrent = document.getElementById("vcShopCrumbCurrent");
-  var catTitle = document.getElementById("vcShopTitle");
-  var catDesc = document.getElementById("vcShopDesc");
   var bannerImgEl = document.getElementById("vcShopBannerImg");
   var itemsLabelEl = document.getElementById("vcShopItemsLabel");
   var chipsEl = document.getElementById("vcShopChips");
@@ -1488,11 +1410,6 @@
   }
 
   function renderShopHero() {
-    if (catTitle) catTitle.textContent = "Shop";
-    if (catDesc) {
-      catDesc.textContent = "Browse ready-made designs and essentials. Filter by collection, color, size, or price.";
-    }
-    if (crumbCurrent) crumbCurrent.textContent = "Shop";
     document.title = "Shop | Vibecano";
   }
 
@@ -1549,21 +1466,12 @@
     state.selectedSubcats = [];
     state.page = 1;
 
-    if (catTitle) {
-      if (slug === "all" || !slug) {
-        catTitle.textContent = "Shop";
-      } else if (/under999/i.test(slug)) {
-        catTitle.textContent = "Under 999";
-      } else {
-        catTitle.textContent = prettyLabel(slugToLabel(slug));
-      }
-    }
-    if (catDesc) {
-      var match = categoryId
-        ? state.allCategories.filter(function (c) { return Number(c.id) === Number(categoryId); })[0]
-        : null;
-      var desc = match ? stripHtml(match.description || "") : "";
-      catDesc.textContent = desc || "Browse ready-made designs and essentials. Filter by collection, color, size, or price.";
+    if (slug === "all" || !slug) {
+      document.title = "Shop | Vibecano";
+    } else if (/under999/i.test(slug)) {
+      document.title = "Under 999 | Vibecano";
+    } else {
+      document.title = prettyLabel(slugToLabel(slug)) + " | Vibecano";
     }
 
     renderCollectionChips();
@@ -1924,12 +1832,7 @@
   function renderCategoryHero(category) {
     if (!category) return renderShopHero();
     var name = category.name || "Shop";
-    var desc = stripHtml(category.description || "");
     var count = Number(category.count) || 0;
-
-    if (crumbCurrent) crumbCurrent.textContent = name;
-    if (catTitle) catTitle.textContent = name;
-    if (catDesc) catDesc.textContent = desc || "Browse ready-made designs and essentials.";
     updateItemsLabel(count);
     document.title = name + " | Vibecano";
   }
@@ -2335,7 +2238,6 @@
 
   function showError(title, body) {
     gridEl.innerHTML = '<div class="vc-shop-error"><strong>' + escapeHtml(title) + "</strong>" + escapeHtml(body) + "</div>";
-    if (catTitle) catTitle.textContent = title;
     updateCountLabel(0);
   }
 
