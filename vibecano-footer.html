@@ -1,10 +1,10 @@
 <!-- ============================================================
-     VIBECANO — SITE FOOTER v1.3
+     VIBECANO — SITE FOOTER v1.4
      Paste this WHOLE file into Elementor → Theme Builder → Footer → HTML widget.
 
      Select ALL old code → Delete → Paste → Update → Purge cache → Ctrl+Shift+R
-     MUST show: data-vc-footer-version="1.3" on #vibecanoFooterRoot
-     Includes: image logo + floating WhatsApp chat (bottom-right)
+     MUST show: data-vc-footer-version="1.4" on #vibecanoFooterRoot
+     WhatsApp: click green icon → chat popup → WhatsApp Us Now!
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -204,25 +204,185 @@
     color: #52525b;
   }
 
-  /* Floating WhatsApp chat (site-wide) */
+  /* Floating WhatsApp chat widget (site-wide) */
   .vc-wa-float {
     position: fixed;
     right: max(18px, env(safe-area-inset-right, 0px));
     bottom: max(20px, env(safe-area-inset-bottom, 0px));
     z-index: 99980;
-    line-height: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+    line-height: 1.4;
+    font-family: Manrope, "Segoe UI", sans-serif;
+  }
+
+  .vc-wa-panel {
+    width: min(340px, calc(100vw - 36px));
+    overflow: hidden;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 22px 60px -24px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    visibility: hidden;
     pointer-events: none;
+    transform: translateY(12px) scale(0.96);
+    transform-origin: bottom right;
+    transition: opacity 0.24s var(--ease), transform 0.24s var(--ease), visibility 0.24s;
+  }
+
+  .vc-wa-float.is-open .vc-wa-panel {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+
+  .vc-wa-panel-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: #2c2e3a;
+    color: #fff;
+  }
+
+  .vc-wa-panel-head-icon {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #25d366;
+    flex-shrink: 0;
+  }
+
+  .vc-wa-panel-head-icon svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+  }
+
+  .vc-wa-panel-head-title {
+    flex: 1;
+    min-width: 0;
+    font-family: Syne, Manrope, sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .vc-wa-panel-close {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.18s var(--ease);
+  }
+
+  .vc-wa-panel-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .vc-wa-panel-body {
+    padding: 18px 16px 16px;
+    background: #f3f3f4;
+  }
+
+  .vc-wa-bubble {
+    position: relative;
+    margin: 0 0 16px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    background: #fff;
+    color: #3f3f46;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.55;
+    box-shadow: 0 8px 24px -18px rgba(0, 0, 0, 0.35);
+  }
+
+  .vc-wa-bubble::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    border-radius: 999px;
+    background: #111;
+  }
+
+  .vc-wa-panel-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 48px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #2c2e3a;
+    color: #fff !important;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: background 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+
+  .vc-wa-panel-cta:hover {
+    background: #1a1b22;
+    transform: translateY(-1px);
+  }
+
+  .vc-wa-panel-cta svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .vc-wa-panel-foot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #e8faf0;
+    color: #128c7e;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .vc-wa-panel-foot svg {
+    width: 14px;
+    height: 14px;
   }
 
   .vc-wa-float-btn {
-    pointer-events: auto;
     display: grid;
     place-items: center;
     width: 58px;
     height: 58px;
+    padding: 0;
+    border: 0;
     border-radius: 50%;
     background: linear-gradient(145deg, #2bd46a 0%, #25d366 52%, #1ebe57 100%);
     color: #fff;
+    cursor: pointer;
     box-shadow:
       0 14px 34px -12px rgba(37, 211, 102, 0.72),
       0 8px 18px -10px rgba(0, 0, 0, 0.28);
@@ -246,27 +406,19 @@
     display: block;
   }
 
-  .vc-wa-float-tip {
-    pointer-events: none;
-    position: absolute;
-    right: calc(100% + 12px);
-    top: 50%;
-    transform: translateY(-50%) translateX(6px);
-    opacity: 0;
-    white-space: nowrap;
-    padding: 8px 12px;
-    border-radius: 999px;
-    background: #111;
-    color: #fff;
-    font: 600 12px/1.2 Manrope, "Segoe UI", sans-serif;
-    box-shadow: 0 10px 24px -16px rgba(0, 0, 0, 0.55);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+  .vc-wa-float-btn .vc-wa-icon-close {
+    display: none;
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 300;
   }
 
-  .vc-wa-float:hover .vc-wa-float-tip,
-  .vc-wa-float:focus-within .vc-wa-float-tip {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0);
+  .vc-wa-float.is-open .vc-wa-float-btn .vc-wa-icon-wa {
+    display: none;
+  }
+
+  .vc-wa-float.is-open .vc-wa-float-btn .vc-wa-icon-close {
+    display: block;
   }
 
   body:has(#vcCheckoutMobileBar.is-active) .vc-wa-float,
@@ -305,20 +457,20 @@
       width: 28px;
       height: 28px;
     }
-    .vc-wa-float-tip {
-      display: none;
+    .vc-wa-panel {
+      width: min(320px, calc(100vw - 32px));
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .vc-wa-float-btn,
-    .vc-wa-float-tip {
+    .vc-wa-panel {
       transition: none !important;
     }
   }
 </style>
 
-<footer class="vibecano-footer-root" id="vibecanoFooterRoot" data-vc-footer-version="1.3">
+<footer class="vibecano-footer-root" id="vibecanoFooterRoot" data-vc-footer-version="1.4">
   <div class="ro-footer">
     <div class="ro-footer-accent" aria-hidden="true"></div>
 
@@ -386,20 +538,33 @@
   </div>
 </footer>
 
-<div class="vc-wa-float" id="vcWhatsAppFloat" data-vc-wa-version="1.0">
-  <a
-    class="vc-wa-float-btn"
-    id="vcWhatsAppFloatBtn"
-    href="https://wa.me/923332929254"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Chat with Vibecano on WhatsApp"
-  >
-    <span class="vc-wa-float-tip" aria-hidden="true">Chat with us</span>
-    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+<div class="vc-wa-float" id="vcWhatsAppFloat" data-vc-wa-version="1.1">
+  <div class="vc-wa-panel" id="vcWhatsAppPanel" role="dialog" aria-modal="true" aria-labelledby="vcWhatsAppTitle" aria-hidden="true">
+    <div class="vc-wa-panel-head">
+      <span class="vc-wa-panel-head-icon" aria-hidden="true">
+        <svg viewBox="0 0 32 32" focusable="false"><path fill="currentColor" d="M16.01 2.667c-7.364 0-13.344 5.979-13.344 13.343 0 2.353.615 4.658 1.784 6.686L2.667 29.333l6.828-1.724a13.28 13.28 0 0 0 6.515 1.667h.005c7.364 0 13.343-5.98 13.343-13.344C29.358 8.646 23.378 2.667 16.01 2.667zm0 24.01h-.004a11.02 11.02 0 0 1-5.617-1.536l-.403-.24-4.052 1.026 1.082-3.953-.262-.406a11.01 11.01 0 0 1-1.69-5.858c0-6.094 4.958-11.052 11.056-11.052 2.954 0 5.73 1.15 7.817 3.24a10.98 10.98 0 0 1 3.233 7.812c0 6.094-4.958 11.052-11.06 11.052zm6.07-8.276c-.333-.167-1.969-.972-2.274-1.083-.305-.11-.527-.167-.749.167-.222.333-.86 1.083-1.055 1.305-.194.222-.389.25-.722.083-.333-.167-1.405-.518-2.676-1.65-.99-.882-1.658-1.972-1.852-2.305-.194-.333-.02-.513.146-.679.15-.149.333-.389.5-.583.167-.194.222-.333.333-.556.111-.222.056-.417-.028-.583-.083-.167-.749-1.805-1.026-2.472-.27-.64-.544-.553-.749-.563l-.638-.011c-.222 0-.583.083-.889.417-.305.333-1.166 1.14-1.166 2.78 0 1.64 1.194 3.226 1.361 3.448.167.222 2.35 3.587 5.694 5.03.795.343 1.416.548 1.899.702.798.254 1.525.218 2.1.132.64-.096 1.969-.805 2.247-1.583.278-.778.278-1.444.194-1.583-.083-.139-.305-.222-.638-.389z"/></svg>
+      </span>
+      <span class="vc-wa-panel-head-title" id="vcWhatsAppTitle">Vibecano</span>
+      <button class="vc-wa-panel-close" type="button" id="vcWhatsAppClose" aria-label="Close chat">×</button>
+    </div>
+    <div class="vc-wa-panel-body">
+      <div class="vc-wa-bubble">Hello! How can I help you today?</div>
+      <a class="vc-wa-panel-cta" id="vcWhatsAppCta" href="https://wa.me/923332929254" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path fill="currentColor" d="M16.01 2.667c-7.364 0-13.344 5.979-13.344 13.343 0 2.353.615 4.658 1.784 6.686L2.667 29.333l6.828-1.724a13.28 13.28 0 0 0 6.515 1.667h.005c7.364 0 13.343-5.98 13.343-13.344C29.358 8.646 23.378 2.667 16.01 2.667zm0 24.01h-.004a11.02 11.02 0 0 1-5.617-1.536l-.403-.24-4.052 1.026 1.082-3.953-.262-.406a11.01 11.01 0 0 1-1.69-5.858c0-6.094 4.958-11.052 11.056-11.052 2.954 0 5.73 1.15 7.817 3.24a10.98 10.98 0 0 1 3.233 7.812c0 6.094-4.958 11.052-11.06 11.052zm6.07-8.276c-.333-.167-1.969-.972-2.274-1.083-.305-.11-.527-.167-.749.167-.222.333-.86 1.083-1.055 1.305-.194.222-.389.25-.722.083-.333-.167-1.405-.518-2.676-1.65-.99-.882-1.658-1.972-1.852-2.305-.194-.333-.02-.513.146-.679.15-.149.333-.389.5-.583.167-.194.222-.333.333-.556.111-.222.056-.417-.028-.583-.083-.167-.749-1.805-1.026-2.472-.27-.64-.544-.553-.749-.563l-.638-.011c-.222 0-.583.083-.889.417-.305.333-1.166 1.14-1.166 2.78 0 1.64 1.194 3.226 1.361 3.448.167.222 2.35 3.587 5.694 5.03.795.343 1.416.548 1.899.702.798.254 1.525.218 2.1.132.64-.096 1.969-.805 2.247-1.583.278-.778.278-1.444.194-1.583-.083-.139-.305-.222-.638-.389z"/></svg>
+        WhatsApp Us Now!
+      </a>
+    </div>
+    <div class="vc-wa-panel-foot" aria-hidden="true">
+      <svg viewBox="0 0 32 32" focusable="false"><path fill="currentColor" d="M16.01 2.667c-7.364 0-13.344 5.979-13.344 13.343 0 2.353.615 4.658 1.784 6.686L2.667 29.333l6.828-1.724a13.28 13.28 0 0 0 6.515 1.667h.005c7.364 0 13.343-5.98 13.343-13.344C29.358 8.646 23.378 2.667 16.01 2.667zm0 24.01h-.004a11.02 11.02 0 0 1-5.617-1.536l-.403-.24-4.052 1.026 1.082-3.953-.262-.406a11.01 11.01 0 0 1-1.69-5.858c0-6.094 4.958-11.052 11.056-11.052 2.954 0 5.73 1.15 7.817 3.24a10.98 10.98 0 0 1 3.233 7.812c0 6.094-4.958 11.052-11.06 11.052zm6.07-8.276c-.333-.167-1.969-.972-2.274-1.083-.305-.11-.527-.167-.749.167-.222.333-.86 1.083-1.055 1.305-.194.222-.389.25-.722.083-.333-.167-1.405-.518-2.676-1.65-.99-.882-1.658-1.972-1.852-2.305-.194-.333-.02-.513.146-.679.15-.149.333-.389.5-.583.167-.194.222-.333.333-.556.111-.222.056-.417-.028-.583-.083-.167-.749-1.805-1.026-2.472-.27-.64-.544-.553-.749-.563l-.638-.011c-.222 0-.583.083-.889.417-.305.333-1.166 1.14-1.166 2.78 0 1.64 1.194 3.226 1.361 3.448.167.222 2.35 3.587 5.694 5.03.795.343 1.416.548 1.899.702.798.254 1.525.218 2.1.132.64-.096 1.969-.805 2.247-1.583.278-.778.278-1.444.194-1.583-.083-.139-.305-.222-.638-.389z"/></svg>
+      Powered by WhatsApp
+    </div>
+  </div>
+  <button class="vc-wa-float-btn" type="button" id="vcWhatsAppFloatBtn" aria-label="Open WhatsApp chat" aria-expanded="false" aria-controls="vcWhatsAppPanel">
+    <span class="vc-wa-icon-close" aria-hidden="true">×</span>
+    <svg class="vc-wa-icon-wa" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
       <path fill="currentColor" d="M16.01 2.667c-7.364 0-13.344 5.979-13.344 13.343 0 2.353.615 4.658 1.784 6.686L2.667 29.333l6.828-1.724a13.28 13.28 0 0 0 6.515 1.667h.005c7.364 0 13.343-5.98 13.343-13.344C29.358 8.646 23.378 2.667 16.01 2.667zm0 24.01h-.004a11.02 11.02 0 0 1-5.617-1.536l-.403-.24-4.052 1.026 1.082-3.953-.262-.406a11.01 11.01 0 0 1-1.69-5.858c0-6.094 4.958-11.052 11.056-11.052 2.954 0 5.73 1.15 7.817 3.24a10.98 10.98 0 0 1 3.233 7.812c0 6.094-4.958 11.052-11.06 11.052zm6.07-8.276c-.333-.167-1.969-.972-2.274-1.083-.305-.11-.527-.167-.749.167-.222.333-.86 1.083-1.055 1.305-.194.222-.389.25-.722.083-.333-.167-1.405-.518-2.676-1.65-.99-.882-1.658-1.972-1.852-2.305-.194-.333-.02-.513.146-.679.15-.149.333-.389.5-.583.167-.194.222-.333.333-.556.111-.222.056-.417-.028-.583-.083-.167-.749-1.805-1.026-2.472-.27-.64-.544-.553-.749-.563l-.638-.011c-.222 0-.583.083-.889.417-.305.333-1.166 1.14-1.166 2.78 0 1.64 1.194 3.226 1.361 3.448.167.222 2.35 3.587 5.694 5.03.795.343 1.416.548 1.899.702.798.254 1.525.218 2.1.132.64-.096 1.969-.805 2.247-1.583.278-.778.278-1.444.194-1.583-.083-.139-.305-.222-.638-.389z"/>
     </svg>
-  </a>
+  </button>
 </div>
 
 <script>
@@ -423,15 +588,53 @@
 
   var root = document.getElementById("vibecanoFooterRoot");
   var waFloat = document.getElementById("vcWhatsAppFloat");
+  var waPanel = document.getElementById("vcWhatsAppPanel");
   var waBtn = document.getElementById("vcWhatsAppFloatBtn");
+  var waClose = document.getElementById("vcWhatsAppClose");
+  var waCta = document.getElementById("vcWhatsAppCta");
 
   if (!root) return;
 
-  if (waBtn) {
-    waBtn.href = "https://wa.me/" + WHATSAPP_PHONE + "?text=" + encodeURIComponent(WHATSAPP_TEXT);
+  if (waCta) {
+    waCta.href = "https://wa.me/" + WHATSAPP_PHONE + "?text=" + encodeURIComponent(WHATSAPP_TEXT);
   }
   if (waFloat && waFloat.parentNode !== document.body) {
     document.body.appendChild(waFloat);
+  }
+
+  setupWhatsAppWidget();
+
+  function setupWhatsAppWidget() {
+    if (!waFloat || !waBtn || !waPanel) return;
+
+    waBtn.addEventListener("click", function () {
+      if (waFloat.classList.contains("is-open")) closeWhatsAppPanel();
+      else openWhatsAppPanel();
+    });
+
+    if (waClose) {
+      waClose.addEventListener("click", closeWhatsAppPanel);
+    }
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeWhatsAppPanel();
+    });
+  }
+
+  function openWhatsAppPanel() {
+    if (!waFloat || !waBtn || !waPanel) return;
+    waFloat.classList.add("is-open");
+    waBtn.setAttribute("aria-expanded", "true");
+    waBtn.setAttribute("aria-label", "Close WhatsApp chat");
+    waPanel.setAttribute("aria-hidden", "false");
+  }
+
+  function closeWhatsAppPanel() {
+    if (!waFloat || !waBtn || !waPanel) return;
+    waFloat.classList.remove("is-open");
+    waBtn.setAttribute("aria-expanded", "false");
+    waBtn.setAttribute("aria-label", "Open WhatsApp chat");
+    waPanel.setAttribute("aria-hidden", "true");
   }
 
   var yearEl = document.getElementById("roFooterYear");
