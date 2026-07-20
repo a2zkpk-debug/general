@@ -1,26 +1,28 @@
 <!-- ============================================================
-     VIBECANO — SEARCH RESULTS PAGE v1.0
+     VIBECANO — SEARCH RESULTS PAGE v1.1
      Paste this WHOLE file into Elementor → Theme Builder → Search Results → HTML widget.
 
      Display Conditions: Search Results → All
-     Hide default Woo output (Site Settings → Custom CSS):
+     Default Woo output is hidden automatically (built into this file).
+     Do NOT paste the hide-CSS separately anywhere — that causes visible text on the page.
 
-        body.search .woocommerce-products-header,
-        body.search .woocommerce-result-count,
-        body.search .woocommerce-ordering,
-        body.search ul.products,
-        body.search .woocommerce-pagination,
-        body.search .page-title {
-          display: none !important;
-        }
-
-     Confirm: data-vc-search-version="1.0" on #vcSearchRoot
+     Confirm: data-vc-search-version="1.1" on #vcSearchRoot
      ============================================================ -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 
 <style>
+  /* Hide default WooCommerce search output */
+  body.search .woocommerce-products-header,
+  body.search .woocommerce-result-count,
+  body.search .woocommerce-ordering,
+  body.search ul.products,
+  body.search .woocommerce-pagination,
+  body.search .page-title {
+    display: none !important;
+  }
+
   .vc-search-root {
     --font-body: "Source Sans 3", "Segoe UI", sans-serif;
     --font-display: "Cormorant Garamond", Georgia, serif;
