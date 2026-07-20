@@ -1,6 +1,8 @@
 <!-- ============================================================
-     VIBECANO — CUSTOM CHECKOUT PAGE (responsive)
+     VIBECANO — CUSTOM CHECKOUT PAGE v1.1 (responsive)
      Paste this whole file into an Elementor HTML widget.
+
+     Confirm: data-vc-checkout-version="1.1" on #vcCheckoutSection
      Uses WooCommerce Store API + WhatsApp confirmation.
 
      Place Order:
@@ -590,13 +592,23 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 99990;
+    z-index: 100100;
     gap: 12px;
     align-items: center;
     padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
     border-top: 1px solid var(--line);
-    background: rgba(255, 255, 255, 0.96);
+    background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 -12px 36px -24px rgba(0, 0, 0, 0.35);
+  }
+
+  .vc-checkout-mobile-bar.is-active {
+    display: flex !important;
+  }
+
+  .vc-checkout-form-actions {
+    display: none;
   }
 
   .vc-checkout-mobile-bar-copy {
@@ -654,8 +666,18 @@
       display: none;
     }
 
+    .vc-checkout-form-actions {
+      display: grid;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .vc-checkout-mobile-bar.is-active {
+      display: flex !important;
+    }
+
     .vc-checkout-mobile-bar {
-      display: flex;
+      display: none;
     }
 
     .vc-checkout-toast {
@@ -709,7 +731,7 @@
   }
 </style>
 
-<section class="vc-checkout" id="vcCheckoutSection">
+<section class="vc-checkout" id="vcCheckoutSection" data-vc-checkout-version="1.1">
   <div class="vc-checkout-inner">
     <header class="vc-checkout-head">
       <div>
@@ -797,7 +819,14 @@
   }
 
   forceFullWidthParents();
-  window.addEventListener("resize", forceFullWidthParents);
+  window.addEventListener("resize", function () {
+    forceFullWidthParents();
+    if (cart && cart.items && cart.items.length) {
+      setMobileBarVisible(true);
+    } else {
+      setMobileBarVisible(false);
+    }
+  });
 
   function $(selector, context) {
     return (context || document).querySelector(selector);
@@ -881,14 +910,31 @@
     }, 2300);
   }
 
+  function isMobileCheckoutView() {
+    return window.matchMedia("(max-width: 960px)").matches;
+  }
+
+  function mountCheckoutOverlaysToBody() {
+    [mobileBarEl, toastEl].forEach(function (el) {
+      if (el && el.parentNode !== document.body) {
+        document.body.appendChild(el);
+      }
+    });
+  }
+
+  mountCheckoutOverlaysToBody();
+
   function setMobileBarVisible(visible) {
     if (!mobileBarEl) return;
-    if (visible) {
-      mobileBarEl.hidden = false;
-      mobileBarEl.style.display = "";
+    var show = !!(visible && isMobileCheckoutView());
+    if (show) {
+      mobileBarEl.removeAttribute("hidden");
+      mobileBarEl.classList.add("is-active");
+      mobileBarEl.style.setProperty("display", "flex", "important");
     } else {
-      mobileBarEl.hidden = true;
-      mobileBarEl.style.display = "none";
+      mobileBarEl.setAttribute("hidden", "");
+      mobileBarEl.classList.remove("is-active");
+      mobileBarEl.style.setProperty("display", "none", "important");
     }
   }
 
@@ -1408,9 +1454,14 @@
   function resetPlaceOrderButtons() {
     var submitButton = $("#vcPlaceOrder");
     var whatsappButton = $("#vcWhatsAppBtn");
+    var formPlaceButton = $("#vcFormPlaceOrder");
     if (submitButton) {
       submitButton.disabled = false;
       submitButton.textContent = "Place Order";
+    }
+    if (formPlaceButton) {
+      formPlaceButton.disabled = false;
+      formPlaceButton.textContent = "Place Order";
     }
     if (mobilePlaceEl) {
       mobilePlaceEl.disabled = false;
@@ -1453,11 +1504,14 @@
 
     var submitButton = $("#vcPlaceOrder");
     var whatsappButton = $("#vcWhatsAppBtn");
-    var buttons = [submitButton, whatsappButton, mobilePlaceEl].filter(Boolean);
+    var formPlaceButton = $("#vcFormPlaceOrder");
+    var buttons = [submitButton, formPlaceButton, whatsappButton, mobilePlaceEl].filter(Boolean);
 
     buttons.forEach(function (btn) {
       btn.disabled = true;
-      if (btn.id === "vcPlaceOrder" || btn.id === "vcMobilePlaceOrder") btn.textContent = "Placing order...";
+      if (btn.id === "vcPlaceOrder" || btn.id === "vcMobilePlaceOrder" || btn.id === "vcFormPlaceOrder") {
+        btn.textContent = "Placing order...";
+      }
       if (btn.id === "vcWhatsAppBtn") btn.textContent = "Placing...";
     });
 
@@ -1674,8 +1728,10 @@
     bindReceiptInput("vcReceiptBank", "vcReceiptBankName");
 
     var placeButton = $("#vcPlaceOrder");
+    var formPlaceButton = $("#vcFormPlaceOrder");
     var whatsappButton = $("#vcWhatsAppBtn");
     if (placeButton) placeButton.addEventListener("click", placeOrder);
+    if (formPlaceButton) formPlaceButton.addEventListener("click", placeOrder);
     if (whatsappButton) whatsappButton.addEventListener("click", placeOrder);
     if (mobilePlaceEl) mobilePlaceEl.addEventListener("click", placeOrder);
 
@@ -1790,6 +1846,9 @@
               '<label for="vcReceiptBank">Bank transfer receipt</label>',
               '<input id="vcReceiptBank" type="file" accept="image/*,.pdf">',
               '<div class="vc-checkout-receipt-name" id="vcReceiptBankName"></div>',
+            "</div>",
+            '<div class="vc-checkout-form-actions">',
+              '<button class="vc-checkout-submit" type="button" id="vcFormPlaceOrder">Place Order</button>',
             "</div>",
           "</div>",
         "</form>",
