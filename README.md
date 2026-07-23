@@ -10,6 +10,9 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 - `vibecano-single-product-page.html` — Single product page with size/color swatches
 - `vibecano-cart-page.html` — Custom cart page with Store API integration
 - `vibecano-checkout-page.html` — Custom checkout page with WhatsApp order flow
+- `vibecano-track-order.html` — Track Your Order widget (Elementor HTML)
+- `vibecano-track-order-api.php` — Secure WooCommerce REST tracking endpoint
+- `TRACK-ORDER-INTEGRATION.md` — Full Track Order setup + API docs
 
 ## Header + hero + footer setup
 
@@ -45,6 +48,14 @@ WooCommerce restores the Store API cart from the `session` query parameter. The 
 ## Single product color swatches fix
 
 Color swatches were hidden because `renderColorOptions()` required `COLOR_VARIES`, which only became true when variation API data exposed parseable color values. The fix shows colors whenever the Color attribute has terms.
+
+## Track Your Order setup
+
+1. **Backend:** Install `vibecano-track-order-api.php` as a plugin, via child-theme `functions.php`, or Code Snippets. PHP cannot run inside Elementor.
+2. **Frontend:** Create a Track Order page → Elementor → HTML widget → paste `vibecano-track-order.html`.
+3. Customers can track with **Order Number + Email/Phone** or **Tracking Number**. The API returns only safe status fields (no addresses, payment data, or WC keys).
+
+See `TRACK-ORDER-INTEGRATION.md` for API payloads, status mapping, rate limiting, and shipment-provider adapters.
 
 ## Usage
 
