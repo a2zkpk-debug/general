@@ -1,0 +1,1285 @@
+<!-- ============================================================
+     VIBECANO — TRACK YOUR ORDER WIDGET
+     Paste this whole file into an Elementor HTML widget
+     (or a custom page template). Width: 100%.
+
+     Backend required:
+     - Activate vibecano-track-order-api.php (plugin / Code Snippets /
+       child-theme functions.php). PHP cannot run inside Elementor.
+
+     Config:
+     - Update VIBECANO_TRACKING_CONFIG.endpoint / nonce below, OR
+       let the PHP enqueue script localize them automatically.
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  .vibecano-track-widget,
+  .vibecano-track-widget *,
+  .vibecano-track-widget *::before,
+  .vibecano-track-widget *::after {
+    box-sizing: border-box;
+  }
+
+  .vibecano-track-widget {
+    --vibecano-black: #111111;
+    --vibecano-white: #ffffff;
+    --vibecano-border: #d9d9d9;
+    --vibecano-text: #111111;
+    --vibecano-muted: #777777;
+    --vibecano-error: #c62828;
+    --vibecano-success: #2e7d32;
+    --vibecano-radius: 10px;
+    --vibecano-soft: #f7f7f7;
+    --vibecano-focus: #2563eb;
+    --vibecano-timeline-done: #111111;
+    --vibecano-timeline-active: #111111;
+    --vibecano-timeline-todo: #d0d0d0;
+    --vibecano-shadow: 0 10px 30px rgba(17, 17, 17, 0.08);
+    --vibecano-font: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --vibecano-display: Manrope, Inter, system-ui, sans-serif;
+
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 28px);
+    color: var(--vibecano-text);
+    font-family: var(--vibecano-font);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    background: var(--vibecano-white);
+  }
+
+  .vibecano-track-widget a {
+    color: inherit;
+  }
+
+  .vibecano-track-header {
+    text-align: center;
+    margin-bottom: clamp(28px, 4vw, 44px);
+  }
+
+  .vibecano-track-title {
+    margin: 0;
+    font-family: var(--vibecano-display);
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    color: var(--vibecano-text);
+  }
+
+  .vibecano-track-subtitle {
+    margin: 10px auto 0;
+    max-width: 420px;
+    color: var(--vibecano-muted);
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .vibecano-track-panels {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: clamp(20px, 3vw, 36px);
+    align-items: start;
+  }
+
+  .vibecano-track-panel {
+    min-width: 0;
+  }
+
+  .vibecano-track-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .vibecano-track-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .vibecano-track-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--vibecano-text);
+  }
+
+  .vibecano-track-input {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+    border: 1px solid var(--vibecano-border);
+    border-radius: var(--vibecano-radius);
+    background: var(--vibecano-white);
+    color: var(--vibecano-text);
+    font: inherit;
+    font-size: 15px;
+    outline: none;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background-color 0.2s ease;
+  }
+
+  .vibecano-track-input::placeholder {
+    color: #a3a3a3;
+  }
+
+  .vibecano-track-input:hover {
+    border-color: #bdbdbd;
+  }
+
+  .vibecano-track-input:focus {
+    border-color: var(--vibecano-black);
+    box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.12);
+  }
+
+  .vibecano-track-input[aria-invalid="true"] {
+    border-color: var(--vibecano-error);
+    box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.12);
+  }
+
+  .vibecano-track-field-error {
+    display: none;
+    margin: 0;
+    color: var(--vibecano-error);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .vibecano-track-field-error.is-visible {
+    display: block;
+  }
+
+  .vibecano-track-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 48px;
+    margin-top: 4px;
+    padding: 12px 20px;
+    border: 1px solid var(--vibecano-black);
+    border-radius: var(--vibecano-radius);
+    background: var(--vibecano-black);
+    color: var(--vibecano-white);
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      background-color 0.18s ease,
+      opacity 0.18s ease;
+  }
+
+  .vibecano-track-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(17, 17, 17, 0.18);
+    background: #000000;
+  }
+
+  .vibecano-track-button:focus-visible {
+    outline: 2px solid var(--vibecano-focus);
+    outline-offset: 3px;
+  }
+
+  .vibecano-track-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .vibecano-track-button.is-loading {
+    pointer-events: none;
+  }
+
+  .vibecano-track-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: vibecano-track-spin 0.7s linear infinite;
+  }
+
+  .vibecano-track-button-secondary {
+    background: var(--vibecano-white);
+    color: var(--vibecano-text);
+    border-color: var(--vibecano-border);
+  }
+
+  .vibecano-track-button-secondary:hover:not(:disabled) {
+    background: var(--vibecano-soft);
+    box-shadow: 0 6px 14px rgba(17, 17, 17, 0.08);
+  }
+
+  .vibecano-track-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    min-height: 100%;
+    padding-top: 28px;
+    gap: 12px;
+    color: var(--vibecano-muted);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    user-select: none;
+  }
+
+  .vibecano-track-divider::before,
+  .vibecano-track-divider::after {
+    content: "";
+    flex: 1 1 auto;
+    width: 1px;
+    min-height: 48px;
+    background: var(--vibecano-border);
+  }
+
+  .vibecano-track-alert {
+    display: none;
+    margin-top: 20px;
+    padding: 12px 14px;
+    border: 1px solid transparent;
+    border-radius: var(--vibecano-radius);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .vibecano-track-alert.is-visible {
+    display: block;
+  }
+
+  .vibecano-track-alert.is-error {
+    border-color: rgba(198, 40, 40, 0.25);
+    background: #fdecea;
+    color: var(--vibecano-error);
+  }
+
+  .vibecano-track-alert.is-info {
+    border-color: rgba(17, 17, 17, 0.12);
+    background: var(--vibecano-soft);
+    color: var(--vibecano-text);
+  }
+
+  .vibecano-track-result {
+    display: none;
+    margin-top: clamp(28px, 4vw, 40px);
+    padding-top: clamp(24px, 3vw, 32px);
+    border-top: 1px solid var(--vibecano-border);
+  }
+
+  .vibecano-track-result.is-visible {
+    display: block;
+    animation: vibecano-track-reveal 0.35s ease;
+  }
+
+  .vibecano-track-result-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px 24px;
+    margin-bottom: 28px;
+  }
+
+  .vibecano-track-result-heading {
+    margin: 0 0 6px;
+    font-family: var(--vibecano-display);
+    font-size: clamp(22px, 3vw, 28px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .vibecano-track-result-meta {
+    margin: 0;
+    color: var(--vibecano-muted);
+    font-size: 14px;
+  }
+
+  .vibecano-track-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1px solid var(--vibecano-border);
+    border-radius: 999px;
+    background: var(--vibecano-soft);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .vibecano-track-status-badge::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--vibecano-black);
+  }
+
+  .vibecano-track-status-badge.is-delivered::before,
+  .vibecano-track-status-badge.is-completed::before {
+    background: var(--vibecano-success);
+  }
+
+  .vibecano-track-status-badge.is-cancelled::before,
+  .vibecano-track-status-badge.is-failed::before,
+  .vibecano-track-status-badge.is-refunded::before {
+    background: var(--vibecano-error);
+  }
+
+  .vibecano-track-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 20px;
+    margin-bottom: 32px;
+  }
+
+  .vibecano-track-detail {
+    min-width: 0;
+  }
+
+  .vibecano-track-detail-label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--vibecano-muted);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .vibecano-track-detail-value {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    word-break: break-word;
+  }
+
+  .vibecano-track-detail-value a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .vibecano-track-timeline {
+    margin: 0;
+    padding: 8px 0 0;
+    list-style: none;
+  }
+
+  .vibecano-track-timeline-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 14px;
+    padding-bottom: 22px;
+  }
+
+  .vibecano-track-timeline-item:last-child {
+    padding-bottom: 0;
+  }
+
+  .vibecano-track-timeline-item:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    top: 28px;
+    left: 13px;
+    width: 2px;
+    bottom: 0;
+    background: var(--vibecano-timeline-todo);
+  }
+
+  .vibecano-track-timeline-item.is-complete:not(:last-child)::before,
+  .vibecano-track-timeline-item.is-current:not(:last-child)::before {
+    background: var(--vibecano-timeline-done);
+  }
+
+  .vibecano-track-timeline-marker {
+    position: relative;
+    z-index: 1;
+    width: 28px;
+    height: 28px;
+    border: 2px solid var(--vibecano-timeline-todo);
+    border-radius: 50%;
+    background: var(--vibecano-white);
+    color: transparent;
+    display: grid;
+    place-items: center;
+  }
+
+  .vibecano-track-timeline-item.is-complete .vibecano-track-timeline-marker {
+    border-color: var(--vibecano-timeline-done);
+    background: var(--vibecano-timeline-done);
+    color: var(--vibecano-white);
+  }
+
+  .vibecano-track-timeline-item.is-current .vibecano-track-timeline-marker {
+    border-color: var(--vibecano-timeline-active);
+    box-shadow: 0 0 0 4px rgba(17, 17, 17, 0.1);
+  }
+
+  .vibecano-track-timeline-item.is-current .vibecano-track-timeline-marker::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--vibecano-timeline-active);
+  }
+
+  .vibecano-track-timeline-check {
+    width: 12px;
+    height: 12px;
+  }
+
+  .vibecano-track-timeline-copy {
+    padding-top: 3px;
+  }
+
+  .vibecano-track-timeline-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .vibecano-track-timeline-item.is-upcoming .vibecano-track-timeline-title {
+    color: var(--vibecano-muted);
+    font-weight: 600;
+  }
+
+  .vibecano-track-timeline-desc {
+    margin: 2px 0 0;
+    color: var(--vibecano-muted);
+    font-size: 13px;
+  }
+
+  .vibecano-track-result-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 18px;
+    margin-top: 28px;
+  }
+
+  .vibecano-track-result-actions .vibecano-track-button,
+  .vibecano-track-result-actions .vibecano-track-button-secondary {
+    width: auto;
+    min-width: 180px;
+  }
+
+  .vibecano-track-refresh {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    color: var(--vibecano-muted);
+    font-size: 13px;
+  }
+
+  .vibecano-track-refresh-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .vibecano-track-refresh-toggle input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--vibecano-black);
+  }
+
+  .vibecano-track-updated {
+    margin: 0;
+  }
+
+  .vibecano-track-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @keyframes vibecano-track-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes vibecano-track-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vibecano-track-widget *,
+    .vibecano-track-widget *::before,
+    .vibecano-track-widget *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    .vibecano-track-button:hover:not(:disabled) {
+      transform: none;
+    }
+  }
+
+  /* Tablet */
+  @media (max-width: 1024px) {
+    .vibecano-track-widget {
+      max-width: 860px;
+    }
+
+    .vibecano-track-panels {
+      gap: 24px;
+    }
+  }
+
+  /* Mobile / stacked */
+  @media (max-width: 768px) {
+    .vibecano-track-panels {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .vibecano-track-divider {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 12px 0;
+      gap: 14px;
+    }
+
+    .vibecano-track-divider::before,
+    .vibecano-track-divider::after {
+      width: auto;
+      height: 1px;
+      min-height: 0;
+      flex: 1 1 auto;
+    }
+
+    .vibecano-track-details {
+      grid-template-columns: 1fr;
+    }
+
+    .vibecano-track-result-actions .vibecano-track-button,
+    .vibecano-track-result-actions .vibecano-track-button-secondary {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .vibecano-track-widget {
+      padding: 24px 14px 36px;
+    }
+
+    .vibecano-track-input,
+    .vibecano-track-button {
+      min-height: 50px;
+    }
+  }
+</style>
+
+<section
+  class="vibecano-track-widget"
+  id="vibecanoTrackWidget"
+  aria-labelledby="vibecanoTrackTitle"
+  data-vibecano-track-root
+>
+  <header class="vibecano-track-header">
+    <h2 class="vibecano-track-title" id="vibecanoTrackTitle">Track Your Order</h2>
+    <p class="vibecano-track-subtitle">
+      Enter your order details or tracking number to see the latest shipping status.
+    </p>
+  </header>
+
+  <div class="vibecano-track-panels" data-vibecano-track-forms>
+    <!-- Method 1: Order Number + Email/Phone -->
+    <div class="vibecano-track-panel">
+      <form class="vibecano-track-form" id="vibecanoTrackOrderForm" novalidate>
+        <div class="vibecano-track-field">
+          <label class="vibecano-track-label" for="vibecanoOrderNumber">Order Number</label>
+          <input
+            class="vibecano-track-input"
+            id="vibecanoOrderNumber"
+            name="orderNumber"
+            type="text"
+            inputmode="text"
+            autocomplete="off"
+            placeholder="e.g. 12345"
+            required
+            aria-describedby="vibecanoOrderNumberError"
+          >
+          <p class="vibecano-track-field-error" id="vibecanoOrderNumberError" role="alert"></p>
+        </div>
+
+        <div class="vibecano-track-field">
+          <label class="vibecano-track-label" for="vibecanoContact">Email or Phone Number</label>
+          <input
+            class="vibecano-track-input"
+            id="vibecanoContact"
+            name="contact"
+            type="text"
+            inputmode="email"
+            autocomplete="email"
+            placeholder="email@example.com or +1 555 000 0000"
+            required
+            aria-describedby="vibecanoContactError"
+          >
+          <p class="vibecano-track-field-error" id="vibecanoContactError" role="alert"></p>
+        </div>
+
+        <button class="vibecano-track-button" type="submit" data-track-submit="order">
+          <span data-btn-label>Track Order</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="vibecano-track-divider" aria-hidden="true">
+      <span>OR</span>
+    </div>
+
+    <!-- Method 2: Tracking Number -->
+    <div class="vibecano-track-panel">
+      <form class="vibecano-track-form" id="vibecanoTrackNumberForm" novalidate>
+        <div class="vibecano-track-field">
+          <label class="vibecano-track-label" for="vibecanoTrackingNumber">Tracking Number</label>
+          <input
+            class="vibecano-track-input"
+            id="vibecanoTrackingNumber"
+            name="trackingNumber"
+            type="text"
+            inputmode="text"
+            autocomplete="off"
+            placeholder="Enter tracking number"
+            required
+            aria-describedby="vibecanoTrackingNumberError"
+          >
+          <p class="vibecano-track-field-error" id="vibecanoTrackingNumberError" role="alert"></p>
+        </div>
+
+        <button class="vibecano-track-button" type="submit" data-track-submit="tracking">
+          <span data-btn-label>Track Order</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div
+    class="vibecano-track-alert"
+    id="vibecanoTrackAlert"
+    role="alert"
+    aria-live="assertive"
+    hidden
+  ></div>
+
+  <div
+    class="vibecano-track-result"
+    id="vibecanoTrackResult"
+    aria-live="polite"
+    hidden
+  >
+    <div class="vibecano-track-result-top">
+      <div>
+        <h3 class="vibecano-track-result-heading" data-result-title>Shipment status</h3>
+        <p class="vibecano-track-result-meta" data-result-subtitle></p>
+      </div>
+      <span class="vibecano-track-status-badge" data-result-badge>Processing</span>
+    </div>
+
+    <div class="vibecano-track-details" data-result-details></div>
+
+    <ol class="vibecano-track-timeline" data-result-timeline aria-label="Order progress"></ol>
+
+    <div class="vibecano-track-result-actions">
+      <a
+        class="vibecano-track-button"
+        data-result-external
+        href="#"
+        target="_blank"
+        rel="noopener noreferrer"
+        hidden
+      >Track Shipment</a>
+      <button class="vibecano-track-button vibecano-track-button-secondary" type="button" data-track-another>
+        Track Another Order
+      </button>
+      <div class="vibecano-track-refresh">
+        <label class="vibecano-track-refresh-toggle">
+          <input type="checkbox" data-auto-refresh checked>
+          <span>Auto-refresh tracking</span>
+        </label>
+        <p class="vibecano-track-updated" data-last-updated></p>
+      </div>
+    </div>
+  </div>
+
+  <p class="vibecano-track-sr-only" aria-live="polite" data-status-live></p>
+</section>
+
+<script>
+(function () {
+  "use strict";
+
+  var TIMELINE_STEPS = [
+    { key: "confirmed", label: "Order Confirmed", description: "We received your order." },
+    { key: "processing", label: "Processing", description: "Your order is being prepared." },
+    { key: "shipped", label: "Shipped", description: "Your package is on the way." },
+    { key: "out-for-delivery", label: "Out for Delivery", description: "The carrier is delivering today." },
+    { key: "delivered", label: "Delivered", description: "Package delivered successfully." }
+  ];
+
+  var STATUS_MAP = {
+    pending: { stage: "confirmed", label: "Order Confirmed" },
+    "on-hold": { stage: "confirmed", label: "On Hold" },
+    processing: { stage: "processing", label: "Processing" },
+    shipped: { stage: "shipped", label: "Shipped" },
+    "out-for-delivery": { stage: "out-for-delivery", label: "Out for Delivery" },
+    completed: { stage: "delivered", label: "Delivered" },
+    delivered: { stage: "delivered", label: "Delivered" },
+    cancelled: { stage: "confirmed", label: "Cancelled", terminal: true, negative: true },
+    refunded: { stage: "confirmed", label: "Refunded", terminal: true, negative: true },
+    failed: { stage: "confirmed", label: "Failed", terminal: true, negative: true }
+  };
+
+  var DEFAULT_CONFIG = {
+    // PLACEHOLDER: replace with your WP REST URL if not localized by PHP.
+    endpoint: "/wp-json/vibecano/v1/track",
+    nonce: "",
+    refreshInterval: 60000
+  };
+
+  // Read config at call-time so PHP-localized footer/head values are picked up.
+  function getConfig() {
+    return Object.assign(
+      {},
+      DEFAULT_CONFIG,
+      window.VIBECANO_TRACKING_CONFIG || {},
+      window.vibecanoTrackOrder || {}
+    );
+  }
+
+  var root = document.getElementById("vibecanoTrackWidget");
+  if (!root) return;
+
+  var orderForm = document.getElementById("vibecanoTrackOrderForm");
+  var trackingForm = document.getElementById("vibecanoTrackNumberForm");
+  var alertEl = document.getElementById("vibecanoTrackAlert");
+  var resultEl = document.getElementById("vibecanoTrackResult");
+  var liveEl = root.querySelector("[data-status-live]");
+  var autoRefreshInput = root.querySelector("[data-auto-refresh]");
+  var lastUpdatedEl = root.querySelector("[data-last-updated]");
+  var trackAnotherBtn = root.querySelector("[data-track-another]");
+  var externalLink = root.querySelector("[data-result-external]");
+
+  var state = {
+    lastPayload: null,
+    lastData: null,
+    requestId: 0,
+    abortController: null,
+    pollTimer: null,
+    lastFetchedAt: null,
+    relativeTimer: null,
+    isPolling: false
+  };
+
+  function trim(value) {
+    return String(value == null ? "" : value).replace(/\s+/g, " ").trim();
+  }
+
+  function isEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  function isPhone(value) {
+    var digits = value.replace(/[^\d]/g, "");
+    return digits.length >= 7 && digits.length <= 15 && /^[\d\s+\-().]+$/.test(value);
+  }
+
+  function isEmailOrPhone(value) {
+    return isEmail(value) || isPhone(value);
+  }
+
+  function setFieldError(input, message) {
+    var errorId = input.getAttribute("aria-describedby");
+    var errorEl = errorId ? document.getElementById(errorId) : null;
+    if (!errorEl) return;
+    if (message) {
+      input.setAttribute("aria-invalid", "true");
+      errorEl.textContent = message;
+      errorEl.classList.add("is-visible");
+    } else {
+      input.removeAttribute("aria-invalid");
+      errorEl.textContent = "";
+      errorEl.classList.remove("is-visible");
+    }
+  }
+
+  function clearFormErrors(form) {
+    Array.prototype.forEach.call(form.querySelectorAll(".vibecano-track-input"), function (input) {
+      setFieldError(input, "");
+    });
+  }
+
+  function showAlert(message, type) {
+    if (!message) {
+      alertEl.hidden = true;
+      alertEl.classList.remove("is-visible", "is-error", "is-info");
+      alertEl.textContent = "";
+      return;
+    }
+    alertEl.hidden = false;
+    alertEl.textContent = message;
+    alertEl.classList.add("is-visible");
+    alertEl.classList.toggle("is-error", type !== "info");
+    alertEl.classList.toggle("is-info", type === "info");
+  }
+
+  function setButtonLoading(button, loading) {
+    if (!button) return;
+    var label = button.querySelector("[data-btn-label]");
+    button.disabled = !!loading;
+    button.classList.toggle("is-loading", !!loading);
+    var existing = button.querySelector(".vibecano-track-spinner");
+    if (existing) existing.remove();
+    if (loading) {
+      var spinner = document.createElement("span");
+      spinner.className = "vibecano-track-spinner";
+      spinner.setAttribute("aria-hidden", "true");
+      button.insertBefore(spinner, label || null);
+      if (label) label.textContent = "Tracking...";
+      button.setAttribute("aria-busy", "true");
+    } else {
+      if (label) label.textContent = "Track Order";
+      button.removeAttribute("aria-busy");
+    }
+  }
+
+  function formatDate(value) {
+    if (!value) return "";
+    var date = new Date(value);
+    if (isNaN(date.getTime())) return String(value);
+    try {
+      return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+    } catch (err) {
+      return String(value);
+    }
+  }
+
+  function formatRelative(fromMs) {
+    var seconds = Math.max(0, Math.floor((Date.now() - fromMs) / 1000));
+    if (seconds < 5) return "Last updated just now";
+    if (seconds < 60) return "Last updated " + seconds + " seconds ago";
+    var minutes = Math.floor(seconds / 60);
+    if (minutes === 1) return "Last updated 1 minute ago";
+    if (minutes < 60) return "Last updated " + minutes + " minutes ago";
+    return "Last updated " + formatDate(new Date(fromMs).toISOString());
+  }
+
+  function updateRelativeLabel() {
+    if (!state.lastFetchedAt || !lastUpdatedEl) return;
+    lastUpdatedEl.textContent = formatRelative(state.lastFetchedAt);
+  }
+
+  function stopPolling() {
+    if (state.pollTimer) {
+      clearInterval(state.pollTimer);
+      state.pollTimer = null;
+    }
+    if (state.relativeTimer) {
+      clearInterval(state.relativeTimer);
+      state.relativeTimer = null;
+    }
+    state.isPolling = false;
+  }
+
+  function startPolling() {
+    stopPolling();
+    if (!autoRefreshInput || !autoRefreshInput.checked || !state.lastPayload) return;
+    if (isTerminalStatus(state.lastData && state.lastData.status)) return;
+
+    state.isPolling = true;
+    state.relativeTimer = setInterval(updateRelativeLabel, 1000);
+    state.pollTimer = setInterval(function () {
+      if (document.hidden) return;
+      if (!autoRefreshInput.checked) return;
+      refreshTracking(true);
+    }, Math.max(30000, Number(getConfig().refreshInterval) || 60000));
+  }
+
+  function isTerminalStatus(status) {
+    var key = String(status || "").toLowerCase();
+    var mapped = STATUS_MAP[key];
+    return key === "delivered" || key === "completed" || !!(mapped && mapped.terminal);
+  }
+
+  function stageIndex(stageKey) {
+    for (var i = 0; i < TIMELINE_STEPS.length; i += 1) {
+      if (TIMELINE_STEPS[i].key === stageKey) return i;
+    }
+    return 0;
+  }
+
+  function mapStatus(status, statusLabel) {
+    var key = String(status || "").toLowerCase();
+    var mapped = STATUS_MAP[key] || { stage: "processing", label: statusLabel || status || "Processing" };
+    return {
+      key: key,
+      stage: mapped.stage,
+      label: statusLabel || mapped.label,
+      negative: !!mapped.negative,
+      terminal: !!mapped.terminal
+    };
+  }
+
+  function buildTimeline(statusInfo) {
+    var list = root.querySelector("[data-result-timeline]");
+    list.innerHTML = "";
+    var currentIndex = stageIndex(statusInfo.stage);
+    var checkSvg =
+      '<svg class="vibecano-track-timeline-check" viewBox="0 0 12 12" aria-hidden="true">' +
+      '<path fill="currentColor" d="M4.7 9.2 1.8 6.3l1.1-1.1 1.8 1.8 4-4.1 1.1 1.1z"/></svg>';
+
+    TIMELINE_STEPS.forEach(function (step, index) {
+      var li = document.createElement("li");
+      li.className = "vibecano-track-timeline-item";
+
+      if (statusInfo.negative) {
+        li.classList.add(index === 0 ? "is-current" : "is-upcoming");
+      } else if (index < currentIndex) {
+        li.classList.add("is-complete");
+      } else if (index === currentIndex) {
+        li.classList.add(statusInfo.stage === "delivered" ? "is-complete" : "is-current");
+      } else {
+        li.classList.add("is-upcoming");
+      }
+
+      var markerState = "";
+      if (li.classList.contains("is-complete")) markerState = checkSvg;
+
+      li.innerHTML =
+        '<span class="vibecano-track-timeline-marker">' + markerState + "</span>" +
+        '<div class="vibecano-track-timeline-copy">' +
+        '<p class="vibecano-track-timeline-title">' + escapeHtml(step.label) + "</p>" +
+        '<p class="vibecano-track-timeline-desc">' + escapeHtml(step.description) + "</p>" +
+        "</div>";
+      list.appendChild(li);
+    });
+  }
+
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function renderDetails(data) {
+    var container = root.querySelector("[data-result-details]");
+    var rows = [
+      { label: "Order Number", value: data.orderNumber },
+      { label: "Status", value: data.statusLabel || data.status },
+      { label: "Carrier", value: data.carrier },
+      { label: "Tracking Number", value: data.trackingNumber },
+      { label: "Estimated Delivery", value: data.estimatedDelivery ? formatDate(data.estimatedDelivery) : "" }
+    ].filter(function (row) {
+      return !!row.value;
+    });
+
+    container.innerHTML = rows.map(function (row) {
+      return (
+        '<div class="vibecano-track-detail">' +
+        '<span class="vibecano-track-detail-label">' + escapeHtml(row.label) + "</span>" +
+        '<span class="vibecano-track-detail-value">' + escapeHtml(row.value) + "</span>" +
+        "</div>"
+      );
+    }).join("");
+  }
+
+  function renderResult(data, options) {
+    options = options || {};
+    var statusInfo = mapStatus(data.status, data.statusLabel);
+    var titleEl = root.querySelector("[data-result-title]");
+    var subtitleEl = root.querySelector("[data-result-subtitle]");
+    var badgeEl = root.querySelector("[data-result-badge]");
+
+    titleEl.textContent = statusInfo.label;
+    subtitleEl.textContent = data.orderNumber
+      ? "Order #" + data.orderNumber
+      : (data.trackingNumber ? "Tracking #" + data.trackingNumber : "Shipment update");
+
+    badgeEl.textContent = statusInfo.label;
+    badgeEl.className = "vibecano-track-status-badge is-" + String(data.status || "").toLowerCase();
+
+    renderDetails(data);
+    buildTimeline(statusInfo);
+
+    if (data.trackingUrl) {
+      externalLink.hidden = false;
+      externalLink.href = data.trackingUrl;
+    } else {
+      externalLink.hidden = true;
+      externalLink.removeAttribute("href");
+    }
+
+    resultEl.hidden = false;
+    resultEl.classList.add("is-visible");
+    state.lastData = data;
+    state.lastFetchedAt = Date.now();
+    updateRelativeLabel();
+
+    if (liveEl) {
+      liveEl.textContent = "Tracking updated. Current status: " + statusInfo.label + ".";
+    }
+
+    if (!options.silent && window.matchMedia("(max-width: 768px)").matches) {
+      resultEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    if (isTerminalStatus(data.status) || (autoRefreshInput && !autoRefreshInput.checked)) {
+      stopPolling();
+      if (isTerminalStatus(data.status) && lastUpdatedEl) {
+        lastUpdatedEl.textContent = "Tracking complete";
+      }
+    } else {
+      startPolling();
+    }
+  }
+
+  function hideResult() {
+    stopPolling();
+    resultEl.hidden = true;
+    resultEl.classList.remove("is-visible");
+    state.lastData = null;
+    state.lastPayload = null;
+    state.lastFetchedAt = null;
+    if (lastUpdatedEl) lastUpdatedEl.textContent = "";
+  }
+
+  function validateOrderForm() {
+    clearFormErrors(orderForm);
+    var orderInput = document.getElementById("vibecanoOrderNumber");
+    var contactInput = document.getElementById("vibecanoContact");
+    var orderNumber = trim(orderInput.value);
+    var contact = trim(contactInput.value);
+    var valid = true;
+
+    if (!orderNumber) {
+      setFieldError(orderInput, "Please enter your order number.");
+      valid = false;
+    }
+    if (!contact) {
+      setFieldError(contactInput, "Please enter the email address or phone number used when placing your order.");
+      valid = false;
+    } else if (!isEmailOrPhone(contact)) {
+      setFieldError(contactInput, "Please enter a valid email address or phone number.");
+      valid = false;
+    }
+
+    return valid ? { type: "order", orderNumber: orderNumber, contact: contact } : null;
+  }
+
+  function validateTrackingForm() {
+    clearFormErrors(trackingForm);
+    var trackingInput = document.getElementById("vibecanoTrackingNumber");
+    var trackingNumber = trim(trackingInput.value);
+    if (!trackingNumber) {
+      setFieldError(trackingInput, "Please enter your tracking number.");
+      return null;
+    }
+    return { type: "tracking", trackingNumber: trackingNumber };
+  }
+
+  function parseJsonSafe(text) {
+    try {
+      return JSON.parse(text);
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function humanError(status, payload) {
+    if (payload && payload.message) return payload.message;
+    if (status === 404) {
+      return state.lastPayload && state.lastPayload.type === "tracking"
+        ? "We couldn't find a shipment with this tracking number. Please check the number and try again."
+        : "Order not found. Please check your details and try again.";
+    }
+    if (status === 429) return "Too many requests. Please wait a moment and try again.";
+    if (status === 401 || status === 403) return "Your session expired. Please refresh the page and try again.";
+    if (status >= 500) return "Something went wrong. Please try again in a moment.";
+    return "Something went wrong. Please try again in a moment.";
+  }
+
+  function trackRequest(payload, options) {
+    options = options || {};
+    var requestId = ++state.requestId;
+
+    if (state.abortController) {
+      try { state.abortController.abort(); } catch (err) { /* ignore */ }
+    }
+    state.abortController = typeof AbortController !== "undefined" ? new AbortController() : null;
+
+    var buttons = root.querySelectorAll("[data-track-submit]");
+    if (!options.silent) {
+      Array.prototype.forEach.call(buttons, function (btn) {
+        setButtonLoading(btn, true);
+      });
+      showAlert("");
+    }
+
+    var config = getConfig();
+    var headers = {
+      "Content-Type": "application/json",
+      Accept: "application/json"
+    };
+    if (config.nonce) {
+      headers["X-WP-Nonce"] = config.nonce;
+    }
+
+    var body = {
+      type: payload.type
+    };
+    if (payload.type === "order") {
+      body.orderNumber = payload.orderNumber;
+      body.contact = payload.contact;
+    } else {
+      body.trackingNumber = payload.trackingNumber;
+    }
+
+    return fetch(config.endpoint, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: headers,
+      body: JSON.stringify(body),
+      signal: state.abortController ? state.abortController.signal : undefined
+    })
+      .then(function (response) {
+        return response.text().then(function (text) {
+          return {
+            ok: response.ok,
+            status: response.status,
+            data: parseJsonSafe(text)
+          };
+        });
+      })
+      .then(function (result) {
+        if (requestId !== state.requestId) return;
+
+        if (!result.data || typeof result.data !== "object") {
+          throw { status: result.status, message: "Unexpected response format." };
+        }
+
+        if (!result.ok || result.data.success === false) {
+          throw {
+            status: result.status,
+            message: humanError(result.status, result.data),
+            code: result.data.code
+          };
+        }
+
+        var data = result.data.data || result.data;
+        state.lastPayload = payload;
+        renderResult(data, { silent: !!options.silent });
+        if (!options.silent) showAlert("");
+      })
+      .catch(function (error) {
+        if (requestId !== state.requestId) return;
+        if (error && error.name === "AbortError") return;
+
+        var message = humanError(error && error.status, error);
+        if (!options.silent) {
+          showAlert(message, "error");
+          if (liveEl) liveEl.textContent = message;
+        }
+      })
+      .then(function () {
+        if (requestId !== state.requestId) return;
+        Array.prototype.forEach.call(buttons, function (btn) {
+          setButtonLoading(btn, false);
+        });
+      });
+  }
+
+  function refreshTracking(silent) {
+    if (!state.lastPayload || state.isPolling && silent === false) return;
+    trackRequest(state.lastPayload, { silent: !!silent });
+  }
+
+  orderForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    var payload = validateOrderForm();
+    if (!payload) return;
+    trackRequest(payload);
+  });
+
+  trackingForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    var payload = validateTrackingForm();
+    if (!payload) return;
+    trackRequest(payload);
+  });
+
+  trackAnotherBtn.addEventListener("click", function () {
+    hideResult();
+    showAlert("");
+    orderForm.reset();
+    trackingForm.reset();
+    clearFormErrors(orderForm);
+    clearFormErrors(trackingForm);
+    document.getElementById("vibecanoOrderNumber").focus();
+  });
+
+  if (autoRefreshInput) {
+    autoRefreshInput.addEventListener("change", function () {
+      if (autoRefreshInput.checked && state.lastPayload && !isTerminalStatus(state.lastData && state.lastData.status)) {
+        startPolling();
+      } else {
+        stopPolling();
+        updateRelativeLabel();
+      }
+    });
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden && autoRefreshInput && autoRefreshInput.checked && state.lastPayload) {
+      refreshTracking(true);
+    }
+  });
+
+  // Expose a tiny debug helper for developers (no secrets).
+  window.VibecanoTrackOrder = {
+    refresh: function () { refreshTracking(false); },
+    getConfig: getConfig
+  };
+})();
+</script>
