@@ -22,9 +22,15 @@ Custom Elementor HTML widgets for the Vibecano WooCommerce store.
 
 The checkout section now stretches to full page width on Elementor. The live checkout HTML widget uses `elementor-widget__width-initial`, which limited the page to about 963px and left empty space on the right. The fix expands the Elementor host containers to `100%` width via JavaScript on load, render, and resize.
 
+## Checkout v1.3 updates
+
+- Heading and description use a single Manrope font stack (no split Syne/Manrope mix).
+- Delivery (and COD shipping) is **Rs. 0** when the customer pays in advance **or** the merchandise total is over **Rs. 7,499**.
+- Payment receipts cannot auto-attach to WhatsApp. The page instructs customers to send the receipt as a WhatsApp attachment after placing the order.
+
 ## Checkout WhatsApp fix (color, size, receipt)
 
-WhatsApp messages now include Size/Color from Store API cart variations. Receipt uploads use the mobile Share API when available; desktop opens a receipt image tab for manual attach because `wa.me` links cannot include files.
+WhatsApp messages include Size/Color from Store API cart variations. Because `wa.me` links cannot attach files, customers are instructed to send the payment receipt as a WhatsApp attachment.
 
 ## Cart checkout redirect fix
 
