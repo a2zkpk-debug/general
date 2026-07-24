@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Al-Nafi College of Technology">
   <rect width="64" height="64" rx="14" fill="#0A2A32"/>
-  <path d="M18 46V18h8.4l5.6 18.2L37.6 18H46v28h-6.2V28.4L34.2 46h-4.4l-5.6-17.6V46H18z" fill="#E8F4F2"/>
-  <rect x="18" y="50" width="28" height="3" rx="1.5" fill="#2EC4B6"/>
+  <path d="M32 14L48 50h-7.2l-2.8-6.6H26l-2.8 6.6H16L32 14zm0 12.4L27.6 37h8.8L32 26.4z" fill="#E8F4F2"/>
+  <rect x="18" y="52" width="28" height="3" rx="1.5" fill="#2EC4B6"/>
 </svg>
