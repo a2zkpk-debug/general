@@ -1,0 +1,1631 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Al-Nafi College of Technology — TTB Peshawar Affiliated Institute</title>
+<meta name="description" content="Al-Nafi College of Technology offers TTB Peshawar-affiliated AutoCAD, 1-Year DIT, Web Development, Graphic Design, Digital Marketing, AI, Freelancing and eBay/Etsy courses in Peshawar, Pakistan.">
+<meta name="author" content="Al-Nafi College of Technology">
+<link rel="canonical" href="https://alnaficollege.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Al-Nafi College of Technology — TTB Peshawar Affiliated Institute">
+<meta property="og:description" content="Al-Nafi College of Technology offers TTB Peshawar-affiliated AutoCAD, 1-Year DIT, Web Development, Graphic Design, Digital Marketing, AI, Freelancing and eBay/Etsy courses in Peshawar, Pakistan.">
+<meta property="og:url" content="https://alnaficollege.com/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%20fill%3D%22none%22%20role%3D%22img%22%20aria-label%3D%22Al-Nafi%20College%20of%20Technology%22%3E%0A%20%20%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%230A2A32%22/%3E%0A%20%20%3Cpath%20d%3D%22M32%2014L48%2050h-7.2l-2.8-6.6H26l-2.8%206.6H16L32%2014zm0%2012.4L27.6%2037h8.8L32%2026.4z%22%20fill%3D%22%23E8F4F2%22/%3E%0A%20%20%3Crect%20x%3D%2218%22%20y%3D%2252%22%20width%3D%2228%22%20height%3D%223%22%20rx%3D%221.5%22%20fill%3D%22%232EC4B6%22/%3E%0A%3C/svg%3E" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Al-Nafi College of Technology — Modern redesign
+   Direction: deep ink teal + cool mist surfaces + sharp geometric type */
+
+:root {
+  --ink: #061820;
+  --ink-soft: #0c2a34;
+  --teal: #1fb8a8;
+  --teal-deep: #0f7f76;
+  --teal-glow: rgba(31, 184, 168, 0.22);
+  --mist: #eef3f4;
+  --paper: #f7fafb;
+  --line: rgba(6, 24, 32, 0.1);
+  --muted: #5b6f76;
+  --text: #14262d;
+  --white: #ffffff;
+  --radius: 18px;
+  --radius-sm: 10px;
+  --shadow: 0 18px 50px rgba(6, 24, 32, 0.12);
+  --header-h: 76px;
+  --font-display: "Syne", sans-serif;
+  --font-body: "Figtree", sans-serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --container: 1120px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body.nav-open {
+  overflow: hidden;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 0;
+  background: none;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.7rem;
+  color: var(--ink);
+}
+
+h1 {
+  font-size: clamp(2.4rem, 6vw, 4.4rem);
+  font-weight: 800;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 3.4vw, 2.7rem);
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+.container {
+  width: min(100% - 2.4rem, var(--container));
+  margin-inline: auto;
+}
+
+/* ——— Buttons ——— */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 48px;
+  padding: 0.75rem 1.35rem;
+  border-radius: 12px;
+  font-weight: 650;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  transition: transform 0.25s var(--ease), background 0.25s var(--ease),
+    color 0.25s var(--ease), border-color 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+  white-space: nowrap;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: var(--teal);
+  color: var(--ink);
+  box-shadow: 0 10px 28px var(--teal-glow);
+}
+
+.btn-primary:hover {
+  background: #34d0c0;
+}
+
+.btn-outline {
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: var(--white);
+  background: transparent;
+}
+
+.site-header.is-scrolled .btn-outline,
+.btn-outline-dark {
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.btn-outline:hover,
+.btn-outline-dark:hover {
+  border-color: var(--teal-deep);
+  color: var(--teal-deep);
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-ghost-dark {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.btn-ghost-dark:hover {
+  background: var(--ink-soft);
+}
+
+.btn-wa {
+  background: #128c7e;
+  color: var(--white);
+}
+
+.btn-wa:hover {
+  background: #0f766c;
+}
+
+/* ——— Header ——— */
+.site-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 100;
+  height: var(--header-h);
+  transition: background 0.35s var(--ease), box-shadow 0.35s var(--ease),
+    backdrop-filter 0.35s var(--ease);
+}
+
+.site-header.is-scrolled {
+  background: rgba(247, 250, 251, 0.92);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 8px 30px rgba(6, 24, 32, 0.08);
+}
+
+.nav {
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  z-index: 2;
+}
+
+.brand img,
+.brand > svg {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  font-family: var(--font-display);
+}
+
+.brand-text strong {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--white);
+  transition: color 0.3s;
+}
+
+.brand-text span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.72);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
+
+.site-header.is-scrolled .brand-text strong {
+  color: var(--ink);
+}
+
+.site-header.is-scrolled .brand-text span {
+  color: var(--muted);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.nav-links a {
+  padding: 0.45rem 0.55rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a[aria-current="page"] {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.site-header.is-scrolled .nav-links a {
+  color: var(--muted);
+}
+
+.site-header.is-scrolled .nav-links a:hover,
+.site-header.is-scrolled .nav-links a[aria-current="page"] {
+  color: var(--ink);
+  background: rgba(6, 24, 32, 0.05);
+}
+
+.nav-cta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  z-index: 2;
+}
+
+.menu-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  place-items: center;
+  gap: 5px;
+  flex-direction: column;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: transform 0.3s var(--ease), opacity 0.3s;
+}
+
+.site-header.is-scrolled .menu-toggle span {
+  background: var(--ink);
+}
+
+.menu-toggle[aria-expanded="true"] span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menu-toggle[aria-expanded="true"] span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle[aria-expanded="true"] span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ——— Hero ——— */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+  color: var(--white);
+  background: var(--ink);
+}
+
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.04);
+  animation: heroDrift 18s ease-in-out infinite alternate;
+}
+
+.hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      105deg,
+      rgba(4, 18, 24, 0.92) 0%,
+      rgba(4, 18, 24, 0.78) 42%,
+      rgba(4, 18, 24, 0.45) 72%,
+      rgba(4, 18, 24, 0.55) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(4, 18, 24, 0.55) 0%,
+      transparent 35%,
+      rgba(4, 18, 24, 0.88) 100%
+    ),
+    radial-gradient(
+      90% 70% at 85% 15%,
+      rgba(31, 184, 168, 0.22),
+      transparent 55%
+    );
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  padding: calc(var(--header-h) + 3.5rem) 0 4.5rem;
+  max-width: 760px;
+}
+
+.hero-brand {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.4vw, 1.55rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.1rem;
+  color: #5eead4;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
+  animation: riseIn 0.7s var(--ease) both;
+}
+
+.hero h1 {
+  color: #ffffff !important;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+  animation: riseIn 0.75s 0.05s var(--ease) both;
+}
+
+.hero h1 .accent {
+  color: #5eead4;
+}
+
+.hero .lead {
+  font-size: clamp(1.05rem, 2vw, 1.22rem);
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 40ch;
+  margin-bottom: 1.8rem;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+  animation: riseIn 0.8s 0.1s var(--ease) both;
+}
+
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  animation: riseIn 0.85s 0.15s var(--ease) both;
+}
+
+.hero-scroll {
+  position: absolute;
+  right: max(1.2rem, calc((100% - var(--container)) / 2));
+  bottom: 1.6rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.hero-scroll i {
+  width: 18px;
+  height: 28px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  position: relative;
+}
+
+.hero-scroll i::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 6px;
+  width: 3px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--teal);
+  transform: translateX(-50%);
+  animation: scrollDot 1.6s ease-in-out infinite;
+}
+
+/* ——— Stats ——— */
+.stats-wrap {
+  margin-top: -2.2rem;
+  position: relative;
+  z-index: 3;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--line);
+}
+
+.stat {
+  background: var(--white);
+  padding: 1.55rem 1.2rem;
+  text-align: center;
+}
+
+.stat .num {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3vw, 2.35rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 0.35rem;
+}
+
+.stat .lbl {
+  font-size: 0.86rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* ——— Sections ——— */
+.section {
+  padding: clamp(4rem, 8vw, 6.5rem) 0;
+}
+
+.section-alt {
+  background:
+    linear-gradient(180deg, #e8f1f2 0%, var(--mist) 40%, #eef3f4 100%);
+  position: relative;
+}
+
+.section-alt::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgba(6, 24, 32, 0.05) 1px,
+    transparent 1px
+  );
+  background-size: 22px 22px;
+  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+  pointer-events: none;
+}
+
+.section-head {
+  max-width: 620px;
+  margin-bottom: 2.4rem;
+}
+
+.section-head.center {
+  text-align: center;
+  margin-inline: auto;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  margin-bottom: 0.7rem;
+}
+
+.section-head p {
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+/* ——— Programs ——— */
+.program-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.program {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem 1.5rem;
+  align-items: center;
+  padding: 1.45rem 1.5rem;
+  border-radius: var(--radius);
+  background: var(--white);
+  border: 1px solid var(--line);
+  transition: border-color 0.25s, transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.program:hover {
+  border-color: rgba(31, 184, 168, 0.45);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(6, 24, 32, 0.08);
+}
+
+.program-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal-deep);
+  margin-bottom: 0.45rem;
+}
+
+.program h3 {
+  margin-bottom: 0.35rem;
+}
+
+.program p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+
+.program-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.1rem;
+  margin-top: 0.85rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.program-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.7rem;
+}
+
+.catalog-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1.35rem 1.5rem;
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--white);
+  background-image:
+    radial-gradient(circle at 90% 20%, rgba(31, 184, 168, 0.35), transparent 40%),
+    linear-gradient(135deg, var(--ink), var(--ink-soft));
+  transition: transform 0.25s var(--ease);
+}
+
+.catalog-link:hover {
+  transform: translateY(-3px);
+}
+
+.catalog-link strong {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.catalog-link span {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+}
+
+.catalog-link .arrow {
+  font-size: 1.5rem;
+  color: var(--teal);
+}
+
+/* ——— Why ——— */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem 1.75rem;
+}
+
+.why-item {
+  padding: 0.4rem 0 1.2rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.why-item .icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(31, 184, 168, 0.12);
+  color: var(--teal-deep);
+  margin-bottom: 0.9rem;
+}
+
+.why-item .icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.why-item h3 {
+  margin-bottom: 0.4rem;
+}
+
+.why-item p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+
+/* ——— Testimonials ——— */
+.testimonials {
+  background: var(--ink);
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonials::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(31, 184, 168, 0.22), transparent 68%);
+  top: -120px;
+  right: -80px;
+  pointer-events: none;
+}
+
+.testimonials .section-head h2,
+.testimonials .eyebrow {
+  color: var(--white);
+}
+
+.testimonials .eyebrow {
+  color: var(--teal);
+}
+
+.t-stage {
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.tcard {
+  padding: 0.5rem 0 1rem;
+  animation: fadeSlide 0.55s var(--ease);
+}
+
+.tcard[hidden] {
+  display: none;
+}
+
+.tcard p {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.5vw, 1.7rem);
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.94);
+  margin-bottom: 1.5rem;
+}
+
+.tperson {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(31, 184, 168, 0.2);
+  color: var(--teal);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.tperson strong {
+  display: block;
+  font-family: var(--font-display);
+}
+
+.tperson span {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.9rem;
+}
+
+.t-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 1.2rem;
+}
+
+.t-dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
+  transition: width 0.3s, background 0.3s;
+}
+
+.t-dots button.is-active {
+  width: 28px;
+  background: var(--teal);
+}
+
+/* ——— CTA band ——— */
+.cta-band {
+  border-radius: calc(var(--radius) + 6px);
+  padding: clamp(2.2rem, 5vw, 3.4rem);
+  text-align: center;
+  color: var(--white);
+  background:
+    radial-gradient(circle at 15% 20%, rgba(31, 184, 168, 0.35), transparent 42%),
+    radial-gradient(circle at 90% 80%, rgba(154, 212, 255, 0.18), transparent 40%),
+    linear-gradient(135deg, #0a2a32, #061820 55%, #0c3640);
+  box-shadow: var(--shadow);
+}
+
+.cta-band h2 {
+  color: var(--white);
+}
+
+.cta-band p {
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 42ch;
+  margin: 0 auto 1.5rem;
+}
+
+.cta-actions {
+  display: flex;
+  gap: 0.7rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ——— Footer ——— */
+.site-footer {
+  background: #041318;
+  color: #94a8b0;
+  padding: 4rem 0 1.5rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.footer-brand {
+  display: flex;
+  gap: 0.65rem;
+  align-items: center;
+  margin-bottom: 0.9rem;
+}
+
+.footer-brand img,
+.footer-brand > svg {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.footer-brand strong {
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+
+.site-footer p {
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+.site-footer h4 {
+  color: var(--white);
+  font-size: 0.92rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.site-footer a {
+  display: block;
+  padding: 0.28rem 0;
+  font-size: 0.94rem;
+  color: #94a8b0;
+  transition: color 0.2s;
+}
+
+.site-footer a:hover {
+  color: var(--teal);
+}
+
+.social {
+  display: flex;
+  gap: 0.55rem;
+  margin-top: 1.1rem;
+}
+
+.social a {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.social a:hover {
+  background: rgba(31, 184, 168, 0.25);
+  transform: translateY(-2px);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1.2rem;
+  font-size: 0.86rem;
+  color: #6d828b;
+}
+
+/* ——— WhatsApp float ——— */
+.wa-float {
+  position: fixed;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  z-index: 90;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: #128c7e;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 12px 28px rgba(18, 140, 126, 0.4);
+  transition: transform 0.25s var(--ease), background 0.25s;
+}
+
+.wa-float:hover {
+  transform: translateY(-3px) scale(1.04);
+  background: #0f766c;
+}
+
+.wa-float svg {
+  width: 26px;
+  height: 26px;
+  fill: #fff;
+}
+
+/* ——— Motion ——— */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes heroDrift {
+  from {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.1) translate3d(-1.5%, -1%, 0);
+  }
+}
+
+@keyframes scrollDot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  55% {
+    opacity: 0.25;
+    transform: translateX(-50%) translateY(10px);
+  }
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .hero-brand,
+  .hero h1,
+  .hero .lead,
+  .hero-cta,
+  .hero-media img,
+  .tcard {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ——— Responsive ——— */
+@media (max-width: 980px) {
+  .nav-links {
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 19, 24, 0.96);
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    padding: 5rem 1.6rem 2rem;
+    gap: 0.25rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+
+  .nav-links.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .nav-links a {
+    font-size: 1.2rem;
+    padding: 0.85rem 1rem;
+    color: rgba(255, 255, 255, 0.88);
+    border-radius: 12px;
+  }
+
+  .site-header.is-scrolled .nav-links a {
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  .menu-toggle {
+    display: grid;
+  }
+
+  .nav-cta .btn {
+    display: none;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .why-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .program {
+    grid-template-columns: 1fr;
+  }
+
+  .program-actions {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-h: 68px;
+  }
+
+  .brand-text {
+    display: none;
+  }
+
+  .hero-inner {
+    padding-bottom: 3.5rem;
+  }
+
+  .hero-scroll {
+    display: none;
+  }
+
+  .why-grid,
+  .footer-grid,
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .stat {
+    text-align: left;
+    padding-inline: 1.35rem;
+  }
+
+  .wa-float {
+    width: 50px;
+    height: 50px;
+    right: 0.9rem;
+    bottom: 0.9rem;
+  }
+}
+
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollegeOrUniversity",
+  "name": "Al-Nafi College of Technology",
+  "url": "https://alnaficollege.com",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Peshawar",
+    "addressRegion": "Khyber Pakhtunkhwa",
+    "addressCountry": "PK"
+  },
+  "telephone": "+92 300 0000000",
+  "email": "info@alnaficollege.com"
+}
+</script>
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="#top">
+      <svg width="42" height="42" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Al-Nafi College of Technology">
+  <rect width="64" height="64" rx="14" fill="#0A2A32"/>
+  <path d="M32 14L48 50h-7.2l-2.8-6.6H26l-2.8 6.6H16L32 14zm0 12.4L27.6 37h8.8L32 26.4z" fill="#E8F4F2"/>
+  <rect x="18" y="52" width="28" height="3" rx="1.5" fill="#2EC4B6"/>
+</svg>
+      <span class="brand-text">
+        <strong>Al-Nafi College</strong>
+        <span>of Technology</span>
+      </span>
+    </a>
+
+    <ul class="nav-links" id="primary-nav">
+      <li><a href="#top" aria-current="page">Home</a></li>
+      <li><a href="#why">About</a></li>
+      <li><a href="#programs">Courses</a></li>
+      <li><a href="#why">TTB Affiliation</a></li>
+      <li><a href="#apply">Admissions</a></li>
+      <li><a href="#why">Faculty</a></li>
+      <li><a href="#stories">Gallery</a></li>
+      <li><a href="#programs">Fees</a></li>
+      <li><a href="#stories">Blog</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <div class="nav-cta">
+      <a class="btn btn-outline" href="#apply">Apply Now</a>
+      <button class="menu-toggle" type="button" aria-label="Toggle menu" aria-controls="primary-nav" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero" aria-label="Welcome">
+    <div class="hero-media" aria-hidden="true">
+      <img
+        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=2000&q=80"
+        alt=""
+        width="2000"
+        height="1333"
+        fetchpriority="high"
+      >
+    </div>
+
+    <div class="container hero-inner">
+      <p class="hero-brand">Al-Nafi College of Technology</p>
+      <h1>Build your future with <span class="accent">industry-ready skills</span></h1>
+      <p class="lead">TTB Peshawar–affiliated diplomas and career-focused training in Peshawar — practical labs, expert faculty, recognised certifications.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#apply">Apply Now</a>
+        <a class="btn btn-ghost" href="#programs">Explore Courses</a>
+        <a class="btn btn-wa" href="https://wa.me/923000000000" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="hero-scroll" aria-hidden="true">
+      <i></i>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <div class="container stats-wrap">
+    <div class="stats reveal" role="list">
+      <div class="stat" role="listitem">
+        <div class="num"><span data-count="1500" data-suffix="+">0</span></div>
+        <div class="lbl">Students Trained</div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="num"><span data-count="20" data-suffix="+">0</span></div>
+        <div class="lbl">Professional Courses</div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="num"><span data-count="95" data-suffix="%">0</span></div>
+        <div class="lbl">Pass Rate</div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="num"><span data-count="15" data-suffix="+">0</span></div>
+        <div class="lbl">Expert Instructors</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="section" id="programs">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Featured Programs</div>
+        <h2>TTB-affiliated diplomas &amp; certifications</h2>
+        <p>Government-recognised programs designed to make you job-ready or launch your freelance career.</p>
+      </div>
+
+      <div class="program-list reveal">
+        <article class="program">
+          <div>
+            <span class="program-tag">TTB Certified</span>
+            <h3>AutoCAD Certification</h3>
+            <p>Industry-standard 2D &amp; 3D CAD drafting for civil, mechanical, architectural and electrical design.</p>
+            <div class="program-meta">
+              <span>3 Months</span>
+              <span>Matric or above</span>
+            </div>
+          </div>
+          <div class="program-actions">
+            <a class="btn btn-ghost-dark" href="#apply">View Details</a>
+          </div>
+        </article>
+
+        <article class="program">
+          <div>
+            <span class="program-tag">TTB Diploma</span>
+            <h3>1-Year Diploma in IT (DIT)</h3>
+            <p>Complete one-year diploma covering computer fundamentals, office, web, graphic design, and freelancing — recognised by TTB Peshawar.</p>
+            <div class="program-meta">
+              <span>12 Months</span>
+              <span>Matric or above</span>
+            </div>
+          </div>
+          <div class="program-actions">
+            <a class="btn btn-ghost-dark" href="#apply">View Details</a>
+          </div>
+        </article>
+
+        <a class="catalog-link" href="#programs">
+          <div>
+            <strong>Explore all courses</strong>
+            <span>Office Automation, Web Development, AI, Graphic Design, eBay/Etsy and more — 10+ programs.</span>
+          </div>
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" id="why">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Why Choose Us</div>
+        <h2>Why Al-Nafi College of Technology</h2>
+        <p>Practical training, recognised credentials, and support that continues after you graduate.</p>
+      </div>
+
+      <div class="why-grid reveal">
+        <article class="why-item">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.2 2.2 4.8-5"/></svg>
+          </div>
+          <h3>TTB Peshawar Affiliated</h3>
+          <p>Government-recognised diplomas and certifications accepted across Pakistan and abroad.</p>
+        </article>
+
+        <article class="why-item">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3.5l2.2 4.5 5 .7-3.6 3.5.9 5.1L12 14.9 7.5 17.3l.9-5.1L4.8 8.7l5-.7z"/></svg>
+          </div>
+          <h3>Industry-Expert Faculty</h3>
+          <p>Learn from working professionals with real project and freelance experience.</p>
+        </article>
+
+        <article class="why-item">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="12" rx="2"/><path d="M8 20.5h8M12 16.5v4"/></svg>
+          </div>
+          <h3>Hands-On Labs</h3>
+          <p>Modern computer labs, real software and project-based learning — not just theory.</p>
+        </article>
+
+        <article class="why-item">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 15v-4"/><path d="M12 15V8"/><path d="M16 15v-6"/></svg>
+          </div>
+          <h3>Career Support</h3>
+          <p>CV building, freelancing setup, interview prep and job referrals for our graduates.</p>
+        </article>
+
+        <article class="why-item">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 1.8"/></svg>
+          </div>
+          <h3>Flexible Timings</h3>
+          <p>Morning, afternoon and evening shifts — designed for students and working professionals.</p>
+        </article>
+
+        <article class="why-item">
+          <div class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M16.5 7.2C16.5 5.4 14.5 4 12 4S7.5 5.4 7.5 7.2c0 1.7 1.5 2.7 4.5 3.3s4.5 1.5 4.5 3.3c0 1.8-2 3.2-4.5 3.2S7.5 15.6 7.5 13.8"/></svg>
+          </div>
+          <h3>Affordable Fees</h3>
+          <p>Quality education at fees that make sense — easy installments available.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section testimonials" id="stories">
+    <div class="container">
+      <div class="section-head center reveal">
+        <div class="eyebrow">Student Success</div>
+        <h2>What our students say</h2>
+      </div>
+
+      <div class="t-stage reveal">
+        <div data-testimonials>
+          <div class="tcard">
+            <p>“The AutoCAD course at Al-Nafi changed my career. I’m now working at a local design firm and also taking freelance projects from Fiverr.”</p>
+            <div class="tperson">
+              <div class="avatar" aria-hidden="true">AK</div>
+              <div>
+                <strong>Ahmad Khan</strong>
+                <span>AutoCAD Graduate, 2024</span>
+              </div>
+            </div>
+          </div>
+          <div class="tcard">
+            <p>“DIT diploma gave me everything — Office, web design and freelancing skills. I now run my own Etsy store from home.”</p>
+            <div class="tperson">
+              <div class="avatar" aria-hidden="true">SN</div>
+              <div>
+                <strong>Sana Naveed</strong>
+                <span>DIT Graduate, 2024</span>
+              </div>
+            </div>
+          </div>
+          <div class="tcard">
+            <p>“Best decision ever. The teachers are friendly and the labs are top-quality. Highly recommended for Peshawar students.”</p>
+            <div class="tperson">
+              <div class="avatar" aria-hidden="true">HM</div>
+              <div>
+                <strong>Hamza Malik</strong>
+                <span>Web Development, 2025</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="apply">
+    <div class="container">
+      <div class="cta-band reveal">
+        <h2>Ready to build your career?</h2>
+        <p>Admissions for the new session are open. Limited seats per course — apply today and secure your future.</p>
+        <div class="cta-actions">
+          <a class="btn btn-primary" href="https://wa.me/923000000000" target="_blank" rel="noopener noreferrer">Apply on WhatsApp</a>
+          <a class="btn btn-wa" href="https://wa.me/923000000000" target="_blank" rel="noopener noreferrer">WhatsApp Admissions</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer" id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <svg width="42" height="42" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Al-Nafi College of Technology">
+  <rect width="64" height="64" rx="14" fill="#0A2A32"/>
+  <path d="M32 14L48 50h-7.2l-2.8-6.6H26l-2.8 6.6H16L32 14zm0 12.4L27.6 37h8.8L32 26.4z" fill="#E8F4F2"/>
+  <rect x="18" y="52" width="28" height="3" rx="1.5" fill="#2EC4B6"/>
+</svg>
+          <strong>Al-Nafi College</strong>
+        </div>
+        <p>Empowering students with practical, industry-relevant skills through TTB Peshawar–affiliated diploma programs, professional certifications, and career-focused training.</p>
+        <div class="social">
+          <a href="#" aria-label="Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M22 12a10 10 0 1 0-11.6 9.9V14.9H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3V22A10 10 0 0 0 22 12z"/></svg>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm5.5-3a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M23 7.2s-.2-1.6-.9-2.3c-.8-.9-1.8-.9-2.2-1C16.8 3.6 12 3.6 12 3.6s-4.8 0-7.9.3c-.4.1-1.4.1-2.2 1-.7.7-.9 2.3-.9 2.3S.8 9.1.8 11v1.9c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.8.9 1.9.9 2.4 1 1.7.2 7.7.3 7.7.3s4.8 0 7.9-.3c.4-.1 1.4-.1 2.2-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8V11c0-1.9-.2-3.8-.2-3.8zM9.7 14.7V8.3l6.2 3.2-6.2 3.2z"/></svg>
+          </a>
+          <a href="https://wa.me/923000000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M20 4A10 10 0 0 0 4 17l-1 5 5-1A10 10 0 1 0 20 4zM12 20a8 8 0 0 1-4-1l-3 1 1-3a8 8 0 1 1 6 3zm4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.2.2-.4 0-.1 0-.3-.1-.4l-.7-1.6c-.2-.4-.4-.3-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.4 1.4.5 2 .6 2.6.5.4 0 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1-.1-.1-.2-.1-.4-.2z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h4>Explore</h4>
+        <a href="#top">Home</a>
+        <a href="#why">About</a>
+        <a href="#programs">Courses</a>
+        <a href="#why">TTB Affiliation</a>
+        <a href="#apply">Admissions</a>
+        <a href="#programs">Fee Structure</a>
+      </div>
+
+      <div>
+        <h4>More</h4>
+        <a href="#why">Faculty</a>
+        <a href="#stories">Gallery</a>
+        <a href="#stories">Blog</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <div>
+        <h4>Contact</h4>
+        <a href="tel:+923000000000">+92 300 0000000</a>
+        <a href="mailto:info@alnaficollege.com">info@alnaficollege.com</a>
+        <a href="#contact">Peshawar, Khyber Pakhtunkhwa, Pakistan</a>
+        <a href="https://wa.me/923000000000" target="_blank" rel="noopener noreferrer">WhatsApp Us</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © <span id="year">2026</span> Al-Nafi College of Technology — Affiliated with TTB Peshawar. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/923000000000" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4A10 10 0 0 0 4 17l-1 5 5-1A10 10 0 1 0 20 4zM12 20a8 8 0 0 1-4-1l-3 1 1-3a8 8 0 1 1 6 3zm4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1-.2.2-.6.8-.7.9-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.2.2-.4 0-.1 0-.3-.1-.4l-.7-1.6c-.2-.4-.4-.3-.5-.4h-.4c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.4 1.4.5 2 .6 2.6.5.4 0 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1-.1-.1-.2-.1-.4-.2z"/></svg>
+</a>
+
+<script>
+(() => {
+  "use strict";
+
+  const doc = document;
+  const header = doc.querySelector(".site-header");
+  const menuToggle = doc.querySelector(".menu-toggle");
+  const navLinks = doc.querySelector(".nav-links");
+  const yearEl = doc.getElementById("year");
+
+  if (yearEl) {
+    yearEl.textContent = String(new Date().getFullYear());
+  }
+
+  /* Sticky header state */
+  const onScroll = () => {
+    if (!header) return;
+    header.classList.toggle("is-scrolled", window.scrollY > 24);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* Mobile nav */
+  if (menuToggle && navLinks) {
+    const setOpen = (open) => {
+      menuToggle.setAttribute("aria-expanded", String(open));
+      navLinks.classList.toggle("is-open", open);
+      doc.body.classList.toggle("nav-open", open);
+    };
+
+    menuToggle.addEventListener("click", () => {
+      const open = menuToggle.getAttribute("aria-expanded") !== "true";
+      setOpen(open);
+    });
+
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => setOpen(false));
+    });
+
+    doc.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setOpen(false);
+    });
+  }
+
+  /* Reveal on scroll */
+  const reveals = doc.querySelectorAll(".reveal");
+  if (reveals.length && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.14, rootMargin: "0px 0px -40px 0px" }
+    );
+    reveals.forEach((el) => io.observe(el));
+  } else {
+    reveals.forEach((el) => el.classList.add("is-visible"));
+  }
+
+  /* Stat counters */
+  const counters = doc.querySelectorAll("[data-count]");
+  if (counters.length && "IntersectionObserver" in window) {
+    const animate = (el) => {
+      const target = Number(el.getAttribute("data-count")) || 0;
+      const suffix = el.getAttribute("data-suffix") || "";
+      const duration = 1400;
+      const start = performance.now();
+
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(target * eased) + suffix;
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
+    const cio = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            animate(entry.target);
+            cio.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.4 }
+    );
+    counters.forEach((el) => cio.observe(el));
+  } else {
+    counters.forEach((el) => {
+      el.textContent =
+        (el.getAttribute("data-count") || "0") +
+        (el.getAttribute("data-suffix") || "");
+    });
+  }
+
+  /* Testimonials slider */
+  const track = doc.querySelector("[data-testimonials]");
+  if (track) {
+    const cards = Array.from(track.querySelectorAll(".tcard"));
+    if (cards.length > 1) {
+      let index = 0;
+      const dotsWrap = doc.createElement("div");
+      dotsWrap.className = "t-dots";
+      dotsWrap.setAttribute("role", "tablist");
+      dotsWrap.setAttribute("aria-label", "Testimonials");
+
+      const show = (i) => {
+        index = (i + cards.length) % cards.length;
+        cards.forEach((card, n) => {
+          card.hidden = n !== index;
+          card.classList.toggle("is-active", n === index);
+        });
+        dotsWrap.querySelectorAll("button").forEach((btn, n) => {
+          btn.setAttribute("aria-selected", String(n === index));
+          btn.classList.toggle("is-active", n === index);
+        });
+      };
+
+      cards.forEach((_, n) => {
+        const btn = doc.createElement("button");
+        btn.type = "button";
+        btn.setAttribute("role", "tab");
+        btn.setAttribute("aria-label", `Show testimonial ${n + 1}`);
+        btn.addEventListener("click", () => {
+          show(n);
+          restart();
+        });
+        dotsWrap.appendChild(btn);
+      });
+
+      track.after(dotsWrap);
+      show(0);
+
+      let timer = null;
+      const restart = () => {
+        clearInterval(timer);
+        timer = setInterval(() => show(index + 1), 5500);
+      };
+      restart();
+
+      track.addEventListener("mouseenter", () => clearInterval(timer));
+      track.addEventListener("mouseleave", restart);
+    }
+  }
+})();
+
+</script>
+</body>
+</html>
