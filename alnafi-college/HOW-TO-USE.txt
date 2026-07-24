@@ -1,0 +1,64 @@
+# How to use COMPLETE-INDEX.html (simple guide)
+
+This is **ONE complete file**. You do NOT need css or js folders.
+
+File name: `COMPLETE-INDEX.html`
+
+---
+
+## Option A — Test on your computer (easiest)
+
+1. Download / copy the file `COMPLETE-INDEX.html`
+2. Rename it to: `index.html`
+3. Double-click the file
+4. It will open in Chrome / Edge / Firefox
+
+---
+
+## Option B — Upload to your website (Hostinger / cPanel / GoDaddy)
+
+1. Rename `COMPLETE-INDEX.html` to `index.html`
+2. Login to your hosting panel (cPanel / File Manager)
+3. Open folder: `public_html` (this is your website root)
+4. Upload `index.html` there
+5. If an old `index.html` already exists, replace it (take a backup first)
+6. Open your website: `https://yourdomain.com`
+
+That is all. No other files are required for this homepage.
+
+---
+
+## Option C — Paste into WordPress / Elementor (HTML widget)
+
+1. Open WordPress Admin
+2. Go to the page you want (or create a new page)
+3. Add an **HTML** / **Custom HTML** block (Elementor: HTML widget)
+4. Open `COMPLETE-INDEX.html` in Notepad
+5. Copy ALL content (Ctrl+A, Ctrl+C)
+6. Paste into the HTML widget (Ctrl+V)
+7. Update / Publish
+
+Note: In WordPress, the theme header/footer may still show. For a full custom homepage, use a blank page template if available.
+
+---
+
+## Important: change your WhatsApp / phone number
+
+In Notepad, press Ctrl+F and search:
+
+`923000000000`
+
+Replace with your real number (example: if number is 0300-1234567, use `923001234567`).
+
+Also replace:
+
+`+92 300 0000000`
+
+with your real phone display number.
+
+---
+
+## Need help?
+
+If the page opens but looks plain (no design), you pasted only part of the file.
+Make sure you copied from the first line `<!doctype html>` to the last line `</html>`.
